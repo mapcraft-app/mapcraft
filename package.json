@@ -1,7 +1,7 @@
 {
   "name": "mapcraft-app",
   "productName": "mapcraft-app",
-  "version": "1.0.0",
+  "version": "0.1.0-alpha",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
@@ -11,9 +11,9 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
-  "keywords": [],
-  "author": "Clement",
-  "license": "MIT",
+  "keywords": ["mapcraft", "minecraft"],
+  "author": "Clément Bertrand",
+  "license": "GPLv3",
   "config": {
     "forge": {
       "packagerConfig": {
@@ -21,26 +21,31 @@
       },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
+          "name": "@electron-forge/maker-deb",
           "config": {
-            "name": "mapcraft_app"
+            "options": {
+              "maintainer": "Clément Bertrand"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {
+            "options": {
+              "maintainer": "Clément Bertrand"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-wix",
+          "config": {
+            "iconUrl": "src/dist/img/icon/icon.ico",
+            "loadingGif": "src/dist/img/loader.gif"
           }
         },
         {
           "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin",
-            "win32",
-            "linux"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
+          "platforms": ["darwin", "win32", "linux"]
         }
       ]
     }
