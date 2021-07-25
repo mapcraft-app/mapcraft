@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
 
-    "make-linux": "electron-forge make --platform linux --targets deb rpm",
+    "make-linux": "electron-forge make --platform linux",
     "make-mac": "electron-forge make --platform darwin",
     "make-windows": "electron-forge make",
 
@@ -27,7 +27,6 @@
         {
           "name": "@electron-forge/maker-deb",
           "config": {
-            "icon": "./src/dist/img/icon/icon.png",
             "options": {
               "maintainer": "Clément Bertrand"
             }
@@ -36,7 +35,6 @@
         {
           "name": "@electron-forge/maker-rpm",
           "config": {
-            "icon": "./src/dist/img/icon/icon.png",
             "options": {
               "maintainer": "Clément Bertrand"
             }
@@ -44,7 +42,7 @@
         },
         {
           "name": "@electron-forge/maker-zip",
-          "platforms": ["win32"]
+          "platforms": ["darwin", "win32"]
         }
       ]
     }
