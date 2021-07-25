@@ -1,0 +1,19 @@
+{
+	"Title": "Utility",
+	"Icon": "nut",
+	"Notification" : "Utility notification",
+	"Data" : {
+		"Menu": {
+			"Blocks": {
+				"Title": "Blocks list",
+				"Icon": "album"
+			},
+			"Items": {
+				"Title": "Items list",
+				"Icon": "tv"
+			}
+		},
+		"Search": "Search",
+		"Download": "Download list in json format"
+	}
+}

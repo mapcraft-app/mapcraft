@@ -1,0 +1,36 @@
+[HTML]
+<tr>
+	<td class="uk-margin-left">
+		<input value="{ID}" name="form-checkbox" class="uk-checkbox" type="checkbox">
+	</td>
+	<td>{ID}</td>
+	<td>{Name}</td>
+	<td>{X1}</td>
+	<td>{Y1}</td>
+	<td>{Z1}</td>
+	<td>{X2}</td>
+	<td>{Y2}</td>
+	<td>{Z2}</td>
+	<td>
+		<button name="form-button-edit" class="uk-button uk-button-primary">
+			<span class="table-icon" uk-icon="pencil"></span>
+		</button>
+	</td>
+	<td>
+		<button name="form-button-modify" class="uk-button uk-button-warning">
+			<span class="table-icon" uk-icon="file-edit"></span>
+		</button>
+	</td>
+	<td>
+		<button name="form-button-delete" class="uk-button uk-button-danger">
+			<span class="table-icon" uk-icon="trash"></span>
+		</button>
+	</td>
+</tr>
+[/HTML]
+
+[CSS]
+.table-icon > svg {
+	max-width: none;
+}
+[/CSS]

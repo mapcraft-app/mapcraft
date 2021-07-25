@@ -1,0 +1,11 @@
+[HTML]
+<div class="uk-margin">
+	<label class="uk-form-label" for="{ID}">{Name}</label>
+	<div class="uk-form-controls">
+		<label class="uk-switch">
+			<input id="{ID}" type="checkbox">
+			<div class="uk-switch-span"></div>
+		</label>
+	</div>
+</div>
+[/HTML]

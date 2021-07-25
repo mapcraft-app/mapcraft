@@ -1,0 +1,21 @@
+[HTML]
+<li>
+	<div class="uk-flex">
+		<div class="uk-flex uk-flex-column">
+			<div class="icon-about">
+				{Logo}
+			</div>
+			<a class="uk-margin-top uk-button uk-button-text" href="{Link}">{Name}</a>
+		</div>
+		<div class="uk-margin-left">
+			<div id="{Name}-licence"></div>
+		</div>
+	</div>
+</li>
+[/HTML]
+
+[CSS]
+.icon-about {
+	width: 160px;
+}
+[/CSS]

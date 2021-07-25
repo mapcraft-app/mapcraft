@@ -1,0 +1,71 @@
+[HTML]
+<div class="uk-flex uk-flex-column uk-flex-between max-height container">
+	<div>
+		<h2 class="uk-text-center header" lang="User-Selection"></h2>
+		<div id="alert-main"></div>
+	</div>
+	<form name="form-user" id="form-user" class="form-user">
+		<table class="uk-table uk-table-striped uk-table-middle">
+			<thead>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="generateTab">
+			</tbody>
+		</table>
+	</form>
+	<div class="menu">
+		<div class="uk-flex uk-flex-middle uk-flex-right">
+			<label for="remember" lang="Remember"></label>
+			<input id="remember" class="uk-checkbox" type="checkbox"/>
+		</div>
+		<div class="uk-flex uk-flex-right uk-margin">
+			<button style="margin-right: 0.5em" href="#createUser" class="uk-button uk-button-large uk-button-secondary" lang="Create" uk-toggle></button>
+			<button class="uk-button uk-button-large uk-button-primary" id="Choose-User"lang="Choose"></button>
+		</div> 
+	</div>
+</div>
+<div id="createUser" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+		<h2 class="uk-modal-title" lang="Modal.Title"></h2>
+		<button class="uk-modal-close-default" type="button" uk-close></button>
+		<div id="alert"></div>
+		<form id="form-createUser">
+			<fieldset class="uk-fieldset">
+				<div class="uk-margin">
+					<input id="modal-username" class="uk-input" type="text" placeholder="..."/>
+				</div>
+				<div class="uk-margin uk-flex uk-flex-right">
+					<button type="submit" class="uk-button uk-button-primary" lang="Modal.Submit"></button>
+				</div>
+			</fieldset>
+		</form>
+    </div>
+</div>
+[/HTML]
+
+[CSS]
+html, body {
+	height: 100%;
+}
+.max-height {
+	height: 100%;
+}
+.container {
+	margin-left: 2em;
+	margin-right: 2em;
+}
+.form-user {
+	max-height: 80%;
+    overflow-y: auto;
+}
+.menu {
+	padding-top: 2em;
+}
+#remember {
+	margin-left: 1em;
+}
+[/CSS]

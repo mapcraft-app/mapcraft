@@ -1,0 +1,20 @@
+{
+	"Title": "Start page",
+	"ChooseWorld": "Choose your world",
+	"SaveLoading" : "Save data is current loading",
+	"Option": {
+		"Option" : "Option",
+		"Reset" : "Reset",
+		"Save" : "Save",
+		"TagTemp": "Path to tempory directory",
+		"TagGame": "Path to game directory", 
+		"TagSave": "Path to save directory",
+		"TagLang": "Set language",
+		"TagResource" : "Name of resourcepack",
+		"TagData" : "Name of datapack"
+	},
+	"Error": {
+		"DirectoryNotExist" : "Directory not exist",
+		"NotMinecraftSaveDirectory" : "Is probably not minecraft save directory, check save path in option"
+	}
+}

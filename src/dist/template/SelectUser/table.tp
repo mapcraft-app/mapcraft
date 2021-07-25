@@ -1,0 +1,11 @@
+[HTML]
+<tr>
+	<td>
+		<img src="{link}"/>
+	</td>
+	<td>{username}</td>
+	<td class="uk-form-controls">
+		<input class="uk-radio" type="radio" value="{username}" name="select_user">
+	</td>
+</tr>
+[/HTML]

@@ -1,0 +1,49 @@
+[
+	{
+		"Name": "__DEFAULT",
+		"Component": "Home"
+	},
+	{
+		"Name": "Main",
+		"Component": "./components/main/components",
+		"Lang": "./components/main/lang",
+		"IsNotification" : false
+	},
+	{
+		"Name": "Home",
+		"Component": "./components/home/components",
+		"Lang": "./components/home/lang",
+		"IsNotification": false
+	},
+	{
+		"Name": "Option",
+		"Component": "./components/option/components",
+		"Lang": "./components/option/lang",
+		"IsNotification": false
+	},
+
+	{
+		"Name": "Trigger",
+		"Component": "./components/trigger/components",
+		"Lang": "./components/trigger/lang",
+		"IsNotification": true
+	},
+	{
+		"Name": "Music",
+		"Component": "./components/music/components",
+		"Lang": "./components/music/lang",
+		"IsNotification": true
+	},
+	{
+		"Name": "Cutscene",
+		"Component": "./components/cutscene/components",
+		"Lang": "./components/cutscene/lang",
+		"IsNotification": true
+	},
+	{
+		"Name": "Utility",
+		"Component": "./components/utility/components",
+		"Lang": "./components/utility/lang",
+		"IsNotification": false
+	}
+]

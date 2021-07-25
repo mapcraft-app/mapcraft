@@ -1,0 +1,71 @@
+[HTML]
+<div class="uk-container">
+	<div id="music-error"></div>
+	<div uk-grid>
+		<div class="uk-width-1-3 button-create">
+			<button class="uk-button uk-button-success" href="#AddMusic" uk-toggle lang="AddMusic"></button>
+		</div>
+		<div class="uk-width-2-3">
+			<audio id="music_player" class="audio-player" controls></audio>
+		</div>
+	</div>
+	<div uk-grid>
+		<div class="uk-width-1-3 sound-list">
+			<ul id="sound-list" class="uk-list uk-list-striped list-border" uk-accordion="multiple: false"></ul>
+		</div>
+		<div class="uk-width-2-3 sound-content">
+			<div class="uk-flex uk-margin-left uk-flex-column">
+				<form class="uk-form-horizontal uk-margin-large" id="music-form"></form>
+				<button class="uk-button uk-button-danger" style="display: none" id="music-delete-modal" href="#modal-delete-music" lang="Delete.ButtonModal" uk-toggle></button>
+			</div>
+		</div>
+	</div>
+	<div id="ModalAddMusic"></div>
+	<div id="ModalDeleteMusic">
+		<div id="modal-delete-music" class="uk-flex-top" container="#ModalDeleteMusic" uk-modal="stack:true;">
+			<div class="uk-modal-dialog uk-margin-auto-vertical">
+				<div class="uk-modal-body">
+					<div id="modal-delete-error"></div>
+					<h3 class="uk-text-center" lang="Delete.Text"></h3>
+				</div>
+				<div class="uk-modal-footer uk-flex uk-flex-between">
+					<button class="uk-button uk-button-default uk-modal-close" id="music-delete-cancel" lang="Delete.Cancel"></button>
+					<button class="uk-button uk-button-danger" id="music-delete-ok" lang="Delete.Delete"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]
+
+[CSS]
+.sound-list {
+	padding: 5px;
+	height: 100%;
+}
+.sound-content {
+	padding: 5px;
+}
+.list-border {
+	border: 1px solid rgb(55, 60, 62);
+	border-top: none;
+}
+.list-border > li {
+	overflow-wrap: break-word;
+}
+.button-create {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	padding-left: unset;
+}
+.audio-player {
+	width: 100%;
+}
+[/CSS]
+
+[JS]
+document.getElementById('music-delete-ok').addEventListener('click', () => {
+	UIkit.modal('#modal-delete-music').hide();
+});
+[/JS]

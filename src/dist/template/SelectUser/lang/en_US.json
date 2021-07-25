@@ -1,0 +1,18 @@
+{
+	"Title" : "Mapcraft",
+	"User-Selection" : "Choose your in-game username, or create it if not present",
+	"Username": "Username",
+	"Remember": "Remembering my choice",
+	"Create" : "Create",
+	"Choose" : "Choose",
+	"Modal" : {
+		"Title": "Enter new username",
+		"Submit": "Submit",
+		"Error" : {
+			"IsExist" : "This username already exists",
+			"UserNotExist": "This username is not registered on Minecraft.net",
+			"NoUser": "No usernames have been selected",
+			"SQLerror" : "An error has occurred, try again later"
+		}
+	}
+}

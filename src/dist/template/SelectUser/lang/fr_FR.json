@@ -1,0 +1,18 @@
+{
+	"Title" : "Mapcraft",
+	"User-Selection" : "Choisissez votre nom d'utilisateur du jeu, ou créer-le si non présent",
+	"Username": "Nom d'utilisateur",
+	"Remember": "Se souvenir de mon choix",
+	"Create" : "Créer",
+	"Choose" : "Sélectionné",
+	"Modal" : {
+		"Title": "Entrer un nom d'utilisateur",
+		"Submit": "Soumettre",
+		"Error" : {
+			"IsExist" : "Ce nom d'utilisateur existe déjà",
+			"UserNotExist": "Ce nom d'utilisateur n'existe pas sur Minecraft",
+			"NoUser": "Aucun nom d'utilisateur n'a été sélectionné",
+			"SQLerror" : "Une erreur est survenu, réessayer ultérieurement"
+		}
+	}
+}

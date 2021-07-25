@@ -1,0 +1,15 @@
+{
+	"category": ["select", "none", "ambient", "block", "hostile", "master", "music", "neutral", "player", "record", "voice", "weather"],
+	"replace": "switch",
+	"subtitle": "input",
+	"sounds" : {
+		"attenuation_distance": ["range", "16", "0", "32", "1"],
+		"name": "group",
+		"pitch": ["range", "1", "0", "2", "0.05"],
+		"preload": "switch",
+		"stream": "switch",
+		"type": ["select", "sound", "event"],
+		"volume": ["range", "1", "0", "2", "0.05"],
+		"weight": ["range", "1", "0", "2", "0.05"]
+	}
+}

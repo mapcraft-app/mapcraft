@@ -1,0 +1,23 @@
+[HTML]
+<form id="start-option" class="uk-form-horizontal">
+	<div id="option-general-path"></div>
+	<div id="option-general-lang">
+		<div class="uk-margin">
+			<label class="uk-form-label" for="option-Lang" lang="TagLang"></label>
+			<div class="uk-form-controls">
+				<select class="uk-select" id="option-Lang"></select>
+			</div>
+		</div>
+	</div>
+	<div class="uk-flex uk-flex-right">
+		<button id="option-button-reset" class="uk-button uk-button-default space-button" type="button" lang="Button.Reset"></button>
+		<button id="option-button-save" class="uk-button uk-button-primary" type="button" lang="Button.Save"></button>
+	</div>
+</form>
+[/HTML]
+
+[CSS]
+.space-button {
+	margin-right: 1em;
+}
+[/CSS]

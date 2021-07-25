@@ -1,0 +1,213 @@
+[HTML]
+<div class="uk-container">
+	<div class="uk-flex uk-flex-right uk-flex-middle uk-flex-between">
+		<div class="check-margin">
+			<input id="checkbox-trigger" class="uk-checkbox uk-margin-right" type="checkbox">
+			<label for="checkbox-trigger" lang="SelectEveryTrigger"></label>
+		</div>
+		<button class="uk-button uk-button-primary" uk-toggle="target: #triggerModalCreate" lang="CreateTrigger"></button>
+	</div>
+	<div id="tab" class="uk-overflow-auto">
+		<table class="uk-table uk-table-striped uk-table-middle">
+			<thead>
+				<tr>
+					<th class="uk-table-shrink"></th>
+					<th class="uk-table-shrink" lang="Tab.ID"></th>
+					<th class="uk-table-expand" lang="Tab.Name"></th>
+					<th lang="Tab.X1"></th>
+					<th lang="Tab.Y1"></th>
+					<th lang="Tab.Z1"></th>
+					<th lang="Tab.X2"></th>
+					<th lang="Tab.Y2"></th>
+					<th lang="Tab.Z2"></th>
+					<th class="uk-table-shrink"></th>
+					<th class="uk-table-shrink"></th>
+					<th class="uk-table-shrink"></th>
+				</tr>
+			</thead>
+			<tbody id="trigger-tab">
+			</tbody>
+		</table>
+	</div>
+	<div class="uk-margin uk-flex uk-flex-middle uk-flex-middle uk-flex-between">
+		<button id="full-delete-tab" class="uk-button uk-button-warning">
+			<span uk-icon="trash"></span>
+		</button>
+	</div>
+	<!-- Create -->
+	<div id="PrintCreateUserModal">
+		<div uk-modal class="uk-flex-top uk-modal-container" id="triggerModalCreate" container="#PrintCreateUserModal">
+			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<h3 class="uk-text-center" lang="CreateTrigger"></h3>
+				<div id="form-trigger-alert"></div>
+				<form id="form-trigger-create">
+					<div class="uk-margin uk-form-horizontal">
+						<label class="uk-form-label" for="trigger-form-name" lang="Tab.Name"></label>
+						<div class="uk-form-controls">
+							<input class="uk-input" id="trigger-form-name" type="text" placeholder="...">
+						</div>
+					</div>
+					<div class="uk-margin uk-grid-divider uk-text-center" uk-grid>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-x1" lang="Tab.X1"></label>
+							<input class="uk-input" id="trigger-form-x1" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-y1" lang="Tab.Y1"></label>
+							<input class="uk-input" id="trigger-form-y1" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-z1" lang="Tab.Z1"></label>
+							<input class="uk-input" id="trigger-form-z1" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-x2" lang="Tab.X2"></label>
+							<input class="uk-input" id="trigger-form-x2" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-y2" lang="Tab.Y2"></label>
+							<input class="uk-input" id="trigger-form-y2" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-Z2" lang="Tab.Z2"></label>
+							<input class="uk-input" id="trigger-form-z2" type="number" value="0">
+						</div>
+					</div>
+					<div class="uk-flex uk-flex-right">
+						<button id="form-trigger-alert-button" type="submit" class="uk-button uk-button-primary" lang="Create"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modify -->
+	<div id="PrintModifyUserModal">
+		<div uk-modal class="uk-flex-top uk-modal-container" id="triggerModalEdit" container="#PrintModifyUserModal">
+			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<h3 class="uk-text-center" lang="ModifyTrigger"></h3>
+				<div id="form-trigger-alert"></div>
+				<form id="form-trigger-edit">
+					<input class="uk-hidden" type="number" id="trigger-form-edit-id">
+					<div class="uk-margin uk-form-horizontal">
+						<label class="uk-form-label" for="trigger-form-edit-name" lang="Tab.Name"></label>
+						<div class="uk-form-controls">
+							<input class="uk-input" id="trigger-form-edit-name" type="text" placeholder="...">
+						</div>
+					</div>
+					<div class="uk-margin uk-grid-divider uk-text-center" uk-grid>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-edit-x1" lang="Tab.X1"></label>
+							<input class="uk-input" id="trigger-form-edit-x1" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-edit-y1" lang="Tab.Y1"></label>
+							<input class="uk-input" id="trigger-form-edit-y1" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-edit-z1" lang="Tab.Z1"></label>
+							<input class="uk-input" id="trigger-form-edit-z1" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-edit-x2" lang="Tab.X2"></label>
+							<input class="uk-input" id="trigger-form-edit-x2" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-edit-y2" lang="Tab.Y2"></label>
+							<input class="uk-input" id="trigger-form-edit-y2" type="number" value="0">
+						</div>
+						<div class="uk-width-1-6">
+							<label class="uk-form-label" for="trigger-form-edit-Z2" lang="Tab.Z2"></label>
+							<input class="uk-input" id="trigger-form-edit-z2" type="number" value="0">
+						</div>
+					</div>
+					<div class="uk-flex uk-flex-right">
+						<button id="form-trigger-alert-button" type="submit" class="uk-button uk-button-primary" lang="Modify"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]
+
+[CSS]
+.check-margin {
+	margin-left: 12px !important;
+}
+[/CSS]
+
+[JS]
+window.api.receive('Trigger:open-modal', (command) => {
+	document.getElementById('trigger-form-x1').value = command.Coordinates.P1[0];
+	document.getElementById('trigger-form-y1').value = command.Coordinates.P1[1];
+	document.getElementById('trigger-form-z1').value = command.Coordinates.P1[2];
+	document.getElementById('trigger-form-x2').value = command.Coordinates.P2[0];
+	document.getElementById('trigger-form-y2').value = command.Coordinates.P2[1];
+	document.getElementById('trigger-form-z2').value = command.Coordinates.P2[2];
+	UIkit.modal('#triggerModalCreate').show();
+});
+
+/* Edit from */
+for (let input of document.querySelectorAll('button[name="form-button-edit"]'))
+{
+	input.addEventListener('click', (event) => {
+		let tr = input.parentNode.parentNode.childNodes;
+		let id = 0;
+		for (td of tr)
+		{
+			if (td.nodeName !== '#text')
+			{
+				if (id > 0 && id < 9)
+				{
+					if (id === 1)
+						document.getElementById('trigger-form-edit-id').value = td.innerHTML;
+					else if (id === 2)
+						document.getElementById('trigger-form-edit-name').value = td.innerHTML;
+					else if (id === 3)
+						document.getElementById('trigger-form-edit-x1').value = td.innerHTML;
+					else if (id === 4)
+						document.getElementById('trigger-form-edit-y1').value = td.innerHTML;
+					else if (id === 5)
+						document.getElementById('trigger-form-edit-z1').value = td.innerHTML;
+					else if (id === 6)
+						document.getElementById('trigger-form-edit-x2').value = td.innerHTML;
+					else if (id === 7)
+						document.getElementById('trigger-form-edit-y2').value = td.innerHTML;
+					else if (id === 8)
+						document.getElementById('trigger-form-edit-z2').value = td.innerHTML;
+				}
+				id++;
+			}
+		}
+		UIkit.modal('#triggerModalEdit').show();
+	});
+}
+
+/* Multi selection */
+document.querySelector('#checkbox-trigger').addEventListener('click', (event) => {
+	event.stopImmediatePropagation();
+	if (document.querySelector('#checkbox-trigger').checked)
+	{
+		for (let input of document.querySelectorAll('input[name="form-checkbox"]'))
+		{
+			if (!input.checked)
+				input.checked = true;
+		}
+	}
+	else
+	{
+		for (let input of document.querySelectorAll('input[name="form-checkbox"]'))
+		{
+			if (input.checked)
+				input.checked = false;
+		}
+	}
+});
+
+document.querySelector('input[name="form-checkbox"]').addEventListener('click', (event) => {
+	if (document.querySelector('#checkbox-trigger').checked)
+		document.querySelector('#checkbox-trigger').checked = false;
+});
+[/JS]

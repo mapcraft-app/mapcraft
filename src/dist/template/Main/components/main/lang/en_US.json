@@ -1,0 +1,11 @@
+{
+	"Title": "Mapcraft",
+	"Log": "Log file",
+	"LogInfo" : "Display the last 100 lines of the file",
+	"ChangeUser": "Change user",
+	"WorkInProgress" : "Work in progress",
+	"Editor": {
+		"Cancel": "Cancel",
+		"Save": "Save"
+	}
+}

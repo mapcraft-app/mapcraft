@@ -1,0 +1,44 @@
+[HTML]
+<div class="header">
+	<h1 class="uk-text-center" lang="ChooseWorld"></h1>
+</div>
+<div class="body">
+	<div id="start-selection" class="uk-card uk-child-width-1-4@s uk-grid-small uk-grid-match" uk-grid></div>
+</div>
+<div class="footer">
+	<div>
+		<a href="#modal-option" uk-icon="icon: cog; ratio:2.5" uk-toggle></a>
+		<div id="modal-option" class="uk-modal-container" uk-modal>
+			<div class="uk-modal-dialog uk-margin-auto-vertical">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<div class="uk-modal-header">
+					<h2 class="uk-modal-title" lang="Option.Option"></h2>
+				</div>
+				<div class="uk-modal-body" uk-overflow-auto>
+					<form id="start-option" class="uk-form-horizontal"></form>
+				</div>
+				<div class="uk-modal-footer uk-text-right">
+					<button id="option-button-reset" class="uk-button uk-button-default" type="button" lang="Option.Reset"></button>
+					<button id="option-button-save" class="uk-button uk-button-primary" type="button" lang="Option.Save"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div id="modal-loadSave" class="uk-flex-top" uk-modal="bg-close:false; esc-close:false;">
+			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical uk-overflow-auto">
+				<div class="uk-flex-inline uk-flex-middle">
+					<img class="img-work-in-progress" src="dist/img/loader.gif"/>
+					<h3 style="margin-left: 1em;" lang="SaveLoading"></h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]
+
+[CSS]
+.img-work-in-progress {
+	width: 64px;
+}
+[/CSS]

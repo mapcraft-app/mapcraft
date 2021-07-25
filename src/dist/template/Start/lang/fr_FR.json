@@ -1,0 +1,20 @@
+{
+	"Title": "Page de démarrage",
+	"ChooseWorld": "Choisissez votre monde",
+	"SaveLoading" : "Les données du monde sont en cours de chargement",
+	"Option": {
+		"Option" : "Option",
+		"Reset" : "Réinitialiser",
+		"Save" : "Sauvegarder",
+		"TagTemp": "Chemin vers le dossier tampon",
+		"TagGame": "Chemin vers le dossier du jeu", 
+		"TagSave": "Chemin vers le dossier des sauvegardes",
+		"TagLang": "Définir la langue",
+		"TagResource" : "Nom du pack de ressource",
+		"TagData" : "Nom du pack de données"
+	},
+	"Error": {
+		"DirectoryNotExist" : "Le dossier n'existe pas",
+		"NotMinecraftSaveDirectory" : "Ce n'est probablement pas le répertoire de sauvegarde de Minecraft, vérifiez le chemin dans les options"
+	}
+}

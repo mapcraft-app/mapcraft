@@ -1,0 +1,18 @@
+[HTML]
+<li id="{ID}" music="{Name}" link="{Link}" {Class}>
+	<a class="uk-accordion-title" href="#">{Name}</a>
+	<div class="uk-accordion-content">
+		<ul class="uk-list">
+			{List}
+		</ul>
+	</div>
+</li>
+[/HTML]
+
+[CSS]
+.boolean-badge {
+	border-radius: 1.0em;
+	padding: 0.3em;
+	line-height: initial;
+}
+[/CSS]
