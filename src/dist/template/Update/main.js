@@ -19,9 +19,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		await Update.checkUpdate();
 		let data = Update.getJson();
 
-		/*if (data.count === 0)
+		if (data.count === 0)
 			IPC.send('Update:close-modal');
-		else */if (data.count === 1)
+		else if (data.count === 1)
 			document.getElementById('text-title').innerText = Component.getLang().One;
 		else
 			document.getElementById('text-title').innerText = Component.getLang().Multi;
