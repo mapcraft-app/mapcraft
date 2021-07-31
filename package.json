@@ -7,15 +7,16 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-
     "make-linux": "electron-forge make --platform linux",
     "make-mac": "electron-forge make --platform darwin",
     "make-windows": "electron-forge make",
-
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
-  "keywords": ["mapcraft", "minecraft"],
+  "keywords": [
+    "mapcraft",
+    "minecraft"
+  ],
   "author": "Clément Bertrand",
   "license": "GPL-3.0",
   "config": {
@@ -42,13 +43,17 @@
         },
         {
           "name": "@electron-forge/maker-zip",
-          "platforms": ["darwin", "win32"]
+          "platforms": [
+            "darwin",
+            "win32"
+          ]
         }
       ]
     }
   },
   "dependencies": {
     "adm-zip": "^0.5.5",
+    "axios": "^0.21.1",
     "better-sqlite3": "^7.1.5",
     "bezier-easing": "^2.1.0",
     "electron-squirrel-startup": "^1.0.0",

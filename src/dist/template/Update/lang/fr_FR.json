@@ -1,0 +1,19 @@
+{
+	"Update": "Mise à jour",
+	"Later": "Plus tard",
+	"Software": "Logiciel",
+	"Datapack": "Datapack",
+	"ResourcePack": "Resourcepack",
+	"Multi": "Des mises à jours sont disponibles, souhaitez-vous les installer ?",
+	"One": "Une mise à jour est disponible, souhaitez-vous l'installer ?",
+	"IsUpdate": {
+		"Software": "Une mise à jour logiciel est disponible",
+		"Datapack": "Une mise à jour du datapack est disponible",
+		"ResourcePack": "Une mise à jour du resourcepack est disponible"
+	},
+	"IsNotUpdate": {
+		"Software": "Vous utilisez la dernière version du logiciel",
+		"Datapack": "Vous utilisez la dernière version du datapack",
+		"ResourcePack": "Vous utilisez la dernière version du resourcepack"
+	}
+}

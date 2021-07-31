@@ -9,6 +9,7 @@ let Channel = {
 	Plugin: ['is-changed', 'update-interface'],
 	Shell: ['send-command', 'new-command', 'execute-command'],
 	Start: ['is-selected-world'],
+	Update: ['create-modal', 'close-modal', 'make-update'],
 	User: ['close-window', 'change-username', 'remove-blur'],
 	WorkProgress: ['signal-open-modal', 'open-modal', 'signal-close-modal', 'close-modal'],
 	

@@ -1,0 +1,57 @@
+[HTML]
+<div id="form" class="uk-container uk-margin-top uk-flex uk-flex-column uk-flex-between body-height">
+	<dl class="uk-description-list uk-description-list-divider">
+		<dt lang="Software"></dt>
+		<dd id="text-software">
+			<div uk-spinner></div>
+		</dd>
+		
+		<dt lang="Datapack"></dt>
+		<dd id="text-datapack">
+			<div uk-spinner></div>
+		</dd>
+		
+		<dt lang="ResourcePack"></dt>
+		<dd id="text-resourcepack">
+			<div uk-spinner></div>
+		</dd>
+	</dl>
+	<div>
+		<h3 id="text-title"></h3>
+		<div class="uk-flex uk-flex-around uk-flex-wrap">
+			<button id="close-update" class="uk-button uk-button-danger" lang="Later"></button>
+			<button id="make-update" class="uk-button uk-button-success" lang="Update"></button>
+		</div>
+	</div>
+</div>
+<div id="spinner-update" class="uk-flex uk-flex-middle uk-flex-center" style="height: 100%; display: none;">
+	<img class="img-work-in-progress" src="dist/img/loader.gif"/>
+</div>
+[/HTML]
+
+[CSS]
+html {
+	height: 100%;
+}
+body {
+	height: 90%;
+}
+.body-height {
+	height: 100%;
+}
+.uk-description-list > dt {
+    color: rgb(211, 207, 201);
+}
+
+#text-title {
+	text-align: center;
+}
+.span-download {
+	margin-right: 1em;
+    color: goldenrod;
+}
+.span-check {
+	margin-right: 1em;
+    color: green;
+}
+[/CSS]

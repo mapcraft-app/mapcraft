@@ -1,14 +1,17 @@
-const { app, BrowserWindow, ipcMain, dialog, ipcRenderer } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
+const AdmZip = require('adm-zip');
 const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
 const User = require('./dist/js/MCuser');
 const MCeditor = require('./dist/js/MCeditor');
 
+
 //#region Variables
-var StartWindow = null, MainWindow = null, SelectUserChild = null;
+var StartWindow = null, MainWindow = null, SelectUserChild = null, UpdateWindow = null;
 var IsSelectedUser = false;
-let PassFirstStep = false;
+let PassFirstStep = true;
 //#endregion
 
 //#region Main system
@@ -223,6 +226,47 @@ ipcMain.on('WorkProgress:signal-open-modal', (event) => {
 });
 ipcMain.on('WorkProgress:signal-close-modal', (event) => {
 	event.reply('WorkProgress:close-modal');
+});
+//#endregion
+
+//#region Update system
+ipcMain.on('Update:create-modal', (event) => {
+	UpdateWindow = new BrowserWindow({
+		width: 640,
+		height: 480,
+		center: true,
+		show: false,
+		titleBarStyle: 'hidden',
+		parent: MainWindow,
+		modal: true,
+		frame: true,
+		icon: path.join(__dirname, '/dist/img/icon/icon.ico'),
+		webPreferences: {
+			nodeIntegration: false,
+			contextIsolation: true,
+			enableRemoteModule: false,
+			preload: path.join(__dirname, '/dist/template/Update/main.js')
+		}
+	});
+	UpdateWindow.setMenuBarVisibility(false);
+	MCwindow.OpenWindow(UpdateWindow, path.join(__dirname, './index.html'));
+	UpdateWindow.once('ready-to-show', () => {
+		UpdateWindow.show();
+	});
+});
+ipcMain.on('Update:close-modal', (event) => {
+	UpdateWindow.close();
+});
+ipcMain.on('Update:make-update', (event, _path) => {
+	if (SelectUserChild) SelectUserChild.close();
+	if (UpdateWindow) UpdateWindow.close();
+	if (MainWindow) MainWindow.close();
+	
+	let Resource = new AdmZip(_path);
+	Resource.extractAllTo(path.join(__dirname, '../'), true);
+	fs.rm(path.join(__dirname, 'temp'), { recursive: true, force: true });
+	app.relaunch()
+	app.exit()
 });
 //#endregion
 //#endregion

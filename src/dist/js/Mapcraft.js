@@ -5,8 +5,9 @@ const Process = require('process');
 
 // API const
 const OSType = OS.platform();
-const APIVersion = '0.0.1';
-const DefaultLang = 'en_US';
+const pack = JSON.parse(fs.readFileSync(path.join(__dirname, '../../manifest'), {encoding: 'utf-8', flag: 'r'}));
+const APIVersion = pack.version;
+const DefaultLang = pack.default_lang;
 const ComponentsLink = path.join(__dirname, '../template/Main/components.json');
 
 class MC

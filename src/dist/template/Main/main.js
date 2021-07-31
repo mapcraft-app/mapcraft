@@ -131,6 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	IPC.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), MCplugin.Default().Title);
 	IPC.receive('User:remove-blur', () => {
 		blurWindow();
+		IPC.send('Update:create-modal');
 		MCplugin.Instance('Main').header();
 		/* If option plugin is open, reload user table for correct info */
 		if (localStorage.getItem('Mapcraft_Plugin') && localStorage.getItem('Mapcraft_Plugin') === 'Option')
