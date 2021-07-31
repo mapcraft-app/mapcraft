@@ -7,9 +7,10 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "make-full": "electron-forge make --platform linux; electron-forge make --platform darwin; electron-forge make --platform win32",
     "make-linux": "electron-forge make --platform linux",
     "make-mac": "electron-forge make --platform darwin",
-    "make-windows": "electron-forge make",
+    "make-windows": "electron-forge make --platform win32",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
@@ -22,7 +23,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "./src/dist/img/icon"
+        "icon": "./src/dist/img/icon/icon"
       },
       "makers": [
         {
