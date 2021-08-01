@@ -24,7 +24,7 @@ class MCwindow
 	static OpenWindow(windowInstance, page) {
 		windowInstance.setMenuBarVisibility(false);
 		windowInstance.loadFile(page);
-		windowInstance.webContents.openDevTools();
+		//windowInstance.webContents.openDevTools();
 	}
 }
 
