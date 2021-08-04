@@ -11,7 +11,7 @@ build:
     - yarn
     - yarn make-full
   artifacts:
-    path:
+    paths:
       - out/make/
     expire_in: never
 
