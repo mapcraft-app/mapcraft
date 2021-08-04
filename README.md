@@ -1,4 +1,4 @@
-![logo](https://gitlab.com/cbertran/mapcraft/-/raw/main/src/dist/img/icon/icon.png "Logo")
+![logo](https://gitlab.com/cbertran/mapcraft/-/raw/main/src/dist/img/icon/icon_small.png "Logo")
 
 [![pipeline status](https://gitlab.com/cbertran/mapcraft/badges/main/pipeline.svg)](https://gitlab.com/cbertran/mapcraft/-/commits/main)
 
