@@ -1,5 +1,9 @@
 ![logo](https://gitlab.com/cbertran/mapcraft/-/raw/main/src/dist/img/icon/icon.png "Logo")
 
+[![pipeline status](https://gitlab.com/cbertran/mapcraft/badges/main/pipeline.svg)](https://gitlab.com/cbertran/mapcraft/-/commits/main)
+
+---
+
 ## Mapcraft is a software to increase the native possibilities of Minecraft Java edition without any mod installation
 
 ## Setup
