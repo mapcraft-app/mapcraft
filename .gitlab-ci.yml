@@ -1,6 +1,6 @@
 stages:
   - build
-  - release
+#  - release
 
 build:
   stage: build
@@ -14,12 +14,10 @@ build:
     path:
       - out/make/
     expire_in: never
-  rules:
-    - if: 
 
-release:
-  stage: release
-  image
+#release:
+#  stage: release
+#  image
     
 #deploy-job:
 #  stage: deploy 
