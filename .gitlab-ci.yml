@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  image: node:16
+  image: electronuserland/builder:wine
   script:
     - echo "Building stage"
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
@@ -12,8 +12,8 @@ build:
     - yarn make-full
   artifacts:
     paths:
-      - out/make/
-    expire_in: never
+      - ./dist/
+    expire_in: 30 days
 
 #release:
 #  stage: release
