@@ -1,0 +1,28 @@
+stages:
+  - build
+  - release
+
+build:
+  stage: build
+  image: node:16
+  script:
+    - echo "Building stage"
+    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
+    - yarn
+    - yarn make-full
+  artifacts:
+    path:
+      - out/make/
+    expire_in: never
+  rules:
+    - if: 
+
+release:
+  stage: release
+  image
+    
+#deploy-job:
+#  stage: deploy 
+#  script:
+#    - echo "Deploying application..."
+#    - echo "Application successfully deployed."
