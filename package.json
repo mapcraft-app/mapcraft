@@ -23,7 +23,8 @@
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "pack": "electron-builder -mwl --x64 --dir ",
-    "dist": "electron-builder -mwl --x64",
+    "dist": "electron-builder -wl --x64",
+    "dist_old": "electron-builder -mwl --x64",
     "postinstall": "electron-builder install-app-deps",
     "lint": "echo \"No linting configured\""
   },
@@ -49,7 +50,6 @@
       ],
       "language": 1033
     },
-
     "mac": {
       "category": "Productivity",
       "icon": "srcs/dist/img/icon/icon.icns",
@@ -70,19 +70,14 @@
         }
       ]
     },
-
     "linux": {
       "icon": "srcs/dist/img/icon/icon.png",
       "target": [
-        "AppImage",
         "deb",
         "rpm"
       ],
       "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
-      "packageCategory": "Development"
-    },
-    "appImage": {
-      "license": "LICENSE"
+      "category": "Development"
     }
   },
   "dependencies": {
@@ -97,6 +92,7 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
+    "dmg-builder": "^22.11.11",
     "electron": "12.0.5",
     "electron-builder": "^22.11.7"
   }
