@@ -9,10 +9,10 @@ build:
     - echo "Building stage"
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
     - yarn
-    - yarn make-full
+    - yarn dist
   artifacts:
     paths:
-      - ./dist/
+      - ./out/
     expire_in: 30 days
 
 #release:

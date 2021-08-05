@@ -1,62 +1,88 @@
 {
   "name": "mapcraft",
+  "description": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
+  "homepage": "https://mapcraft.app",
+  "license": "GPL-3.0",
+  "author": {
+    "name": "Clément Bertrand",
+    "email": "hello@mapcraft.app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/cbertran/mapcraft.git"
+  },
   "productName": "mapcraft",
   "version": "0.1.0-alpha",
-  "description": "Mapcraft software",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make-full": "electron-forge make --platform linux; electron-forge make --platform darwin; electron-forge make --platform win32",
-    "make-linux": "electron-forge make --platform linux",
-    "make-mac": "electron-forge make --platform darwin",
-    "make-windows": "electron-forge make --platform win32",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
-  },
   "keywords": [
     "mapcraft",
     "minecraft"
   ],
-  "author": "Clément Bertrand",
-  "license": "GPL-3.0",
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "./src/dist/img/icon/icon"
-      },
-      "makers": [
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "publish": "electron-forge publish",
+    "pack": "electron-builder -mwl --x64 --dir ",
+    "dist": "electron-builder -mwl --x64",
+    "postinstall": "electron-builder install-app-deps",
+    "lint": "echo \"No linting configured\""
+  },
+  "build": {
+    "appId": "com.electron.mapcraft",
+    "productName": "mapcraft",
+    "copyright": "Copyright (C) 2020 - ...  Clément Bertrand",
+    "directories": {
+      "output": "out"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "srcs/dist/img/icon/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "license": "LICENSE",
+      "installerLanguages": [
+        "en_US",
+        "fr_FR"
+      ],
+      "language": 1033
+    },
+
+    "mac": {
+      "category": "Productivity",
+      "icon": "srcs/dist/img/icon/icon.icns",
+      "target": "dmg"
+    },
+    "dmg": {
+      "backgroundColor": "#181a1b",
+      "contents": [
         {
-          "name": "@electron-forge/maker-deb",
-          "config": {
-            "options": {
-              "maintainer": "Clément Bertrand"
-            }
-          }
+          "x": 110,
+          "y": 150
         },
         {
-          "name": "@electron-forge/maker-rpm",
-          "config": {
-            "options": {
-              "maintainer": "Clément Bertrand"
-            }
-          }
-        },
-        {
-          "name": "@electron-forge/maker-wix",
-          "config": {
-            "language": 1033,
-            "manufacturer": "Clément Bertrand"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin",
-            "win32"
-          ]
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
         }
       ]
+    },
+
+    "linux": {
+      "icon": "srcs/dist/img/icon/icon.png",
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
+      "packageCategory": "Development"
+    },
+    "appImage": {
+      "license": "LICENSE"
     }
   },
   "dependencies": {
@@ -71,12 +97,7 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
-    "@electron-forge/maker-deb": "^6.0.0-beta.54",
-    "@electron-forge/maker-pkg": "^6.0.0-beta.54",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
-    "@electron-forge/maker-wix": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "electron": "12.0.5",
-    "electron-wix-msi": "^3.2.0"
+    "electron-builder": "^22.11.7"
   }
 }
