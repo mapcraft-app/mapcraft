@@ -67,7 +67,7 @@ class Template
 
 			if (!fs.existsSync(this.DIRLink))
 			{
-				fs.mkdirSync(this.DIRLink);
+				fs.mkdirSync(this.DIRLink, '0777', true);
 				generateEverything();
 			}
 			else if (!fs.existsSync(this.LOCKLink) || !fs.readFileSync(this.LOCKLink, 'utf8'))

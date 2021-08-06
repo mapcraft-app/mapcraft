@@ -38,6 +38,7 @@
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - ...  Clément Bertrand",
+    "extends": null,
     "directories": {
       "output": "out"
     },
@@ -50,6 +51,7 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
+      "displayLanguageSelector": true,
       "license": "LICENSE",
       "installerLanguages": [
         "en_US",
