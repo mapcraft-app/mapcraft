@@ -48,7 +48,7 @@
         "zip"
       ],
       "icon": "src/dist/img/icon/icon.ico",
-      "artifactName": "${productName}_${version}_${os}.${ext}"
+      "artifactName": "${productName}_${os}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -64,7 +64,7 @@
     "mac": {
       "category": "Productivity",
       "icon": "src/dist/img/icon/icon.icns",
-      "artifactName": "${productName}_${version}_${os}.${ext}",
+      "artifactName": "${productName}_${os}.${ext}",
       "target": [
         "dmg",
         "zip"
@@ -87,7 +87,7 @@
     },
     "linux": {
       "icon": "src/dist/img/icon/icon.png",
-      "artifactName": "${productName}_${version}_${os}.${ext}",
+      "artifactName": "${productName}_${os}.${ext}",
       "target": [
         "deb",
         "rpm",
