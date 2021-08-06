@@ -28,7 +28,7 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - |
-      release-cli create --name "v$CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG --ref $CI_COMMIT_SHA \
+      release-cli create --name "v$CI_COMMIT_TAG_`cat CI_JOB_ID.txt`" --tag-name $CI_COMMIT_TAG --ref $CI_COMMIT_SHA \
       --assets-link "{\"name\":\"Windows setup\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`cat CI_JOB_ID.txt`/artifacts/raw/out/mapcraft_win.exe\"}" \
       --assets-link "{\"name\":\"Windows setup blockmap\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`cat CI_JOB_ID.txt`/artifacts/raw/out/mapcraft_win.exe.blockmap\"}" \
       --assets-link "{\"name\":\"Windows archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`cat CI_JOB_ID.txt`/artifacts/raw/out/mapcraft_win.tar.gz\"}" \
