@@ -43,7 +43,7 @@
       "output": "out"
     },
     "win": {
-      "target": ["nsis", "zip"],
+      "target": ["nsis", "7z"],
       "icon": "src/dist/img/icon/icon.ico",
       "artifactName": "${productName}_${os}.${ext}"
     },
