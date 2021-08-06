@@ -43,10 +43,7 @@
       "output": "out"
     },
     "win": {
-      "target": [
-        "nsis",
-        "zip"
-      ],
+      "target": ["nsis", "zip"],
       "icon": "src/dist/img/icon/icon.ico",
       "artifactName": "${productName}_${os}.${ext}"
     },
@@ -65,10 +62,7 @@
       "category": "Productivity",
       "icon": "src/dist/img/icon/icon.icns",
       "artifactName": "${productName}_${os}.${ext}",
-      "target": [
-        "dmg",
-        "zip"
-      ]
+      "target": ["tar.gz"]
     },
     "dmg": {
       "backgroundColor": "#181a1b",
@@ -88,11 +82,7 @@
     "linux": {
       "icon": "src/dist/img/icon/icon.png",
       "artifactName": "${productName}_${os}.${ext}",
-      "target": [
-        "deb",
-        "rpm",
-        "zip"
-      ],
+      "target": ["deb", "rpm", "tar.gz"],
       "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
       "category": "Development"
     }
