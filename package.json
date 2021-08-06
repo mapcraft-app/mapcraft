@@ -51,6 +51,7 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
       "displayLanguageSelector": true,
       "license": "LICENSE",
       "installerLanguages": [
