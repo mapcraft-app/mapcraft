@@ -23,8 +23,7 @@
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "pack": "electron-builder -mwl --x64 --dir ",
-    "dist": "electron-builder -wl --x64",
-    "dist_old": "electron-builder -mwl --x64",
+    "dist": "electron-builder -mwl --x64",
     "postinstall": "electron-builder install-app-deps",
     "lint": "echo \"No linting configured\""
   },
@@ -43,13 +42,13 @@
       "output": "out"
     },
     "win": {
-      "target": "nsis",
-      "icon": "src/dist/img/icon/icon.ico"
+      "target": ["nsis", "zip"],
+      "icon": "src/dist/img/icon/icon.ico",
+      "artifactName": "${productName}_${version}_${os}.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
-      "artifactName": "${productName}_${version}.${ext}",
       "allowToChangeInstallationDirectory": true,
       "license": "LICENSE",
       "installerLanguages": [
@@ -61,8 +60,8 @@
     "mac": {
       "category": "Productivity",
       "icon": "src/dist/img/icon/icon.icns",
-      "artifactName": "${productName}_${version}.${ext}",
-      "target": "dmg"
+      "artifactName": "${productName}_${version}_${os}.${ext}",
+      "target": ["dmg", "zip"]
     },
     "dmg": {
       "backgroundColor": "#181a1b",
@@ -81,11 +80,8 @@
     },
     "linux": {
       "icon": "src/dist/img/icon/icon.png",
-      "artifactName": "${productName}_${version}.${ext}",
-      "target": [
-        "deb",
-        "rpm"
-      ],
+      "artifactName": "${productName}_${version}_${os}.${ext}",
+      "target": ["deb", "rpm", "zip"],
       "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
       "category": "Development"
     }
