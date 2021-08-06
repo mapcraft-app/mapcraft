@@ -2,7 +2,6 @@ const { contextBridge } = require('electron');
 const path = require('path');
 const IPC = require('../../js/MCipc');
 const MClog = require('../../js/MClog');
-const User = require('../../js/MCuser');
 const MCP = require('../../js/MCplugin'), MCplugin = new MCP();
 
 //#region Set ContextBridge

@@ -3,7 +3,6 @@ const IPC = require('../../js/MCipc');
 const Database = require('better-sqlite3');
 const https = require('https');
 const Component = require('./components');
-const User = require('../../js/MCuser');
 
 var Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 
@@ -21,6 +20,14 @@ function CreateAlert(type, DOMelement, str)
 	DOMelement.appendChild(alert);
 }
 
+function UserConnected(Username)
+{
+	let db = Database(Mapcraft.DBPath, { verbose: console.log });
+	const sql = db.prepare('UPDATE User SET IsConnected = 1 WHERE Username = ?');
+	sql.run(Username);
+	db.close();
+}
+
 function IfUserExist()
 {
 	if (localStorage.getItem('Mapcraft_User'))
@@ -31,8 +38,8 @@ function IfUserExist()
 		let ret = JSON.parse(localStorage.getItem('Mapcraft_User'));
 		if (isUser > 0 && ret.Username && ret.Remember === true)
 		{
-			User.connected(ret.Username, ret.UUID);
-			IPC.send('User:close-window', true);
+			UserConnected(ret.Username);
+			IPC.send('User:close-window', Mapcraft.DBPath, ret);
 		}
 	}
 }
@@ -59,8 +66,8 @@ window.addEventListener('DOMContentLoaded', () => {
 					Remember: Remember
 				};
 				localStorage.setItem('Mapcraft_User', JSON.stringify(ret));
-				User.connected(Username, UUID);
-				IPC.send('User:close-window');
+				UserConnected(Username);
+				IPC.send('User:close-window', Mapcraft.DBPath, ret);
 				return ;
 			}
 		}

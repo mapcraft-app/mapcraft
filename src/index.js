@@ -2,16 +2,21 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const AdmZip = require('adm-zip');
+const Database = require('better-sqlite3');
 const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
-const User = require('./dist/js/MCuser');
 const MCeditor = require('./dist/js/MCeditor');
-
 
 //#region Variables
 var StartWindow = null, MainWindow = null, SelectUserChild = null, UpdateWindow = null;
 var IsSelectedUser = false;
 let PassFirstStep = false;
+
+var SaveCurrentUser = {
+	DBpath: String,
+	Username: String,
+	UUID: String
+}
 //#endregion
 
 //#region Main system
@@ -28,7 +33,10 @@ function QuitServices()
 		return ;
 	const MClink = require('./dist/js/MClink');
 	MClink.cleanComponents();
-	User.disconnected();
+	let db = Database(SaveCurrentUser.DBpath, { verbose: console.log });
+	const sql = db.prepare('UPDATE User SET IsConnected = 0 WHERE Username = ?');
+	sql.run(SaveCurrentUser.Username);
+	db.close();
 }
 
 app.on('ready', () => {
@@ -213,9 +221,12 @@ ipcMain.on('User:change-username', () => {
 	PassFirstStep = true;
 	OpenMainWindow();
 });
-ipcMain.on('User:close-window', () => {
+ipcMain.on('User:close-window', (event, DBPath, JSON) => {
 	IsSelectedUser = true;
 	MainWindow.webContents.send('User:remove-blur');
+	SaveCurrentUser.Username = JSON.Username;
+	SaveCurrentUser.UUID = JSON.UUID;
+	SaveCurrentUser.DBpath = DBPath;
 	SelectUserChild.close();
 });
 //#endregion

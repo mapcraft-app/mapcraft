@@ -8,6 +8,7 @@ build:
   script:
     - echo "Building stage"
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
+    - apt install gconf2 gconf-service libnotify4 libappindicator1 libxtst6 libnss3 
     - yarn
     - yarn dist
   artifacts:

@@ -28,6 +28,13 @@
     "postinstall": "electron-builder install-app-deps",
     "lint": "echo \"No linting configured\""
   },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "src/dist/img/icon/icon"
+      }
+    }
+  },
   "build": {
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
@@ -37,11 +44,12 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "srcs/dist/img/icon/icon.ico"
+      "icon": "src/dist/img/icon/icon.ico"
     },
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
+      "artifactName": "${productName}_${version}.${ext}",
       "allowToChangeInstallationDirectory": true,
       "license": "LICENSE",
       "installerLanguages": [
@@ -52,7 +60,8 @@
     },
     "mac": {
       "category": "Productivity",
-      "icon": "srcs/dist/img/icon/icon.icns",
+      "icon": "src/dist/img/icon/icon.icns",
+      "artifactName": "${productName}_${version}.${ext}",
       "target": "dmg"
     },
     "dmg": {
@@ -71,7 +80,8 @@
       ]
     },
     "linux": {
-      "icon": "srcs/dist/img/icon/icon.png",
+      "icon": "src/dist/img/icon/icon.png",
+      "artifactName": "${productName}_${version}.${ext}",
       "target": [
         "deb",
         "rpm"
@@ -91,7 +101,7 @@
     "read-last-lines": "^1.8.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/cli": "^6.0.0-beta.59",
     "dmg-builder": "^22.11.11",
     "electron": "12.0.5",
     "electron-builder": "^22.11.7"
