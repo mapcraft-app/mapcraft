@@ -43,7 +43,7 @@
       "output": "out"
     },
     "win": {
-      "target": ["nsis", "7z"],
+      "target": ["nsis", "tar.gz"],
       "icon": "src/dist/img/icon/icon.ico",
       "artifactName": "${productName}_${os}.${ext}"
     },
@@ -82,7 +82,7 @@
     "linux": {
       "icon": "src/dist/img/icon/icon.png",
       "artifactName": "${productName}_${os}.${ext}",
-      "target": ["deb", "rpm", "tar.gz"],
+      "target": ["AppImage", "tar.gz"],
       "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
       "category": "Development"
     }
