@@ -7,7 +7,7 @@ build:
   image: electronuserland/builder:wine
   script:
     - echo "Building stage"
-    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
+    - echo "${CI_JOB_ID}" > ./out/CI_JOB_ID.txt
     - yarn
     - yarn dist
   artifacts:
