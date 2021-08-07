@@ -7,17 +7,6 @@ const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
 const MCeditor = require('./dist/js/MCeditor');
 
-var cwd = path.join(__dirname, '..');
-var cp_path;
-if (fs.existsSync(path.join(cwd, 'app.asar')))
-	cp_path = 'app.asar/src';
-else
-{
-	cp_path = './src';
-	cwd = null;
-}
-fs.mkdirSync(cp_path, 0o777, true);
-
 //#region Variables
 var StartWindow = null, MainWindow = null, SelectUserChild = null, UpdateWindow = null;
 var IsSelectedUser = false;
