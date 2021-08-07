@@ -38,7 +38,7 @@
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - ...  Clément Bertrand",
-    "asar": true,
+    "asar": false,
     "asarUnpack": ["**/*"],
     "directories": {
       "output": "out"
