@@ -16,7 +16,7 @@
 			<div uk-spinner></div>
 		</dd>
 	</dl>
-	<div>
+	<div id="validation-button">
 		<h3 id="text-title"></h3>
 		<div class="uk-flex uk-flex-around uk-flex-wrap">
 			<button id="close-update" class="uk-button uk-button-danger" lang="Later"></button>
@@ -53,5 +53,8 @@ body {
 .span-check {
 	margin-right: 1em;
     color: green;
+}
+#validation-button {
+	display: none;
 }
 [/CSS]

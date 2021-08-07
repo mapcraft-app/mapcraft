@@ -1,5 +1,6 @@
 const { contextBridge } = require('electron');
 const path = require('path');
+const Database = require('better-sqlite3');
 const IPC = require('../../js/MCipc');
 const MClog = require('../../js/MClog');
 const MCP = require('../../js/MCplugin'), MCplugin = new MCP();
@@ -110,9 +111,13 @@ IPC.receive('Plugin:update-interface', (plugin, name) => {
 //#region Username system
 function changeUsername()
 {
-	localStorage.removeItem('Mapcraft_User');
 	blurWindow();
-	User.disconnected();
+	const Username = JSON.parse(localStorage.getItem('Mapcraft_User')).Username;
+	const DBPath = JSON.parse(localStorage.getItem('Mapcraft')).DBPath;
+	localStorage.removeItem('Mapcraft_User');
+	let db = Database(DBPath);
+	const sql = db.prepare('UPDATE User SET IsConnected = 0 WHERE Username = ?');
+	sql.run(Username);
 	IPC.send('User:change-username');
 }
 //#endregion

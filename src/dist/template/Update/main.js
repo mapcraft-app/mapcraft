@@ -20,11 +20,15 @@ window.addEventListener('DOMContentLoaded', () => {
 		let data = Update.getJson();
 
 		if (data.count === 0)
+		{
 			IPC.send('Update:close-modal');
+			return ;
+		}
 		else if (data.count === 1)
 			document.getElementById('text-title').innerText = Component.getLang().One;
 		else
 			document.getElementById('text-title').innerText = Component.getLang().Multi;
+		document.getElementById('validation-button').style.display = 'block';
 		
 		if (ifUpdated(data.software, Update.getCurrentVersion().software))
 			document.getElementById('text-software').innerHTML = '<p><span uk-icon="download" class="span-download"></span>'+ Component.getLang().IsUpdate.Software +'</p>';
