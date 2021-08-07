@@ -8,8 +8,7 @@ build:
   script:
     - echo "Building stage"
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
-    - TagVersion=$(cat ./src/manifest | bash ./json.bash software | sed 's/ //g')
-    - echo $TagVersion > TAG_VERSION.txt
+    - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
     - cp ./src/manifest MANIFEST.json
     - yarn
     - yarn dist
@@ -28,8 +27,10 @@ release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
+    - TAG_VERSION=$(cat TAG_VERSION.txt)
+    - echo TAG_VERSION
     - |
-      release-cli create --name "v`cat TAG_VERSION.txt`" --tag-name `cat TAG_VERSION.txt` --ref $CI_COMMIT_SHA \
+      release-cli create --name "v$TAG_VERSION" --tag-name $TAG_VERSION --ref $CI_COMMIT_SHA \
       --assets-link "{\"name\":\"Windows setup\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`cat CI_JOB_ID.txt`/artifacts/raw/out/mapcraft_win.exe\"}" \
       --assets-link "{\"name\":\"Windows setup blockmap\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`cat CI_JOB_ID.txt`/artifacts/raw/out/mapcraft_win.exe.blockmap\"}" \
       --assets-link "{\"name\":\"Windows archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`cat CI_JOB_ID.txt`/artifacts/raw/out/mapcraft_win.zip\"}" \
