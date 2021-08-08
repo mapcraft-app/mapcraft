@@ -91,6 +91,7 @@ class Update {
 			software: res1.data,
 			datapack: res2.data,
 			resourcepack: res3.data,
+			update: res1.data.update,
 			count: 0
 		};
 		if (Object.keys(_data.software).length && _data.software.version !== this.APIVersion.software) _data.count++;
@@ -134,24 +135,22 @@ class Update {
 	}
 	async software()
 	{
-		IPC.send('Update:make-update', "test");
-		/*if (this._OSType === 'win32')
-			this._url = this.json.windows.archive.url;
-		else if (this._OSType === 'darwin')
-			this._url = this.json.macOS.archive.url;
-		else
-			this._url = this.json.linux.archive.url;
-		fs.mkdir(path.join(__dirname, 'temp'), {recursive: false}, (err) => {
-			const _path = path.join(__dirname, 'temp', json.software.version + '.zip');
-			download(json.software.url, _path, (err) => {
+		const temp_dir = path.join(__dirname, '../../../temp');
+		fs.mkdir(temp_dir, {recursive: false}, (err) => {
+			let _download_url;
+			if (OS.platform() === 'win32') _download_url = this.json.software.windows.archive.url;
+			else if (OS.platform() === 'darwin') _download_url = this.json.software.darwin.archive.url;
+			else _download_url = this.json.software.linux.archive.url;
+			const _path = path.join(temp_dir, 'update_archive.zip');
+			download(_download_url, _path, (err) => {
 				if (err)
 				{
 					console.error(err);
 					return ;
 				}
-				IPC.send('Update:make-update', _path);
+				IPC.send('Update:make-update', temp_dir, _path, path.join(temp_dir, 'output'));
 			});
-		});*/
+		});
 	}
 }
 

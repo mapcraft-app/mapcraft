@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const process = require('process');
+const child = require('child_process');
 const path = require('path');
-const fs = require('fs');
-const AdmZip = require('adm-zip');
+const OS = require('os');
 const Database = require('better-sqlite3');
 const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
@@ -268,16 +269,21 @@ ipcMain.on('Update:create-modal', (event) => {
 ipcMain.on('Update:close-modal', (event) => {
 	UpdateWindow.close();
 });
-ipcMain.on('Update:make-update', (event, _path) => {
+ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => {
 	if (SelectUserChild) SelectUserChild.close();
 	if (UpdateWindow) UpdateWindow.close();
 	if (MainWindow) MainWindow.close();
 	
-	let Resource = new AdmZip(_path);
-	Resource.extractAllTo(path.join(__dirname, '../'), true);
-	fs.rm(path.join(__dirname, 'temp'), { recursive: true, force: true });
-	app.relaunch()
-	app.exit()
+	let executable;
+	if (OS.platform() === 'win32') executable = "update.exe";
+	else executable = "update";
+	const EXECUTABLE = path.join(process.cwd(), executable);
+	var update = child.exec(EXECUTABLE, (error, stdout, stderr) => {
+		if (error)
+			throw error;
+	});
+	update.unref();
+	app.exit();
 });
 //#endregion
 //#endregion
