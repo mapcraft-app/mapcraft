@@ -15,5 +15,6 @@
 		"Software": "You are using the latest version of the software",
 		"Datapack": "You are using the latest version of the datapack",
 		"ResourcePack": "You are using the latest version of the resourcepack"
-	}
+	},
+	"UpdateProgress": "The download may take several times depending of the speed of your internet connection"
 }

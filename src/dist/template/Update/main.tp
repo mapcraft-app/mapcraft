@@ -24,8 +24,9 @@
 		</div>
 	</div>
 </div>
-<div id="spinner-update" class="uk-flex uk-flex-middle uk-flex-center" style="height: 100%; display: none;">
+<div id="spinner-update" class="uk-flex uk-flex-middle uk-flex-center" style="height: 100%; display: none; flex-direction: column;">
 	<img class="img-work-in-progress" src="dist/img/loader.gif"/>
+	<h4 class="uk-text-center" lang="UpdateProgress"></h4>
 </div>
 [/HTML]
 

@@ -3,6 +3,10 @@ const process = require('process');
 const child = require('child_process');
 const path = require('path');
 const OS = require('os');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const axios = require('axios');
 const Database = require('better-sqlite3');
 const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
@@ -21,6 +25,80 @@ var SaveCurrentUser = {
 //#endregion
 
 //#region Main system
+
+//#region Update updateSystem
+var UpdateExecutableIsPresent = false;
+function download(url, destination, callback)
+{
+	const file = fs.createWriteStream(destination);
+	let httpMethod;
+	if (url.indexOf(('https://')) !== -1)
+		httpMethod = https;
+	else
+		httpMethod = http;
+	const request = httpMethod.get(url, (response) => {
+		if (response.statusCode !== 200)
+			return callback(response.statusCode + ' error to ' + url);
+		response.pipe(file);
+		file.on('finish', () => {
+			file.close(callback);
+		});
+	});
+	request.on('error', (err) => {
+		fs.unlink(destination);
+		callback(err.message);
+	});
+	file.on('error', (err) => {
+		fs.unlink(destination);
+		callback(err.message);
+	});
+}
+async function Update_UpdateSystem()
+{
+	const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, './manifest'), {encoding: 'utf-8', flag: 'r'}));
+	const plateform = OS.platform();
+	const cwd = process.cwd();
+	const json = await axios({
+		method: 'get',
+		url: 'https://api.mapcraft.app/update'
+	});
+	let _url;
+	let executable;
+	if (plateform === 'win32')
+	{
+		_url = json.data.windows.url;
+		executable = "update.exe";
+	}
+	else if (plateform === 'darwin')
+	{
+		_url = json.data.darwin.url;
+		executable = "update";
+	}
+	else
+	{
+		_url = json.data.linux.url;
+		executable = "update";
+	}
+	const access = path.join(cwd, executable);
+	if (manifest.version.update === json.data.version && fs.existsSync(access))
+	{
+		UpdateExecutableIsPresent = true;
+		return ;
+	}
+	if (fs.existsSync(access)) fs.rmSync(access, {force: true});
+	download(_url, access, (err) => {
+		if (err)
+		{
+			console.error(err);
+			return ;
+		}
+		UpdateExecutableIsPresent = true;
+	});
+}
+
+Update_UpdateSystem();
+//#endregion
+
 function CreateWindow(preload)
 {
 	let window = MCwindow.CreateWindow(1280, 720, preload);
@@ -270,11 +348,19 @@ ipcMain.on('Update:close-modal', (event) => {
 	UpdateWindow.close();
 });
 ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => {
+	let executable;
+	
+	let interval = setInterval(wait, 1000);
+	function wait() {
+		if (UpdateExecutableIsPresent === true)
+			clearInterval(interval);
+		else
+			console.log('Update executable not finish to download, retry in 1s');
+	}
+	
 	if (SelectUserChild) SelectUserChild.close();
 	if (UpdateWindow) UpdateWindow.close();
 	if (MainWindow) MainWindow.close();
-	
-	let executable;
 	if (OS.platform() === 'win32') executable = "update.exe";
 	else executable = "update";
 	const EXECUTABLE = path.join(process.cwd(), executable);

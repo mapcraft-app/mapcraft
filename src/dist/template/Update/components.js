@@ -25,6 +25,10 @@ class Component
 		this.main();
 		Template.updateLang(document.body, LANG);
 	}
+	static cleanNode(node, RemoveParent)
+	{
+		Template.cleanNode(node, RemoveParent);
+	}
 }
 
 module.exports = Component;

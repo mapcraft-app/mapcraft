@@ -104,7 +104,6 @@ class Update {
 	{
 		fs.mkdir(path.join(__dirname, 'temp'), {recursive: false}, () => {
 			const _path = path.join(__dirname, 'temp', json.datapack.version + '.zip');
-			console.log("tata");
 			download(json.datapack.url, _path, (err) => {
 				if (err)
 				{
