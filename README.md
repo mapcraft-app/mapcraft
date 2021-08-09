@@ -2,7 +2,12 @@
 
 ---
 
+[![Website](https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fmapcraft.app)](https://mapcraft.app)
+
+
 ## Mapcraft is a software to increase the native possibilities of Minecraft Java edition without any mod installation
+
+### [Go to the official website](https://mapcraft.app/)
 
 ## Setup
 1. Download the latest stable version [here](https://gitlab.com/cbertran/mapcraft/-/releases)
