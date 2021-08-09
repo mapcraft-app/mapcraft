@@ -2,9 +2,18 @@ const MC = require('../../js/Mapcraft');
 const IPC = require('../../js/MCipc');
 const Database = require('better-sqlite3');
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const Component = require('./components');
 
 var Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+function GetLang()
+{
+	let data;
+	try { data = JSON.parse(fs.readFileSync(path.join(__dirname, './lang', MC.GetConfig().Env.Lang + '.json'))) }
+	catch (err) { throw err }
+	return (data);
+}; let LANG = GetLang();
 
 function CreateAlert(type, DOMelement, str)
 {
@@ -71,7 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				return ;
 			}
 		}
-		CreateAlert('danger', document.getElementById('alert-main'), MC.GetLang().SelectUser.Modal.Error.NoUser);
+		CreateAlert('danger', document.getElementById('alert-main'), LANG.Modal.Error.NoUser);
 	});
 	// Create user
 	document.getElementById('form-createUser').addEventListener('submit', (event) => {
@@ -80,7 +89,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			let db = Database(Mapcraft.DBPath, { verbose: console.log });
 			const sql_User = db.prepare('SELECT Username FROM User WHERE Username = ?');
 			if (sql_User.get(name) !== undefined && sql_User.get(name).Username)
-				CreateAlert('danger', document.getElementById('alert'), MC.GetLang().SelectUser.Modal.Error.IsExist);
+				CreateAlert('danger', document.getElementById('alert'), LANG.Modal.Error.IsExist);
 			else
 			{
 				const sql = db.prepare('INSERT INTO User (Username, UUID) VALUES (?, ?)');
@@ -102,7 +111,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			res => {
 				if (res.statusCode !== 200)
 				{
-					CreateAlert('warning', document.getElementById('alert'), MC.GetLang().SelectUser.Modal.Error.UserNotExist);
+					CreateAlert('warning', document.getElementById('alert'), LANG.Modal.Error.UserNotExist);
 					return ;
 				}
 				else

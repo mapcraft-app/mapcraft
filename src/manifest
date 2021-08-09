@@ -1,9 +1,9 @@
 {
-	"version": {
-		"datapack": "0.1.0-alpha",
-		"resourcepack": "0.1.0-alpha",
-		"software": "0.1.3-alpha",
-		"update": "0.2.0"
-	},
-	"default_lang": "en_US"
+    "version": {
+        "datapack": "0.1.0-alpha",
+        "resourcepack": "0.1.0-alpha",
+        "software": "0.1.3-alpha",
+        "update": "0.2.0"
+    },
+    "default_lang": "en_US"
 }

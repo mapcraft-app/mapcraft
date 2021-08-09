@@ -1,5 +1,5 @@
 {
-	"Mapcraft": ["https://gitlab.com/cbertran/mapcraft-app", "img", "mapcraft.png", "gitlab.com", "/cbertran/mapcraft-app/-/raw/master/LICENSE"],
+	"Mapcraft": ["https://gitlab.com/cbertran/mapcraft", "img", "mapcraft.png", "gitlab.com", "/cbertran/mapcraft/-/raw/main/LICENSE"],
 	"Ace-Editor": ["https://ace.c9.io/", "img", "ace.png", "raw.githubusercontent.com", "/ajaxorg/ace/master/LICENSE"],
 	"adm-zip": ["https://github.com/cthackers/adm-zip", "img", "zip.png", "raw.githubusercontent.com", "/cthackers/adm-zip/master/LICENSE"],
 	"Better-SQLite3": ["https://github.com/JoshuaWise/better-sqlite3/", "img", "better-sqlite3.png", "raw.githubusercontent.com", "/JoshuaWise/better-sqlite3/master/LICENSE"], 
