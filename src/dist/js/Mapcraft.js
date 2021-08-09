@@ -16,6 +16,13 @@ class MC
 	{
 		if (!fs.existsSync('config.json'))
 			this.ResetConfigFile();
+		this.UpdateAPIVersion();
+	}
+	UpdateAPIVersion()
+	{
+		let data = JSON.parse(fs.readFileSync('config.json', {encoding: 'utf-8', flag: 'r'}));
+		data.Env.APIVersion = APIVersion;
+		fs.writeFileSync('config.json', JSON.stringify(data, null, 4));
 	}
 	ResetConfigFile()
 	{

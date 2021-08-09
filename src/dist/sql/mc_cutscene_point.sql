@@ -6,5 +6,6 @@ CREATE TABLE "CutscenePoint" (
 	"Z"				INTEGER,
 	"Rx"			INTEGER,
 	"Ry"			INTEGER,
-	"Duration"		INTEGER
+	"Duration"		INTEGER,
+	"Transition"	TEXT
 );
