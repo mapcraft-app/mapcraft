@@ -95,7 +95,6 @@ async function Update_UpdateSystem()
 		UpdateExecutableIsPresent = true;
 	});
 }
-
 Update_UpdateSystem();
 //#endregion
 
@@ -350,12 +349,12 @@ ipcMain.on('Update:close-modal', (event) => {
 ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => {
 	let executable;
 	
-	let interval = setInterval(wait, 1000);
+	let interval = setInterval(wait, 2000);
 	function wait() {
 		if (UpdateExecutableIsPresent === true)
 			clearInterval(interval);
 		else
-			console.log('Update executable not finish to download, retry in 1s');
+			console.log('Update executable not finish to download, retry in 2s');
 	}
 	
 	if (SelectUserChild) SelectUserChild.close();
@@ -363,11 +362,9 @@ ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => 
 	if (MainWindow) MainWindow.close();
 	if (OS.platform() === 'win32') executable = "update.exe";
 	else executable = "update";
+
 	const EXECUTABLE = path.join(process.cwd(), executable);
-	var update = child.exec(EXECUTABLE, (error, stdout, stderr) => {
-		if (error)
-			throw error;
-	});
+	var update = child.spawn(EXECUTABLE, {detached: true, stdio: ['ignore' /* stdin */, 'ignore' /* stdout */, 'ignore' /* stderr */]});
 	update.unref();
 	app.exit();
 });
