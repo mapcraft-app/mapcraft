@@ -16,12 +16,12 @@ window.addEventListener('DOMContentLoaded', () => {
 		await Update.checkUpdate();
 		let data = Update.getJson();
 
-		/*if (data.count === 0)
+		if (data.count === 0)
 		{
 			IPC.send('Update:close-modal');
 			return ;
 		}
-		else */if (data.count === 1)
+		else if (data.count === 1)
 			document.getElementById('text-title').innerText = Component.getLang().One;
 		else
 			document.getElementById('text-title').innerText = Component.getLang().Multi;
@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			Component.cleanNode(document.getElementById('form'), true);
 			document.body.style.height = '100%';
 			document.getElementById('spinner-update').style.display = 'flex';
-			/*let _async = async () => {
+			let _async = async () => {
 				if (ifUpdated(data.software, Update.getCurrentVersion().software))
 				{
 					if (ifUpdated(data.datapack, Update.getCurrentVersion().datapack))
@@ -66,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
 						await Update.resourcepack();
 					fs.rm(path.join(__dirname, 'temp'), { recursive: true, force: true });
 				}
-			}; _async();*/
+			}; _async();
 		});
 	}; _async();
 });
