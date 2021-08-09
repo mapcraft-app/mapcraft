@@ -41,7 +41,8 @@ window.addEventListener('DOMContentLoaded', () => {
 			document.getElementById('text-resourcepack').innerHTML = '<p><span uk-icon="download" class="span-download"></span>'+ Component.getLang().IsUpdate.ResourcePack +'</p>';
 		else
 			document.getElementById('text-resourcepack').innerHTML = '<p><span uk-icon="check" class="span-check"></span>'+ Component.getLang().IsNotUpdate.ResourcePack +'</p>';
-		
+		IPC.send('Update:open-window');
+
 		document.getElementById('close-update').addEventListener('click', () => {
 			IPC.send('Update:close-modal')
 		});

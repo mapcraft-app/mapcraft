@@ -51,10 +51,9 @@ function IfUserExist()
 			IPC.send('User:close-window', Mapcraft.DBPath, ret);
 		}
 	}
-}
+}; IfUserExist();
 
 window.addEventListener('DOMContentLoaded', () => {
-	IfUserExist();
 	Component.draw();
 	// Submit form
 	document.getElementById('Choose-User').addEventListener('click', (event) => {

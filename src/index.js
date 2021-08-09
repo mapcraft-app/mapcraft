@@ -182,6 +182,7 @@ function OpenMainWindow() {
 	WindowUser();
 	SelectUserChild.once('ready-to-show', () => {
 		SelectUserChild.show();
+		SelectUserChild.focus();
 	});
 	SelectUserChild.on('closed', () => {
 		SelectUserChild = null;
@@ -301,11 +302,13 @@ ipcMain.on('User:change-username', () => {
 });
 ipcMain.on('User:close-window', (event, DBPath, JSON) => {
 	IsSelectedUser = true;
-	MainWindow.webContents.send('User:remove-blur');
 	SaveCurrentUser.Username = JSON.Username;
 	SaveCurrentUser.UUID = JSON.UUID;
 	SaveCurrentUser.DBpath = DBPath;
 	SelectUserChild.close();
+	MainWindow.once('ready-to-show', () => {
+		MainWindow.webContents.send('User:remove-blur');
+	});
 });
 //#endregion
 
@@ -325,10 +328,11 @@ ipcMain.on('Update:create-modal', (event) => {
 		height: 480,
 		center: true,
 		show: false,
+		resizable: false,
 		titleBarStyle: 'hidden',
 		parent: MainWindow,
 		modal: true,
-		frame: true,
+		frame: false,
 		icon: path.join(__dirname, '/dist/img/icon/icon.ico'),
 		webPreferences: {
 			nodeIntegration: false,
@@ -339,9 +343,9 @@ ipcMain.on('Update:create-modal', (event) => {
 	});
 	UpdateWindow.setMenuBarVisibility(false);
 	MCwindow.OpenWindow(UpdateWindow, path.join(__dirname, './index.html'));
-	UpdateWindow.once('ready-to-show', () => {
-		UpdateWindow.show();
-	});
+});
+ipcMain.on('Update:open-window', (event) => {
+	UpdateWindow.show();
 });
 ipcMain.on('Update:close-modal', (event) => {
 	UpdateWindow.close();
