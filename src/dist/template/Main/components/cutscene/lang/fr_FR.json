@@ -22,6 +22,10 @@
 		"AddPointError": "Il est impossible d'ajouter un point si aucune cinématique n'est sélectioné",
 		"GenerateError": "Aucune cinématique n'a été sélectioné",
 		"StartPoint": "Départ",
+		"Files": {
+			"Start": "Modifier la fonction de départ",
+			"End": "Modifier la fonction de fin"
+		},
 		"TypeError": {
 			"Incorrect": "Le type de données reçu est incorrecte, attendu",
 			"Received": "reçu",

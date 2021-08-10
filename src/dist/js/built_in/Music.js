@@ -3,7 +3,7 @@ const fs = require('fs');
 const MCfs = require('../MCfs');
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const MainPath = path.join(Mapcraft.Mapcraft, 'data/mapcraft/functions/built_in/music/main.mcfunction');
+const MainPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/music/execute.mcfunction');
 
 class Music
 {

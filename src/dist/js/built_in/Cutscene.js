@@ -7,7 +7,7 @@ const MCP = require('../MCplugin'), MCplugin = new MCP();
 var LANG = MCplugin.Lang('Cutscene');
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const MainPath = path.join(Mapcraft.Mapcraft, 'data/mapcraft/functions/built_in/cutscene/main.mcfunction');
+const MainPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene/start.mcfunction');
 const CutsceneDir = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene');
 
 function CreateAlert(type, DOMelement, str)

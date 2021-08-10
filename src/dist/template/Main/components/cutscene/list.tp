@@ -37,11 +37,6 @@
 	</td>
 
 	<td>
-		<button point="{Point}" id="edit" name="form-button-modify" class="uk-button uk-button-warning">
-			<span class="table-icon" uk-icon="file-edit"></span>
-		</button>
-	</td>
-	<td>
 		<button point="{Point}" id="delete" name="point-delete" class="uk-button uk-button-danger">
 			<span class="table-icon" uk-icon="trash"></span>
 		</button>

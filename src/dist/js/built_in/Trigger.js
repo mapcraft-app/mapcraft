@@ -3,12 +3,12 @@ const fs = require('fs');
 const MCfs = require('../MCfs');
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const DetectPath = path.join(Mapcraft.Mapcraft, 'data/mapcraft/functions/built_in/trigger/zone/detect.mcfunction');
-const ExecutePath = path.join(Mapcraft.Mapcraft, 'data/mapcraft/functions/built_in/trigger/zone/execute.mcfunction');
+const DetectPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/trigger/detect.mcfunction');
+const ExecutePath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/trigger/execute.mcfunction');
 
 class Trigger
 {
-	static CreateTrigger(ID, x1, y1, z1, x2, y2, z2, IsEdit)
+	static CreateTrigger(ID, x1, y1, z1, x2, y2, z2, IsEdit = false)
 	{
 		let TriggerPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/trigger', ID.toString());
 		let data = [
@@ -25,10 +25,10 @@ class Trigger
 				throw err;
 			fs.writeFileSync(path.join(TriggerPath, 'detect.mcfunction'), data.join(''), { flag: 'w' }, 'utf8');
 			fs.writeFileSync(path.join(TriggerPath, 'execute.mcfunction'), '', { flag: 'w' }, 'utf8');
-			if (!IsEdit || IsEdit === undefined)
+			if (IsEdit === false || IsEdit === undefined)
 			{
-				MCfs.AddLine(DetectPath, 'function mapcraft-data:trigger/'+ ID.toString() +'/detect\n');
-				MCfs.AddLine(ExecutePath, 'execute if score @s MC_Trigger matches '+ ID.toString() +' run function mapcraft-data:trigger/'+ ID.toString() +'/execute\n');
+				MCfs.AddLine(DetectPath, 'function mapcraft-data:trigger/'+ ID.toString() +'/detect.mcfunction\n');
+				MCfs.AddLine(ExecutePath, 'execute if score @s MC_Trigger matches '+ ID.toString() +' run function mapcraft-data:trigger/'+ ID.toString() +'/execute.mcfunction\n');
 			}
 		});
 	}

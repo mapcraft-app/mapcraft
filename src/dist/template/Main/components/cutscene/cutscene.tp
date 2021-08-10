@@ -65,8 +65,15 @@
 				<span uk-icon="icon: clock; ratio: 1.5"></span>
 				<span generate-time></span>
 			</h4>
-			
 		</div>
+	</div>
+	<div id="edit-button" class="uk-flex uk-flex-center" style="display: none">
+		<button point="{Point}" id="edit-start" name="form-button-modify" class="uk-button uk-button-primary uk-margin-right">
+			<span class="table-icon" lang="Files.Start"></span>
+		</button>
+		<button point="{Point}" id="edit-end" name="form-button-modify" class="uk-button uk-button-warning uk-margin-left">
+			<span class="table-icon" lang="Files.End"></span>
+		</button>
 	</div>
 	<div class="uk-margin-top uk-flex uk-flex-column">
 		<div class="uk-overflow-auto uk-text-center">
@@ -81,7 +88,6 @@
 						<th class="uk-text-center" lang="Thead.Ry"></th>
 						<th class="uk-text-center" lang="Thead.Duration"></th>
 						<th class="uk-text-center" lang="Thead.Transition"></th>
-						<th class="uk-table-shrink"></th>
 						<th class="uk-table-shrink"></th>
 					</tr>
 				</thead>
@@ -98,6 +104,18 @@
 [/HTML]
 
 [CSS]
+@media (max-width: 1009px) {
+	#edit-button {
+		padding-top: 0.5em;
+		margin-top: 0;
+	}
+}
+@media (min-width: 1010px) {
+	#edit-button {
+		margin-top: -2.2em;
+	}
+}
+
 .header-generate-cutscene {
 	position: relative;
 	margin-bottom: 2.5em;

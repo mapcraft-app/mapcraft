@@ -1,5 +1,6 @@
 var Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const Database = require('better-sqlite3');
+const path = require('path');
 const IPC = require('../../../../js/MCipc');
 const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
 const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname);
@@ -99,6 +100,22 @@ const DisableDurationLastElement = () => {
 	}
 };
 
+function EditFile()
+{
+	for (let input of document.querySelectorAll('button[id="edit-start"]'))
+	{
+		input.addEventListener('click', () => {
+			IPC.send('Editor:open', path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'start.mcfunction'));
+		});
+	}
+	for (let input of document.querySelectorAll('button[id="edit-end"]'))
+	{
+		input.addEventListener('click', () => {
+			IPC.send('Editor:open', path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'end.mcfunction'));
+		});
+	}
+}
+
 class Cutscene
 {
 	static draw()
@@ -138,7 +155,9 @@ class Cutscene
 				CutsceneID = li.getAttribute('id');
 				document.getElementById('heading-cutscene').innerText = li.getAttribute('name');
 				document.querySelector('span[generate-time]').innerText = li.querySelector('h3:last-child > span[time]').innerText;
+				document.getElementById('edit-button').style.display = 'flex';
 				this.CutscenePoints();
+				EditFile();
 			});
 		});
 	}

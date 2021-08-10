@@ -22,6 +22,10 @@
 		"AddPointError": "It is impossible to add points if no cutscene is selected",
 		"GenerateError": "No cutscene have been selected",
 		"StartPoint": "Start",
+		"Files": {
+			"Start": "Edit start function",
+			"End": "Edit end function"
+		},
 		"TypeError": {
 			"Incorrect": "The type of data received is incorrect, expected",
 			"Received": "received",
