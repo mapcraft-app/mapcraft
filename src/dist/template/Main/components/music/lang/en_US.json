@@ -18,7 +18,7 @@
 			"Upload": "Drag file or click for upload",
 			"Name": "Name of file",
 			"Directory": "Music saving folder",
-			"NotWellFormated": "Autorized character: [a-z], [0-9], _",
+			"NotWellFormated": "Autorized character: [a-z], [0-9], /, ., _, -",
 			"IncorrectPath": "Music must be placed in the sounds folder of the resource pack",
 			"Save": "Save",
 			"Error" : {

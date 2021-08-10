@@ -78,7 +78,7 @@
 	//#endregion
 
 	document.getElementById('add-music-form-Name').addEventListener('input', (event) => {
-		if (!event.target.value.match(/^[a-z0-9_]+$/i))
+		if (!event.target.value.match(/^[a-z0-9\/._-]+$/g))
 			document.getElementById('add-music-form-Name-Error').style.display = 'block';
 		else
 			document.getElementById('add-music-form-Name-Error').style.display = 'none';

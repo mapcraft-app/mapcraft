@@ -18,7 +18,7 @@
 			"Upload": "Glisser le fichier ou cliquer pour téléverser",
 			"Name": "Nom du fichier",
 			"Directory": "Dossier de sauvegarde",
-			"NotWellFormated": "Caractères autorisés: [a-z], [0-9], _",
+			"NotWellFormated": "Caractères autorisés: [a-z], [0-9], /, ., _, -",
 			"IncorrectPath": "La Musique doit-être placé dans le dossier sounds du resource pack",
 			"Save": "Sauvegarder",
 			"Error" : {

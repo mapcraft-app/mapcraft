@@ -224,7 +224,7 @@ function MusicForm()
 			CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoName);
 			isError = true;
 		}
-		else if (!Name.match(/^[a-z0-9_]+$/i))
+		else if (!Name.match(/^[a-z0-9\/._-]+$/g))
 		{
 			CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.ForbiddenName);
 			isError = true;
@@ -309,7 +309,7 @@ function PrintSoundElement()
 		
 			//#region Update Name of file in live
 			document.getElementById('Sound_Name').addEventListener('input', (event) => {
-				if (!event.target.value.match(/^[a-z0-9_]+$/i))
+				if (!event.target.value.match(/^[a-z0-9\/._-]+$/g))
 					document.getElementById('Sound_Name-Error').style.display = 'block';
 				else
 				{
