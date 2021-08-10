@@ -8,7 +8,7 @@ build:
   script:
     - echo "Building stage"
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
-    - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
+    - echo "${CI_COMMIT_TAG}" > TAG_VERSION.txt
     - yarn
     - yarn dist
   artifacts:
