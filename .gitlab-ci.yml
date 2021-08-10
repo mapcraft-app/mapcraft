@@ -8,7 +8,8 @@ build:
   script:
     - echo "Building stage"
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
-    - echo "${CI_COMMIT_TAG}" > TAG_VERSION.txt
+    - curl -O https://download.mapcraft.app/srcs/json.bash
+    - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
     - yarn
     - yarn dist
   artifacts:
