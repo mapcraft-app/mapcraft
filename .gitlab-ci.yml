@@ -30,6 +30,7 @@ release:
   script:
     - TAG_VERSION=$(cat TAG_VERSION.txt)
     - CI_ID=$(cat CI_JOB_ID.txt)
+    - echo "${CI_ID} ${TAG_VERSION}"
     - rm -f TAG_VERSION.txt CI_JOB_ID.txt
     - |
       release-cli create --name "v$TAG_VERSION" --tag-name $TAG_VERSION --ref $CI_COMMIT_SHA \
