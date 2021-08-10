@@ -7,10 +7,14 @@ build:
   image: electronuserland/builder:wine
   script:
     - echo "Building stage"
+    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
+    - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
     - yarn
     - yarn dist
   artifacts:
     paths:
+      - CI_JOB_ID.txt
+      - TAG_VERSION.txt
       - ./out/*.zip
       - ./out/*.AppImage
       - ./out/*.exe
@@ -23,8 +27,9 @@ release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
-    - TAG_VERSION=$(echo $CI_COMMIT_TAG)
-    - CI_ID=$(echo $CI_JOB_ID)
+    - TAG_VERSION=$(cat TAG_VERSION.txt)
+    - CI_ID=$(cat CI_JOB_ID.txt)
+    - rm -f TAG_VERSION.txt CI_JOB_ID.txt
     - |
       release-cli create --name "v$TAG_VERSION" --tag-name $TAG_VERSION --ref $CI_COMMIT_SHA \
       --assets-link "{\"name\":\"Windows setup\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_win.exe\"}" \
