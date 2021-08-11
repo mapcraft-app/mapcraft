@@ -171,14 +171,11 @@ let WindowUser = () => {
 		}
 	});
 	SelectUserChild.setMenuBarVisibility(false);
+	SelectUserChild.setAlwaysOnTop(true);
 	MCwindow.OpenWindow(SelectUserChild, path.join(__dirname, 'index.html'));
 };
 
-function OpenMainWindow() {
-	if (MainWindow)
-		MainWindow.focus();
-	else
-		MainWindow = CreateWindow(path.join(__dirname, '/dist/template/Main/main.js'));
+function CreateSelectUserWindow() {
 	WindowUser();
 	SelectUserChild.once('ready-to-show', () => {
 		SelectUserChild.show();
@@ -189,8 +186,19 @@ function OpenMainWindow() {
 		if (!IsSelectedUser)
 			MainWindow.close();
 	});
+}
+
+function OpenMainWindow() {
+	if (MainWindow)
+	{
+		MainWindow.focus();
+		CreateSelectUserWindow();
+	}
+	else
+		MainWindow = CreateWindow(path.join(__dirname, '/dist/template/Main/main.js'));
 	MainWindow.once('ready-to-show', () => {
 		MainWindow.show();
+		CreateSelectUserWindow();
 	});
 	MainWindow.on('closed', () => {
 		MainWindow = null;
@@ -306,9 +314,7 @@ ipcMain.on('User:close-window', (event, DBPath, JSON) => {
 	SaveCurrentUser.UUID = JSON.UUID;
 	SaveCurrentUser.DBpath = DBPath;
 	SelectUserChild.close();
-	MainWindow.once('ready-to-show', () => {
-		MainWindow.webContents.send('User:remove-blur');
-	});
+	MainWindow.webContents.send('User:remove-blur');
 });
 //#endregion
 
@@ -342,10 +348,11 @@ ipcMain.on('Update:create-modal', (event) => {
 		}
 	});
 	UpdateWindow.setMenuBarVisibility(false);
+	UpdateWindow.setAlwaysOnTop(true);
 	MCwindow.OpenWindow(UpdateWindow, path.join(__dirname, './index.html'));
 });
 ipcMain.on('Update:open-window', (event) => {
-	UpdateWindow.show();
+	if (!SelectUserChild) UpdateWindow.show();
 });
 ipcMain.on('Update:close-modal', (event) => {
 	UpdateWindow.close();
@@ -368,7 +375,7 @@ ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => 
 	else executable = "update";
 
 	const EXECUTABLE = path.join(process.cwd(), executable);
-	var update = child.spawn(EXECUTABLE, {detached: true, stdio: ['ignore' /* stdin */, 'ignore' /* stdout */, 'ignore' /* stderr */]});
+	var update = child.spawn(EXECUTABLE, {detached: true, stdio: ['ignore', 'ignore', 'ignore']});
 	update.unref();
 	app.exit();
 });

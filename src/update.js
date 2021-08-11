@@ -9,32 +9,6 @@ const AdmZip = require('adm-zip');
 const IPC = require('./dist/js/MCipc');
 
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const copyFilePath = {
-	"Cutscene": [path.join(LocalMapcraft.Mapcraft, 'data/mapcraft/functions/built_in/cutscene/main.mcfunction')],
-	"Music": [path.join(LocalMapcraft.Mapcraft, 'data/mapcraft/functions/built_in/music/main.mcfunction')],
-	"Trigger": [path.join(LocalMapcraft.Mapcraft, 'data/mapcraft/functions/built_in/trigger/zone/detect.mcfunction'), path.join(LocalMapcraft.Mapcraft, 'data/mapcraft/functions/built_in/trigger/zone/execute.mcfunction')]
-}
-
-function copyFile()
-{
-	for (let id in copyFilePath)
-	{
-		for (let el in copyFilePath[id])
-		{
-			fs.copyFileSync(copyFilePath[id][el], path.join(__dirname, 'temp', path.basename(copyFilePath[id][el])));
-		}
-	}
-}
-function pastFile()
-{
-	for (let id in copyFilePath)
-	{
-		for (let el in copyFilePath[id])
-		{
-			fs.copyFileSync(path.join(__dirname, 'temp', path.basename(copyFilePath[id][el])), copyFilePath[id][el]);
-		}
-	}
-}
 
 function download(url, destination, callback)
 {
@@ -102,25 +76,25 @@ class Update {
 
 	async datapack()
 	{
-		fs.mkdir(path.join(__dirname, 'temp'), {recursive: false}, () => {
-			const _path = path.join(__dirname, 'temp', json.datapack.version + '.zip');
+		const temp_dir = path.join(__dirname, '../../../temp');
+		fs.mkdir(temp_dir, {recursive: false}, (err) => {
+			const _path = path.join(temp_dir, json.datapack.version + '.zip');
 			download(json.datapack.url, _path, (err) => {
 				if (err)
 				{
 					console.error(err);
 					return ;
 				}
-				copyFile();
 				let Resource = new AdmZip(_path);
 				Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
-				pastFile();
 			});
 		});
 	}
 	async resourcepack()
 	{
-		fs.mkdir(path.join(__dirname, 'temp'), {recursive: false}, () => {
-			const _path = path.join(__dirname, 'temp', json.resourcepack.version + '.zip');
+		const temp_dir = path.join(__dirname, '../../../temp');
+		fs.mkdir(temp_dir, {recursive: false}, () => {
+			const _path = path.join(temp_dir, json.resourcepack.version + '.zip');
 			download(json.resourcepack.url, _path, (err) => {
 				if (err)
 				{
