@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const IPC = require('../../js/MCipc');
 const Component = require('./components');
 const Up = require('../../../update'), Update = new Up();
@@ -13,6 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	
 	let _async = async () => {
+		await Update.checkUpdate();
 		let data = Update.getJson();
 		if (data.count === 0)
 		{
@@ -63,7 +66,10 @@ window.addEventListener('DOMContentLoaded', () => {
 						await Update.datapack();
 					if (ifUpdated(data.resourcepack, Update.getCurrentVersion().resourcepack))
 						await Update.resourcepack();
-					fs.rm(path.join(__dirname, 'temp'), { recursive: true, force: true });
+					fs.rm(path.join(__dirname, 'temp'), { recursive: true, force: true }, () => {
+						Update.updateManifest();
+						IPC.send('Update:close-modal');
+					});
 				}
 			}; _async();
 		});

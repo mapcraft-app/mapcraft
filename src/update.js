@@ -79,11 +79,16 @@ class Update {
 			method: 'get',
 			url: 'https://api.mapcraft.app/resourcepack'
 		});
+		const res4 = await axios({
+			method: 'get',
+			url: 'https://api.mapcraft.app/update'
+		});
 		let _data = {
 			software: res1.data,
 			datapack: res2.data,
 			resourcepack: res3.data,
 			update: res1.data.update,
+			updateProgram: res4.data,
 			count: 0
 		};
 		if (Object.keys(_data.software).length && _data.software.version !== this.APIVersion.software) _data.count++;
@@ -91,7 +96,6 @@ class Update {
 		if (Object.keys(_data.resourcepack).length && _data.resourcepack.version !== this.APIVersion.resourcepack) _data.count++;
 		this.json = _data;
 	}
-
 	async installBase()
 	{
 		await this.checkUpdate();
@@ -132,7 +136,6 @@ class Update {
 				console.log('Update executable not finish to download, retry in 2s');
 		}
 	}
-
 	async datapack()
 	{
 		const temp_dir = path.join(__dirname, '../../../temp');
@@ -165,6 +168,16 @@ class Update {
 			});
 		});
 	}
+	updateManifest()
+	{
+		var data = JSON.parse(fs.readFileSync(path.join(__dirname, './manifest'), {encoding: 'utf-8', flag: 'r'}));
+		data.version.datapack = this.json.datapack.version;
+		data.version.resourcepack = this.json.resourcepack.version;
+		data.version.software = this.json.software.version;
+		data.version.update = this.json.updateProgram.version;
+		fs.writeFileSync(path.join(__dirname, './manifest'), JSON.stringify(data, null, 4));
+	}
+
 	async software()
 	{
 		const temp_dir = path.join(__dirname, '../../../temp');
