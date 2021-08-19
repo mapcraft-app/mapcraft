@@ -1,6 +1,6 @@
 ## Feature
 
-(Résumez de façon concise la fonction recherchée)
+(Summarize in a concise way the function you are looking for)
 
 ## More explanations
 

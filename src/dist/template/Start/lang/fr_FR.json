@@ -1,7 +1,11 @@
 {
 	"Title": "Page de démarrage",
 	"ChooseWorld": "Choisissez votre monde",
-	"SaveLoading" : "Les données du monde sont en cours de chargement",
+	"WaitModal" : {
+		"Default": "Les données du monde sont en cours de chargement",
+		"CustomResource" : "Le datapack et le resourcepack de l'utilisateur est en train d'être installé",
+		"BaseResource" : "Mapcraft finit de s'installer"
+	},
 	"Option": {
 		"Option" : "Option",
 		"Reset" : "Réinitialiser",

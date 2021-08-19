@@ -6,6 +6,14 @@ const IPC = require('../../js/MCipc');
 const Component = require('./components');
 const { CreateDB, ManageDB } = require('../../js/MCdatabase');
 
+function GetLang()
+{
+	let data;
+	try { data = JSON.parse(fs.readFileSync(path.join(__dirname, './lang', MC.GetConfig().Env.Lang + '.json'))) }
+	catch (err) { throw err }
+	return (data);
+}; let LANG = GetLang();
+
 window.addEventListener('DOMContentLoaded', () => {
 	Component.drawFullComponent();
 	/* Options */
@@ -79,15 +87,20 @@ window.addEventListener('DOMContentLoaded', () => {
 					ResourcePack: path.join(MC.GetConfig().Env.SavePath, '../resourcepacks', Name + '-' + MC.GetConfig().Data.ResourcePack)
 				}
 			}
-			localStorage.setItem('Mapcraft', JSON.stringify(Mapcraft));
+			localStorage.setItem('Mapcraft', JSON.stringify(Mapcraft)); 
 			if (!fs.existsSync(Mapcraft.DBPath))
 				new CreateDB(Mapcraft.DBPath);
-			AddRessources();
-			IPC.send('Start:is-selected-world');
+			document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
+			AddResources();
+			//#region Install base resource if not present
+			document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
+			const Up = require('../../../update'), Update = new Up();
+			Update.installBase();
+			//#endregion
 		}
 	});
 
-	function AddRessources()
+	function AddResources()
 	{
 		let Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		if (!fs.existsSync(Mapcraft.Data.ResourcePack))

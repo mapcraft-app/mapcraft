@@ -29,7 +29,7 @@
 			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical uk-overflow-auto">
 				<div class="uk-flex-inline uk-flex-middle">
 					<img class="img-work-in-progress" src="dist/img/loader.gif"/>
-					<h3 style="margin-left: 1em;" lang="SaveLoading"></h3>
+					<h3 id="textWaitModal" style="margin-left: 1em;" lang="WaitModal.Default"></h3>
 				</div>
 			</div>
 		</div>

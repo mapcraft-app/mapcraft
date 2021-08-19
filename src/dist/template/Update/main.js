@@ -13,9 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	
 	let _async = async () => {
-		await Update.checkUpdate();
 		let data = Update.getJson();
-
 		if (data.count === 0)
 		{
 			IPC.send('Update:close-modal');
