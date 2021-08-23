@@ -27,7 +27,7 @@
 .uk-width-small {
     width: 10%;
 }
-tbody img {
+#items-list img {
 	width: 45%;
 	image-rendering: -webkit-crisp-edges;
     image-rendering: -moz-crisp-edges;
