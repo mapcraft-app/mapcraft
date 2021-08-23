@@ -20,6 +20,7 @@
 	<thead>
 		<tr>
 			<th class="uk-width-small">ID</th>
+			<th class="uk-width-small">Icon</th>
 			<th>Name</th>
 		</tr>
 	</thead>

@@ -25,10 +25,12 @@ class UtilityComponent
 		Template.cleanNode(list);
 		for (let id of jsonData)
 		{
+			let image = document.createElement('img'); image.src = path.join(__dirname, '../../../../img/assets/block', id.name + '.png');
 			let element = document.createElement('tr');
 			let element_id = document.createElement('td'); element_id.innerText = ++x;
+			let element_image = document.createElement('td'); element_image.appendChild(image);
 			let element_name = document.createElement('td'); element_name.innerText = id.name;
-			element.appendChild(element_id); element.appendChild(element_name);
+			element.appendChild(element_id); element.appendChild(element_image); element.appendChild(element_name);
 			list.appendChild(element);
 		}
 	}
@@ -69,10 +71,12 @@ class UtilityComponent
 		Template.cleanNode(list);
 		for (let id of jsonData)
 		{
+			let image = document.createElement('img'); image.src = path.join(__dirname, '../../../../img/assets/item', id.name + '.png');
 			let element = document.createElement('tr');
 			let element_id = document.createElement('td'); element_id.innerText = ++x;
+			let element_image = document.createElement('td'); element_image.appendChild(image);
 			let element_name = document.createElement('td'); element_name.innerText = id.name;
-			element.appendChild(element_id); element.appendChild(element_name);
+			element.appendChild(element_id); element.appendChild(element_image); element.appendChild(element_name);
 			list.appendChild(element);
 		}
 	}
