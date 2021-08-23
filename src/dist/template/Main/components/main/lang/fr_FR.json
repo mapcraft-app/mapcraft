@@ -3,6 +3,8 @@
 	"Log": "Fichier de log",
 	"LogInfo" : "Affiche les 100 dernières lignes du fichier",
 	"ChangeUser": "Changer d'utilisateur",
+	"Documentation": "Documentation",
+	"Tooltip": "Ouvrer la documentation officiel dans votre navigateur",
 	"WorkInProgress" : "Travail en cours",
 	"Editor": {
 		"Cancel": "Annuler",

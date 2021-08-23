@@ -13,6 +13,9 @@
 		<div id="offcanvas-slide" uk-offcanvas="overlay:true">
 			<div class="uk-offcanvas-bar">
 				<article class="uk-comment" id="nav-header"></article>
+				<div class="uk-flex uk-flex-center">
+					<a id="documentation-link" class="uk-button uk-button-text" lang="Documentation"></a>
+				</div>
 				<hr class="uk-divider-icon">
 				<ul id="toogle-nav" class="uk-nav uk-nav-default">
 				</ul>

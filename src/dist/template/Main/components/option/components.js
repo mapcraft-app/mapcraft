@@ -113,6 +113,8 @@ class OptionComponent
 	}
 	static RedrawInterface()
 	{
+		console.log(document.getElementById('documentation-link'), MC.GetConfig().Env.Lang);
+		document.getElementById('documentation-link').href = "https://documentation.mapcraft.app/?" + MC.GetConfig().Env.Lang;
 		UpdateLang();
 		// Header
 		Template.updateLang(document.getElementById('nav-header'), MCplugin.Lang('Main'));
@@ -146,6 +148,7 @@ class OptionComponent
 					IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 				});
 			});
+			
 		}; SideNav();
 		// Editor
 		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.Lang('Main'));

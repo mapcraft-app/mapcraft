@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const { shell } = require('electron');
 const IPC = require('../../../../js/MCipc');
+const MC = require('../../../../js/Mapcraft');
 const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
 const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname);
 
@@ -15,6 +17,8 @@ class MainComponent
 		let User = JSON.parse(localStorage.getItem('Mapcraft_User'));
 		Template.render(document.getElementById('nav-header'), 'header.tp', {Username: User.Username, Link: 'https://crafatar.com/avatars/'+ User.UUID +'?size=80' });
 		Template.updateLang(document.getElementById('nav-header'), MCplugin.Lang('Main'));
+		document.getElementById('documentation-link').href = "https://documentation.mapcraft.app/?" + MC.GetConfig().Env.Lang;
+		OpenExternLink();
 	}
 	static nav()
 	{
@@ -79,6 +83,20 @@ function DetectClickOnElement()
 			IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 		});
 	});
+}
+
+function OpenExternLink()
+{
+	const link = document.getElementById('documentation-link');
+	const url = link.getAttribute('href');
+	if (url.indexOf('http') === 0)
+	{
+		link.addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			shell.openExternal(url);
+		});
+	}
 }
 
 module.exports = MainComponent;
