@@ -90,35 +90,28 @@ window.addEventListener('DOMContentLoaded', () => {
 			localStorage.setItem('Mapcraft', JSON.stringify(Mapcraft)); 
 			if (!fs.existsSync(Mapcraft.DBPath))
 				new CreateDB(Mapcraft.DBPath);
-			document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
-			AddResources();
-			//#region Install base resource if not present
+
 			let LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+			const Up = require('../../../update'), Update = new Up();
+			//#region Install necessary tools
+			if (!fs.existsSync(Mapcraft.Data.ResourcePack) || !fs.existsSync(Mapcraft.Data.DataPack))
+			{
+				document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
+				Update.addNecessaryTools();
+			}
+			//#endregion
+			//#region Install base resource if not present
 			if (!fs.existsSync(LocalMapcraft.Mapcraft) || !fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
 			{
-				console.log("tutu");
 				document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
-				const Up = require('../../../update'), Update = new Up();
 				Update.installBase();
 			}
 			else
+			{
+				fs.rmSync(path.join(__dirname, '../../temp'), {recursive: true, force: true});
 				IPC.send('Start:is-selected-world');
+			}
 			//#endregion
 		}
 	});
-
-	function AddResources()
-	{
-		let Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-		if (!fs.existsSync(Mapcraft.Data.ResourcePack))
-		{
-			let Resource = new AdmZip(path.join(__dirname, '../../res/resourcepacks.zip'));
-			Resource.extractAllTo(Mapcraft.Data.ResourcePack);
-		}
-		if (!fs.existsSync(Mapcraft.Data.DataPack))
-		{
-			let Data = new AdmZip(path.join(__dirname, '../../res/datapacks.zip'));
-			Data.extractAllTo(Mapcraft.Data.DataPack);
-		}
-	}
 });

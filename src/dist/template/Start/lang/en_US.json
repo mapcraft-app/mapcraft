@@ -2,7 +2,7 @@
 	"Title": "Start page",
 	"ChooseWorld": "Choose your world",
 	"WaitModal" : {
-		"Default": "Save data is current loading",
+		"Default": "World data is current loading",
 		"CustomResource" : "Custom datapack and resourcepack is being installed",
 		"BaseResource" : "Mapcraft finished installing"
 	},

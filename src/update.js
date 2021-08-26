@@ -96,6 +96,45 @@ class Update {
 		if (Object.keys(_data.resourcepack).length && _data.resourcepack.version !== this.APIVersion.resourcepack) _data.count++;
 		this.json = _data;
 	}
+	async addNecessaryTools()
+	{
+		if (fs.existsSync(LocalMapcraft.Data.ResourcePack) && fs.existsSync(LocalMapcraft.Data.DataPack))
+			return ;
+		let ret = {data: false, res: false};
+		const temp_dir = path.join(__dirname, './temp');
+		const datapack_path = path.join(temp_dir, 'datapacks.zip');
+		const resourcepack_path = path.join(temp_dir, 'resourcepacks.zip');
+
+		fs.mkdirSync(temp_dir, {recursive: true});
+		if (!fs.existsSync(LocalMapcraft.Data.ResourcePack))
+		{
+			download('https://download.mapcraft.app/srcs/res/resourcepacks.zip', resourcepack_path, (err) => {
+				if (err) { console.error(err); return ; }
+				let Resource = new AdmZip(resourcepack_path);
+				Resource.extractAllTo(LocalMapcraft.Data.ResourcePack, true);
+				ret.data = true;
+			});
+		} else { ret.data = true; }
+		if (!fs.existsSync(LocalMapcraft.Data.DataPack))
+		{
+			download('https://download.mapcraft.app/srcs/res/datapacks.zip', datapack_path, (err) => {
+				if (err) { console.error(err); return ; }
+				let Resource = new AdmZip(datapack_path);
+				Resource.extractAllTo(LocalMapcraft.Data.DataPack, true);
+				ret.res = true;
+			});
+		} else { ret.res = true; }
+
+		let interval = setInterval(wait, 2000);
+		function wait() {
+			if (ret.data === true && ret.res === true)
+			{
+				clearInterval(interval);
+			}
+			else
+				console.log('Necessary tools not finish to download, retry in 2s');
+		}
+	}
 	async installBase()
 	{
 		if (fs.existsSync(LocalMapcraft.Mapcraft) && fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
@@ -135,7 +174,7 @@ class Update {
 				IPC.send('Start:is-selected-world');
 			}
 			else
-				console.log('Update executable not finish to download, retry in 2s');
+				console.log('Base system not finish to download, retry in 2s');
 		}
 	}
 	async datapack()
