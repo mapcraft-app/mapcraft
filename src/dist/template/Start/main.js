@@ -93,9 +93,16 @@ window.addEventListener('DOMContentLoaded', () => {
 			document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
 			AddResources();
 			//#region Install base resource if not present
-			document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
-			const Up = require('../../../update'), Update = new Up();
-			Update.installBase();
+			let LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+			if (!fs.existsSync(LocalMapcraft.Mapcraft) || !fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
+			{
+				console.log("tutu");
+				document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
+				const Up = require('../../../update'), Update = new Up();
+				Update.installBase();
+			}
+			else
+				IPC.send('Start:is-selected-world');
 			//#endregion
 		}
 	});

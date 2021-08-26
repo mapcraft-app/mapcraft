@@ -16,7 +16,7 @@
 		<span uk-icon="download"></span>{Download}
 	</a>
 </div>
-<table class="uk-table uk-table-divider">
+<table class="uk-table uk-table-divider uk-table-middle">
 	<thead>
 		<tr>
 			<th class="uk-width-small">ID</th>

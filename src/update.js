@@ -98,6 +98,8 @@ class Update {
 	}
 	async installBase()
 	{
+		if (fs.existsSync(LocalMapcraft.Mapcraft) && fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
+			return ;
 		await this.checkUpdate();
 		let ret = {data: false, res: false};
 		const temp_dir = path.join(__dirname, './temp');
