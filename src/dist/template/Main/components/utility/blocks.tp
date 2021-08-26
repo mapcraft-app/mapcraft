@@ -17,7 +17,7 @@
 	<thead>
 		<tr>
 			<th class="uk-width-small">ID</th>
-			<th class="uk-width-small">Icon</th>
+			<th style="text-align:center" class="uk-width-small">Icon</th>
 			<th>Name</th>
 		</tr>
 	</thead>
@@ -39,5 +39,8 @@
 #error-block-list {
 	text-align: center;
 	display: none;
+}
+#blocks-list img {
+	max-width: 75px;
 }
 [/CSS]

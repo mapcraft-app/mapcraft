@@ -25,8 +25,15 @@ class UtilityComponent
 		Template.cleanNode(list);
 		for (let id of jsonData)
 		{
-			let image = document.createElement('img'); image.src = path.join(__dirname, '../../../../img/assets/block', id.name + '.png');
-			let element = document.createElement('tr');
+			let image = document.createElement('img');
+			
+			let testpath = path.join(__dirname, '../../../../img/assets/block', id.name + '.png');
+			if (fs.existsSync(testpath))
+				image.src = testpath;
+			else
+				image.src = path.join(__dirname, '../../../../img/assets/block', id.name + '.webp');
+			
+				let element = document.createElement('tr');
 			let element_id = document.createElement('td'); element_id.innerText = ++x;
 			let element_image = document.createElement('td'); element_image.appendChild(image);
 			let element_name = document.createElement('td'); element_name.innerText = id.name;
@@ -71,7 +78,14 @@ class UtilityComponent
 		Template.cleanNode(list);
 		for (let id of jsonData)
 		{
-			let image = document.createElement('img'); image.src = path.join(__dirname, '../../../../img/assets/item', id.name + '.png');
+			let image = document.createElement('img');
+			
+			let testpath = path.join(__dirname, '../../../../img/assets/item', id.name + '.png');
+			if (fs.existsSync(testpath))
+				image.src = testpath;
+			else
+				image.src = path.join(__dirname, '../../../../img/assets/item', id.name + '.webp');
+
 			let element = document.createElement('tr');
 			let element_id = document.createElement('td'); element_id.innerText = ++x;
 			let element_image = document.createElement('td'); element_image.appendChild(image);
