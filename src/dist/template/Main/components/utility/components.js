@@ -136,7 +136,7 @@ function searchInList(input, list, error)
 		{
 			if (isNumber)
 			{
-				if (i.getElementsByTagName('td')[0].innerText != input.value)
+				if (i.getElementsByTagName('td')[1].innerText != input.value)
 					i.style.display = "none";
 				else
 				{
@@ -146,7 +146,7 @@ function searchInList(input, list, error)
 			}
 			else
 			{
-				if (regex.test(i.getElementsByTagName('td')[1].innerText))
+				if (regex.test(i.getElementsByTagName('td')[2].innerText))
 				{
 					i.style.display = "table-row";
 					isExist = true;

@@ -5,9 +5,6 @@
 		<input style="color: #fff" id="items-search" class="uk-search-input" type="search" placeholder="{Search}">
 	</form>
 	<select id="items-version" class="uk-select search-width-30">
-        <option value="1.13">1.13</option>
-		<option value="1.14">1.14</option>
-		<option value="1.16">1.16</option>
 		<option value="1.17" selected>1.17</option>
     </select>
 </div>
