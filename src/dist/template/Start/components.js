@@ -36,7 +36,7 @@ class Component
 			let testIfDir = path.join(MC.GetConfig().Env.SavePath, '/', Save);
 			if (fs.existsSync(testIfDir) && fs.lstatSync(testIfDir).isDirectory())
 			{
-				if (!fs.existsSync(path.join(testIfDir, '/icon.png')))
+				if (!fs.existsSync(path.join(testIfDir, '/icon.png')) || !fs.existsSync(path.join(testIfDir, '/level.dat')))
 				{
 					document.getElementById('start-selection').innerHTML = '<h2>'+ LANG.Error.NotMinecraftSaveDirectory +'</h2>';
 					return ;

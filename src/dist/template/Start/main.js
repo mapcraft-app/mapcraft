@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const AdmZip = require('adm-zip');
 const MC = require('../../js/Mapcraft');
 const IPC = require('../../js/MCipc');
 const Component = require('./components');
