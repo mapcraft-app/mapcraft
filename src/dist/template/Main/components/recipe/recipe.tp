@@ -1,0 +1,173 @@
+[HTML]
+<div class="uk-contaier">
+	<div id="recipe-error"></div>
+	<div class="uk-flex uk-height-medium">
+		<div class="uk-width-1-3">
+			<ul id="sound-list" class="uk-list uk-list-striped list-border" uk-accordion="multiple: false"></ul>
+		</div>
+		<div class="uk-width-2-3 uk-margin-left">
+			<ul class="uk-child-width-expand" uk-tab="animation: uk-animation-fade">
+				<li class="uk-active"><a href="#">
+					<img class="img-menu" style="padding:0.6em" src="dist/img/assets/player.png"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/crafting_table.webp"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/furnace.webp"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/blast_furnace.webp"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/campfire.webp"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/smoker.webp"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/stonecutter.webp"/>
+				</a></li>
+				<li><a href="#">
+					<img class="img-menu" src="dist/img/assets/block/smithing_table.webp"/>
+				</a></li>
+			</ul>
+			<ul class="uk-switcher">
+				<li>
+					<h3 class="uk-text-center" lang="Type.Crafting_Player"></h3>
+					<div id="crafting_player"></div>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Crafting_Table"></h3>
+					<div id="crafting_table"></div>
+					<form class="uk-form-stacked">
+						<div class="uk-margin">
+							<label class="uk-form-label" for="form-stacked-text">Text</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="form-stacked-text" type="text" placeholder="Some text...">
+							</div>
+						</div>
+						<div class="uk-margin">
+							<label class="uk-form-label" for="shapeless" lang=""></label>
+							<div class="uk-form-controls">
+								<label class="uk-switch">
+									<input id="shapeless" type="checkbox">
+									<div class="uk-switch-span"></div>
+								</label>
+							</div>
+						</div>
+					</form>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Furnace"></h3>
+					<div id="furnace"></div>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Blast_Furnace"></h3>
+					<div id="blast_furnace"></div>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Campfire"></h3>
+					<div id="campfire"></div>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Smoker"></h3>
+					<div id="smoker"></div>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Stonecutter"></h3>
+					<div id="stonecutter"></div>
+				</li>
+				<li>
+					<h3 class="uk-text-center" lang="Type.Smithing_Table"></h3>
+					<div id="smithing_table"></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+[/HTML]
+
+[CSS]
+.list-border {
+	border: 1px solid rgb(55, 60, 62);
+	border-top: none;
+}
+.list-border > li {
+	overflow-wrap: break-word;
+}
+.img-menu {
+	width: 3.5em;
+}
+
+.craft {
+	display: flex;
+	justify-content: center;
+}
+.craft_background {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	background-color: #c6c7c6;
+    height: 250px;
+    margin: 0 5em;
+    max-width: 480px;
+    min-width: 480px;
+    border: 5px inset;
+}
+
+.recipes_cases_3x3 {
+	display: flex;
+    width: 13em;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+}
+.recipes_cases_2x2 {
+	display: flex;
+    width: 9em;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+}
+.recipes_cases_furnace {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.case {
+	background-color: #8c8a8c;
+    width: 4em;
+    height: 4em;
+    margin: 0.15em;
+	cursor: pointer;
+}
+.case:hover {
+	background-color: rgba(24, 26, 27, 0.5);
+}
+
+.craft_arrow {
+	width: 5em;
+    height: 5em;
+	image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+.craft_fire_and_cross {
+	width: 4em;
+    height: 4em;
+	image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+[/CSS]
+
+[JS]
+
+[/JS]

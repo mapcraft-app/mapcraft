@@ -1,0 +1,9 @@
+[HTML]
+<div class="craft">
+	<div id="{ID}" class="craft_background">
+		<div id="{ID}-cases" class="case"></div>
+		<img class="craft_arrow" src="dist/img/assets/arrow.png"/>
+		<div id="{ID}-result" class="case"></div>
+	</div>
+</div>
+[/HTML]

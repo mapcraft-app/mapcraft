@@ -1,0 +1,11 @@
+[HTML]
+<div class="craft">
+	<div id="{ID}" class="craft_background">
+		<div id="{ID}-cases-add-one" class="case"></div>
+		<img class="craft_fire_and_cross" src="dist/img/assets/cross.png"/>
+		<div id="{ID}-cases-add-two" class="case"></div>
+		<img class="craft_arrow" src="dist/img/assets/arrow.png"/>
+		<div id="{ID}-result" class="case"></div>
+	</div>
+</div>
+[/HTML]

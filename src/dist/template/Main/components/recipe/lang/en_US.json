@@ -1,0 +1,22 @@
+{
+	"Title": "Recipe",
+	"Icon": "grid",
+	"Notification": "",
+	"Data": {
+		"Type": {
+			"Crafting_Player": "Crafting player",
+			"Crafting_Table": "Crafting table",
+			"Furnace": "Furnace",
+			"Blast_Furnace": "Blast furnace",
+			"Campfire": "Campfire",
+			"Smoker": "Smoker",
+			"Stonecutter": "Stonecutter",
+			"Smithing_Table": "Smithing table"
+		},
+		"Options": {
+			"Shapeless": "Shapeless",
+			"ExactPattern": "Exact pattern",
+			"2x2Grid": ""
+		}
+	}
+}

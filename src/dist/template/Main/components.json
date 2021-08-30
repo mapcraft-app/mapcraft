@@ -41,6 +41,12 @@
 		"IsNotification": true
 	},
 	{
+		"Name": "Recipe",
+		"Component": "./components/recipe/components",
+		"Lang": "./components/recipe/lang",
+		"IsNotification": false
+	},
+	{
 		"Name": "Utility",
 		"Component": "./components/utility/components",
 		"Lang": "./components/utility/lang",
