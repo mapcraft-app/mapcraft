@@ -40,93 +40,174 @@ class RecipeComponent
 
 class CreateRecipe
 {
+	
+	static generateCraftingTable_2_3(nameOfId, optionFormId, is3x3 = false)
+	{
+		let model = Models.crafting_player;
+		const RECIPE_CASES = document.getElementById(nameOfId + '-cases');
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id;
+		let temp_RECIPE_COUNT = document.getElementById(nameOfId + '-count').value;
+		if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
+		else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
+		const RECIPE_COUNT = temp_RECIPE_COUNT;
+		const FORM_INPUT = document.getElementById(optionFormId).elements;
+		const FORM = {Shapeless: FORM_INPUT[0].checked, ExactPosition: FORM_INPUT[1].checked, Group: FORM_INPUT[2].value, Output: FORM_INPUT[3].value};
+		
+		if (FORM.Group)
+			model.group = FORM.Group;
+		else
+			delete model['group'];
+		if (FORM.Shapeless)
+		{
+			model.type = 'minecraft:crafting_shapeless';
+			delete model['pattern'];
+			delete model['key'];
+			let ingredients = new Array();
+			const ITEMS = RECIPE_CASES.querySelectorAll('img');
+			for (let item of ITEMS)
+				ingredients.push({ "item": "minecraft:"+ item.id });
+			model.ingredients = ingredients;
+		}
+		else
+		{
+			model.type = 'minecraft:crafting_shaped';
+			delete model['ingredients'];
+			let alpha = 'A';
+			let jsonKey = {};
+			let jsonPattern = new Array();
+			const ItemList = new Array();
+			const ItemKey = new Array();
+			let patternTemp, rowMAX, colMAX;
+			if (!is3x3)
+			{
+				rowMAX = 1;
+				colMAX = 1;
+				patternTemp = [
+					['', ''],
+					['', '']
+				];
+			}
+			else
+			{
+				rowMAX = 2;
+				colMAX = 2;
+				patternTemp = [
+					['', '', ''],
+					['', '', ''],
+					['', '', '']
+				];
+			}
+			const ITEMS = RECIPE_CASES.querySelectorAll('div');
+			//#region Fill patternTemp
+			let row = 0; let col = 0;
+			for (let item of ITEMS)
+			{
+				if (!item.hasChildNodes()) patternTemp[row][col] = ' ';
+				else patternTemp[row][col] = item.children[0].id;
+				col++;
+				if (col > colMAX) { row++; col = 0; }
+				if (row > rowMAX) break ;
+			}
+			//#endregion
+			//#region Transform block to key
+			row = 0; col = 0;
+			while (row <= rowMAX)
+			{
+				if (ItemList.indexOf(patternTemp[row][col]) < 0)
+				{
+					ItemList.push(patternTemp[row][col]);
+					ItemKey.push(alpha);
+					alpha = this.nextCharacter(alpha);
+				}
+				col++;
+				if (col > colMAX) { row++; col = 0; }
+			}
+			//#endregion
+			//#region Key(s)
+			let z = 0;
+			let Length = ItemList.length;
+			while (z < Length)
+			{
+				if (ItemList[z] != ' ')
+					jsonKey[ItemKey[z]] = { "item": "minecraft:" + ItemList[z] }
+				z++;
+			}
+			model.key = jsonKey;
+			//#endregion
+			//#region Pattern
+			row = 0; col = 0;
+			while (row <= rowMAX)
+			{
+				let index = ItemList.indexOf(patternTemp[row][col]);
+				if (ItemList[index] != ' ')
+					patternTemp[row][col] = ItemKey[index];
+				else
+					patternTemp[row][col] = ' ';
+				col++;
+				if (col > colMAX) { row++; col = 0; }
+			}
+			//#endregion
+			//#region Reduce pattern & generate final pattern
+			if (!FORM.ExactPosition)
+			{
+				let test;
+				//#region Remove empty row
+				row = 0; col = 0;
+				while (row <= rowMAX)
+				{
+					test = false;
+					while (col <= colMAX)
+					{
+						if (patternTemp[row][col] != ' ') { test = true; break; }
+						col++;
+					}
+					if (!test)
+					{
+						patternTemp.splice(row, 1);
+						--rowMAX;
+					}
+					row++;
+				}
+				//#endregion
+				//#region Remove empty column
+				row = 0; col = 0;			
+				while (col <= colMAX)
+				{
+					test = false;
+					while (row <= rowMAX)
+					{
+						if (patternTemp[row][col] != ' ') { test = true; break; }
+						row++;
+					}
+					if (!test)
+					{
+						row = 0;
+						while (row <= rowMAX)
+							patternTemp[row++].splice(col, 1);
+						--colMAX;
+					}
+					col++;
+				}
+				//#endregion
+			}
+			for (let row of patternTemp)
+				jsonPattern.push(row.join(''));
+			model.pattern = jsonPattern;
+			//#endregion
+		}
+		model.result.item = "minecraft:"+ RECIPE_RESULT;
+		model.result.count = RECIPE_COUNT;
+		return (model);
+	}
+	
 	static player()
 	{
 		document.getElementById('crafting_player_validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let model = Models.crafting_player;
-			const RECIPE_CASES = document.getElementById('area_crafting_player-cases');
-			const RECIPE_RESULT = document.getElementById('area_crafting_player-result').querySelectorAll('img')[0].id;
-			let temp_RECIPE_COUNT = document.getElementById('area_crafting_player-count').value;
-			if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
-			else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
-			const RECIPE_COUNT = temp_RECIPE_COUNT;
-			const FORM_INPUT = document.getElementById('crafting_player_form').elements;
-			const FORM = {Shapeless: FORM_INPUT[0].checked, ExactPosition: FORM_INPUT[1].checked, Group: FORM_INPUT[2].value, Output: FORM_INPUT[3].value};
-			
-			if (FORM.Group)
-				model.group = FORM.Group;
-			else
-				delete model['group'];
-			if (FORM.Shapeless)
-			{
-				model.type = 'minecraft:crafting_shapeless';
-				delete model['pattern'];
-				delete model['key'];
-				let ingredients = new Array();
-				const ITEMS = RECIPE_CASES.querySelectorAll('img');
-				for (let item of ITEMS)
-					ingredients.push({ "item": "minecraft:"+ item.id });
-				model.ingredients = ingredients;
-			}
-			else
-			{
-				model.type = 'minecraft:crafting_shaped';
-				delete model['ingredients'];
-				let alpha = 'A';
-				const ItemList = new Array();
-				const ItemKey = new Array();
-				let patternTemp = [
-					['', ''],
-					['', '']
-				];
-				const ITEMS = RECIPE_CASES.querySelectorAll('div');
-				const xmax = 1; const ymax = 1;
-				//#region Fill patternTemp
-				let x = 0; let y = 0;
-				for (let item of ITEMS)
-				{
-					if (!item.hasChildNodes()) patternTemp[x][y] = ' ';
-					else patternTemp[x][y] = item.children[0].id;
-					x++;
-					if (x > xmax) { y++; x = 0; }
-					if (y > ymax) break ;
-				}
-				//#endregion
-				//#region Transform block to key
-				x = 0; y = 0;
-				while (y < ymax + 1)
-				{
-					if (ItemList.indexOf(patternTemp[x][y]) < 0)
-					{
-						ItemList.push(patternTemp[x][y]);
-						ItemKey.push(alpha);
-						alpha = this.nextCharacter(alpha);
-					}
-					x++;
-					if (x > xmax) { y++; x = 0; }
-				}
-				//#endregion
-				//#region Key(s)
-				let z = 0;
-				let Length = ItemList.length;
-				let jsonKey = {};
-				while (z < Length)
-				{
-					if (ItemList[z] != ' ')
-						jsonKey[ItemKey[z]] = { "item": "minecraft:" + ItemList[z] }
-					z++;
-				}
-				//#endregion
-				//#region Pattern
-				
-				//#endregion
-			}
-			model.result.item = "minecraft:"+ RECIPE_RESULT;
-			model.result.count = RECIPE_COUNT;
-
-			console.log(model);
+			// 2x2   area_crafting_player	crafting_player_form	false
+			let __ret = this.generateCraftingTable_2_3('area_crafting_player', 'crafting_player_form', false);
+			console.log(__ret);
 		});
 	}
 	static nextCharacter(c) {
