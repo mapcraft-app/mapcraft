@@ -1,7 +1,7 @@
 [HTML]
 <div class="uk-contaier">
 	<div id="recipe-error"></div>
-	<div class="uk-flex uk-height-medium">
+	<div class="uk-flex">
 		<div class="uk-width-1-3">
 			<ul id="sound-list" class="uk-list uk-list-striped list-border" uk-accordion="multiple: false"></ul>
 		</div>
@@ -34,29 +34,12 @@
 			</ul>
 			<ul class="uk-switcher">
 				<li>
-					<h3 class="uk-text-center" lang="Type.Crafting_Player"></h3>
+					<h3 class="title-options" lang="Type.Crafting_Player"></h3>
 					<div id="crafting_player"></div>
 				</li>
 				<li>
 					<h3 class="uk-text-center" lang="Type.Crafting_Table"></h3>
 					<div id="crafting_table"></div>
-					<form class="uk-form-stacked">
-						<div class="uk-margin">
-							<label class="uk-form-label" for="form-stacked-text">Text</label>
-							<div class="uk-form-controls">
-								<input class="uk-input" id="form-stacked-text" type="text" placeholder="Some text...">
-							</div>
-						</div>
-						<div class="uk-margin">
-							<label class="uk-form-label" for="shapeless" lang=""></label>
-							<div class="uk-form-controls">
-								<label class="uk-switch">
-									<input id="shapeless" type="checkbox">
-									<div class="uk-switch-span"></div>
-								</label>
-							</div>
-						</div>
-					</form>
 				</li>
 				<li>
 					<h3 class="uk-text-center" lang="Type.Furnace"></h3>
@@ -86,9 +69,51 @@
 		</div>
 	</div>
 </div>
+<div id="SelectBlockItemModal">
+	<div uk-modal class="uk-flex-top uk-modal-container" id="recipeModalSelect" container="#SelectBlockItemModal">
+		<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical" uk-overflow-auto>
+			<button class="uk-modal-close-default" type="button" uk-close></button>
+			<div>
+				<ul class="uk-child-width-expand" uk-tab>
+					<li class="uk-active"><a href="#">Block</a></li>
+					<li><a href="#">Item</a></li>
+				</ul>
+				<ul class="uk-switcher">
+					<li>
+						<input type="text" id="blocks-search" class="uk-input uk-margin-bottom" placeholder="{Search}">
+						<div class="uk-flex uk-flex-wrap uk-flex-middle flex-list" id="blocks-list"></div>
+					</li>
+					<li>
+						<input type="text" id="items-search" class="uk-input uk-margin-bottom" placeholder="{Search}">
+						<div class="uk-flex uk-flex-wrap uk-flex-middle flex-list" id="items-list"></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
 [/HTML]
 
 [CSS]
+.flex-list img {
+	max-width: 3em;
+    max-height: 3em;
+	margin: 0.2em;
+}
+#items-list img {
+	width: 3em;
+	padding: 0.5em;
+	image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+.flex-list img:hover {
+	background-color: rgb(12, 98, 183);
+	cursor: pointer;
+}
+
 .list-border {
 	border: 1px solid rgb(55, 60, 62);
 	border-top: none;
@@ -98,6 +123,9 @@
 }
 .img-menu {
 	width: 3.5em;
+}
+.title-options {
+	border-bottom: 1px solid white;
 }
 
 .craft {
@@ -142,7 +170,15 @@
     width: 4em;
     height: 4em;
     margin: 0.15em;
+	text-align: center;
 	cursor: pointer;
+}
+.case img {
+	position: relative;
+    max-width: 4em;
+    max-height: 4em;
+    transform: translateY(-50%);
+    top: 50%;
 }
 .case:hover {
 	background-color: rgba(24, 26, 27, 0.5);
@@ -168,6 +204,42 @@
 }
 [/CSS]
 
+<script>
 [JS]
+document.querySelectorAll('div[class="case"]').forEach((element) => {
+	element.addEventListener('click', (event) => {
+		element.setAttribute('case_selected', '');
+		UIkit.modal(document.getElementById('recipeModalSelect')).show();
+	});
+});
 
+document.getElementById('blocks-list').addEventListener('click', (event) => {
+	if (event.target.nodeName === 'IMG')
+		SetImage(event.target.id, event.target.src);
+});
+document.getElementById('items-list').addEventListener('click', (event) => {
+	if (event.target.nodeName === 'IMG')
+		SetImage(event.target.id, event.target.src, true);
+});
+function SetImage(id, src, isItem = false)
+{
+	let Case = document.querySelector('div[case_selected]');
+	let img = document.createElement('img');
+	img.src = src;
+	img.id = id;
+	if (isItem)
+		img.classList.add('craft_fire_and_cross');
+	while (Case.firstChild)
+		Case.removeChild(Case.firstChild);
+	if (id != 'trash')
+		Case.appendChild(img);
+	UIkit.modal(document.getElementById('recipeModalSelect')).hide();
+}
+
+document.getElementById('recipeModalSelect').addEventListener('beforehide', () => {
+	document.querySelectorAll('div[case_selected]').forEach((element) => {
+		element.removeAttribute('case_selected');
+	});
+});
 [/JS]
+</script>

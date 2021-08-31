@@ -39,12 +39,17 @@
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - ...  Clément Bertrand",
     "asar": false,
-    "asarUnpack": ["**/*"],
+    "asarUnpack": [
+      "**/*"
+    ],
     "directories": {
       "output": "out"
     },
     "win": {
-      "target": ["nsis", "zip"],
+      "target": [
+        "nsis",
+        "zip"
+      ],
       "icon": "src/dist/img/icon/icon.ico",
       "artifactName": "${productName}_${os}.${ext}"
     },
@@ -65,7 +70,9 @@
       "category": "Productivity",
       "icon": "src/dist/img/icon/icon.icns",
       "artifactName": "${productName}_${os}.${ext}",
-      "target": ["zip"]
+      "target": [
+        "zip"
+      ]
     },
     "dmg": {
       "backgroundColor": "#181a1b",
@@ -85,7 +92,10 @@
     "linux": {
       "icon": "src/dist/img/icon/icon.png",
       "artifactName": "${productName}_${os}.${ext}",
-      "target": ["AppImage", "zip"],
+      "target": [
+        "AppImage",
+        "zip"
+      ],
       "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
       "category": "Development"
     }

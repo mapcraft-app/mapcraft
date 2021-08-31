@@ -11,4 +11,35 @@
 		<div id="{ID}-result" class="case"></div>
 	</div>
 </div>
+<form id="crafting_player_form">
+	<div class="uk-margin-top">
+		<h3 class="title-options" lang="Options.Title"></h3>
+		<div class="uk-flex uk-flex-around uk-flex-nowrap">
+			<div>
+				<label class="uk-form-label" for="shapeless" lang="Options.Shapeless"></label>
+				<div class="uk-form-controls">
+					<label class="uk-switch">
+						<input id="shapeless" type="checkbox">
+						<div class="uk-switch-span"></div>
+					</label>
+				</div>
+			</div>
+			<div class="uk-text-center">
+				<label class="uk-form-label" for="form-stacked-text" lang="Options.Group"></label>
+				<div class="uk-form-controls">
+					<input class="uk-input" id="form-stacked-text" type="text">
+				</div>
+			</div>
+			<div class="uk-text-center">
+				<label class="uk-form-label" for="form-stacked-text" lang="Options.Output"></label>
+				<div class="uk-form-controls">
+					<input class="uk-input" id="form-stacked-text" type="text" value="crafting_recipe">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="uk-padding">
+	<button id="crafting_player_validation" class="uk-button uk-button-success uk-width-1-1" lang="Options.Button"></button>
+</div>
 [/HTML]

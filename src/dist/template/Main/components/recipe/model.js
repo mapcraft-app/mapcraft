@@ -1,0 +1,56 @@
+'use strict';
+
+/**
+ * shapeless, ingredients is using, and pattern & key is deleted
+ * shape, ingredients is deleted, and pattern & key is using
+ */
+exports.crafting_player = {
+	type: "minecraft:crafting_shaped",
+	group: String,
+	ingredients: Array,
+    pattern: Array,
+    key: {},
+    result: {
+        item: String,
+        count: Number
+    }
+};
+
+/**
+ * furnace: smelting
+ * blast_furnace: blasting
+ * campfire: campfire_cooking
+ * smoker: smoking
+ */
+
+exports.furnace = {
+	type: String,
+	group: String,
+    ingredient: Array,
+    result: String,
+    experience: Number,
+    cookingtime: Number
+};
+
+exports.stonecutter = {
+	type: "minecraft:stonecutting",
+	group: String,
+	ingredient: {
+		item: String
+	},
+	result: String,
+	count: Number
+};
+
+exports.smithing_table = {
+	type: "minecraft:smithing",
+    base: {
+        item: String
+    },
+    addition: {
+        item: String
+    },
+    result: {
+        item: String
+    }
+};

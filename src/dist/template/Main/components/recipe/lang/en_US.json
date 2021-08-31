@@ -14,9 +14,13 @@
 			"Smithing_Table": "Smithing table"
 		},
 		"Options": {
+			"Search": "Search",
+			"DeleteCase": "Delete case",
+			"Title": "Options",
 			"Shapeless": "Shapeless",
-			"ExactPattern": "Exact pattern",
-			"2x2Grid": ""
+			"Group": "Group",
+			"Output": "Output name",
+			"Button": "Create recipe"
 		}
 	}
 }
