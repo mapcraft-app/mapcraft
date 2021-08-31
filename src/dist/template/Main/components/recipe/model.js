@@ -5,7 +5,7 @@
  * shape, ingredients is deleted, and pattern & key is using
  */
 exports.crafting_player = {
-	type: "minecraft:crafting_shaped",
+	type: String,
 	group: String,
 	ingredients: Array,
     pattern: Array,

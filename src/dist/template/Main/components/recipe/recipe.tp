@@ -81,10 +81,16 @@
 				<ul class="uk-switcher">
 					<li>
 						<input type="text" id="blocks-search" class="uk-input uk-margin-bottom" placeholder="{Search}">
+						<div id="error-blocks-list" class="error-modal">
+							<h3 lang="Options.NoBlock"></h3>
+						</div>
 						<div class="uk-flex uk-flex-wrap uk-flex-middle flex-list" id="blocks-list"></div>
 					</li>
 					<li>
 						<input type="text" id="items-search" class="uk-input uk-margin-bottom" placeholder="{Search}">
+						<div id="error-items-list" class="error-modal">
+							<h3 lang="Options.NoItem"></h3>
+						</div>
 						<div class="uk-flex uk-flex-wrap uk-flex-middle flex-list" id="items-list"></div>
 					</li>
 				</ul>
@@ -95,6 +101,11 @@
 [/HTML]
 
 [CSS]
+.error-modal {
+	text-align: center;
+	display: none;
+}
+
 .flex-list img {
 	max-width: 3em;
     max-height: 3em;
@@ -201,6 +212,13 @@
     image-rendering: crisp-edges;
     image-rendering: pixelated;
     -ms-interpolation-mode: nearest-neighbor;
+}
+
+.count-result {
+	position: absolute;
+    margin-top: 0.5em;
+    width: 4.55em;
+    margin-left: 0.15em;
 }
 [/CSS]
 

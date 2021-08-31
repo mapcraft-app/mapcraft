@@ -45,13 +45,92 @@ class CreateRecipe
 		document.getElementById('crafting_player_validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
+			let model = Models.crafting_player;
 			const RECIPE_CASES = document.getElementById('area_crafting_player-cases');
-			const RECIPE_RESULT = document.getElementById('area_crafting_player-result');
+			const RECIPE_RESULT = document.getElementById('area_crafting_player-result').querySelectorAll('img')[0].id;
+			let temp_RECIPE_COUNT = document.getElementById('area_crafting_player-count').value;
+			if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
+			else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
+			const RECIPE_COUNT = temp_RECIPE_COUNT;
+			const FORM_INPUT = document.getElementById('crafting_player_form').elements;
+			const FORM = {Shapeless: FORM_INPUT[0].checked, ExactPosition: FORM_INPUT[1].checked, Group: FORM_INPUT[2].value, Output: FORM_INPUT[3].value};
+			
+			if (FORM.Group)
+				model.group = FORM.Group;
+			else
+				delete model['group'];
+			if (FORM.Shapeless)
+			{
+				model.type = 'minecraft:crafting_shapeless';
+				delete model['pattern'];
+				delete model['key'];
+				let ingredients = new Array();
+				const ITEMS = RECIPE_CASES.querySelectorAll('img');
+				for (let item of ITEMS)
+					ingredients.push({ "item": "minecraft:"+ item.id });
+				model.ingredients = ingredients;
+			}
+			else
+			{
+				model.type = 'minecraft:crafting_shaped';
+				delete model['ingredients'];
+				let alpha = 'A';
+				const ItemList = new Array();
+				const ItemKey = new Array();
+				let patternTemp = [
+					['', ''],
+					['', '']
+				];
+				const ITEMS = RECIPE_CASES.querySelectorAll('div');
+				const xmax = 1; const ymax = 1;
+				//#region Fill patternTemp
+				let x = 0; let y = 0;
+				for (let item of ITEMS)
+				{
+					if (!item.hasChildNodes()) patternTemp[x][y] = ' ';
+					else patternTemp[x][y] = item.children[0].id;
+					x++;
+					if (x > xmax) { y++; x = 0; }
+					if (y > ymax) break ;
+				}
+				//#endregion
+				//#region Transform block to key
+				x = 0; y = 0;
+				while (y < ymax + 1)
+				{
+					if (ItemList.indexOf(patternTemp[x][y]) < 0)
+					{
+						ItemList.push(patternTemp[x][y]);
+						ItemKey.push(alpha);
+						alpha = this.nextCharacter(alpha);
+					}
+					x++;
+					if (x > xmax) { y++; x = 0; }
+				}
+				//#endregion
+				//#region Key(s)
+				let z = 0;
+				let Length = ItemList.length;
+				let jsonKey = {};
+				while (z < Length)
+				{
+					if (ItemList[z] != ' ')
+						jsonKey[ItemKey[z]] = { "item": "minecraft:" + ItemList[z] }
+					z++;
+				}
+				//#endregion
+				//#region Pattern
+				
+				//#endregion
+			}
+			model.result.item = "minecraft:"+ RECIPE_RESULT;
+			model.result.count = RECIPE_COUNT;
 
-			const FORM = document.getElementById('crafting_player_form').elements;
-			for (let input of FORM)
-				console.log(input.value);
+			console.log(model);
 		});
+	}
+	static nextCharacter(c) {
+		return String.fromCharCode(c.charCodeAt(0) + 1);
 	}
 }
 
@@ -59,9 +138,18 @@ class GenerateList
 {
 	constructor()
 	{
-		this._generateList();
+		this._generateListBlock();
+		this._generateListItem();
+		document.getElementById('blocks-search').addEventListener('input', (event) => {
+			event.preventDefault(); event.stopImmediatePropagation();
+			this._searchInList(event.target, document.getElementById('blocks-list'), document.getElementById('error-blocks-list'));
+		});
+		document.getElementById('items-search').addEventListener('input', (event) => {
+			event.preventDefault(); event.stopImmediatePropagation();
+			this._searchInList(event.target, document.getElementById('items-list'), document.getElementById('error-items-list'));
+		});
 	}
-	_generateList()
+	_generateListBlock()
 	{
 		let list = document.getElementById('blocks-list');
 		let jsonData = JSON.parse(fs.readFileSync(path.join(Data.Blocks), 'utf-8'));
@@ -81,10 +169,14 @@ class GenerateList
 			image.setAttribute('uk-tooltip', 'title:'+id.name+'; pos:right');
 			list.appendChild(image);
 		}
-
-		list = document.getElementById('items-list');
-		jsonData = JSON.parse(fs.readFileSync(path.join(Data.Items), 'utf-8'));
+	}
+	_generateListItem()
+	{
+		let list = document.getElementById('items-list');
+		let jsonData = JSON.parse(fs.readFileSync(path.join(Data.Items), 'utf-8'));
 		Template.cleanNode(list);
+		let trash = document.createElement('img'); trash.src = path.join(__dirname, '../../../../img/assets/trash.png'); trash.id = 'trash';
+		trash.setAttribute('uk-tooltip', 'title:'+ LANG.Options.DeleteCase +'; pos: right');
 		for (let id of jsonData)
 		{
 			let image = document.createElement('img');
@@ -96,6 +188,35 @@ class GenerateList
 			image.id = id.name;
 			image.setAttribute('uk-tooltip', 'title:'+id.name+'; pos:right');
 			list.appendChild(image);
+		}
+	}
+	_searchInList(input, list, error)
+	{
+		let imgs = list.getElementsByTagName('img');
+		let isExist = false;
+		let regex = new RegExp(input.value);
+		if (!input.value)
+		{
+			error.style.display = "none";
+			for (let i of imgs)
+				i.style.removeProperty('display');
+		}
+		else
+		{
+			for (let i of imgs)
+			{
+				if (regex.test(i.id))
+				{
+					i.style.removeProperty('display');
+					isExist = true;
+				}
+				else
+					i.style.display = "none";
+			}
+			if (!isExist)
+				error.style.removeProperty('display');
+			else
+				error.style.display = "none";
 		}
 	}
 }

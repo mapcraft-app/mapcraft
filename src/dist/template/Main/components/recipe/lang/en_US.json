@@ -16,8 +16,11 @@
 		"Options": {
 			"Search": "Search",
 			"DeleteCase": "Delete case",
+			"NoBlock": "No block found",
+			"NoItem": "No item found",
 			"Title": "Options",
 			"Shapeless": "Shapeless",
+			"ExactPosition": "Exact position",
 			"Group": "Group",
 			"Output": "Output name",
 			"Button": "Create recipe"
