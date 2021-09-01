@@ -12,10 +12,16 @@
 				<span class="space-icon-nav" uk-icon="icon: {ItemsIcon}; ratio: 1"></span>
 			</a>
 		</li>
+		<li>
+			<a href="#" lang="Menu.Tags.Title">
+				<span class="space-icon-nav" uk-icon="icon: {TagsIcon}; ratio: 1"></span>
+			</a>
+		</li>
 	</ul>
 	<ul class="uk-switcher">
 		<li id="utility-tab-blocks"></li>
 		<li id="utility-tab-items"></li>
+		<li id="utility-tab-tags"></li>
 	</ul>
 </div>
 [/HTML]

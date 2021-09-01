@@ -11,6 +11,10 @@
 			"Items": {
 				"Title": "Liste des items",
 				"Icon": "tv"
+			},
+			"Tag": {
+				"Title": "Liste des tags",
+				"Icon": "hashtag"
 			}
 		},
 		"Search": "Rechercher",

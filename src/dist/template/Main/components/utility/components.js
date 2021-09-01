@@ -5,7 +5,8 @@ const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
 const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname);
 const Data = {
 	Blocks: path.join(__dirname, '/list/blocks'),
-	Items: path.join(__dirname, '/list/items')
+	Items: path.join(__dirname, '/list/items'),
+	Tags: path.join(__dirname, '/list/tags')
 }
 var LANG; UpdateLang();
 function UpdateLang() { LANG = MCplugin.Lang('Utility').Data; }
@@ -14,7 +15,7 @@ class UtilityComponent
 {
 	static utility()
 	{
-		Template.render(document.getElementById('content'), 'utility.tp', { BlocksIcon: LANG.Menu.Blocks.Icon, ItemsIcon: LANG.Menu.Items.Icon });
+		Template.render(document.getElementById('content'), 'utility.tp', { BlocksIcon: LANG.Menu.Blocks.Icon, ItemsIcon: LANG.Menu.Items.Icon, TagsIcon: LANG.Menu.Tags.Icon });
 	}
 	//#region Blocks
 	static _generateListBlock(version)
@@ -64,7 +65,6 @@ class UtilityComponent
 			let link = document.createElement('a');
 			link.download = document.getElementById('blocks-version').value + '.json';
 			link.href = path.join(__dirname, 'list/blocks', link.download);
-			console.log(link.href);
 			link.click();
 		});
 	}
@@ -117,7 +117,90 @@ class UtilityComponent
 			let link = document.createElement('a');
 			link.download = document.getElementById('items-version').value + '.json';
 			link.href = path.join(__dirname, 'list/items', link.download);
-			console.log(link.href);
+			link.click();
+		});
+	}
+	//#endregion
+	//#region Tags
+	static _generateTagItem(version)
+	{
+		let x = 0;
+		let list = document.getElementById('tags-list');
+		let jsonData = JSON.parse(fs.readFileSync(path.join(Data.Tags, version +'.json'), 'utf-8'));
+		const isTag = new RegExp('^#.+');
+		Template.cleanNode(list);
+		for (let col in jsonData)
+		{
+			let TR = document.createElement('tr'); TR.id = 'list_' + col;
+			let TD_NAME = document.createElement('td');
+			let P_TD_NAME = document.createElement('p'); P_TD_NAME.innerText = col; TD_NAME.appendChild(P_TD_NAME);
+			let TD_TAG = document.createElement('td');
+			let TD_DIV = document.createElement('div'); TD_DIV.classList.add('uk-flex', 'uk-flex-wrap');
+			for (let row in jsonData[col])
+			{
+				const NAME = jsonData[col][row];
+				let element = document.createElement('div');
+				let image = document.createElement('img');
+				let testpath, isItem = false;
+				if (fs.existsSync(path.join(__dirname, '../../../../img/assets/block', NAME + '.png')))
+					testpath = path.join(__dirname, '../../../../img/assets/block', NAME + '.png');
+				else if (fs.existsSync(path.join(__dirname, '../../../../img/assets/block', NAME + '.webp')))
+					testpath = path.join(__dirname, '../../../../img/assets/block', NAME + '.webp');
+				else if (fs.existsSync(path.join(__dirname, '../../../../img/assets/item', NAME + '.png')))
+				{
+					testpath = path.join(__dirname, '../../../../img/assets/item', NAME + '.png');
+					isItem = true;
+				}
+				else
+				{
+					testpath = path.join(__dirname, '../../../../img/assets/item', NAME + '.webp');
+					isItem = true;
+				}
+
+				if (isTag.test(NAME))
+				{
+					let link = document.createElement('a'); link.href = "#list_" + NAME.substring(1); link.innerText = NAME;
+					element.appendChild(link);
+				}
+				else
+				{
+					image.classList.add('img-list');
+					if (isItem) image.classList.add('cubic-img');
+					image.src = testpath;
+					image.setAttribute('uk-tooltip', 'title:'+ NAME +'; pos:right');
+					element.appendChild(image);
+				}
+				element.classList.add('tag-list');
+				TD_DIV.appendChild(element);
+			}
+			TD_TAG.appendChild(TD_DIV);
+			TR.appendChild(TD_NAME); TR.appendChild(TD_TAG);
+			list.appendChild(TR);
+		}
+	}
+	static tags()
+	{
+		Template.render(document.getElementById('utility-tab-tags'), 'tags.tp', { Search: LANG.Search, Download: LANG.Download});
+		this._generateTagItem(document.getElementById('tags-version').value);
+		document.getElementById('disabled-form').addEventListener('submit', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+		});
+		document.getElementById('tags-search').addEventListener('input', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			_searchInTagList(event.target, document.getElementById('tags-list'), document.getElementById('error-tags-list'));
+		});
+		document.getElementById('tags-version').addEventListener('change', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			this._generateTagItem(event.target.value);
+			document.getElementById('tags-search').value = "";
+		});
+		document.getElementById('tags-download').addEventListener('click', () => {
+			let link = document.createElement('a');
+			link.download = document.getElementById('tags-version').value + '.json';
+			link.href = path.join(__dirname, 'list/tags', link.download);
 			link.click();
 		});
 	}
@@ -128,6 +211,7 @@ class UtilityComponent
 		this.utility();
 		this.blocks();
 		this.items();
+		this.tags();
 		Template.updateLang(document.getElementById('content'), LANG);
 	}
 }
@@ -175,5 +259,35 @@ function searchInList(input, list, error)
 			error.style.display = "none";
 	}
 }
+
+function _searchInTagList(input, list, error)
+	{
+		let TR = list.getElementsByTagName('tr');
+		let isExist = false;
+		let regex = new RegExp(input.value);
+		if (!input.value)
+		{
+			error.style.display = "none";
+			for (let i of TR)
+				i.style.removeProperty('display');
+		}
+		else
+		{
+			for (let i of TR)
+			{
+				if (regex.test(i.id))
+				{
+					i.style.removeProperty('display');
+					isExist = true;
+				}
+				else
+					i.style.display = "none";
+			}
+			if (!isExist)
+				error.style.removeProperty('display');
+			else
+				error.style.display = "none";
+		}
+	}
 
 module.exports = UtilityComponent;

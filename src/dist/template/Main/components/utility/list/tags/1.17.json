@@ -190,7 +190,7 @@
 	"flowers": [
 		"#small_flowers",
 		"#tall_flowers",
-		"azalea_leaves_flowers",
+		"flowering_azalea_leaves",
 		"flowering_azalea"
 	],
 	"fox_food": [
@@ -234,7 +234,7 @@
 		"acacia_leaves",
 		"birch_leaves",
 		"azalea_leaves",
-		"azalea_leaves_flowers"
+		"flowering_azalea_leaves"
 	],
 	"lectern_books": [
 		"written_book",
