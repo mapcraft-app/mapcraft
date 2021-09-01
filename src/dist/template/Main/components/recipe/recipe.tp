@@ -38,31 +38,31 @@
 					<div id="crafting_player"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Crafting_Table"></h3>
+					<h3 class="title-options" lang="Type.Crafting_Table"></h3>
 					<div id="crafting_table"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Furnace"></h3>
+					<h3 class="title-options" lang="Type.Furnace"></h3>
 					<div id="furnace"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Blast_Furnace"></h3>
+					<h3 class="title-options" lang="Type.Blast_Furnace"></h3>
 					<div id="blast_furnace"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Campfire"></h3>
+					<h3 class="title-options" lang="Type.Campfire"></h3>
 					<div id="campfire"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Smoker"></h3>
+					<h3 class="title-options" lang="Type.Smoker"></h3>
 					<div id="smoker"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Stonecutter"></h3>
+					<h3 class="title-options" lang="Type.Stonecutter"></h3>
 					<div id="stonecutter"></div>
 				</li>
 				<li>
-					<h3 class="uk-text-center" lang="Type.Smithing_Table"></h3>
+					<h3 class="title-options" lang="Type.Smithing_Table"></h3>
 					<div id="smithing_table"></div>
 				</li>
 			</ul>

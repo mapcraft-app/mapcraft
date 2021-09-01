@@ -12,7 +12,6 @@ const Data = {
 	Items: path.join(__dirname, '../utility/list/items', LastMinecraftVersion + '.json')
 }
 
-
 class RecipeComponent
 {
 	static craft_table()
@@ -34,13 +33,12 @@ class RecipeComponent
 		const _generateList = new GenerateList();
 		this.craft_table();
 		Template.updateLang(document.getElementById('content'), LANG);
-		CreateRecipe.player();
+		CreateRecipe.setEvent();
 	}
 }
 
 class CreateRecipe
 {
-	
 	static generateCraftingTable_2_3(nameOfId, optionFormId, is3x3 = false)
 	{
 		let model = Models.crafting_player;
@@ -102,8 +100,10 @@ class CreateRecipe
 			let row = 0; let col = 0;
 			for (let item of ITEMS)
 			{
-				if (!item.hasChildNodes()) patternTemp[row][col] = ' ';
-				else patternTemp[row][col] = item.children[0].id;
+				if (!item.hasChildNodes())
+					patternTemp[row][col] = ' ';
+				else 
+					patternTemp[row][col] = item.children[0].id;
 				col++;
 				if (col > colMAX) { row++; col = 0; }
 				if (row > rowMAX) break ;
@@ -156,6 +156,7 @@ class CreateRecipe
 				while (row <= rowMAX)
 				{
 					test = false;
+					col = 0;
 					while (col <= colMAX)
 					{
 						if (patternTemp[row][col] != ' ') { test = true; break; }
@@ -174,6 +175,7 @@ class CreateRecipe
 				while (col <= colMAX)
 				{
 					test = false;
+					row = 0;
 					while (row <= rowMAX)
 					{
 						if (patternTemp[row][col] != ' ') { test = true; break; }
@@ -200,13 +202,53 @@ class CreateRecipe
 		return (model);
 	}
 	
+	static generateFurnace(nameOfId, optionFormId)
+	{
+		let model = Models.furnace;
+		const RECIPE_CASES = document.getElementById(nameOfId + '-cases');
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id;
+		let temp_RECIPE_COUNT = document.getElementById(nameOfId + '-count').value;
+		if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
+		else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
+		const RECIPE_COUNT = temp_RECIPE_COUNT;
+		const FORM_INPUT = document.getElementById(optionFormId).elements;
+		const FORM = {Experience: FORM_INPUT[0].value, Time: FORM_INPUT[1].value, Group: FORM_INPUT[2].value, Output: FORM_INPUT[3].value};
+
+		if (FORM.Group)
+			model.group = FORM.Group;
+		else
+			delete model['group'];
+	}
+
+	static setEvent()
+	{
+		this.player();
+		this.craft_table();
+	}
 	static player()
 	{
 		document.getElementById('crafting_player_validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			// 2x2   area_crafting_player	crafting_player_form	false
 			let __ret = this.generateCraftingTable_2_3('area_crafting_player', 'crafting_player_form', false);
+			console.log(__ret);
+		});
+	}
+	static craft_table()
+	{
+		document.getElementById('crafting_table_validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateCraftingTable_2_3('area_crafting_table', 'crafting_table_form', true);
+			console.log(__ret);
+		});
+	}
+	static furnace()
+	{
+		document.getElementById('area_furnace-validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateCraftingTable_2_3('area_furnace', 'area_furnace-form', true);
 			console.log(__ret);
 		});
 	}

@@ -11,4 +11,26 @@
 		</div>
 	</div>
 </div>
+<form id="{ID}-form">
+	<div class="uk-margin-top">
+		<h3 class="title-options" lang="Options.Title"></h3>
+		<div class="uk-flex uk-flex-around uk-flex-nowrap">
+			<div class="uk-text-center">
+				<label class="uk-form-label" for="form-stacked-text" lang="Options.Group"></label>
+				<div class="uk-form-controls">
+					<input class="uk-input" id="form-stacked-text" type="text">
+				</div>
+			</div>
+			<div class="uk-text-center">
+				<label class="uk-form-label" for="form-stacked-text" lang="Options.Output"></label>
+				<div class="uk-form-controls">
+					<input class="uk-input" id="form-stacked-text" type="text" value="crafting_recipe">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="uk-padding">
+	<button id="{ID}-validation" class="uk-button uk-button-success uk-width-1-1" lang="Options.Button"></button>
+</div>
 [/HTML]

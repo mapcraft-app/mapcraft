@@ -21,6 +21,8 @@
 			"Title": "Options",
 			"Shapeless": "Shapeless",
 			"ExactPosition": "Exact position",
+			"Experience": "Experience gain",
+			"Time": "Waiting time",
 			"Group": "Group",
 			"Output": "Output name",
 			"Button": "Create recipe"
