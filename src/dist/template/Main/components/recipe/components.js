@@ -43,6 +43,18 @@ class CreateRecipe
 	{
 		let model = Models.crafting_player;
 		const RECIPE_CASES = document.getElementById(nameOfId + '-cases');
+		let case_count = (is3x3) ? 9 : 4;
+		let case_x = 0;
+		let check_empty_cases = RECIPE_CASES.querySelectorAll('div');
+		for (let _case of check_empty_cases)
+			if (!_case.hasChildNodes()) ++case_x;
+		if (case_x === case_count)
+			throw 'No item on recipe cases';
+		try {
+			document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id;
+		} catch (e) {
+			throw 'No item on result case';
+		}
 		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id;
 		let temp_RECIPE_COUNT = document.getElementById(nameOfId + '-count').value;
 		if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
@@ -202,28 +214,114 @@ class CreateRecipe
 		return (model);
 	}
 	
-	static generateFurnace(nameOfId, optionFormId)
+	static generateFurnace(nameOfId, optionFormId, type)
 	{
 		let model = Models.furnace;
-		const RECIPE_CASES = document.getElementById(nameOfId + '-cases');
+		try {
+			document.getElementById(nameOfId + '-cases').querySelectorAll('div')[0].children[0].id;
+		} catch (e) {
+			throw 'No item on recipe case';
+		}
+		const RECIPE_CASE = document.getElementById(nameOfId + '-cases').querySelectorAll('img')[0].id;
+		try {
+			document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id
+		} catch (e) {
+			throw 'No item on result case';	
+		}
 		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id;
 		let temp_RECIPE_COUNT = document.getElementById(nameOfId + '-count').value;
 		if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
 		else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
 		const RECIPE_COUNT = temp_RECIPE_COUNT;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
-		const FORM = {Experience: FORM_INPUT[0].value, Time: FORM_INPUT[1].value, Group: FORM_INPUT[2].value, Output: FORM_INPUT[3].value};
+		let temp_TIME = FORM_INPUT[1].value;
+		if (temp_TIME < 0) temp_TIME = 0
+		const FORM = {Experience: FORM_INPUT[0].value, Time: (temp_TIME * 20), Group: FORM_INPUT[2].value, Output: FORM_INPUT[3].value};
+		
+		model.type = 'minecraft:' + type;
+		model.ingredient = {
+			"item": "minecraft:" + RECIPE_CASE
+		};
+		model.result = "minecraft:" + RECIPE_RESULT;
+		model.experience = parseFloat(FORM.Experience);
+		model.cookingtime = parseFloat(FORM.Time);
+		if (FORM.Group) model.group = FORM.Group;
+		else delete model['group'];
+		return (model);
+	}
 
-		if (FORM.Group)
-			model.group = FORM.Group;
-		else
-			delete model['group'];
+	static generateStoneCutter(nameOfId, optionFormId, type)
+	{
+		let model = Models.stonecutter;
+		try {
+			document.getElementById(nameOfId + '-cases').children[0].id;
+		} catch (e) {
+			throw 'No item on recipe case';
+		}
+		const RECIPE_CASE = document.getElementById(nameOfId + '-cases').children[0].id;
+		try {
+			document.getElementById(nameOfId + '-result').children[0].id;
+		} catch (e) {
+			throw 'No item on result case';	
+		}
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').children[0].id;
+		let temp_RECIPE_COUNT = document.getElementById(nameOfId + '-count').value;
+		if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
+		else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
+		const RECIPE_COUNT = temp_RECIPE_COUNT;
+		const FORM_INPUT = document.getElementById(optionFormId).elements;
+		const FORM = {Group: FORM_INPUT[0].value, Output: FORM_INPUT[1].value};
+		model.type = "minecraft:" + type;
+		if (FORM.Group) model.group = FORM.Group;
+		else delete model['group'];
+		model.ingredient.item = 'minecraft:' + RECIPE_CASE;
+		model.result = 'minecraft:' + RECIPE_RESULT;
+		model.count = RECIPE_COUNT;
+		return (model);
+	}
+
+	static generateSmithingTable(nameOfId, optionFormId, type)
+	{
+		let model = Models.smithing_table;
+		try {
+			document.getElementById(nameOfId + '-cases-add-one').children[0].id;
+		} catch (e) {
+			throw 'No item on base recipe case';
+		}
+		const RECIPE_CASE_BASE = document.getElementById(nameOfId + '-cases-add-one').children[0].id;
+		try {
+			document.getElementById(nameOfId + '-cases-add-two').children[0].id;
+		} catch (e) {
+			throw 'No item on addition recipe case';	
+		}
+		const RECIPE_CASE_ADD = document.getElementById(nameOfId + '-cases-add-two').children[0].id;
+		try {
+			document.getElementById(nameOfId + '-result').children[0].id;
+		} catch (e) {
+			throw 'No item on addition recipe case';	
+		}
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').children[0].id;
+		const FORM_INPUT = document.getElementById(optionFormId).elements;
+		const FORM = {Group: FORM_INPUT[0].value, Output: FORM_INPUT[1].value};
+		model.type = type;
+		if (FORM.Group) model.group = FORM.Group;
+		else delete model['group'];
+		model.base.item = 'minecraft:' + RECIPE_CASE_BASE;
+		model.addition.item = 'minecraft:' + RECIPE_CASE_ADD;
+		model.result.item = 'minecraft:' + RECIPE_RESULT;
+		return (model);
 	}
 
 	static setEvent()
 	{
 		this.player();
 		this.craft_table();
+		this.furnace();
+		this.blast_furnace();
+		this.campfire();
+		this.smoker();
+		this.stonecutter();
+		this.smithing_table();
 	}
 	static player()
 	{
@@ -248,7 +346,52 @@ class CreateRecipe
 		document.getElementById('area_furnace-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateCraftingTable_2_3('area_furnace', 'area_furnace-form', true);
+			let __ret = this.generateFurnace('area_furnace', 'area_furnace-form', 'smelting');
+			console.log(__ret);
+		});
+	}
+	static blast_furnace()
+	{
+		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateFurnace('area_blast_furnace', 'area_blast_furnace-form', 'blasting');
+			console.log(__ret);
+		});
+	}
+	static campfire()
+	{
+		document.getElementById('area_campfire-validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateFurnace('area_campfire', 'area_campfire-form', 'campfire_cooking');
+			console.log(__ret);
+		});
+	}
+	static smoker()
+	{
+		document.getElementById('area_smoker-validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateFurnace('area_smoker', 'area_smoker-form', 'smoking');
+			console.log(__ret);
+		});
+	}
+	static stonecutter()
+	{
+		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateStoneCutter('area_stonecutter', 'area_stonecutter-form', 'stonecutting');
+			console.log(__ret);
+		});
+	}
+	static smithing_table()
+	{
+		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			let __ret = this.generateSmithingTable('area_smithing_table', 'area_smithing_table-form', 'smithing');
 			console.log(__ret);
 		});
 	}

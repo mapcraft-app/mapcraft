@@ -7,7 +7,6 @@
 		<img class="craft_arrow" src="dist/img/assets/arrow.png"/>
 		<div>
 			<div id="{ID}-result" class="case"></div>
-			<input id="{ID}-count" class="uk-input uk-form-small count-result" type="number" value="1" min="1" max="64" step="1"/>
 		</div>
 	</div>
 </div>

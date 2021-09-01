@@ -33,7 +33,7 @@ exports.furnace = {
 };
 
 exports.stonecutter = {
-	type: "minecraft:stonecutting",
+	type: String,
 	group: String,
 	ingredient: {
 		item: String
@@ -43,7 +43,7 @@ exports.stonecutter = {
 };
 
 exports.smithing_table = {
-	type: "minecraft:smithing",
+	type: String,
     base: {
         item: String
     },

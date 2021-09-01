@@ -176,6 +176,14 @@
 	align-items: center;
 }
 
+.case-disabled {
+	background-color: #4e4e4e;
+    width: 4em;
+    height: 4em;
+    margin: 0.15em;
+	text-align: center;
+}
+
 .case {
 	background-color: #8c8a8c;
     width: 4em;
