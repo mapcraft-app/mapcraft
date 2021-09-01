@@ -29,6 +29,7 @@ class RecipeComponent
 	}
 	static draw()
 	{
+		UpdateLang();
 		Template.render(document.getElementById('content'), 'recipe.tp', { Search: LANG.Options.Search });
 		const _generateList = new GenerateList();
 		this.craft_table();

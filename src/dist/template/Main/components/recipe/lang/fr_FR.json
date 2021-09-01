@@ -3,6 +3,29 @@
 	"Icon": "grid",
 	"Notification": "",
 	"Data": {
-
+		"Type": {
+			"Crafting_Player": "Établi du joueur",
+			"Crafting_Table": "Établi",
+			"Furnace": "Fourneau",
+			"Blast_Furnace": "Haut fourneau",
+			"Campfire": "Feu de camp",
+			"Smoker": "Fumoir",
+			"Stonecutter": "Tailleur de pierre",
+			"Smithing_Table": "Table de forgeron"
+		},
+		"Options": {
+			"Search": "Recherche",
+			"DeleteCase": "Supprimer la case",
+			"NoBlock": "Aucun bloc trouvé",
+			"NoItem": "Aucun élément trouvé",
+			"Title": "Options",
+			"Shapeless": "Informe",
+			"ExactPosition": "Position exacte",
+			"Experience": "Gain d'expérience",
+			"Time": "Temps d'attente",
+			"Group": "Groupe",
+			"Output": "Nom du fichier de sortie",
+			"Button": "Créer la recette"
+		}
 	}
 }
