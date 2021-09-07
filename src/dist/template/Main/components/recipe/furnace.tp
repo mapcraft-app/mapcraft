@@ -17,27 +17,27 @@
 		<h3 class="title-options" lang="Options.Title"></h3>
 		<div class="uk-flex uk-flex-around uk-flex-nowrap">
 			<div class="uk-text-center uk-margin">
-				<label class="uk-form-label" for="form-stacked-text" lang="Options.Experience"></label>
+				<label class="uk-form-label" for="{ID}-formExperience" lang="Options.Experience"></label>
 				<div class="uk-form-controls">
-					<input class="uk-input uk-form-width-small" id="form-stacked-text" type="number" step="0.1" min="0.0" value="0.0">
+					<input class="uk-input uk-form-width-small" id="{ID}-formExperience" type="number" step="0.1" min="0.0" value="0.0">
 				</div>
 			</div>
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="form-stacked-text" lang="Options.Time"></label>
+				<label class="uk-form-label" for="{ID}-formTime" lang="Options.Time"></label>
 				<div class="uk-form-controls">
-					<input class="uk-input uk-form-width-small" id="form-stacked-text" type="number" step="0.1" min="0.0" value="0.0">
+					<input class="uk-input uk-form-width-small" id="{ID}-formTime" type="number" step="0.1" min="0.0" value="0.0">
 				</div>
 			</div>
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="form-stacked-text" lang="Options.Group"></label>
+				<label class="uk-form-label" for="{ID}-formGroup" lang="Options.Group"></label>
 				<div class="uk-form-controls">
-					<input class="uk-input" id="form-stacked-text" type="text">
+					<input class="uk-input" id="{ID}-formGroup" type="text">
 				</div>
 			</div>
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="form-stacked-text" lang="Options.Output"></label>
+				<label class="uk-form-label" for="{ID}-formOutput" lang="Options.Output"></label>
 				<div class="uk-form-controls">
-					<input class="uk-input" id="form-stacked-text" type="text" value="crafting_recipe">
+					<input class="uk-input" id="{ID}-formOutput" type="text" value="crafting_recipe">
 				</div>
 			</div>
 		</div>

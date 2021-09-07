@@ -5,12 +5,32 @@ const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname
 var LANG; UpdateLang();
 function UpdateLang() { LANG = MCplugin.Lang('Recipe').Data; }
 
+const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+if (!fs.existsSync(path.join(LocalMapcraft.Data.DataPack, 'recipes')))
+	fs.mkdirSync(path.join(LocalMapcraft.Data.DataPack, 'recipes'));
+
 const Models = require('./model');
 const LastMinecraftVersion = "1.17";
 const Data = {
 	Blocks: path.join(__dirname, '../utility/list/blocks', LastMinecraftVersion + '.json'),
 	Items: path.join(__dirname, '../utility/list/items', LastMinecraftVersion + '.json')
 }
+
+//#region General function
+function CreateAlert(type, DOMelement, str)
+{
+	let alert = document.createElement('div');
+	alert.classList.add('uk-alert-' + type);
+	alert.setAttribute('uk-alert', '');
+	let closeButton = document.createElement('a');
+	closeButton.classList.add('uk-alert-close');
+	closeButton.setAttribute('uk-close', '');
+	let text = document.createElement('p').appendChild(document.createTextNode(str));
+	alert.appendChild(closeButton);
+	alert.appendChild(text);
+	DOMelement.appendChild(alert);
+}
+//#endregion
 
 class RecipeComponent
 {
@@ -329,7 +349,12 @@ class CreateRecipe
 		document.getElementById('crafting_player_validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateCraftingTable_2_3('area_crafting_player', 'crafting_player_form', false);
+			let __ret;
+			try {
+				__ret = this.generateCraftingTable_2_3('area_crafting_player', 'crafting_player_form', false);
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -338,7 +363,12 @@ class CreateRecipe
 		document.getElementById('crafting_table_validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateCraftingTable_2_3('area_crafting_table', 'crafting_table_form', true);
+			let __ret;
+			try {
+				__ret = this.generateCraftingTable_2_3('area_crafting_table', 'crafting_table_form', true);
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -347,7 +377,12 @@ class CreateRecipe
 		document.getElementById('area_furnace-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateFurnace('area_furnace', 'area_furnace-form', 'smelting');
+			let __ret;
+			try {
+				__ret = this.generateFurnace('area_furnace', 'area_furnace-form', 'smelting');
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -356,7 +391,12 @@ class CreateRecipe
 		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateFurnace('area_blast_furnace', 'area_blast_furnace-form', 'blasting');
+			let __ret;
+			try {
+				__ret = this.generateFurnace('area_blast_furnace', 'area_blast_furnace-form', 'blasting');
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -365,7 +405,12 @@ class CreateRecipe
 		document.getElementById('area_campfire-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateFurnace('area_campfire', 'area_campfire-form', 'campfire_cooking');
+			let __ret;
+			try {
+				__ret = this.generateFurnace('area_campfire', 'area_campfire-form', 'campfire_cooking');
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -374,7 +419,12 @@ class CreateRecipe
 		document.getElementById('area_smoker-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateFurnace('area_smoker', 'area_smoker-form', 'smoking');
+			let __ret;
+			try {
+				__ret = this.generateFurnace('area_smoker', 'area_smoker-form', 'smoking');
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -383,7 +433,12 @@ class CreateRecipe
 		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateStoneCutter('area_stonecutter', 'area_stonecutter-form', 'stonecutting');
+			let __ret;
+			try {
+				__ret = this.generateStoneCutter('area_stonecutter', 'area_stonecutter-form', 'stonecutting');
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}
@@ -392,7 +447,12 @@ class CreateRecipe
 		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			let __ret = this.generateSmithingTable('area_smithing_table', 'area_smithing_table-form', 'smithing');
+			let __ret;
+			try {
+				__ret = this.generateSmithingTable('area_smithing_table', 'area_smithing_table-form', 'smithing');
+			} catch (__error) {
+				CreateAlert('warning', document.getElementById('recipe-error'), __error);
+			}
 			console.log(__ret);
 		});
 	}

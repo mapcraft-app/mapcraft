@@ -19,33 +19,33 @@
 		<h3 class="title-options" lang="Options.Title"></h3>
 		<div class="uk-flex uk-flex-around uk-flex-nowrap">
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="shapeless" lang="Options.Shapeless"></label>
+				<label class="uk-form-label" for="{ID}-shapeless" lang="Options.Shapeless"></label>
 				<div class="uk-form-controls">
 					<label class="uk-switch">
-						<input id="shapeless" type="checkbox">
+						<input id="{ID}-shapeless" type="checkbox">
 						<div class="uk-switch-span"></div>
 					</label>
 				</div>
 			</div>
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="shapeless" lang="Options.ExactPosition"></label>
+				<label class="uk-form-label" for="{ID}-exactPosition" lang="Options.ExactPosition"></label>
 				<div class="uk-form-controls">
 					<label class="uk-switch">
-						<input id="exactPosition" type="checkbox">
+						<input id="{ID}-exactPosition" type="checkbox">
 						<div class="uk-switch-span"></div>
 					</label>
 				</div>
 			</div>
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="form-stacked-text" lang="Options.Group"></label>
+				<label class="uk-form-label" for="{ID}-formGroup" lang="Options.Group"></label>
 				<div class="uk-form-controls">
-					<input class="uk-input" id="form-stacked-text" type="text">
+					<input class="uk-input" id="{ID}-formGroup" type="text">
 				</div>
 			</div>
 			<div class="uk-text-center">
-				<label class="uk-form-label" for="form-stacked-text" lang="Options.Output"></label>
+				<label class="uk-form-label" for="{ID}-formOutput" lang="Options.Output"></label>
 				<div class="uk-form-controls">
-					<input class="uk-input" id="form-stacked-text" type="text" value="crafting_recipe">
+					<input class="uk-input" id="{ID}-formOutput" type="text" value="crafting_recipe">
 				</div>
 			</div>
 		</div>
