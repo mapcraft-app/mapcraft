@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 
 let validChannels = new Array();
 let Channel = {
-	Dialog: ['open-file', 'open-directory'],
+	Dialog: ['open-file', 'open-directory', 'question', 'error'],
 	Editor: ['open', 'open-modal', 'close', 'close-modal', 'save-file'],
 	Log: ['is-change', 'send-change'],
 	Notification: ['click-notification'],
@@ -14,7 +14,8 @@ let Channel = {
 	WorkProgress: ['signal-open-modal', 'open-modal', 'signal-close-modal', 'close-modal'],
 	
 	Cutscene: ['signal-create-cutscene', 'create-cutscene'],
-	Trigger: ['signal-open-modal', 'open-modal']
+	Trigger: ['signal-open-modal', 'open-modal'],
+	Recipes: ['signal-is-exist', 'is-exist']
 }
 
 class ArrayIPC

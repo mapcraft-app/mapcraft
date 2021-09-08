@@ -3,7 +3,7 @@
 	<div id="recipe-error"></div>
 	<div class="uk-flex">
 		<div class="uk-width-1-3">
-			<ul id="sound-list" class="uk-list uk-list-striped list-border" uk-accordion="multiple: false"></ul>
+			<ul id="sound-list" class="uk-list uk-list-striped list-border uk-accordion" uk-accordion="multiple: false"></ul>
 		</div>
 		<div class="uk-width-2-3 uk-margin-left">
 			<ul class="uk-child-width-expand" uk-tab="animation: uk-animation-fade">
@@ -94,6 +94,17 @@
 						<div class="uk-flex uk-flex-wrap uk-flex-middle flex-list" id="items-list"></div>
 					</li>
 				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="RecipesIsExistModal">
+	<div uk-modal="esc-close:false;bg-close:false" class="uk-flex-top" id="ModalIsExist" container="#RecipesIsExistModal">
+		<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+			<h3 class="uk-text-center" lang="Modal.IsExist.Title"></h3>
+			<div class="uk-flex uk-flex-around">
+				<buton class="uk-button uk-button-success uk-modal-close" lang="Modal.IsExist.Yes" id="ModalIsExist-Yes"></buton>
+				<buton class="uk-button uk-button-danger uk-modal-close" lang="Modal.IsExist.No" id="ModalIsExist-No"></buton>
 			</div>
 		</div>
 	</div>
@@ -266,6 +277,10 @@ document.getElementById('recipeModalSelect').addEventListener('beforehide', () =
 	document.querySelectorAll('div[case_selected]').forEach((element) => {
 		element.removeAttribute('case_selected');
 	});
+});
+
+window.api.receive('Recipes:is-exist', (command) => {
+	UIkit.modal('#ModalIsExist').show();
 });
 [/JS]
 </script>

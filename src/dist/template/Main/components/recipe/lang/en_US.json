@@ -26,6 +26,15 @@
 			"Group": "Group",
 			"Output": "Output name",
 			"Button": "Create recipe"
+		},
+		"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)",
+		"FileCreationSuccess": "The recipe has been successfully created",
+		"Modal": {
+			"IsExist": {
+				"Title": "This recipe already exists, do you want to overwrite it ?",
+				"Yes": "Yes",
+				"No": "No"
+			}
 		}
 	}
 }

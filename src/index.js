@@ -230,6 +230,14 @@ ipcMain.on('Dialog:open-file', (event, element, path) => {
 		console.error(error);
 	});
 });
+ipcMain.on('Dialog:question', (event, options) => {
+	dialog.showMessageBox(null, options, (response) => {
+		event.reply('Dialog:answer', response);
+	});
+});
+ipcMain.on('Dialog:error', (event, title, content) => {
+	dialog.showErrorBox(title, content);
+});
 //#endregion
 
 //#region Editor
@@ -299,6 +307,12 @@ ipcMain.on('Trigger:signal-open-modal', (event, command) => {
 //#region Cutscene
 ipcMain.on('Cutscene:signal-create-cutscene', (event, command) => {
 	event.reply('Cutscene:create-cutscene', command);
+});
+//#endregion
+
+//#region Recipes
+ipcMain.on('Recipes:signal-is-exist', (event) => {
+	event.reply('Recipes:is-exist');
 });
 //#endregion
 

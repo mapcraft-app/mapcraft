@@ -1,15 +1,18 @@
 const path = require('path');
 const fs = require('fs');
+const IPC = require('../../../../js/MCipc');
+const MCutilities = require('../../../../js/MCutilities');
 const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
 const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname);
 var LANG; UpdateLang();
 function UpdateLang() { LANG = MCplugin.Lang('Recipe').Data; }
 
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-if (!fs.existsSync(path.join(LocalMapcraft.Data.DataPack, 'recipes')))
-	fs.mkdirSync(path.join(LocalMapcraft.Data.DataPack, 'recipes'));
+const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraft-data', 'recipes');
+if (!fs.existsSync(RecipesDirectory)) fs.mkdirSync(RecipesDirectory);
 
 const Models = require('./model');
+
 const LastMinecraftVersion = "1.17";
 const Data = {
 	Blocks: path.join(__dirname, '../utility/list/blocks', LastMinecraftVersion + '.json'),
@@ -47,12 +50,62 @@ class RecipeComponent
 		Template.renderRaw(document.getElementById('campfire'), Template.parseRaw(Furnace, {ID:"area_campfire" }), 'campfire.tp', null);
 		Template.renderRaw(document.getElementById('smoker'), Template.parseRaw(Furnace, {ID:"area_smoker" }), 'smoker.tp', null);
 	}
+
+
+	static recipe_list()
+	{
+		let createAccordion = (group) => {
+			let newAccordion = document.createElement('li');
+			let main_a = document.createElement('a'); main_a.classList.add('uk-accordion-title'); main_a.href = "#"; main_a.innerText = group;
+			let main_div = document.createElement('div'); main_div.classList.add('uk-accordion-content');
+			let UL = document.createElement('ul'); UL.classList.add('uk-list', 'uk-list-square'); UL.id = group + "-list";
+			main_div.appendChild(UL);
+			newAccordion.appendChild(main_a); newAccordion.appendChild(main_div);
+			document.getElementById('sound-list').appendChild(newAccordion);
+		};
+		
+		createAccordion('default');
+		fs.readdir(RecipesDirectory, {encoding: 'utf-8', withFileTypes: false}, (err, files) => {
+			if (err) throw err;
+			for (let file of files)
+			{
+				if (path.extname(file) === '.json')
+				{
+					fs.readFile(path.join(RecipesDirectory, file), {encoding: 'utf-8', flag: 'r'}, (err, data) => {
+						if (err) throw err;
+						const _json = JSON.parse(data);
+						if (!document.getElementById(_json.group + '-list') && _json.hasOwnProperty('group'))
+							createAccordion(_json.group);
+						let newItem = document.createElement('li'); newItem.innerText = path.basename(file, '.json');
+						if (_json.hasOwnProperty('group'))
+							document.getElementById(_json.group + "-list").appendChild(newItem);
+						else
+							document.getElementById("default-list").appendChild(newItem);
+						newItem.addEventListener('click', (event) => {
+							this.FillForm(event);
+						});
+					});
+				}
+			}
+		});
+	}
+
+	static FillForm(event)
+	{
+		const pathFile = event.target.innerText + '.json';
+		fs.readFile(path.join(RecipesDirectory, pathFile), {encoding: 'utf-8', flag: 'r'}, (err, data) => {
+			if (err) throw err;
+			data;
+		});
+	}
+
 	static draw()
 	{
 		UpdateLang();
 		Template.render(document.getElementById('content'), 'recipe.tp', { Search: LANG.Options.Search });
 		const _generateList = new GenerateList();
 		this.craft_table();
+		this.recipe_list();
 		Template.updateLang(document.getElementById('content'), LANG);
 		CreateRecipe.setEvent();
 	}
@@ -231,8 +284,8 @@ class CreateRecipe
 			//#endregion
 		}
 		model.result.item = "minecraft:"+ RECIPE_RESULT;
-		model.result.count = RECIPE_COUNT;
-		return (model);
+		model.result.count = parseInt(RECIPE_COUNT, 10);
+		return ({data: model, output: FORM.Output});
 	}
 	
 	static generateFurnace(nameOfId, optionFormId, type)
@@ -268,7 +321,7 @@ class CreateRecipe
 		model.cookingtime = parseFloat(FORM.Time);
 		if (FORM.Group) model.group = FORM.Group;
 		else delete model['group'];
-		return (model);
+		return ({data: model, output: FORM.Output});
 	}
 
 	static generateStoneCutter(nameOfId, optionFormId, type)
@@ -297,8 +350,8 @@ class CreateRecipe
 		else delete model['group'];
 		model.ingredient.item = 'minecraft:' + RECIPE_CASE;
 		model.result = 'minecraft:' + RECIPE_RESULT;
-		model.count = RECIPE_COUNT;
-		return (model);
+		model.count = parseInt(RECIPE_COUNT, 10);
+		return ({data: model, output: FORM.Output});
 	}
 
 	static generateSmithingTable(nameOfId, optionFormId, type)
@@ -330,7 +383,7 @@ class CreateRecipe
 		model.base.item = 'minecraft:' + RECIPE_CASE_BASE;
 		model.addition.item = 'minecraft:' + RECIPE_CASE_ADD;
 		model.result.item = 'minecraft:' + RECIPE_RESULT;
-		return (model);
+		return ({data: model, output: FORM.Output});
 	}
 
 	static setEvent()
@@ -352,10 +405,10 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateCraftingTable_2_3('area_crafting_player', 'crafting_player_form', false);
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
 	static craft_table()
@@ -545,6 +598,47 @@ class GenerateList
 			else
 				error.style.display = "none";
 		}
+	}
+}
+
+class FileManagement
+{
+	static check(data, nameFile)
+	{
+		if (!MCutilities.CheckIfStringIsLegalCharacter(nameFile))
+			throw (LANG.Options.Output + ' ' + LANG.ContainIllegalCharacter);
+		else if (!MCutilities.CheckIfStringIsLegalCharacter(data.group))
+			throw (LANG.Options.Group + ' ' + LANG.ContainIllegalCharacter);
+		else
+		{
+			if (fs.existsSync(path.join(RecipesDirectory, nameFile + '.json')))
+			{
+				IPC.send('Recipes:signal-is-exist');
+				document.getElementById('ModalIsExist-Yes').addEventListener('click', () => {
+					this.createFile(data, nameFile);
+				});
+			}
+			else
+				this.createFile(data, nameFile);
+		}
+	}
+	static createFile(data, nameFile)
+	{
+		fs.writeFile(path.join(RecipesDirectory, nameFile + '.json'), JSON.stringify(data, null, 4), {encoding:'utf-8', flag:'w'}, (err) => {
+			if (err) throw err;
+			CreateAlert('success', document.getElementById('recipe-error'), LANG.FileCreationSuccess);
+		});
+	}
+	static deleteFile(nameFile)
+	{
+		fs.access(path.join(RecipesDirectory, nameFile + '.json'), fs.constants.F_OK, (err) => {
+			if (!err)
+			{
+				fs.rm(path.join(RecipesDirectory, nameFile + '.json'), {force: true}, (err) => {
+					if (err) throw err;
+				});
+			}
+		});
 	}
 }
 
