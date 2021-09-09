@@ -284,17 +284,23 @@ function SetImage(id, src, isItem = false)
 	img.id = id;
 	if (isItem)
 		img.classList.add('craft_fire_and_cross');
-	while (Case.firstChild)
-		Case.removeChild(Case.firstChild);
+	if (Case.hasChildNodes())
+	{
+		while (Case.firstChild)
+			Case.removeChild(Case.firstChild);
+	}
 	if (id != 'trash')
 		Case.appendChild(img);
 	UIkit.modal(document.getElementById('recipeModalSelect')).hide();
 }
 
-document.getElementById('recipeModalSelect').addEventListener('beforehide', () => {
-	document.querySelectorAll('div[case_selected]').forEach((element) => {
-		element.removeAttribute('case_selected');
-	});
+document.getElementById('recipeModalSelect').addEventListener('beforehide', (event) => {
+	if (event.target.nodeName === 'DIV')
+	{
+		document.querySelectorAll('div[case_selected]').forEach((element) => {
+			element.removeAttribute('case_selected');
+		});
+	}
 });
 
 window.api.receive('Recipes:is-exist', () => {
