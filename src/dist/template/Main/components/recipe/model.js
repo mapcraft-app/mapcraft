@@ -13,7 +13,9 @@ exports.crafting_player = {
     result: {
         item: String,
         count: Number
-    }
+    },
+    isPlayer: Boolean,
+    exactPosition: Boolean
 };
 
 /**
@@ -44,6 +46,7 @@ exports.stonecutter = {
 
 exports.smithing_table = {
 	type: String,
+    group: String,
     base: {
         item: String
     },

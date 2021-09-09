@@ -15,7 +15,7 @@ let Channel = {
 	
 	Cutscene: ['signal-create-cutscene', 'create-cutscene'],
 	Trigger: ['signal-open-modal', 'open-modal'],
-	Recipes: ['signal-is-exist', 'is-exist']
+	Recipes: ['signal-is-exist', 'is-exist', 'signal-open-switcher', 'open-switcher']
 }
 
 class ArrayIPC

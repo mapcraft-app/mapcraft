@@ -6,7 +6,11 @@
 			<ul id="sound-list" class="uk-list uk-list-striped list-border uk-accordion" uk-accordion="multiple: false"></ul>
 		</div>
 		<div class="uk-width-2-3 uk-margin-left">
-			<ul class="uk-child-width-expand" uk-tab="animation: uk-animation-fade">
+			<h3 class="uk-text-center">
+				<span uk-icon="hashtag"></span>
+				<span id="recipe-title"></span>
+			</h3>
+			<ul id="recipe-tab" class="uk-child-width-expand" uk-tab="animation: uk-animation-fade">
 				<li class="uk-active"><a href="#">
 					<img class="img-menu" style="padding:0.6em" src="dist/img/assets/player.png"/>
 				</a></li>
@@ -32,8 +36,8 @@
 					<img class="img-menu" src="dist/img/assets/block/smithing_table.webp"/>
 				</a></li>
 			</ul>
-			<ul class="uk-switcher">
-				<li>
+			<ul id="recipe-switcher" class="uk-switcher">
+				<li class="uk-active">
 					<h3 class="title-options" lang="Type.Crafting_Player"></h3>
 					<div id="crafting_player"></div>
 				</li>
@@ -143,6 +147,17 @@
 .list-border > li {
 	overflow-wrap: break-word;
 }
+.list-ul > li {
+	cursor: pointer;
+	transition: .1s ease-in-out;
+	position: relative;
+	transition-property: left;
+	left: 0;
+}
+.list-ul > li:hover {
+	left: 0.5em;
+}
+
 .img-menu {
 	width: 3.5em;
 }
@@ -232,6 +247,10 @@
     image-rendering: pixelated;
     -ms-interpolation-mode: nearest-neighbor;
 }
+.debug_block {
+	width: 4em;
+    height: 4em;
+}
 
 .count-result {
 	position: absolute;
@@ -240,7 +259,6 @@
     margin-left: 0.15em;
 }
 [/CSS]
-
 <script>
 [JS]
 document.querySelectorAll('div[class="case"]').forEach((element) => {
@@ -279,8 +297,11 @@ document.getElementById('recipeModalSelect').addEventListener('beforehide', () =
 	});
 });
 
-window.api.receive('Recipes:is-exist', (command) => {
+window.api.receive('Recipes:is-exist', () => {
 	UIkit.modal('#ModalIsExist').show();
+});
+window.api.receive('Recipes:open-switcher', (id) => {
+	UIkit.tab(document.getElementById('recipe-tab')).show(id);
 });
 [/JS]
 </script>

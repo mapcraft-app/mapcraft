@@ -7,6 +7,10 @@ class MCutilities
 			return (false);
 		return (true);
 	}
+	
+	static GetNextCharacterInAlphabet(char) {
+		return String.fromCharCode(char.charCodeAt(0) + 1);
+	}
 }
 
 module.exports = MCutilities;

@@ -314,6 +314,9 @@ ipcMain.on('Cutscene:signal-create-cutscene', (event, command) => {
 ipcMain.on('Recipes:signal-is-exist', (event) => {
 	event.reply('Recipes:is-exist');
 });
+ipcMain.on('Recipes:signal-open-switcher', (event, id) => {
+	event.reply('Recipes:open-switcher', id);
+});
 //#endregion
 
 //#region User

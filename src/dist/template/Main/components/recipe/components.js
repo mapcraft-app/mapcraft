@@ -12,12 +12,15 @@ const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraf
 if (!fs.existsSync(RecipesDirectory)) fs.mkdirSync(RecipesDirectory);
 
 const Models = require('./model');
-
 const LastMinecraftVersion = "1.17";
 const Data = {
 	Blocks: path.join(__dirname, '../utility/list/blocks', LastMinecraftVersion + '.json'),
 	Items: path.join(__dirname, '../utility/list/items', LastMinecraftVersion + '.json')
 }
+let IsLoadRecipe = false;
+const outputRegExp = new RegExp('(?:formOutput$)', 'gm');
+const checkedShapeless = new RegExp('(?:shapeless$)', 'gm');
+const checkedExactPosition = new RegExp('(?:exactPosition$)', 'gm');
 
 //#region General function
 function CreateAlert(type, DOMelement, str)
@@ -58,12 +61,12 @@ class RecipeComponent
 			let newAccordion = document.createElement('li');
 			let main_a = document.createElement('a'); main_a.classList.add('uk-accordion-title'); main_a.href = "#"; main_a.innerText = group;
 			let main_div = document.createElement('div'); main_div.classList.add('uk-accordion-content');
-			let UL = document.createElement('ul'); UL.classList.add('uk-list', 'uk-list-square'); UL.id = group + "-list";
+			let UL = document.createElement('ul'); UL.classList.add('uk-list', 'uk-list-square', 'list-ul'); UL.id = group + "-list";
 			main_div.appendChild(UL);
 			newAccordion.appendChild(main_a); newAccordion.appendChild(main_div);
 			document.getElementById('sound-list').appendChild(newAccordion);
 		};
-		
+		Template.cleanNode(document.getElementById('sound-list'));
 		createAccordion('default');
 		fs.readdir(RecipesDirectory, {encoding: 'utf-8', withFileTypes: false}, (err, files) => {
 			if (err) throw err;
@@ -82,20 +85,12 @@ class RecipeComponent
 						else
 							document.getElementById("default-list").appendChild(newItem);
 						newItem.addEventListener('click', (event) => {
-							this.FillForm(event);
+							IsLoadRecipe = true;
+							FillForm.main(event);
 						});
 					});
 				}
 			}
-		});
-	}
-
-	static FillForm(event)
-	{
-		const pathFile = event.target.innerText + '.json';
-		fs.readFile(path.join(RecipesDirectory, pathFile), {encoding: 'utf-8', flag: 'r'}, (err, data) => {
-			if (err) throw err;
-			data;
 		});
 	}
 
@@ -104,10 +99,264 @@ class RecipeComponent
 		UpdateLang();
 		Template.render(document.getElementById('content'), 'recipe.tp', { Search: LANG.Options.Search });
 		const _generateList = new GenerateList();
+		document.getElementById('recipe-title').innerText = 'crafting_recipe';
 		this.craft_table();
 		this.recipe_list();
+		this.UpdateEvent();
+		this.CleanIfTabChange();
 		Template.updateLang(document.getElementById('content'), LANG);
 		CreateRecipe.setEvent();
+	}
+
+	static UpdateEvent()
+	{
+		document.querySelectorAll('ul[id="recipe-switcher"] > li').forEach(element => {
+			if (element.classList.contains('uk-active'))
+			{
+				let _checkboxExact, _checkboxShapeless;
+				element.querySelectorAll('input').forEach(_input => {
+					if (checkedShapeless.test(_input.id))
+						_checkboxShapeless = _input;
+					else if (checkedExactPosition.test(_input.id))
+						_checkboxExact = _input;
+					if (outputRegExp.test(_input.id))
+					{
+						_input.addEventListener('input', (event) => {
+							document.getElementById('recipe-title').innerText = event.target.value;
+						});
+					}
+					else
+						_input.removeEventListener('input', () => {;});
+				});
+				_checkboxShapeless.addEventListener('input', (event) => {
+					if (event.target.checked)
+						_checkboxExact.checked = false;
+				});
+				_checkboxExact.addEventListener('input', (event) => {
+					if (event.target.checked)
+						_checkboxShapeless.checked = false;
+				});
+			}
+		});
+	}
+
+	static CleanIfTabChange()
+	{
+		document.getElementById('recipe-switcher').addEventListener('beforehide', () => {
+			if (!IsLoadRecipe)
+			{
+				document.getElementById('recipe-title').innerText = 'crafting_recipe';
+				document.querySelectorAll('div[class="case"]').forEach((_case) => {
+					Template.cleanNode(_case);
+				});
+				document.querySelectorAll('input').forEach((input) => {
+					if (input.type === 'number')
+						input.value = input.min;
+					else if (input.type === 'checkbox')
+						input.checked = false;
+					else
+					{
+						if (outputRegExp.test(input.id)) input.value = 'crafting_recipe';
+						else input.value = '';
+					}
+				});
+			}
+			IsLoadRecipe = false;
+		});
+		document.getElementById('recipe-switcher').addEventListener('show', () => {
+			this.UpdateEvent();
+		});
+	}
+}
+
+class FillForm
+{
+	static main(event)
+	{
+		const pathFile = event.target.innerText + '.json';
+		fs.readFile(path.join(RecipesDirectory, pathFile), {encoding: 'utf-8', flag: 'r'}, (err, data) => {
+			if (err) throw err;
+			let _json = JSON.parse(data);
+			document.getElementById('recipe-title').innerText = event.target.innerText;
+			switch (_json.type)
+			{
+				case 'minecraft:crafting_shapeless':
+					if (_json.hasOwnProperty('isPlayer') && _json.isPlayer)
+					{
+						IPC.send('Recipes:signal-open-switcher', 0);
+						this.craftTable(event.target.innerText, 'area_crafting_player', 'crafting_player_form', _json);
+					}
+					else
+					{
+						IPC.send('Recipes:signal-open-switcher', 1);
+						this.craftTable(event.target.innerText, 'area_crafting_table', 'crafting_table_form', _json);
+					}
+				break ;
+				case 'minecraft:crafting_shaped' :
+					if (_json.hasOwnProperty('isPlayer') && _json.isPlayer)
+					{
+						IPC.send('Recipes:signal-open-switcher', 0);
+						this.craftTable(event.target.innerText, 'area_crafting_player', 'crafting_player_form', _json);
+					}
+					else
+					{
+						IPC.send('Recipes:signal-open-switcher', 1);
+						this.craftTable(event.target.innerText, 'area_crafting_table', 'crafting_table_form', _json);
+					}
+				break ;
+				case 'minecraft:smelting' :
+					IPC.send('Recipes:signal-open-switcher', 2);
+					this.furnace(event.target.innerText, 'area_furnace', 'area_furnace-form', _json);
+				break ;
+				case 'minecraft:blasting' :
+					IPC.send('Recipes:signal-open-switcher', 3);
+					this.furnace(event.target.innerText, 'area_blast_furnace', 'area_blast_furnace-form', _json);
+				break ;
+				case 'minecraft:campfire_cooking' :
+					IPC.send('Recipes:signal-open-switcher', 4);
+					this.furnace(event.target.innerText, 'area_campfire', 'area_campfire-form', _json);
+				break ;
+				case 'minecraft:smoking' :
+					IPC.send('Recipes:signal-open-switcher', 5);
+					this.furnace(event.target.innerText, 'area_smoker', 'area_smoker-form', _json);
+				break ;
+				case 'minecraft:stonecutting' :
+					IPC.send('Recipes:signal-open-switcher', 6);
+					this.stonecutter(event.target.innerText, 'area_stonecutter', 'area_stonecutter-form', _json);
+				break ;
+				case 'minecraft:smithing' :
+					IPC.send('Recipes:signal-open-switcher', 7);
+					this.smithing_table(event.target.innerText, 'area_smithing_table', 'area_smithing_table-form', _json);
+				break ;
+			}
+		});
+	}
+
+	static craftTable(nameOfFile, nameOfId, optionFormId, json)
+	{
+		const RECIPE_CASES = document.getElementById(nameOfId + '-cases').querySelectorAll('div');
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result');
+		const RECIPE_COUNT = document.getElementById(nameOfId + '-count');
+		const RECIPE_FORM = document.getElementById(optionFormId).elements;
+		for (let __case of RECIPE_CASES)
+		{
+			if (__case.hasChildNodes())
+				Template.cleanNode(__case);
+		}
+		Template.cleanNode(RECIPE_RESULT);
+		if (json.type === 'minecraft:crafting_shapeless')
+		{
+			RECIPE_FORM[0].checked = true;
+			let _case = 0;
+			for (let ingredient of json.ingredients)
+				RECIPE_CASES[_case++].appendChild(this.getSrcImage(ingredient.item.match(/(?<=^minecraft:).*/gm)[0]));
+		}
+		else
+		{
+			RECIPE_FORM[0].checked = false;
+			let _case = 0, row = 0, coef;
+			if (json.hasOwnProperty('isPlayer') && json.isPlayer) coef = 2;
+			else coef = 3;
+			for (let line of json.pattern)
+			{
+				_case = row * coef;
+				let items = Array.from(line);
+				for (let item of items)
+				{
+					let key = this.getItemWithKey(json, item);
+					if (key != undefined)
+						RECIPE_CASES[_case++].appendChild(this.getSrcImage(key));
+					else if (item === ' ') ++_case;
+				}
+				row++;
+			}
+		}
+		RECIPE_RESULT.appendChild(this.getSrcImage(json.result.item.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_COUNT.value = json.result.count;
+
+		if (json.hasOwnProperty('exactPosition')) RECIPE_FORM[1].checked = json.exactPosition;
+		else RECIPE_FORM[1].checked = false;
+		if (json.hasOwnProperty('group')) RECIPE_FORM[2].value = json.group;
+		else RECIPE_FORM[2].value = '';
+		RECIPE_FORM[3].value = nameOfFile;
+	}
+
+	static furnace(nameOfFile, nameOfId, optionFormId, json)
+	{
+		const RECIPE_CASE = document.getElementById(nameOfId + '-cases').querySelectorAll('div')[0];
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result');
+		const RECIPE_FORM = document.getElementById(optionFormId).elements;
+		Template.cleanNode(RECIPE_CASE);
+		Template.cleanNode(RECIPE_RESULT);
+
+		RECIPE_CASE.appendChild(this.getSrcImage(json.ingredient.item.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_RESULT.appendChild(this.getSrcImage(json.result.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_FORM[0].value = json.experience;
+		RECIPE_FORM[1].value = json.cookingtime / 20;
+		if (json.hasOwnProperty('group')) RECIPE_FORM[2].value = json.group;
+		else RECIPE_FORM[2].value = '';
+		RECIPE_FORM[3].value = nameOfFile;
+	}
+
+	static stonecutter(nameOfFile, nameOfId, optionFormId, json)
+	{
+		const RECIPE_CASE = document.getElementById(nameOfId + '-cases');
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result');
+		const RECIPE_COUNT = document.getElementById(nameOfId + '-count');
+		const RECIPE_FORM = document.getElementById(optionFormId).elements;
+		Template.cleanNode(RECIPE_CASE);
+		Template.cleanNode(RECIPE_RESULT);
+
+		RECIPE_CASE.appendChild(this.getSrcImage(json.ingredient.item.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_RESULT.appendChild(this.getSrcImage(json.result.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_COUNT.value = json.count;
+		if (json.hasOwnProperty('group')) RECIPE_FORM[0].value = json.group;
+		else RECIPE_FORM[0].value = '';
+		RECIPE_FORM[1].value = nameOfFile;
+	}
+
+	static smithing_table(nameOfFile, nameOfId, optionFormId, json)
+	{
+		const RECIPE_CASE_ADD_ONE = document.getElementById(nameOfId + '-cases-add-one');
+		const RECIPE_CASE_ADD_TWO = document.getElementById(nameOfId + '-cases-add-two');
+		const RECIPE_RESULT = document.getElementById(nameOfId + '-result');
+		const RECIPE_FORM = document.getElementById(optionFormId).elements;
+		Template.cleanNode(RECIPE_CASE_ADD_ONE);
+		Template.cleanNode(RECIPE_CASE_ADD_TWO);
+		Template.cleanNode(RECIPE_RESULT);
+
+		RECIPE_CASE_ADD_ONE.appendChild(this.getSrcImage(json.base.item.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_CASE_ADD_TWO.appendChild(this.getSrcImage(json.addition.item.match(/(?<=^minecraft:).*/gm)[0]));
+		RECIPE_RESULT.appendChild(this.getSrcImage(json.result.item.match(/(?<=^minecraft:).*/gm)[0]));
+		if (json.hasOwnProperty('group')) RECIPE_FORM[0].value = json.group;
+		else RECIPE_FORM[0].value = '';
+		RECIPE_FORM[1].value = nameOfFile;
+	}
+
+	static getItemWithKey(json, _key)
+	{
+		for (let element in json.key)
+		{
+			if (element === _key)
+				return (json.key[_key].item.match(/(?<=^minecraft:).*/gm)[0]);
+		}
+		return (undefined);
+	}
+
+	static getSrcImage(item)
+	{
+		let image = document.createElement('img'); image.id = item;
+		let testBlockPath = path.join(__dirname, '../../../../img/assets/block', item);
+		let testItemPath = path.join(__dirname, '../../../../img/assets/item', item);
+		if (fs.existsSync(testBlockPath + '.png'))
+		{ image.src = testBlockPath + '.png'; image.classList.add('debug_block'); }
+		else if (fs.existsSync(testBlockPath + '.webp'))
+		{ image.src = testBlockPath + '.webp'; image.classList.add('debug_block'); }
+		else if (fs.existsSync(testItemPath + '.png'))
+		{ image.src = testItemPath + '.png'; image.classList.add('craft_fire_and_cross'); }
+		else
+		{ image.src = testItemPath + '.webp'; image.classList.add('craft_fire_and_cross'); }
+		return (image);
 	}
 }
 
@@ -203,7 +452,7 @@ class CreateRecipe
 				{
 					ItemList.push(patternTemp[row][col]);
 					ItemKey.push(alpha);
-					alpha = this.nextCharacter(alpha);
+					alpha = MCutilities.GetNextCharacterInAlphabet(alpha);
 				}
 				col++;
 				if (col > colMAX) { row++; col = 0; }
@@ -285,6 +534,8 @@ class CreateRecipe
 		}
 		model.result.item = "minecraft:"+ RECIPE_RESULT;
 		model.result.count = parseInt(RECIPE_COUNT, 10);
+		model.isPlayer = (is3x3) ? false : true;
+		model.exactPosition = (!FORM.ExactPosition) ? false : true;
 		return ({data: model, output: FORM.Output});
 	}
 	
@@ -303,10 +554,6 @@ class CreateRecipe
 			throw 'No item on result case';	
 		}
 		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').querySelectorAll('img')[0].id;
-		let temp_RECIPE_COUNT = document.getElementById(nameOfId + '-count').value;
-		if (temp_RECIPE_COUNT <= 0) temp_RECIPE_COUNT = 1;
-		else if (temp_RECIPE_COUNT > 64) temp_RECIPE_COUNT = 64;
-		const RECIPE_COUNT = temp_RECIPE_COUNT;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		let temp_TIME = FORM_INPUT[1].value;
 		if (temp_TIME < 0) temp_TIME = 0
@@ -345,7 +592,7 @@ class CreateRecipe
 		const RECIPE_COUNT = temp_RECIPE_COUNT;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		const FORM = {Group: FORM_INPUT[0].value, Output: FORM_INPUT[1].value};
-		model.type = "minecraft:" + type;
+		model.type = 'minecraft:' + type;
 		if (FORM.Group) model.group = FORM.Group;
 		else delete model['group'];
 		model.ingredient.item = 'minecraft:' + RECIPE_CASE;
@@ -377,7 +624,7 @@ class CreateRecipe
 		const RECIPE_RESULT = document.getElementById(nameOfId + '-result').children[0].id;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		const FORM = {Group: FORM_INPUT[0].value, Output: FORM_INPUT[1].value};
-		model.type = type;
+		model.type = 'minecraft:' + type;
 		if (FORM.Group) model.group = FORM.Group;
 		else delete model['group'];
 		model.base.item = 'minecraft:' + RECIPE_CASE_BASE;
@@ -397,6 +644,7 @@ class CreateRecipe
 		this.stonecutter();
 		this.smithing_table();
 	}
+
 	static player()
 	{
 		document.getElementById('crafting_player_validation').addEventListener('click', (event) => {
@@ -411,6 +659,7 @@ class CreateRecipe
 			}
 		});
 	}
+
 	static craft_table()
 	{
 		document.getElementById('crafting_table_validation').addEventListener('click', (event) => {
@@ -419,12 +668,13 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateCraftingTable_2_3('area_crafting_table', 'crafting_table_form', true);
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
+
 	static furnace()
 	{
 		document.getElementById('area_furnace-validation').addEventListener('click', (event) => {
@@ -433,12 +683,13 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateFurnace('area_furnace', 'area_furnace-form', 'smelting');
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
+
 	static blast_furnace()
 	{
 		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) => {
@@ -447,12 +698,13 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateFurnace('area_blast_furnace', 'area_blast_furnace-form', 'blasting');
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
+
 	static campfire()
 	{
 		document.getElementById('area_campfire-validation').addEventListener('click', (event) => {
@@ -461,12 +713,13 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateFurnace('area_campfire', 'area_campfire-form', 'campfire_cooking');
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
+
 	static smoker()
 	{
 		document.getElementById('area_smoker-validation').addEventListener('click', (event) => {
@@ -475,12 +728,13 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateFurnace('area_smoker', 'area_smoker-form', 'smoking');
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
+
 	static stonecutter()
 	{
 		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) => {
@@ -489,12 +743,13 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateStoneCutter('area_stonecutter', 'area_stonecutter-form', 'stonecutting');
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
 	}
+
 	static smithing_table()
 	{
 		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) => {
@@ -503,14 +758,11 @@ class CreateRecipe
 			let __ret;
 			try {
 				__ret = this.generateSmithingTable('area_smithing_table', 'area_smithing_table-form', 'smithing');
+				FileManagement.check(__ret.data, __ret.output);
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
-			console.log(__ret);
 		});
-	}
-	static nextCharacter(c) {
-		return String.fromCharCode(c.charCodeAt(0) + 1);
 	}
 }
 
@@ -627,6 +879,7 @@ class FileManagement
 		fs.writeFile(path.join(RecipesDirectory, nameFile + '.json'), JSON.stringify(data, null, 4), {encoding:'utf-8', flag:'w'}, (err) => {
 			if (err) throw err;
 			CreateAlert('success', document.getElementById('recipe-error'), LANG.FileCreationSuccess);
+			RecipeComponent.recipe_list();
 		});
 	}
 	static deleteFile(nameFile)
@@ -636,6 +889,7 @@ class FileManagement
 			{
 				fs.rm(path.join(RecipesDirectory, nameFile + '.json'), {force: true}, (err) => {
 					if (err) throw err;
+					RecipeComponent.recipe_list();
 				});
 			}
 		});
