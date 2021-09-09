@@ -25,7 +25,8 @@
 			"Time": "Waiting time",
 			"Group": "Group",
 			"Output": "Output name",
-			"Button": "Create recipe"
+			"Button": "Create recipe",
+			"Delete": "Delete recipe"
 		},
 		"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)",
 		"FileCreationSuccess": "The recipe has been successfully created",

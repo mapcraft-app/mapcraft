@@ -85,6 +85,7 @@ class RecipeComponent
 						else
 							document.getElementById("default-list").appendChild(newItem);
 						newItem.addEventListener('click', (event) => {
+							sessionStorage.setItem('recipe-selected', file);
 							IsLoadRecipe = true;
 							FillForm.main(event);
 						});
@@ -128,39 +129,47 @@ class RecipeComponent
 					else
 						_input.removeEventListener('input', () => {;});
 				});
-				_checkboxShapeless.addEventListener('input', (event) => {
-					if (event.target.checked)
-						_checkboxExact.checked = false;
-				});
-				_checkboxExact.addEventListener('input', (event) => {
-					if (event.target.checked)
-						_checkboxShapeless.checked = false;
-				});
+				if (_checkboxShapeless)
+				{
+					_checkboxShapeless.addEventListener('input', (event) => {
+						if (event.target.checked)
+							_checkboxExact.checked = false;
+					});
+				}
+				if (_checkboxExact)
+				{
+					_checkboxExact.addEventListener('input', (event) => {
+						if (event.target.checked)
+							_checkboxShapeless.checked = false;
+					});
+				}
 			}
 		});
 	}
 
-	static CleanIfTabChange()
+	static CleanIfTabChange(bypass = false)
 	{
+		const _function = () => {
+			document.getElementById('recipe-title').innerText = 'crafting_recipe';
+			document.querySelectorAll('div[class="case"]').forEach((_case) => {
+				Template.cleanNode(_case);
+			});
+			document.querySelectorAll('input').forEach((input) => {
+				if (input.type === 'number')
+					input.value = input.min;
+				else if (input.type === 'checkbox')
+					input.checked = false;
+				else
+				{
+					if (outputRegExp.test(input.id)) input.value = 'crafting_recipe';
+					else input.value = '';
+				}
+			});
+		};
+		if (bypass === true) _function();
 		document.getElementById('recipe-switcher').addEventListener('beforehide', () => {
 			if (!IsLoadRecipe)
-			{
-				document.getElementById('recipe-title').innerText = 'crafting_recipe';
-				document.querySelectorAll('div[class="case"]').forEach((_case) => {
-					Template.cleanNode(_case);
-				});
-				document.querySelectorAll('input').forEach((input) => {
-					if (input.type === 'number')
-						input.value = input.min;
-					else if (input.type === 'checkbox')
-						input.checked = false;
-					else
-					{
-						if (outputRegExp.test(input.id)) input.value = 'crafting_recipe';
-						else input.value = '';
-					}
-				});
-			}
+				_function();
 			IsLoadRecipe = false;
 		});
 		document.getElementById('recipe-switcher').addEventListener('show', () => {
@@ -658,6 +667,12 @@ class CreateRecipe
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
+		document.getElementById('crafting_player_delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
+		});
 	}
 
 	static craft_table()
@@ -672,6 +687,12 @@ class CreateRecipe
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
+		});
+		document.getElementById('crafting_table_delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
 		});
 	}
 
@@ -688,6 +709,12 @@ class CreateRecipe
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
+		document.getElementById('area_furnace-delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
+		});
 	}
 
 	static blast_furnace()
@@ -702,6 +729,12 @@ class CreateRecipe
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
+		});
+		document.getElementById('area_blast_furnace-delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
 		});
 	}
 
@@ -718,6 +751,12 @@ class CreateRecipe
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
+		document.getElementById('area_campfire-delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
+		});
 	}
 
 	static smoker()
@@ -732,6 +771,12 @@ class CreateRecipe
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
+		});
+		document.getElementById('area_smoker-delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
 		});
 	}
 
@@ -748,6 +793,12 @@ class CreateRecipe
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
+		document.getElementById('area_stonecutter-delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
+		});
 	}
 
 	static smithing_table()
@@ -762,6 +813,12 @@ class CreateRecipe
 			} catch (__error) {
 				CreateAlert('warning', document.getElementById('recipe-error'), __error);
 			}
+		});
+		document.getElementById('area_smithing_table-delete').addEventListener('click', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (sessionStorage.getItem('recipe-selected'))
+				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
 		});
 	}
 }
@@ -884,12 +941,13 @@ class FileManagement
 	}
 	static deleteFile(nameFile)
 	{
-		fs.access(path.join(RecipesDirectory, nameFile + '.json'), fs.constants.F_OK, (err) => {
+		fs.access(path.join(RecipesDirectory, nameFile), fs.constants.F_OK, (err) => {
 			if (!err)
 			{
-				fs.rm(path.join(RecipesDirectory, nameFile + '.json'), {force: true}, (err) => {
+				fs.rm(path.join(RecipesDirectory, nameFile), {force: true}, (err) => {
 					if (err) throw err;
 					RecipeComponent.recipe_list();
+					RecipeComponent.CleanIfTabChange(true);
 				});
 			}
 		});

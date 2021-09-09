@@ -16,8 +16,8 @@
 		"Options": {
 			"Search": "Recherche",
 			"DeleteCase": "Supprimer la case",
-			"NoBlock": "Aucun bloc trouvé",
-			"NoItem": "Aucun élément trouvé",
+			"NoBlock": "Aucun bloc trouver",
+			"NoItem": "Aucun élément trouver",
 			"Title": "Options",
 			"Shapeless": "Informe",
 			"ExactPosition": "Position exacte",
@@ -25,7 +25,17 @@
 			"Time": "Temps d'attente",
 			"Group": "Groupe",
 			"Output": "Nom du fichier de sortie",
-			"Button": "Créer la recette"
+			"Button": "Créer la recette",
+			"Delete": "Supprimer la recette"
+		},
+		"ContainIllegalCharacter": "contient des caractères interdit, voici ceux autoriser: ([a-z], [0-9], _, -, /, .)",
+		"FileCreationSuccess": "La recette a été créer",
+		"Modal": {
+			"IsExist": {
+				"Title": "Cette recette existe déjà, souhaitez-vous l'écraser ?",
+				"Yes": "Oui",
+				"No": "Non"
+			}
 		}
 	}
 }
