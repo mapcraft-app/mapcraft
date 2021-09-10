@@ -166,12 +166,16 @@ class RecipeComponent
 				}
 			});
 		};
-		if (bypass === true) _function();
-		document.getElementById('recipe-switcher').addEventListener('beforehide', () => {
-			if (!IsLoadRecipe)
-				_function();
-			IsLoadRecipe = false;
-		});
+		if (bypass === true)
+			_function();
+		else
+		{
+			document.getElementById('recipe-switcher').addEventListener('beforehide', () => {
+				if (!IsLoadRecipe)
+					_function();
+				IsLoadRecipe = false;
+			});
+		}
 		document.getElementById('recipe-switcher').addEventListener('show', () => {
 			this.UpdateEvent();
 		});
