@@ -37,7 +37,7 @@
   "build": {
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
-    "copyright": "Copyright (C) 2020 - ...  Clément Bertrand",
+    "copyright": "Copyright (C) 2020 - 2021, Clément Bertrand",
     "asar": false,
     "asarUnpack": [
       "**/*"
@@ -67,7 +67,8 @@
       "language": 1033
     },
     "mac": {
-      "category": "Productivity",
+      "category": "public.app-category.productivity",
+      "type": "distribution",
       "icon": "src/dist/img/icon/icon.icns",
       "artifactName": "${productName}_${os}.${ext}",
       "target": [
