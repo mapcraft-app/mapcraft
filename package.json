@@ -72,11 +72,16 @@
       "icon": "src/dist/img/icon/icon.icns",
       "artifactName": "${productName}_${os}.${ext}",
       "target": [
-        "zip"
+        "tar.gz"
       ]
     },
     "dmg": {
       "backgroundColor": "#181a1b",
+      "iconSize": 75,
+      "window": {
+        "width": 544,
+        "height": 408
+      },
       "contents": [
         {
           "x": 110,

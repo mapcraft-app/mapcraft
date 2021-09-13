@@ -2,7 +2,7 @@
     "version": {
         "datapack": "0.6.1-alpha",
         "resourcepack": "0.2.0-alpha",
-        "software": "0.4.1-alpha",
+        "software": "0.5.0-alpha",
         "update": "0.2.0"
     },
     "default_lang": "en_US"
