@@ -15,7 +15,7 @@ const MCeditor = require('./dist/js/MCeditor');
 //#region Variables
 var StartWindow = null, MainWindow = null, SelectUserChild = null, UpdateWindow = null;
 var IsSelectedUser = false;
-let PassFirstStep = true;
+let PassFirstStep = false;
 
 var SaveCurrentUser = {
 	DBpath: String,
