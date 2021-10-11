@@ -36,12 +36,12 @@ class Component
 			let testIfDir = path.join(MC.GetConfig().Env.SavePath, '/', Save);
 			if (fs.existsSync(testIfDir) && fs.lstatSync(testIfDir).isDirectory())
 			{
-				if (!fs.existsSync(path.join(testIfDir, '/icon.png')) || !fs.existsSync(path.join(testIfDir, '/level.dat')))
+				if (fs.existsSync(path.join(testIfDir, '/icon.png')) && fs.existsSync(path.join(testIfDir, '/level.dat')))
 				{
-					document.getElementById('start-selection').innerHTML = '<h2>'+ LANG.Error.NotMinecraftSaveDirectory +'</h2>';
-					return ;
+					//document.getElementById('start-selection').innerHTML = '<h2>'+ LANG.Error.NotMinecraftSaveDirectory +'</h2>';
+					//return ;
+					HTML += Template.parseRaw(Component, {id: countElement, ImgPath: path.join(testIfDir, '/icon.png'), title: Save});
 				}
-				HTML += Template.parseRaw(Component, {id: countElement, ImgPath: path.join(testIfDir, '/icon.png'), title: Save});
 			}
 			countElement++;
 		}

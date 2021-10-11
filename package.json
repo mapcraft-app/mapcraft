@@ -20,6 +20,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
+    "debug": "electron --trace-warnings .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "pack": "electron-builder -mwl --x64 --dir ",
@@ -38,7 +39,7 @@
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - 2021, Clément Bertrand",
-    "asar": false,
+    "asar": true,
     "asarUnpack": [
       "**/*"
     ],
