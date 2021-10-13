@@ -12,7 +12,7 @@
     "url": "https://gitlab.com/cbertran/mapcraft.git"
   },
   "productName": "mapcraft",
-  "version": "0.1.0-alpha",
+  "version": "0.5.1-alpha",
   "keywords": [
     "mapcraft",
     "minecraft"
@@ -39,11 +39,10 @@
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - 2021, Clément Bertrand",
-    "asar": false,
-    "asarUnpack": [
-      "**/*"
-    ],
+    "asar": true,
+   
     "directories": {
+      "buildResources": "build",
       "output": "out"
     },
     "win": {
