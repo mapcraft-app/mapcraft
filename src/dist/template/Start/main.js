@@ -79,6 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				ID: ID,
 				Name: Name,
 				SavePath: path.join(MC.GetConfig().Env.SavePath, Name),
+				TempPath: MC.GetConfig().Env.TempPath,
 				Mapcraft: path.join(MC.GetConfig().Env.SavePath, Name, 'datapacks', 'mapcraft'),
 				DBPath: path.join(MC.GetConfig().Env.SavePath, Name, 'data.db'),
 				Data : {
@@ -93,11 +94,11 @@ window.addEventListener('DOMContentLoaded', () => {
 			let LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 			const Up = require('../../../update'), Update = new Up();
 			//#region Install necessary tools
-			if (!fs.existsSync(Mapcraft.Data.ResourcePack) || !fs.existsSync(Mapcraft.Data.DataPack))
+			if (!fs.existsSync(LocalMapcraft.Data.ResourcePack) || !fs.existsSync(LocalMapcraft.Data.DataPack))
 			{
 				document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
 				Update.addNecessaryTools();
-			}
+			}/*
 			//#endregion
 			//#region Install base resource if not present
 			if (!fs.existsSync(LocalMapcraft.Mapcraft) || !fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
@@ -107,9 +108,9 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 			else
 			{
-				fs.rmSync(path.join(__dirname, '../../temp'), {recursive: true, force: true});
+				fs.rmSync(path.join(LocalMapcraft.TempPath, 'mapcraftTemp'), {recursive: true, force: true});
 				IPC.send('Start:is-selected-world');
-			}
+			}*/
 			//#endregion
 		}
 	});

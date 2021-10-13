@@ -20,9 +20,9 @@ class MC
 	}
 	UpdateAPIVersion()
 	{
-		let data = JSON.parse(fs.readFileSync('config.json', {encoding: 'utf-8', flag: 'r'}));
+		let data = JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'config.json'), {encoding: 'utf-8', flag: 'r'}));
 		data.Env.APIVersion = APIVersion;
-		fs.writeFileSync('config.json', JSON.stringify(data, null, 4));
+		fs.writeFileSync(path.join(process.env.AppDataPath, 'config.json'), JSON.stringify(data, null, 4), {encoding: 'utf-8', flag: 'w'});
 	}
 	ResetConfigFile()
 	{
@@ -37,6 +37,7 @@ class MC
 			Env: {
 				OS: OSType,
 				TempPath: OS.tmpdir(),
+				AppDataPath : process.env.AppDataPath,
 				GamePath: linkToGame,
 				SavePath: null,
 				Lang: DefaultLang,
@@ -50,7 +51,7 @@ class MC
 		}
 		config.Env.GamePath = path.join(config.Env.GamePath + '/.minecraft');
 		config.Env.SavePath = path.join(config.Env.GamePath + '/saves');
-		fs.writeFileSync('config.json', JSON.stringify(config, null, 4));
+		fs.writeFileSync(path.join(process.env.AppDataPath, 'config.json'), JSON.stringify(config, null, 4), {encoding: 'utf-8', flag: 'w'});
 	}
 	UpdateConfig(temp, data, save, lang, resourcepack, datapack)
 	{
@@ -58,6 +59,7 @@ class MC
 			Env: {
 				OS: OSType,
 				TempPath: temp,
+				AppDataPath : process.env.AppDataPath,
 				GamePath: data,
 				SavePath: save,
 				Lang: lang,
@@ -69,12 +71,12 @@ class MC
 				DataPack: datapack
 			}
 		}
-		fs.writeFileSync('config.json', JSON.stringify(config, null, 4));
+		fs.writeFileSync(path.join(process.env.AppDataPath, 'config.json'), JSON.stringify(config, null, 4), {encoding: 'utf-8', flag: 'w'});
 	}
 	// Getters
 	GetConfig()
 	{
-		return (JSON.parse(fs.readFileSync('config.json', 'utf-8')));
+		return (JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'config.json'), {encoding: 'utf-8', flag: 'r'})));
 	}
 	GetLang()
 	{

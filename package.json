@@ -39,7 +39,7 @@
     "appId": "com.electron.mapcraft",
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - 2021, Clément Bertrand",
-    "asar": true,
+    "asar": false,
     "asarUnpack": [
       "**/*"
     ],
@@ -109,8 +109,8 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.5",
-    "axios": "^0.21.1",
-    "better-sqlite3": "^7.1.5",
+    "axios": "^0.23.0",
+    "better-sqlite3": "^7.4.3",
     "bezier-easing": "^2.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "jsonabc": "^2.3.1",
@@ -120,7 +120,8 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.59",
     "dmg-builder": "^22.11.11",
-    "electron": "12.0.5",
+    "electron": "15.1.2",
     "electron-builder": "^22.11.7"
-  }
+  },
+  "packageManager": "yarn@3.0.2"
 }

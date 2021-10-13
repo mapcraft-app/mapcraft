@@ -20,14 +20,16 @@ class Template
 	constructor(directory)
 	{
 		this.directory = directory;
-		this.DIRFile = 'out';
-		this.DIRLink = path.join(directory, this.DIRFile);
+		this.DIRMAIN = path.join(process.env.AppDataPath, 'template');
+		if (!fs.existsSync(this.DIRMAIN)) fs.mkdirSync(this.DIRMAIN, '0777', true);
+		this.DIRFile = path.join(process.env.AppDataPath, 'template', directory.split('\\').pop());
+		this.DIRLink = path.join(this.DIRFile);
 		this.CSSFile = 'style.css';
-		this.CSSLink = path.join(directory, this.DIRFile, this.CSSFile);
+		this.CSSLink = path.join(this.DIRFile, this.CSSFile);
 		this.JSFile = 'data.js';
-		this.JSLink = path.join(directory, this.DIRFile, this.JSFile);
+		this.JSLink = path.join(this.DIRFile, this.JSFile);
 		this.LOCKFile = 'lock';
-		this.LOCKLink = path.join(directory, this.DIRFile, this.LOCKFile);
+		this.LOCKLink = path.join(this.DIRFile, this.LOCKFile);
 		fs.readdir(directory, (err, files) => {
 			let Hash = new Array();
 			let CSS = '';

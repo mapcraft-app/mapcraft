@@ -5,6 +5,7 @@ const Component = require('./components');
 const Up = require('../../../update'), Update = new Up();
 
 window.addEventListener('DOMContentLoaded', () => {
+	
 	document.title = Component.getLang().Update;
 
 	Component.draw();
@@ -66,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
 						await Update.datapack();
 					if (ifUpdated(data.resourcepack, Update.getCurrentVersion().resourcepack))
 						await Update.resourcepack();
-					fs.rm(path.join(__dirname, 'temp'), { recursive: true, force: true }, () => {
+					fs.rm(path.join(__dirname, 'mapcraftTemp'), { recursive: true, force: true }, () => {
 						Update.updateManifest();
 						IPC.send('Update:close-modal');
 					});

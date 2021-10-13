@@ -11,8 +11,10 @@ const Database = require('better-sqlite3');
 const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
 const MCeditor = require('./dist/js/MCeditor');
+const MCutilities = require('./dist/js/MCutilities'); 
 
 //#region Variables
+MCutilities.GetAppDataPath();
 var StartWindow = null, MainWindow = null, SelectUserChild = null, UpdateWindow = null;
 var IsSelectedUser = false;
 let PassFirstStep = false;
@@ -208,6 +210,18 @@ function OpenMainWindow() {
 }
 //#endregion
 
+//#region Error handling
+/*process.on("uncaughtException", (err) => {
+	const messageBoxOptions = {
+		type: "error",
+		title: "Error in Main process",
+		message: "Something failed"
+	};
+	dialog.showMessageBoxSync(messageBoxOptions);
+	app.exit(1);
+ });*/
+//#endregion
+
 //#region IPC signal (Alphabetic order)
 //#region Dialog
 ipcMain.on('Dialog:open-directory', (event, element, path) => {
@@ -350,7 +364,7 @@ ipcMain.on('Update:create-modal', (event) => {
 		width: 640,
 		height: 480,
 		center: true,
-		show: false,
+		show: true,
 		resizable: false,
 		titleBarStyle: 'hidden',
 		parent: MainWindow,
