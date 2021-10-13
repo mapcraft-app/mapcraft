@@ -4,8 +4,6 @@ const child = require('child_process');
 const path = require('path');
 const OS = require('os');
 const fs = require('fs');
-const http = require('http');
-const https = require('https');
 const axios = require('axios');
 const Database = require('better-sqlite3');
 const MCwindow = require('./dist/js/MCwindow');
@@ -30,42 +28,16 @@ var SaveCurrentUser = {
 
 //#region Update updateSystem
 var UpdateExecutableIsPresent = false;
-function download(url, destination, callback)
-{
-	const file = fs.createWriteStream(destination);
-	let httpMethod;
-	if (url.indexOf(('https://')) !== -1)
-		httpMethod = https;
-	else
-		httpMethod = http;
-	const request = httpMethod.get(url, (response) => {
-		if (response.statusCode !== 200)
-			return callback(response.statusCode + ' error to ' + url);
-		response.pipe(file);
-		file.on('finish', () => {
-			file.close(callback);
-		});
-	});
-	request.on('error', (err) => {
-		fs.unlink(destination);
-		callback(err.message);
-	});
-	file.on('error', (err) => {
-		fs.unlink(destination);
-		callback(err.message);
-	});
-}
 async function Update_UpdateSystem()
 {
 	const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, './manifest'), {encoding: 'utf-8', flag: 'r'}));
 	const plateform = OS.platform();
-	const cwd = process.cwd();
+	//const cwd = process.cwd();
 	const json = await axios({
 		method: 'get',
 		url: 'https://api.mapcraft.app/update'
 	});
-	let _url;
-	let executable;
+	let _url, executable;
 	if (plateform === 'win32')
 	{
 		_url = json.data.windows.url;
@@ -81,19 +53,15 @@ async function Update_UpdateSystem()
 		_url = json.data.linux.url;
 		executable = "update";
 	}
-	const access = path.join(cwd, executable);
+	const access = path.join(process.env.AppDataPath, executable);
 	if (manifest.version.update === json.data.version && fs.existsSync(access))
 	{
 		UpdateExecutableIsPresent = true;
 		return ;
 	}
 	if (fs.existsSync(access)) fs.rmSync(access, {force: true});
-	download(_url, access, (err) => {
-		if (err)
-		{
-			console.error(err);
-			return ;
-		}
+	MCutilities.download(_url, access, (err) => {
+		if (err) { console.error(err); return ; }
 		UpdateExecutableIsPresent = true;
 	});
 }
@@ -211,15 +179,15 @@ function OpenMainWindow() {
 //#endregion
 
 //#region Error handling
-/*process.on("uncaughtException", (err) => {
+process.on("uncaughtException", (err) => {
 	const messageBoxOptions = {
 		type: "error",
 		title: "Error in Main process",
-		message: "Something failed"
+		message: err
 	};
 	dialog.showMessageBoxSync(messageBoxOptions);
 	app.exit(1);
- });*/
+ });
 //#endregion
 
 //#region IPC signal (Alphabetic order)
@@ -308,7 +276,16 @@ ipcMain.on('Shell:send-command', (event, command) => {
 
 //#region Start
 ipcMain.on('Start:is-selected-world', () => {
-	OpenMainWindow();
+	let interval = setInterval(wait, 2000);
+	function wait() {
+		if (UpdateExecutableIsPresent === true)
+		{
+			clearInterval(interval);
+			OpenMainWindow();
+		}
+		else
+			console.log('Update executable not finish to download, retry in 2s');
+	}
 });
 //#endregion
 
@@ -405,7 +382,7 @@ ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => 
 	if (OS.platform() === 'win32') executable = "update.exe";
 	else executable = "update";
 
-	const EXECUTABLE = path.join(process.cwd(), executable);
+	const EXECUTABLE = path.join(process.env.AppDataPath, executable);
 	var update = child.spawn(EXECUTABLE, {detached: true, stdio: ['ignore', 'ignore', 'ignore']});
 	update.unref();
 	app.exit();

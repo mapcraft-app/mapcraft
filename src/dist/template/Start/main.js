@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const MC = require('../../js/Mapcraft');
 const IPC = require('../../js/MCipc');
+const Up = require('../../../update');
 const Component = require('./components');
 const { CreateDB, ManageDB } = require('../../js/MCdatabase');
 
@@ -12,6 +13,30 @@ function GetLang()
 	catch (err) { throw err }
 	return (data);
 }; let LANG = GetLang();
+
+async function MakeInstallationOfBase()
+{
+	let LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+	const Update = new Up();
+	//#region Install necessary tools
+	if (!fs.existsSync(LocalMapcraft.Data.ResourcePack) || !fs.existsSync(LocalMapcraft.Data.DataPack))
+	{
+		document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
+		await Update.addNecessaryTools();
+	}
+	//#endregion
+	//#region Install base resource if not present
+	if (!fs.existsSync(LocalMapcraft.Mapcraft) || !fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
+	{
+		document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
+		await Update.installBase();
+	}
+	else
+	{
+		fs.rmSync(path.join(LocalMapcraft.TempPath, 'mapcraftTemp'), {recursive: true, force: true});
+		IPC.send('Start:is-selected-world');
+	}
+}
 
 window.addEventListener('DOMContentLoaded', () => {
 	Component.drawFullComponent();
@@ -91,27 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (!fs.existsSync(Mapcraft.DBPath))
 				new CreateDB(Mapcraft.DBPath);
 
-			let LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-			const Up = require('../../../update'), Update = new Up();
-			//#region Install necessary tools
-			if (!fs.existsSync(LocalMapcraft.Data.ResourcePack) || !fs.existsSync(LocalMapcraft.Data.DataPack))
-			{
-				document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
-				Update.addNecessaryTools();
-			}/*
-			//#endregion
-			//#region Install base resource if not present
-			if (!fs.existsSync(LocalMapcraft.Mapcraft) || !fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
-			{
-				document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
-				Update.installBase();
-			}
-			else
-			{
-				fs.rmSync(path.join(LocalMapcraft.TempPath, 'mapcraftTemp'), {recursive: true, force: true});
-				IPC.send('Start:is-selected-world');
-			}*/
-			//#endregion
+			MakeInstallationOfBase();
 		}
 	});
 });

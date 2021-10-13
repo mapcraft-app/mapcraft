@@ -2,65 +2,10 @@
 const path = require('path');
 const OS = require('os');
 const fs = require('fs');
-const http = require('http');
-const https = require('https');
 const axios = require('axios');
 const AdmZip = require('adm-zip');
 const IPC = require('./dist/js/MCipc');
-
-const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-
-async function downloadSync(url, destination)
-{
-	const response = await axios({
-		method: 'GET',
-		url: url,
-		responseType: 'stream'
-	});
-	response.data.pipe(fs.createWriteStream(destination));
-	return new Promise((resolve, reject) => {
-		response.data.on('end', () => {
-			resolve();
-		});
-		response.data.on('error', () => {
-			reject();
-		});
-	});
-}
-
-function download(url, destination, callback)
-{
-	const file = fs.createWriteStream(destination);
-	let httpMethod;
-	if (url.indexOf(('https://')) !== -1)
-		httpMethod = https;
-	else
-		httpMethod = http;
-		const Agent = httpMethod.Agent({
-			rejectUnauthorized: false
-		});
-	const request = httpMethod.get(url, (response) => {
-		if (response.statusCode !== 200)
-			return callback(response.statusCode + ' error to ' + url);
-		response.pipe(file);
-		file.on('finish', () => {
-			file.close(callback);
-		});
-	});
-	request.on('error', (err) => {
-		fs.unlink(destination, (err) => {
-			if (err) { console.error('download request error:', err); }
-		});
-		// error of certificate here
-		callback(err.message);
-	});
-	file.on('error', (err) => {
-		fs.unlink(destination, (err) => {
-			if (err) { console.error('file request error:', err); }
-		});
-		callback(err.message);
-	});
-}
+const MCutilities = require('./dist/js/MCutilities');
 
 class Update {
 	constructor()
@@ -106,40 +51,36 @@ class Update {
 	}
 	async addNecessaryTools()
 	{
+		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		let ret = {data: false, res: false};
 		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
 		const datapack_path = path.join(temp_dir, 'datapacks.zip');
 		const resourcepack_path = path.join(temp_dir, 'resourcepacks.zip');
-		console.log(temp_dir, datapack_path, resourcepack_path);
-		const process = require('process'); process.stdout.write("Hello World !");
 
 		if (!fs.existsSync(temp_dir)) fs.mkdirSync(temp_dir, {recursive: true});
 		if (!fs.existsSync(LocalMapcraft.Data.ResourcePack))
 		{
-			download('https://download.mapcraft.app/srcs/res/resourcepacks.zip', resourcepack_path, (err) => {
+			MCutilities.download('https://download.mapcraft.app/srcs/res/resourcepacks.zip', resourcepack_path, (err) => {
 				if (err) { console.error(err); return ; }
 				let Resource = new AdmZip(resourcepack_path);
 				Resource.extractAllTo(LocalMapcraft.Data.ResourcePack, true);
 				ret.data = true;
 			});
 		} else { ret.data = true; }
-		/*if (!fs.existsSync(LocalMapcraft.Data.DataPack))
+		if (!fs.existsSync(LocalMapcraft.Data.DataPack))
 		{
-			download('https://download.mapcraft.app/srcs/res/datapacks.zip', datapack_path, (err) => {
+			MCutilities.download('https://download.mapcraft.app/srcs/res/datapacks.zip', datapack_path, (err) => {
 				if (err) { console.error(err); return ; }
 				let Resource = new AdmZip(datapack_path);
 				Resource.extractAllTo(LocalMapcraft.Data.DataPack, true);
 				ret.res = true;
 			});
-		} else { ret.res = true; }*/
+		} else { ret.res = true; }
 
 		let interval = setInterval(wait, 2000);
 		function wait() {
 			if (ret.data === true && ret.res === true)
-			{
 				clearInterval(interval);
-				fs.rmSync(temp_dir, {recursive: true, force: true});
-			}
 			else
 				console.log('Necessary tools not finish to download, retry in 2s');
 		}
@@ -147,15 +88,17 @@ class Update {
 	async installBase()
 	{
 		await this.checkUpdate();
+		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		let ret = {data: false, res: false};
 		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
-		const datapack_path = path.join(temp_dir, this.json.datapack.version + '.zip');
-		const resourcepack_path = path.join(temp_dir, this.json.resourcepack.version + '.zip');
+		const datapack_path = path.join(temp_dir, 'base_datapack.zip');
+		const resourcepack_path = path.join(temp_dir, 'base_resourcepack.zip');
 
 		if (!fs.existsSync(temp_dir)) fs.mkdirSync(temp_dir, {recursive: true});
 		if (!fs.existsSync(LocalMapcraft.Mapcraft))
 		{
-			download(this.json.datapack.url, datapack_path, (err) => {
+			console.log(this.json.datapack.url, datapack_path);
+			MCutilities.download(this.json.datapack.url, datapack_path, (err) => {
 				if (err) { console.error(err); return ; }
 				let Resource = new AdmZip(datapack_path);
 				Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
@@ -164,7 +107,8 @@ class Update {
 		} else { ret.data = true; }
 		if (!fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
 		{
-			download(this.json.resourcepack.url, resourcepack_path, (err) => {
+			console.log(this.json.resourcepack.url, resourcepack_path);
+			MCutilities.download(this.json.resourcepack.url, resourcepack_path, (err) => {
 				if (err) { console.error(err); return ; }
 				let Resource = new AdmZip(resourcepack_path);
 				Resource.extractAllTo(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), true);
@@ -186,15 +130,12 @@ class Update {
 	}
 	async datapack()
 	{
+		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
 		fs.mkdir(temp_dir, {recursive: false}, (err) => {
 			const _path = path.join(temp_dir, this.json.datapack.version + '.zip');
-			download(this.json.datapack.url, _path, (err) => {
-				if (err)
-				{
-					console.error(err);
-					return ;
-				}
+			MCutilities.download(this.json.datapack.url, _path, (err) => {
+				if (err) { console.error(err); return ; }
 				let Resource = new AdmZip(_path);
 				Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
 			});
@@ -202,15 +143,12 @@ class Update {
 	}
 	async resourcepack()
 	{
+		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
 		fs.mkdir(temp_dir, {recursive: false}, () => {
 			const _path = path.join(temp_dir, this.json.resourcepack.version + '.zip');
-			download(this.json.resourcepack.url, _path, (err) => {
-				if (err)
-				{
-					console.error(err);
-					return ;
-				}
+			MCutilities.download(this.json.resourcepack.url, _path, (err) => {
+				if (err) { console.error(err); return ; }
 				let Resource = new AdmZip(_path);
 				Resource.extractAllTo(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), true);
 			});
@@ -228,6 +166,7 @@ class Update {
 
 	async software()
 	{
+		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
 		fs.mkdir(temp_dir, {recursive: false}, (err) => {
 			let _download_url;
@@ -235,12 +174,8 @@ class Update {
 			else if (OS.platform() === 'darwin') _download_url = this.json.software.darwin.archive.url;
 			else _download_url = this.json.software.linux.archive.url;
 			const _path = path.join(temp_dir, 'update_archive.zip');
-			download(_download_url, _path, (err) => {
-				if (err)
-				{
-					console.error(err);
-					return ;
-				}
+			MCutilities.download(_download_url, _path, (err) => {
+				if (err) { console.error(err); return ; }
 				IPC.send('Update:make-update', temp_dir, _path, path.join(temp_dir, 'output'));
 			});
 		});

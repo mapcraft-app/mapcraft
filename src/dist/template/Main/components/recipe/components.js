@@ -9,8 +9,8 @@ function UpdateLang() { LANG = MCplugin.Lang('Recipe').Data; }
 
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraft-data', 'recipes');
-//if (!fs.existsSync(RecipesDirectory))
-//	fs.mkdirSync(RecipesDirectory, {recursive: true});
+if (!fs.existsSync(RecipesDirectory))
+	fs.mkdirSync(RecipesDirectory, {recursive: true});
 
 const Models = require('./model');
 const LastMinecraftVersion = "1.17";

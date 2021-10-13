@@ -1,5 +1,6 @@
 const fs = require('fs');
-const OS = require('os');
+const http = require('http');
+const https = require('https');
 const path = require('path');
 const process = require('process');
 
@@ -19,7 +20,7 @@ class MCutilities
 
 	/**
 	 * Generate path of AppData directory of system
-	 * Output : window.appDataPath;
+	 * Output : process.env.AppDataPath
 	 */
 	static GetAppDataPath() {
 		const __MAPCRAFT = "mapcraft";
@@ -43,6 +44,42 @@ class MCutilities
 			}
 		};
 		if (!fs.existsSync(process.env.AppDataPath)) fs.mkdirSync(process.env.AppDataPath);
+	}
+
+	/**
+	 * Download file from web, accept http and https
+	 * @param {string} url url of download file
+	 * @param {string} destination path of file destination
+	 * @param {function} callback callback function with (error)
+	 */
+	static download(url, destination, callback)
+	{
+		const file = fs.createWriteStream(destination);
+		let httpMethod;
+		if (url.indexOf(('https://')) !== -1)
+			httpMethod = https;
+		else
+			httpMethod = http;
+		const request = httpMethod.get(url, (response) => {
+			if (response.statusCode !== 200)
+				return callback(response.statusCode + ' error to ' + url);
+			response.pipe(file);
+			file.on('finish', () => {
+				file.close(callback);
+			});
+		});
+		request.on('error', (err) => {
+			fs.unlink(destination, (err) => {
+				if (err) { console.error('download request error:', err); }
+			});
+			callback(err.message);
+		});
+		file.on('error', (err) => {
+			fs.unlink(destination, (err) => {
+				if (err) { console.error('download request error:', err); }
+			});
+			callback(err.message);
+		});
 	}
 }
 
