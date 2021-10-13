@@ -175,15 +175,15 @@ class Cutscene
 			const Rx = this.BezierCurve(POINTS[id + 1].Rx - POINTS[id].Rx, POINTS[id].Duration, POINTS[id].Transition);
 			const Ry = this.BezierCurve(POINTS[id + 1].Ry - POINTS[id].Ry, POINTS[id].Duration, POINTS[id].Transition);
 			
-			const POINT = (Number) => {
-				return (Number == 0.0) ? (' ~0') : (' ~'+ Number)
+			const POINT = (_Number) => {
+				return (isNaN(_Number) || Number(_Number) == 0.0) ? (' ~0') : (' ~'+ Number(_Number))
 			};
 
 			if (POINTS[id].Transition === 'linear')
 			{
 				data.camera += '# Point ' + POINTS[id].Point + '\n';
 				let Teleport = [POINT(X.Points[0]), POINT(Y.Points[0]), POINT(Z.Points[0]), POINT(Rx.Points[0]), POINT(Ry.Points[0])].join('');
-				let Matches = (id === 0) ? ('..' + data.current_duration) : (data.old_duration + '..' + data.current_duration);
+				let Matches = (id === 0 || data.old_duration >= data.current_duration) ? ('..' + data.current_duration) : (data.old_duration + '..' + data.current_duration);
 				data.camera += COMMAND.Camera[0] + Matches + COMMAND.Camera[1] + Teleport + '\n';
 			}
 			else

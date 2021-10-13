@@ -36,8 +36,13 @@ class Component
 			let testIfDir = path.join(MC.GetConfig().Env.SavePath, '/', Save);
 			if (fs.existsSync(testIfDir) && fs.lstatSync(testIfDir).isDirectory())
 			{
-				if (fs.existsSync(path.join(testIfDir, '/icon.png')) && fs.existsSync(path.join(testIfDir, '/level.dat')))
-					HTML += Template.parseRaw(Component, {id: countElement, ImgPath: path.join(testIfDir, '/icon.png'), title: Save});
+				if (fs.existsSync(path.join(testIfDir, '/level.dat')))
+				{
+					let img_link = String;
+					if (fs.existsSync(path.join(testIfDir, '/icon.png'))) img_link = path.join(testIfDir, '/icon.png');
+					else img_link = path.join(__dirname, '../../img/icon/default_logo.png');
+					HTML += Template.parseRaw(Component, {id: countElement, ImgPath: img_link, title: Save});
+				}
 			}
 			countElement++;
 		}
