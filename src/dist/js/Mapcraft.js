@@ -30,16 +30,16 @@ class MC
 		if (OS.platform() === 'win32')
 			linkToGame =  path.join(process.env.APPDATA, '.minecraft');
 		else if (OS.platform() === 'linux')
-			linkToGame = path.join(process.env.HOME);
+			linkToGame = path.join(process.env.HOME, '.minecraft');
 		else if (OS.platform() === 'darwin')
-			linkToGame = path.join(process.env.HOME, "Library", "Application Support", "minecraft");
+			linkToGame = path.join(process.env.HOME, 'Library', 'Application Support', 'minecraft');
 		let config = {
 			Env: {
 				OS: OSType,
 				TempPath: OS.tmpdir(),
 				AppDataPath : process.env.AppDataPath,
 				GamePath: linkToGame,
-				SavePath: path.join(linkToGame + '/saves'),
+				SavePath: path.join(linkToGame + 'saves'),
 				Lang: DefaultLang,
 				Components: ComponentsLink,
 				APIVersion: APIVersion
