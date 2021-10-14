@@ -19,12 +19,12 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "electron-forge start",
-    "debug": "electron --trace-warnings .",
+    "start": "sh ./build/install_sql.sh && electron-forge start",
+    "debug": "sh ./build/install_sql.sh && electron --trace-warnings .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
-    "pack": "electron-builder -mwl --x64 --dir ",
-    "dist": "electron-builder -mwl --x64",
+    "pack": "sh ./build/install_sql.sh && electron-builder -mwl --x64 --dir ",
+    "dist": "sh ./build/install_sql.sh && electron-builder -mwl --x64",
     "postinstall": "electron-builder install-app-deps",
     "lint": "echo \"No linting configured\""
   },
@@ -40,6 +40,7 @@
     "productName": "mapcraft",
     "copyright": "Copyright (C) 2020 - 2021, Clément Bertrand",
     "asar": true,
+    "npmRebuild": false,
    
     "directories": {
       "buildResources": "build",
