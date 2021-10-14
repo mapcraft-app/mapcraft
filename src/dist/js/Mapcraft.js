@@ -1,7 +1,7 @@
 const fs = require('fs');
 const OS = require('os');
 const path = require('path');
-const Process = require('process');
+const process = require('process');
 
 // API const
 const OSType = OS.platform();
@@ -28,18 +28,18 @@ class MC
 	{
 		let linkToGame;
 		if (OS.platform() === 'win32')
-			linkToGame =  Process.env.APPDATA;
+			linkToGame =  path.join(process.env.APPDATA, '.minecraft');
 		else if (OS.platform() === 'linux')
-			linkToGame = Process.env.HOME;
+			linkToGame = path.join(process.env.HOME);
 		else if (OS.platform() === 'darwin')
-			linkToGame = Process.env.HOME;
+			linkToGame = path.join(process.env.HOME, "Library", "Application Support", "minecraft");
 		let config = {
 			Env: {
 				OS: OSType,
 				TempPath: OS.tmpdir(),
 				AppDataPath : process.env.AppDataPath,
 				GamePath: linkToGame,
-				SavePath: null,
+				SavePath: path.join(linkToGame + '/saves'),
 				Lang: DefaultLang,
 				Components: ComponentsLink,
 				APIVersion: APIVersion
@@ -49,8 +49,6 @@ class MC
 				DataPack: 'Mapcraft-data'
 			}
 		}
-		config.Env.GamePath = path.join(config.Env.GamePath + '/.minecraft');
-		config.Env.SavePath = path.join(config.Env.GamePath + '/saves');
 		fs.writeFileSync(path.join(process.env.AppDataPath, 'config.json'), JSON.stringify(config, null, 4), {encoding: 'utf-8', flag: 'w'});
 	}
 	UpdateConfig(temp, data, save, lang, resourcepack, datapack)
