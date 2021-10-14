@@ -39,7 +39,7 @@ class MC
 				TempPath: OS.tmpdir(),
 				AppDataPath : process.env.AppDataPath,
 				GamePath: linkToGame,
-				SavePath: path.join(linkToGame + 'saves'),
+				SavePath: path.join(linkToGame, 'saves'),
 				Lang: DefaultLang,
 				Components: ComponentsLink,
 				APIVersion: APIVersion
