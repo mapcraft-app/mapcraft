@@ -23,7 +23,6 @@ class Template
 		this.DIRMAIN = path.join(process.env.AppDataPath, 'template');
 		if (!fs.existsSync(this.DIRMAIN)) fs.mkdirSync(this.DIRMAIN, '0777', true);
 		this.DIRFile = path.join(process.env.AppDataPath, 'template', path.basename(directory));
-		console.log(this.DIRFile);
 		this.DIRLink = path.join(this.DIRFile);
 		this.CSSFile = 'style.css';
 		this.CSSLink = path.join(this.DIRFile, this.CSSFile);

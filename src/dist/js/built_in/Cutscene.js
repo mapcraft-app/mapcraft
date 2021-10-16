@@ -29,7 +29,7 @@ class Cutscene
 	//#region Cutscene main
 	static AddCutscene(ID)
 	{
-		//MCfs.AddLine(MainPath, 'execute if entity @s[tag=Cutscene,tag=Cutscene_'+ ID.toString() +'] run say '+ ID.toString());
+		MCfs.AddLine(MainPath, 'execute positioned -371.7 66 417.9 rotated -160.3 10.3 if entity @s[tag=Cutscene,tag=Cutscene_5] run function mapcraft-data:cutscene/5/cutscene');
 		fs.mkdir(path.join(CutsceneDir, ID.toString()), (err) => {
 			if (err)
 				throw err;
@@ -100,6 +100,8 @@ class Cutscene
 	static GenerateCutscene(ID)
 	{
 		//#region Data generate
+		if (!fs.existsSync(path.join(CutsceneDir, ID.toString())))
+			fs.mkdirSync(path.join(CutsceneDir, ID.toString()));
 		const DB = Database(Mapcraft.DBPath, { verbose: console.log });
 		let sql = DB.prepare('SELECT * FROM Cutscene WHERE ID = ?');
 		const CUTSCENE = sql.get(ID);
@@ -124,7 +126,7 @@ class Cutscene
 			Launch: ['execute positioned ', Coordinates.Position,' rotated ', Coordinates.Rotation,' if entity @s[tag=Cutscene,tag=Cutscene_', ID.toString(), '] run function mapcraft-data:cutscene/', ID.toString(), '/cutscene'],
 			Core: {
 				0: ['# Core'],
-				1: ['execute if score @s MC_Cutscene matches 0 run tp @s ~ ~ ~ ~ ~'],
+				1: ['execute if score @s MC_Cutscene matches 0 run tp @s[tag=', TAG, ',tag=Cutscene,tag=!Debug] ~ ~ ~ ~ ~'],
 				2: ['execute if score @s MC_Cutscene matches 0 unless entity @e[sort=nearest,tag=Cutscene,tag=Camera] run function mapcraft:built_in/cutscene/summon_camera'],
 				3: ['execute if score @s MC_Cutscene matches 0 run tag @e[tag=Cutscene,tag=Camera,sort=nearest,limit=1] add ', TAG],
 				4: ['execute if score @s MC_Cutscene matches 0 run tp @e[tag=', TAG, ',tag=Cutscene,tag=Camera,sort=nearest,limit=1] ', Coordinates.Position, ' ', Coordinates.Rotation],

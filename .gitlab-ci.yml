@@ -44,6 +44,6 @@ release:
       --assets-link "{\"name\":\"Linux archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_linux.zip\"}" \
       \
       --assets-link "{\"name\":\"MacOS dmg\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_mac.dmg\"}" \
-      --assets-link "{\"name\":\"MacOS archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_mac.tar.gz\"}"
+      --assets-link "{\"name\":\"MacOS archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_mac.zip\"}"
   rules:
     - if: $CI_COMMIT_TAG

@@ -10,6 +10,14 @@ class MCfs
 				throw new Error(err);
 		});
 	}
+	
+	/**
+	 * Modify line if occurence found, add new line at the end of file if not exist if AddIsNotExit set to true
+	 * @param {string} File 
+	 * @param {string} Occurence 
+	 * @param {string} NewLine 
+	 * @param {boolean} AddIfNotExit 
+	 */
 	static async ModifyLine(File, Occurence, NewLine = undefined, AddIfNotExit = false)
 	{
 		let LineNumber = 0;
@@ -35,7 +43,7 @@ class MCfs
 				LineNumber++;
 			}
 			if (AddIfNotExit)
-				MCfs.AddLine(File, NewLine);
+				MCfs.AddLine(File, NewLine + '\n');
 		});
 	}
 	static DeleteLine(File, Occurence)

@@ -81,6 +81,15 @@ class MCutilities
 			callback(err.message);
 		});
 	}
+
+	/**
+	 * Check if directory is empty
+	 * @param {string} path path to directory
+	 */
+	static IsEmptyDir(path)
+	{
+		return fs.readdirSync(path).length === 0;
+	}
 }
 
 module.exports = MCutilities;

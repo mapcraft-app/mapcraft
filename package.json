@@ -19,8 +19,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "sh ./build/install_sql.sh && electron-forge start",
-    "debug": "sh ./build/install_sql.sh && electron --trace-warnings .",
+    "start": "electron-forge start",
+    "debug": "electron --trace-warnings .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "pack": "sh ./build/install_sql.sh && electron-builder -mwl --x64 --dir ",
@@ -75,7 +75,7 @@
       "artifactName": "${productName}_${os}.${ext}",
       "target": [
       	"dmg",
-        "tar.gz"
+        "zip"
       ]
     },
     "dmg": {
@@ -103,7 +103,7 @@
       "artifactName": "${productName}_${os}.${ext}",
       "target": [
         "AppImage",
-        "tar.gz"
+        "zip"
       ],
       "synopsis": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
       "category": "Development"

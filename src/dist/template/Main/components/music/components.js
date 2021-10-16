@@ -2,15 +2,38 @@ const fs = require('fs');
 const path = require('path');
 const JsonABC = require('jsonabc');
 const MC = require('../../../../js/Mapcraft');
+const MCutilities = require('../../../../js/MCutilities');
 const IPC = require('../../../../js/MCipc');
 const Music = require('../../../../js/built_in/Music');
 const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
 const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname);
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+const BaseSoundsJson = {
+    "blank": {
+        "category": "master",
+        "id": 1,
+        "sounds": [
+            {
+                "name": "mapcraft:mapcraft/blank"
+            }
+        ],
+        "subtitle": "Hello"
+    }
+};
 const SoundsJsonLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft', 'sounds.json');
 const SoundsLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 const Namespace = 'mapcraft:'
+
+if (!fs.existsSync(SoundsJsonLink))
+	fs.writeFileSync(SoundsJsonLink, JSON.stringify(BaseSoundsJson, null, 4), {encoding: 'utf-8', mode: 'w'});
+if (!fs.existsSync(SoundsLink))
+{
+	fs.mkdirSync(SoundsLink, {recursive: true});
+	MCutilities.download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) => {
+		if (err) { console.error(err); }
+	});
+}
 
 var MusicID = 0;
 
@@ -231,8 +254,9 @@ function MusicForm()
 		}
 		if (!fs.existsSync(Directory))
 		{
-			CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
-			isError = true;
+			fs.mkdirSync(Directory, {recursive: true});
+			//CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
+			//isError = true;
 		}
 		let BaseLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 		BaseLink = BaseLink.replace(/(\/)/g, '\/\/');
@@ -516,8 +540,9 @@ function DeleteMusic()
 			const ID = data[Name].id;
 			delete data[Name];
 			fs.unlink(Link, (err) => {
-				if (Error(err))
-					return ;
+				if (Error(err)) return ;
+				if (MCutilities.IsEmptyDir(path.dirname(Link)))
+					fs.rmdirSync(path.dirname(Link), {recursive: true, force: true});
 			});
 			fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(data, null, 4), 'utf-8', (err) => {
 				if (Error(err))
