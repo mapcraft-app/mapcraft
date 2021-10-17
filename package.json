@@ -12,7 +12,7 @@
     "url": "https://gitlab.com/cbertran/mapcraft.git"
   },
   "productName": "mapcraft",
-  "version": "0.6.0-alpha",
+  "version": "0.6.1-alpha",
   "keywords": [
     "mapcraft",
     "minecraft"
@@ -23,9 +23,10 @@
     "debug": "electron --trace-warnings .",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
-    "pack": "sh ./build/install_sql.sh && electron-builder -mwl --x64 --dir ",
-    "dist": "sh ./build/install_sql.sh && electron-builder -wl --x64",
-    "distMac": "yarn add --dev dmg-license && sh ./build/install_sql.sh && electron-builder -m --x64",
+    "pack": "electron-builder -mwl --x64 --dir ",
+    "dist": "electron-builder -mwl --x64",
+    "distMac": "electron-builder -m --x64",
+    "distWindowsLinux": "electron-builder -wl --x64",
     "postinstall": "electron-builder install-app-deps",
     "lint": "echo \"No linting configured\""
   },

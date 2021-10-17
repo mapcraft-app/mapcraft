@@ -16,6 +16,7 @@ build-mac:
     - echo "Building stage for MacOS"
     - echo "${CI_JOB_ID}" > CI_JOB_ID_MAC.txt
     - yarn
+    - yarn add --dev dmg-license
     - yarn distMac
   artifacts:
     paths:
@@ -35,7 +36,7 @@ build:
     - curl -O https://download.mapcraft.app/srcs/json.bash
     - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
     - yarn
-    - yarn distWindowLinux
+    - yarn distWindowsLinux
   artifacts:
     paths:
       - CI_JOB_ID.txt
