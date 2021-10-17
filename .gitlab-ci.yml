@@ -10,7 +10,7 @@ stages:
 
 build-mac:
   stage: build-mac
-  tag:
+  tags:
     - macos-runner
   script:
     - echo "Building stage for MacOS"
