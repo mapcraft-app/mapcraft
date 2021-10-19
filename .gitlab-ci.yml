@@ -1,8 +1,3 @@
-.macos_buildcloud_runners:
-  tags:
-    - shared-macos-amd64
-  image: macos-11-xcode-12
-
 stages:
   - build-mac
   - build
