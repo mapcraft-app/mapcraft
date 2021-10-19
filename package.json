@@ -80,20 +80,20 @@
       ]
     },
     "dmg": {
-      "backgroundColor": "#181a1b",
-      "iconSize": 75,
+      "background": "build/background.png",
+      "iconSize": 80,
       "window": {
-        "width": 544,
-        "height": 408
+        "width": 540,
+        "height": 380
       },
       "contents": [
         {
-          "x": 110,
-          "y": 150
+          "x": 140,
+          "y": 190
         },
         {
-          "x": 240,
-          "y": 150,
+          "x": 400,
+          "y": 190,
           "type": "link",
           "path": "/Applications"
         }
