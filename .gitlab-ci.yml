@@ -1,5 +1,6 @@
 stages:
   - build-mac
+  - build-windows
   - build
   - release
 
@@ -22,24 +23,41 @@ build-mac:
   rules:
     - if: $CI_COMMIT_TAG
 
+build-windows:
+  stage: build-windows
+  tags:
+    - windows-runner
+  script:
+    - echo "Building stage for Windows"
+    - echo "${CI_JOB_ID}" > CI_JOB_ID_WINDOWS.txt
+    - yarn
+    - yarn distWindows
+  artifacts:
+    paths:
+      - CI_JOB_ID_WINDOWS.txt
+      - ./out/*.zip
+      - ./out/*.exe
+      - ./out/*.blockmap
+    expire_in: never
+  rules:
+    - if: $CI_COMMIT_TAG
+
 build:
   stage: build
   image: electronuserland/builder:wine
   script:
-    - echo "Building stage for Windows/Linux"
-    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
+    - echo "Building stage for Linux"
+    - echo "${CI_JOB_ID}" > CI_JOB_ID_LINUX.txt
     - curl -O https://download.mapcraft.app/srcs/json.bash
     - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
     - yarn
-    - yarn distWindowsLinux
+    - yarn distLinux
   artifacts:
     paths:
-      - CI_JOB_ID.txt
+      - CI_JOB_ID_LINUX.txt
       - TAG_VERSION.txt
       - ./out/*.zip
       - ./out/*.AppImage
-      - ./out/*.exe
-      - ./out/*.blockmap
     expire_in: never
   rules:
     - if: $CI_COMMIT_TAG
@@ -49,18 +67,19 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - TAG_VERSION=$(cat TAG_VERSION.txt)
-    - CI_ID=$(cat CI_JOB_ID.txt)
+    - CI_ID_LINUX=$(cat CI_JOB_ID_LINUX.txt)
     - CI_ID_MAC=$(cat CI_JOB_ID_MAC.txt)
+    - CI_ID_WINDOWS=$(cat CI_JOB_ID_WINDOWS.txt)
     - echo "${CI_ID} ${TAG_VERSION}"
-    - rm -f TAG_VERSION.txt CI_JOB_ID.txt CI_JOB_ID_MAC.txt
+    - rm -f TAG_VERSION.txt CI_JOB_ID_LINUX.txt CI_JOB_ID_MAC.txt CI_JOB_ID_WINDOWS.txt
     - |
       release-cli create --name "v$TAG_VERSION" --tag-name $TAG_VERSION --ref $CI_COMMIT_SHA \
-      --assets-link "{\"name\":\"Windows setup\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_win.exe\"}" \
-      --assets-link "{\"name\":\"Windows setup blockmap\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_win.exe.blockmap\"}" \
-      --assets-link "{\"name\":\"Windows archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_win.zip\"}" \
+      --assets-link "{\"name\":\"Windows setup\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_WINDOWS}"`/artifacts/raw/out/mapcraft_win.exe\"}" \
+      --assets-link "{\"name\":\"Windows setup blockmap\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_WINDOWS}"`/artifacts/raw/out/mapcraft_win.exe.blockmap\"}" \
+      --assets-link "{\"name\":\"Windows archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_WINDOWS}"`/artifacts/raw/out/mapcraft_win.zip\"}" \
       \
-      --assets-link "{\"name\":\"Linux AppImage\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_linux.AppImage\"}" \
-      --assets-link "{\"name\":\"Linux archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID}"`/artifacts/raw/out/mapcraft_linux.zip\"}" \
+      --assets-link "{\"name\":\"Linux AppImage\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_LINUX}"`/artifacts/raw/out/mapcraft_linux.AppImage\"}" \
+      --assets-link "{\"name\":\"Linux archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_LINUX}"`/artifacts/raw/out/mapcraft_linux.zip\"}" \
       \
       --assets-link "{\"name\":\"MacOS dmg\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_MAC}"`/artifacts/raw/out/mapcraft_mac.dmg\"}" \
       --assets-link "{\"name\":\"MacOS archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_MAC}"`/artifacts/raw/out/mapcraft_mac.zip\"}"
