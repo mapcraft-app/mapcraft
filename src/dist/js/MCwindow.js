@@ -3,10 +3,11 @@ const path = require('path');
 
 class MCwindow
 {
-	static CreateWindow(width, height, preload) {
-		let _newWindow = new BrowserWindow({
-			width: width,
-			height: height,
+	static CreateWindow(_width, _height, _preload)
+	{
+		const _newWindow = new BrowserWindow({
+			width: _width,
+			height: _height,
 			center: true,
 			show: false,
 			frame: true,
@@ -16,12 +17,14 @@ class MCwindow
 				contextIsolation: true,
 				enableRemoteModule: false,
 				webSecurity: true,
-				preload: preload
-			}
+				preload: _preload,
+			},
 		});
 		return (_newWindow);
 	}
-	static OpenWindow(windowInstance, page) {
+
+	static OpenWindow(windowInstance, page)
+	{
 		windowInstance.setMenuBarVisibility(false);
 		windowInstance.loadFile(page);
 		//windowInstance.webContents.openDevTools();

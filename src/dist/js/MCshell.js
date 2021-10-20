@@ -6,25 +6,28 @@ class MCshell
 	static parse(line)
 	{
 		let ret = null;
-		let check = line.indexOf(COMMAND);
+		const check = line.indexOf(COMMAND);
 		if (check !== -1)
 		{
-			let args = line.substring(check + LENGTH).trim().split(' ');
-			switch(args[0]) 
+			const args = line.substring(check + LENGTH).trim().split(' ');
+			switch (args[0])
 			{
 				case 'trigger':
 					ret = this._trigger(args);
-					break ;
+					break;
 				case 'cutscene':
 					ret = this._cutscene(args);
-					break ;
+					break;
 				case 'option':
 					ret = this._option(args);
-					break ;
+					break;
+				default:
+					break;
 			}
 		}
 		return (ret);
 	}
+
 	static _trigger(args)
 	{
 		return ({
@@ -32,15 +35,14 @@ class MCshell
 			Player: args[1],
 			Coordinates: {
 				P1: [args[2], args[3], args[4]],
-				P2: [args[5], args[6], args[7]]
-			}
+				P2: [args[5], args[6], args[7]],
+			},
 		});
 	}
+
 	static _cutscene(args)
 	{
-		const stof = (str) => {
-			return (parseFloat(parseFloat(str.slice(0,-1)).toFixed(1)));
-		};
+		const stof = (str) => parseFloat(parseFloat(str.slice(0, -1)).toFixed(1));
 
 		switch (args[2])
 		{
@@ -48,10 +50,10 @@ class MCshell
 				return ({
 					Command: args[0],
 					Player: args[1],
-					Type: args[2]
+					Type: args[2],
 				});
 			case 'add-point':
-				parseFloat(args[3].slice(0,-1))
+				parseFloat(args[3].slice(0, -1));
 				return ({
 					NoNotification: true,
 					Command: args[0],
@@ -59,8 +61,8 @@ class MCshell
 					Type: args[2],
 					Coordinates: {
 						Point: [stof(args[3]), stof(args[4]), stof(args[5])],
-						Rotation: [stof(args[6]), stof(args[7])]
-					}
+						Rotation: [stof(args[6]), stof(args[7])],
+					},
 				});
 			case 'delete-point':
 				return ({
@@ -69,19 +71,20 @@ class MCshell
 					Player: args[1],
 					Type: args[2],
 					Coordinates: {
-						Point: [stof(args[3]), stof(args[4]), stof(args[5])]
-					}
+						Point: [stof(args[3]), stof(args[4]), stof(args[5])],
+					},
 				});
 			default:
-				return ({Command: undefined})
+				return ({ Command: undefined });
 		}
 	}
+
 	static _option(args)
 	{
 		return ({
 			Command: args[0],
 			Player: args[1],
-			Option: args[2]
+			Option: args[2],
 		});
 	}
 }

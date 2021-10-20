@@ -10,21 +10,24 @@ class CreateDB
 		console.log(__dirname);
 		this.AddTable();
 	}
+
 	AddTable()
 	{
 		this._AddTableUser();
 		this._AddTableTrigger();
 		this._AddTableCutscene();
 	}
-	/* ===== */
+
 	_AddTableUser()
 	{
 		this.db.exec(fs.readFileSync(path.join(__dirname, '../sql/mc_user.sql'), 'utf8'));
 	}
+
 	_AddTableTrigger()
 	{
 		this.db.exec(fs.readFileSync(path.join(__dirname, '../sql/mc_trigger.sql'), 'utf8'));
 	}
+
 	_AddTableCutscene()
 	{
 		this.db.exec(fs.readFileSync(path.join(__dirname, '../sql/mc_cutscene.sql'), 'utf8'));

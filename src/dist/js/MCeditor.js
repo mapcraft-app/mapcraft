@@ -9,9 +9,10 @@ class MCeditor
 			isEdit: false,
 			link: '',
 			fileName: '',
-			extension: ''
+			extension: '',
 		};
 	}
+
 	OpenFile(link)
 	{
 		this.state.isEdit = true;
@@ -20,27 +21,26 @@ class MCeditor
 		this.state.extension = path.extname(link).slice(1);
 		if (fs.existsSync(this.state.link))
 		{
-			let data = fs.readFileSync(this.state.link, 'utf-8');
+			const _data = fs.readFileSync(this.state.link, 'utf-8');
 			return ({
 				fileName: this.state.fileName,
 				extension: this.state.extension,
-				data: data
+				data: _data,
 			});
 		}
-		else
-			throw ('Editor: file no exist');
+		throw new Error('Editor: file no exist');
 	}
+
 	SaveFile(data)
 	{
 		if (this.state.isEdit)
-		{
 			fs.writeFile(this.state.link, data, (err) => {
 				if (err)
-					throw ('Editor: ' + err);
+					throw new Error('Editor:', err);
 				this.CloseFile();
 			});
-		}
 	}
+
 	CloseFile()
 	{
 		this.state.isEdit = false;

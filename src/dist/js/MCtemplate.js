@@ -4,12 +4,10 @@ const path = require('path');
 const MClink = require('./MClink');
 
 const AutoClean = true;
-const checksum = (data, algorithm, encoding) => {
-	return (crypto
-		.createHash(algorithm || 'sha1')
-		.update(data, 'utf8')
-		.digest(encoding || 'hex'));
-};
+const checksum = (data, algorithm, encoding) => crypto
+	.createHash(algorithm || 'sha1')
+	.update(data, 'utf8')
+	.digest(encoding || 'hex');
 
 class Template
 {
@@ -21,7 +19,8 @@ class Template
 	{
 		this.directory = directory;
 		this.DIRMAIN = path.join(process.env.AppDataPath, 'template');
-		if (!fs.existsSync(this.DIRMAIN)) fs.mkdirSync(this.DIRMAIN, '0777', true);
+		if (!fs.existsSync(this.DIRMAIN))
+			fs.mkdirSync(this.DIRMAIN, '0777', true);
 		this.DIRFile = path.join(process.env.AppDataPath, 'template', path.basename(directory));
 		this.DIRLink = path.join(this.DIRFile);
 		this.CSSFile = 'style.css';
@@ -30,18 +29,19 @@ class Template
 		this.JSLink = path.join(this.DIRFile, this.JSFile);
 		this.LOCKFile = 'lock';
 		this.LOCKLink = path.join(this.DIRFile, this.LOCKFile);
-		fs.readdir(directory, (err, files) => {
-			let Hash = new Array();
+		fs.readdir(directory, (err, files) =>
+		{
+			const Hash = [];
 			let CSS = '';
 			let JS = '';
-			let TempCSS, TempJS = null;
+			let TempCSS = null;
+			let TempJS = null;
 			if (err)
 				throw (err);
 			for (const file of files)
-			{
 				if (path.extname(file) === '.tp')
 				{
-					let data = fs.readFileSync(path.join(directory, file), 'utf8');
+					const data = fs.readFileSync(path.join(directory, file), 'utf8');
 					TempCSS = data.match(/(?<=\[CSS\]\s*).*?(?=\s*\[\/CSS\])/gs);
 					if (TempCSS)
 						CSS += TempCSS;
@@ -49,19 +49,22 @@ class Template
 					if (TempJS)
 						JS += TempJS;
 				}
-			}
 			Hash.push(checksum(CSS));
 			Hash.push(checksum(JS));
-			let generateCSS = () => {
+			const generateCSS = () =>
+			{
 				fs.writeFileSync(this.CSSLink, CSS, { flag: 'w' }, 'utf8');
 			};
-			let generateJS = () => {
+			const generateJS = () =>
+			{
 				fs.writeFileSync(this.JSLink, JS, { flag: 'w' }, 'utf8');
 			};
-			let generateLOCK = () => {
-				fs.writeFileSync(this.LOCKLink, JSON.stringify({CSS:Hash[0],JS:Hash[1]}, null, 4), { flag: 'w' }, 'utf8');
+			const generateLOCK = () =>
+			{
+				fs.writeFileSync(this.LOCKLink, JSON.stringify({ CSS: Hash[0], JS: Hash[1] }, null, 4), { flag: 'w' }, 'utf8');
 			};
-			let generateEverything = () => {
+			const generateEverything = () =>
+			{
 				generateLOCK();
 				generateCSS();
 				generateJS();
@@ -73,7 +76,9 @@ class Template
 				generateEverything();
 			}
 			else if (!fs.existsSync(this.LOCKLink) || !fs.readFileSync(this.LOCKLink, 'utf8'))
+			{
 				generateEverything();
+			}
 			else
 			{
 				let ChangeLock = false;
@@ -95,7 +100,7 @@ class Template
 		});
 	}
 
-//#region Public
+	//#region Public
 	/**
 	 * Render template in DOMelement
 	 * @param {DOMelement} DOMelement DOMelement on which the elements will be added
@@ -105,7 +110,7 @@ class Template
 	render(DOMelement, template, args)
 	{
 		let HTML = null;
-		let data = fs.readFileSync(path.join(this.directory, template), 'utf8');
+		const data = fs.readFileSync(path.join(this.directory, template), 'utf8');
 		if (!data)
 			throw data;
 		HTML = data.match(/(?<=\[HTML\]\s*).*?(?=\s*\[\/HTML\])/gs);
@@ -113,10 +118,9 @@ class Template
 		{
 			HTML = HTML.toString().trim();
 			if (typeof args === 'object')
-			{
-				for (let arg in args)
-					HTML = HTML.replace(RegExp('{' + arg + '}', 'g'), args[arg])
-			}
+				for (const arg in args)
+					if (Object.prototype.hasOwnProperty.call(args, arg))
+						HTML = HTML.replace(RegExp(`{${arg}}`, 'g'), args[arg]);
 			HTML = HTML.replace(/{\w+}/g, '');
 		}
 		this._insertTemplate(DOMelement, template, HTML);
@@ -130,52 +134,53 @@ class Template
 	getRaw(template)
 	{
 		let HTML = null;
-		let data = fs.readFileSync(path.join(this.directory, template), 'utf8');
+		const data = fs.readFileSync(path.join(this.directory, template), 'utf8');
 		if (!data)
 			throw data;
 		HTML = data.match(/(?<=\[HTML\]\s*).*?(?=\s*\[\/HTML\])/gs);
 		return (HTML.toString().trim());
 	}
-	
+
 	/**
 	 * Render generated elements in raw formats; data must be valid HTML
 	 * @param {DOMelement} DOMelement DOMelement on which the elements will be added
 	 * @param {string} rawHTML HTML raw
-	 * @param {*} template Name of template file with extension
-	 * @param {*} args Valid json for replace variable(s)
+	 * @param {string} template Name of template file with extension
+	 * @param {JSON} args Valid json for replace variable(s)
 	 */
 	renderRaw(DOMelement, rawHTML, template, args)
 	{
-		if (rawHTML === undefined)
-			throw 'HTML is ' + rawHTML;
+		let newRawHTML = rawHTML;
+		if (newRawHTML === undefined)
+			throw new Error(`HTML is ${newRawHTML}`);
 		if (args && typeof args === 'object')
 		{
-			for (let arg in args)
-				rawHTML = rawHTML.replace(RegExp('{' + arg + '}', 'g'), args[arg])
-			rawHTML = rawHTML.replace(/{\w+}/g, '');
+			for (const arg in args)
+				if (Object.prototype.hasOwnProperty.call(args, arg))
+					newRawHTML = newRawHTML.replace(RegExp(`{${arg}}`, 'g'), args[arg]);
+			newRawHTML = newRawHTML.replace(/{\w+}/g, '');
 		}
-		this._insertTemplate(DOMelement, template, rawHTML);
+		this._insertTemplate(DOMelement, template, newRawHTML);
 	}
-	
+
 	/**
 	 * Parse HTML raw with variable(s)
 	 * @param {string} HTML HTML raw
 	 * @param {json} args Valid json for replace variable(s)
-	 * @returns 
 	 */
 	parseRaw(HTML, args)
 	{
-		if (!HTML)
-			throw 'HTML raw is not defined';
+		let newHTML = HTML;
+		if (!newHTML)
+			throw new Error('HTML raw is not defined');
 		if (typeof args === 'object')
-		{
-			for (let arg in args)
-				HTML = HTML.replace(RegExp('{' + arg + '}', 'g'), args[arg])
-		}
-		HTML = HTML.replace(/{\w+}/g, '');
-		return (HTML);
+			for (const arg in args)
+				if (Object.prototype.hasOwnProperty.call(args, arg))
+					newHTML = newHTML.replace(RegExp(`{${arg}}`, 'g'), args[arg]);
+		newHTML = newHTML.replace(/{\w+}/g, '');
+		return (newHTML);
 	}
-	
+
 	/**
 	 * Update lang of specific DOMelement
 	 * @param {DOMelement} DOMelement DOMelement of DOM
@@ -183,31 +188,33 @@ class Template
 	 */
 	updateLang(DOMelement, args)
 	{
-		/*	
+		/*
 		**	1. NodeList
 		**	2. HTMLcollection
 		*/
 		if (this._ifDOMelementIsLive(DOMelement) !== true)
-			throw 'DOMelement is static';
+			throw new Error('DOMelement is static');
 		if (typeof args !== 'object')
-			throw 'args is not JSON object';
-		if (HTMLCollection.prototype.isPrototypeOf(DOMelement))
+			throw new Error('args is not JSON object');
+		if (HTMLCollection.prototype.isPrototypeOf(DOMelement)) // eslint-disable-line
 		{
-			for (let i = 0; i < DOMelement.length; i++) {
+			for (let i = 0; i < DOMelement.length; i++)
 				if (DOMelement[i].hasAttribute('lang'))
 				{
 					let value;
-					try {
-						value = DOMelement[i].getAttribute('lang').split('.').reduce((args, i) => args[i], args);
-					} catch (err) {
-						console.error(DOMelement[i].getAttribute('lang') + ' ' + 'is not defined in lang file');
+					try
+					{
+						value = DOMelement[i].getAttribute('lang').split('.').reduce((_args, _i) => _args[_i], args);
+					}
+					catch (err)
+					{
+						console.error(`${DOMelement[i].getAttribute('lang')} is not defined in lang file`);
 						value = 'undefined';
 					}
 					if (DOMelement[i].lastChild && DOMelement[i].lastChild.nodeType === 3)
 						DOMelement[i].lastChild.remove();
 					DOMelement[i].appendChild(document.createTextNode(value));
 				}
-			}
 		}
 		else
 		{
@@ -219,6 +226,7 @@ class Template
 			this._iterateNodeList(list, args);
 		}
 	}
+
 	/**
 	 * Correctly clean child of element
 	 * @param {DOMelement} node DOMelement
@@ -227,25 +235,22 @@ class Template
 	cleanNode(node, RemoveParent = false)
 	{
 		if (node && node.hasChildNodes())
-		{
 			while (node.firstChild)
 				node.removeChild(node.firstChild);
-		}
 		if (RemoveParent)
 			node.remove();
 	}
-//#endregion
+	//#endregion
 
-//#region Private
+	//#region Private
 	_cleanRender(template)
 	{
-		let DOMelement = document.querySelectorAll('[tp="'+ template +'"]')[0];
+		const DOMelement = document.querySelectorAll(`[tp="${template}"]`)[0];
 		if (DOMelement && DOMelement.hasChildNodes())
-		{
 			while (DOMelement.firstChild)
 				DOMelement.removeChild(DOMelement.firstChild);
-		}
 	}
+
 	_cleanIncludes(OldDOMelement)
 	{
 		let attr = null;
@@ -254,38 +259,38 @@ class Template
 			attr = path.parse(OldDOMelement.getAttribute('tp')).name;
 		if (attr)
 			MClink.removeComponent(attr);
-		let DOMelement = document.head.querySelectorAll('[directory]');
+		const DOMelement = document.head.querySelectorAll('[directory]');
 		if (DOMelement.length > 0)
-		{
-			for (let link of DOMelement)
+			for (const link of DOMelement)
 			{
-				let attr = link.getAttribute('directory');
-				if (MClink.getComponents().indexOf(attr) < 0)
+				const _attr = link.getAttribute('directory');
+				if (MClink.getComponents().indexOf(_attr) < 0)
 					link.remove();
 			}
-		}
 	}
+
 	_insertTemplate(DOMelement, template, str)
 	{
 		if (DOMelement === undefined || DOMelement === null)
-			throw 'DOMelement of ' + template + ' is ' + DOMelement;
+			throw new Error(`DOMelement of ${template} is ${DOMelement}`);
 		if (AutoClean)
 			this._cleanIncludes(DOMelement);
 		this._cleanRender(template);
-		let DOM = document.createElement('template');
+		const DOM = document.createElement('template');
 		DOM.innerHTML = str;
 		DOMelement.appendChild(DOM.content.cloneNode(true));
 		DOMelement.setAttribute('tp', template.toLowerCase());
-		this._includes(DOMelement);
+		this._includes();
 	}
-	_includes(DOMelement)
+
+	_includes()
 	{
-		let SameDirectory = this.directory.split('\\').pop();
-		let Link = document.head.querySelectorAll('link[directory="'+ SameDirectory +'"]');
-		let Script = document.head.querySelectorAll('script[directory="'+ SameDirectory +'"]');
+		const SameDirectory = this.directory.split('\\').pop();
+		const Link = document.head.querySelectorAll(`link[directory="${SameDirectory}"]`);
+		const Script = document.head.querySelectorAll(`script[directory="${SameDirectory}"]`);
 		if (fs.readFileSync(this.CSSLink, 'utf8') && Link.length < 1)
 		{
-			let CSSlink = document.createElement('link');
+			const CSSlink = document.createElement('link');
 			CSSlink.setAttribute('rel', 'stylesheet');
 			CSSlink.setAttribute('href', this.CSSLink);
 			CSSlink.setAttribute('directory', this.directory.split('\\').pop());
@@ -293,24 +298,25 @@ class Template
 		}
 		if (fs.readFileSync(this.JSLink, 'utf8') && Script.length < 1)
 		{
-			let JSlink = document.createElement('script');
+			const JSlink = document.createElement('script');
 			JSlink.defer = true;
 			JSlink.setAttribute('src', this.JSLink);
 			JSlink.setAttribute('directory', this.directory.split('\\').pop());
 			document.head.appendChild(JSlink);
 		}
 	}
-	/* NodeList */
+
+	/*NodeList*/
 	_ifDOMelementIsLive(DOMelement)
 	{
 		let list;
-		if (HTMLCollection.prototype.isPrototypeOf(DOMelement))
+		if (HTMLCollection.prototype.isPrototypeOf(DOMelement)) // eslint-disable-line
 			return (true);
 		if (!DOMelement.childNodes)
 			list = DOMelement;
 		else
 			list = DOMelement.childNodes;
-		const length = list.length;
+		const { length } = list;
 		if (!length)
 			return (undefined);
 		const element = list.item(0);
@@ -322,19 +328,23 @@ class Template
 		parent.removeChild(clone);
 		return (live);
 	}
+
 	_iterateNodeList(list, args)
 	{
-		for (let element of list)
+		for (const element of list)
 		{
 			if (element.nodeName !== '#text' && element.nodeType === 8)
-				continue ;
+				continue; // eslint-disable-line
 			if (element.nodeName !== '#text' && element.hasAttribute('lang'))
 			{
 				let value;
-				try {
-					value = element.getAttribute('lang').split('.').reduce((args, i) => args[i], args);
-				} catch (err) {
-					console.error(element.getAttribute('lang') + ' ' + 'is not defined in lang file');
+				try
+				{
+					value = element.getAttribute('lang').split('.').reduce((_args, _i) => _args[_i], args);
+				}
+				catch (err)
+				{
+					console.error(`${element.getAttribute('lang')} is not defined in lang file`);
 					value = 'undefined';
 				}
 				if (element.lastChild && element.lastChild.nodeType === 3)

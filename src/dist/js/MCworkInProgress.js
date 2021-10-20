@@ -1,11 +1,14 @@
 const IPC = require('./MCipc');
+
 const WorkInProgress = {
-	open: () => {
+	open: () =>
+	{
 		IPC.send('WorkProgress:signal-open-modal');
 	},
-	close: () => {
+	close: () =>
+	{
 		IPC.send('WorkProgress:signal-close-modal');
-	}
+	},
 };
 
 module.exports = WorkInProgress;

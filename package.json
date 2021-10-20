@@ -29,7 +29,7 @@
     "distWindows": "electron-builder -w --x64",
     "distLinux": "electron-builder -l --x64",
     "postinstall": "electron-builder install-app-deps",
-    "lint": "echo \"No linting configured\""
+    "lint": "eslint ."
   },
   "config": {
     "forge": {
