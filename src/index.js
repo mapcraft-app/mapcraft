@@ -9,7 +9,7 @@ const Database = require('better-sqlite3');
 const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
 const MCeditor = require('./dist/js/MCeditor');
-const MCutilities = require('./dist/js/MCutilities'); 
+const MCutilities = require('./dist/js/MCutilities');
 
 //#region Variables
 MCutilities.GetAppDataPath();
@@ -25,7 +25,6 @@ var SaveCurrentUser = {
 //#endregion
 
 //#region Main system
-
 //#region Update updateSystem
 var UpdateExecutableIsPresent = false;
 async function Update_UpdateSystem()
@@ -365,7 +364,7 @@ ipcMain.on('Update:open-window', (event) => {
 ipcMain.on('Update:close-modal', (event) => {
 	UpdateWindow.close();
 });
-ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => {
+ipcMain.on('Update:make-update', (event, _execute_path, _temp_path, _zip_path, _unzip_path) => {
 	let executable;
 	
 	let interval = setInterval(wait, 2000);
@@ -383,7 +382,16 @@ ipcMain.on('Update:make-update', (event, _temp_path, _zip_path, _unzip_path) => 
 	else executable = "update";
 
 	const EXECUTABLE = path.join(process.env.AppDataPath, executable);
-	var update = child.spawn(EXECUTABLE, {detached: true, stdio: ['ignore', 'ignore', 'ignore']});
+	var update = child.spawn(EXECUTABLE, {
+		detached: true,
+		stdio: ['ignore', 'ignore', 'ignore'],
+		env: {
+			EXECUTE_PATH: _execute_path,
+			TEMP_PATH: _temp_path,
+			ZIP_PATH: _zip_path,
+			UNZIP_PATH: _unzip_path
+		}
+	});
 	update.unref();
 	app.exit();
 });

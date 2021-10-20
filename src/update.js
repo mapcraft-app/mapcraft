@@ -14,6 +14,9 @@ class Update {
 		this.APIVersion = pack.version;
 		this._OSType = OS.platform();
 		this.json;
+		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
+		if (!fs.existsSync(temp_dir)) fs.mkdirSync(temp_dir, {recursive: true});
 	}
 	getJson() { return this.json; }
 	getCurrentVersion() { return this.APIVersion; }
@@ -53,7 +56,7 @@ class Update {
 	{
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		let ret = {data: false, res: false};
-		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
+		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'addNecessaryTools');
 		const datapack_path = path.join(temp_dir, 'datapacks.zip');
 		const resourcepack_path = path.join(temp_dir, 'resourcepacks.zip');
 
@@ -90,7 +93,7 @@ class Update {
 		await this.checkUpdate();
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		let ret = {data: false, res: false};
-		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
+		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'installBase');
 		const datapack_path = path.join(temp_dir, 'base_datapack.zip');
 		const resourcepack_path = path.join(temp_dir, 'base_resourcepack.zip');
 
@@ -131,8 +134,8 @@ class Update {
 	async datapack()
 	{
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
-		fs.mkdir(temp_dir, {recursive: false}, (err) => {
+		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'datapack');
+		fs.mkdir(temp_dir, {recursive: true}, (err) => {
 			const _path = path.join(temp_dir, this.json.datapack.version + '.zip');
 			MCutilities.download(this.json.datapack.url, _path, (err) => {
 				if (err) { console.error(err); return ; }
@@ -144,8 +147,8 @@ class Update {
 	async resourcepack()
 	{
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
-		fs.mkdir(temp_dir, {recursive: false}, () => {
+		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'resourcepack');
+		fs.mkdir(temp_dir, {recursive: true}, () => {
 			const _path = path.join(temp_dir, this.json.resourcepack.version + '.zip');
 			MCutilities.download(this.json.resourcepack.url, _path, (err) => {
 				if (err) { console.error(err); return ; }
@@ -167,16 +170,28 @@ class Update {
 	async software()
 	{
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp');
-		fs.mkdir(temp_dir, {recursive: false}, (err) => {
-			let _download_url;
-			if (OS.platform() === 'win32') _download_url = this.json.software.windows.archive.url;
-			else if (OS.platform() === 'darwin') _download_url = this.json.software.darwin.archive.url;
-			else _download_url = this.json.software.linux.archive.url;
+		const temp_dir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'software');
+		fs.mkdir(temp_dir, {recursive: true}, (err) => {
+			let _download_url, _mapcraft_soft;
+			if (OS.platform() === 'win32')
+			{
+				_download_url = this.json.software.windows.archive.url;
+				_mapcraft_soft = path.join(__dirname, '../../../', 'mapcraft.exe');
+			}
+			else if (OS.platform() === 'darwin')
+			{
+				_download_url = this.json.software.darwin.archive.url;
+				_mapcraft_soft = path.join(__dirname, '../../../', 'mapcraft');
+			}
+			else
+			{
+				_download_url = this.json.software.linux.archive.url;
+				_mapcraft_soft = path.join(__dirname, '../../../', 'mapcraft');
+			}
 			const _path = path.join(temp_dir, 'update_archive.zip');
 			MCutilities.download(_download_url, _path, (err) => {
 				if (err) { console.error(err); return ; }
-				IPC.send('Update:make-update', temp_dir, _path, path.join(temp_dir, 'output'));
+				IPC.send('Update:make-update', _mapcraft_soft, temp_dir, _path, path.join(__dirname, '../../../'));
 			});
 		});
 	}
