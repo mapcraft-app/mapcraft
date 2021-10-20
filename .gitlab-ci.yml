@@ -1,7 +1,7 @@
 stages:
   - build-mac
   - build-windows
-  - build
+  - build-linux
   - release
 
 build-mac:
@@ -9,7 +9,7 @@ build-mac:
   tags:
     - macos-runner
   script:
-    - echo "Building stage for MacOS"
+    - echo "Building stage for MacOS, ID:${CI_JOB_ID}"
     - echo "${CI_JOB_ID}" > CI_JOB_ID_MAC.txt
     - yarn
     - yarn add --dev dmg-license
@@ -17,8 +17,8 @@ build-mac:
   artifacts:
     paths:
       - CI_JOB_ID_MAC.txt
-      - ./out/*.zip
-      - ./out/*.dmg
+      - ./out/mapcraft_mac.zip
+      - ./out/mapcraft_mac.dmg
     expire_in: never
   rules:
     - if: $CI_COMMIT_TAG
@@ -28,25 +28,25 @@ build-windows:
   tags:
     - windows-runner
   script:
-    - echo "Building stage for Windows"
+    - echo "Building stage for Windows, ID:${CI_JOB_ID}"
     - echo "${CI_JOB_ID}" > CI_JOB_ID_WINDOWS.txt
     - yarn
     - yarn distWindows
   artifacts:
     paths:
       - CI_JOB_ID_WINDOWS.txt
-      - ./out/*.zip
-      - ./out/*.exe
-      - ./out/*.blockmap
+      - ./out/mapcraft_win.zip
+      - ./out/mapcraft_win.exe
+      - ./out/mapcraft_win.exe.blockmap
     expire_in: never
   rules:
     - if: $CI_COMMIT_TAG
 
-build:
-  stage: build
+build-linux:
+  stage: build-linux
   image: electronuserland/builder:wine
   script:
-    - echo "Building stage for Linux"
+    - echo "Building stage for Linux, ID:${CI_JOB_ID}"
     - echo "${CI_JOB_ID}" > CI_JOB_ID_LINUX.txt
     - curl -O https://download.mapcraft.app/srcs/json.bash
     - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
@@ -56,8 +56,8 @@ build:
     paths:
       - CI_JOB_ID_LINUX.txt
       - TAG_VERSION.txt
-      - ./out/*.zip
-      - ./out/*.AppImage
+      - ./out/mapcraft_linux.zip
+      - ./out/mapcraft_linux.AppImage
     expire_in: never
   rules:
     - if: $CI_COMMIT_TAG
@@ -67,9 +67,9 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - TAG_VERSION=$(cat TAG_VERSION.txt)
+    - CI_ID_WINDOWS=$(tr -d "\r" < CI_JOB_ID_WINDOWS.txt)
     - CI_ID_LINUX=$(cat CI_JOB_ID_LINUX.txt)
     - CI_ID_MAC=$(cat CI_JOB_ID_MAC.txt)
-    - CI_ID_WINDOWS=$(cat CI_JOB_ID_WINDOWS.txt)
     - echo "${CI_ID} ${TAG_VERSION}"
     - rm -f TAG_VERSION.txt CI_JOB_ID_LINUX.txt CI_JOB_ID_MAC.txt CI_JOB_ID_WINDOWS.txt
     - |
