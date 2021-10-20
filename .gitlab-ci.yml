@@ -28,8 +28,8 @@ build-windows:
   tags:
     - windows-runner
   script:
-    - echo "Building stage for Windows, ID:${CI_JOB_ID}"
-    - echo "${CI_JOB_ID}" > CI_JOB_ID_WINDOWS.txt
+    - echo "Building stage for Windows, ID:$CI_JOB_ID"
+    - echo $CI_JOB_ID > CI_JOB_ID_WINDOWS.txt
     - yarn
     - yarn distWindows
   artifacts:
