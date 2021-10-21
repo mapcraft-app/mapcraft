@@ -3,7 +3,7 @@ const OS = require('os');
 const path = require('path');
 const process = require('process');
 
-// API const
+//API const
 const OSType = OS.platform();
 const pack = JSON.parse(fs.readFileSync(path.join(__dirname, '../../manifest'), { encoding: 'utf-8', flag: 'r' }));
 const _APIVersion = pack.version;
@@ -75,7 +75,7 @@ class MC
 		fs.writeFileSync(path.join(process.env.AppDataPath, 'config.json'), JSON.stringify(config, null, 4), { encoding: 'utf-8', flag: 'w' });
 	}
 
-	// Getters
+	//Getters
 	GetConfig()
 	{
 		return (JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'config.json'), { encoding: 'utf-8', flag: 'r' })));

@@ -21,6 +21,7 @@ module.exports = {
 		"no-underscore-dangle": "off",
 		"no-restricted-syntax": ["off"],
 		"nonblock-statement-body-position": ["warn", "below"],
+		"object-curly-newline": ["error", { "multiline": true }],
 		"brace-style": ["warn", "allman"],
 		"indent": ["error", "tab", {"SwitchCase": 1}],
 		"no-tabs": ["off", {allowIndentationTabs: true}],
