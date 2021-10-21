@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				const Username = checkbox[i].value;
 				const db = Database(Mapcraft.DBPath, { verbose: console.log });
 				const sqlUser = db.prepare('SELECT UUID FROM User WHERE Username = ?');
-				const UUID = sqlUser.get(Username).UUID;  // eslint-disable-line
+				const { UUID } = sqlUser.get(Username);
 				db.close();
 				const Remember = document.getElementById('remember').checked;
 				const ret = {
