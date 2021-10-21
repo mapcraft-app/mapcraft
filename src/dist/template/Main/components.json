@@ -41,6 +41,12 @@
 		"IsNotification": true
 	},
 	{
+		"Name": "Advancement",
+		"Component": "./components/Advancement/components",
+		"Lang": "./components/Advancement/lang",
+		"IsNotification": false
+	},
+	{
 		"Name": "Recipe",
 		"Component": "./components/recipe/components",
 		"Lang": "./components/recipe/lang",

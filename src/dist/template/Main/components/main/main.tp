@@ -11,13 +11,13 @@
 	</div>
 	<div id="nav-slide">
 		<div id="offcanvas-slide" uk-offcanvas="overlay:true">
-			<div class="uk-offcanvas-bar">
+			<div class="uk-offcanvas-bar main-nav-offcanvas">
 				<article class="uk-comment" id="nav-header"></article>
 				<div class="uk-flex uk-flex-center">
 					<a id="documentation-link" class="uk-button uk-button-text" lang="Documentation"></a>
 				</div>
 				<hr class="uk-divider-icon">
-				<ul id="toogle-nav" class="uk-nav uk-nav-default">
+				<ul id="toogle-nav" class="uk-nav uk-nav-default nav-main-slide">
 				</ul>
 			</div>
 		</div>
@@ -57,7 +57,7 @@
 	</div>
 </footer>
 [/HTML]
-
+width: max-content;
 [CSS]
 #EditFile-Info {
 	display: hidden;
@@ -67,6 +67,12 @@
 	width: -webkit-fill-available;
 	margin: 2em;
 	border-radius: 0.3em;
+}
+.nav-main-slide {
+	word-break: break-all;
+}
+.main-nav-offcanvas {
+	width: max-content;
 }
 [/CSS]
 

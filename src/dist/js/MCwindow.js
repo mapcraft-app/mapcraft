@@ -8,11 +8,15 @@ class MCwindow
 		const _newWindow = new BrowserWindow({
 			width: _width,
 			height: _height,
+			minWidth: 800,
+			minHeight: 600,
 			center: true,
 			show: false,
 			frame: true,
 			icon: path.join(__dirname, '../img/icon/icon.ico'),
 			webPreferences: {
+				defaultEncoding: 'utf-8',
+				enableWebSQL: false,
 				nodeIntegration: false,
 				contextIsolation: true,
 				enableRemoteModule: false,

@@ -62,7 +62,7 @@ class MusicComponent
 	{
 		const IsExist = (json, key, ret = 0) =>
 		{
-			if (Object.prototype.isPrototypeOf.call(json, key))
+			if (Object.prototype.hasOwnProperty.call(json, key))
 			{
 				if (!ret)
 					return (true);
@@ -80,7 +80,7 @@ class MusicComponent
 
 		fs.readFile(SoundsJsonLink, 'utf-8', (err, data) =>
 		{
-			let newData = data;
+			let newData;
 			if (err)
 			{
 				MCutilities.CreateAlert('danger', document.getElementById('music-error'), `sounds.json : ${err}`);
@@ -88,7 +88,7 @@ class MusicComponent
 			}
 			try
 			{
-				newData = JSON.parse(newData.trim());
+				newData = JSON.parse(data.trim());
 				newData = JsonABC.sortObj(newData);
 			}
 			catch (err2)

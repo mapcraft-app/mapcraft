@@ -206,10 +206,10 @@ process.on('uncaughtException', (err) =>
 	const messageBoxOptions = {
 		type: 'error',
 		title: 'Error in Main process',
-		message: err,
+		message: err.toString(),
 	};
 	dialog.showMessageBoxSync(messageBoxOptions);
-	app.exit(1);
+	//app.exit(1);
 });
 //#endregion
 

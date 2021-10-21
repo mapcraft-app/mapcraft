@@ -1,0 +1,12 @@
+[HTML]
+<h2 class="test">Hello World !</h2>
+[/HTML]
+
+[CSS]
+.test {
+	color: green;
+}
+[/CSS]
+
+[JS]
+[/JS]
