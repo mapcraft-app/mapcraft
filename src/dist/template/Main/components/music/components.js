@@ -1,64 +1,44 @@
 const fs = require('fs');
 const path = require('path');
 const JsonABC = require('jsonabc');
-const MC = require('../../../../js/Mapcraft');
 const MCutilities = require('../../../../js/MCutilities');
+const MCworkInProgress = require('../../../../js/MCworkInProgress');
 const IPC = require('../../../../js/MCipc');
 const Music = require('../../../../js/built_in/Music');
-const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
-const Temp = require('../../../../js/MCtemplate'), Template = new Temp(__dirname);
+const MCP = require('../../../../js/MCplugin');
+const Temp = require('../../../../js/MCtemplate');
+
+const MCplugin = new MCP();
+const Template = new Temp(__dirname);
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const BaseSoundsJson = {
-    "blank": {
-        "category": "master",
-        "id": 1,
-        "sounds": [
-            {
-                "name": "mapcraft:mapcraft/blank"
-            }
-        ],
-        "subtitle": "Hello"
-    }
+	blank: {
+		category: 'master',
+		id: 1,
+		sounds: [
+			{ name: 'mapcraft:mapcraft/blank' },
+		],
+		subtitle: 'Hello',
+	},
 };
 const SoundsJsonLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft', 'sounds.json');
 const SoundsLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
-const Namespace = 'mapcraft:'
+const Namespace = 'mapcraft:';
 
 if (!fs.existsSync(SoundsJsonLink))
-	fs.writeFileSync(SoundsJsonLink, JSON.stringify(BaseSoundsJson, null, 4), {encoding: 'utf-8', mode: 'w'});
+	fs.writeFileSync(SoundsJsonLink, JSON.stringify(BaseSoundsJson, null, 4), { encoding: 'utf-8', mode: 'w' });
 if (!fs.existsSync(SoundsLink))
 {
-	fs.mkdirSync(SoundsLink, {recursive: true});
-	MCutilities.download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) => {
-		if (err) { console.error(err); }
+	fs.mkdirSync(SoundsLink, { recursive: true });
+	MCutilities.download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) =>
+	{
+		if (err)
+			console.error(err);
 	});
 }
 
-var MusicID = 0;
-
-const WorkProgress = {
-	open: () => {
-		IPC.send('WorkProgress:signal-open-modal');
-	},
-	close: () => {
-		IPC.send('WorkProgress:signal-close-modal');
-	}
-}
-
-function CreateAlert(type, DOMelement, str)
-{
-	let alert = document.createElement('div');
-	alert.classList.add('uk-alert-' + type);
-	alert.setAttribute('uk-alert', '');
-	let closeButton = document.createElement('a');
-	closeButton.classList.add('uk-alert-close');
-	closeButton.setAttribute('uk-close', '');
-	let text = document.createElement('p').appendChild(document.createTextNode(str));
-	alert.appendChild(closeButton);
-	alert.appendChild(text);
-	DOMelement.appendChild(alert);
-}
+let MusicID = 0;
 
 class MusicComponent
 {
@@ -68,121 +48,131 @@ class MusicComponent
 
 		Template.updateLang(document.getElementById('content'), MCplugin.Lang('Music').Data);
 		this.createForm();
-		DeleteMusic();
+		DeleteMusic(); // eslint-disable-line
 	}
+
 	static createForm()
 	{
 		Template.render(document.getElementById('ModalAddMusic'), 'music_form_create.tp', null);
 		Template.updateLang(document.getElementById('ModalAddMusic'), MCplugin.Lang('Music').Data);
-		MusicForm();
-		
+		MusicForm(); // eslint-disable-line
 	}
+
 	static musicList(isReload = false)
 	{
-		const IsExist = (json, key, ret = 0) => {
-			if (json.hasOwnProperty(key))
+		const IsExist = (json, key, ret = 0) =>
+		{
+			if (Object.prototype.isPrototypeOf.call(json, key))
 			{
 				if (!ret)
 					return (true);
-				let Value = eval('json.' + key);
-				if (typeof(Value) === 'boolean')
-				{
+				//eslint-disable-next-line no-eval
+				let Value = eval(`json.${key}`);
+				if (typeof (Value) === 'boolean')
 					if (Value)
 						Value = '<span class="uk-label uk-label-success boolean-badge" uk-icon="check" uk-tooltip="title: true; pos: right"></span>';
 					else
 						Value = '<span class="uk-label uk-label-danger boolean-badge" uk-icon="ban" uk-tooltip="title: false; pos: right"></span>';
-				}
-				return (Template.parseRaw('<li>{Object}: {Value}</li>', {Object: key, Value: Value}))
+				return (Template.parseRaw('<li>{Object}: {Value}</li>', { Object: key, Value }));
 			}
 			return (false);
-		}
+		};
 
-		fs.readFile(SoundsJsonLink, 'utf-8', (err, data) => {
+		fs.readFile(SoundsJsonLink, 'utf-8', (err, data) =>
+		{
+			let newData = data;
 			if (err)
 			{
-				CreateAlert('danger', document.getElementById('music-error'), 'sounds.json : ' + err);
-				return ;
+				MCutilities.CreateAlert('danger', document.getElementById('music-error'), `sounds.json : ${err}`);
+				return;
 			}
-			try {
-				data = JSON.parse(data.trim());
-				data = JsonABC.sortObj(data);
-			} catch (err) {
-				CreateAlert('warning', document.getElementById('music-error'), 'sounds.json : ' + err);
-				return ;
+			try
+			{
+				newData = JSON.parse(newData.trim());
+				newData = JsonABC.sortObj(newData);
+			}
+			catch (err2)
+			{
+				MCutilities.CreateAlert('warning', document.getElementById('music-error'), `sounds.json : ${err2}`);
+				return;
 			}
 
 			let HTML = '';
 			let Link = '';
 			let ID = 0;
 			MusicID = 0;
-			for (let i in data)
-			{
-				let HTMLlist = '';
-				if (IsExist(data[i], 'id'))
+			for (const i in newData)
+				if (Object.prototype.hasOwnProperty.call(newData, i))
 				{
-					HTMLlist += IsExist(data[i], 'id', true);
-					ID = data[i].id;
-					if (parseInt(ID, 10) > MusicID)
-						MusicID = parseInt(ID, 10);
-				}
-				if (IsExist(data[i], 'category'))
-					HTMLlist += IsExist(data[i], 'category', true);
-				if (IsExist(data[i], 'replace'))
-					HTMLlist += IsExist(data[i], 'replace', true);
-				if (IsExist(data[i], 'subtitle'))
-					HTMLlist += IsExist(data[i], 'subtitle', true);
-				if (data[i].hasOwnProperty('sounds') && Array.isArray(data[i].sounds))
-				{
-					HTMLlist += '<li class="uk-margin-left"><ul uk-accordion>';
-					let Sounds = data[i].sounds;
-					let SoundList = '';
-					let SoundArray = new Array();
-					for (let i in Sounds)
+					let HTMLlist = '';
+					if (IsExist(newData[i], 'id'))
 					{
-						if (typeof(Sounds[i]) === 'object')
-						{
-							if (IsExist(Sounds[i], 'name'))
+						HTMLlist += IsExist(newData[i], 'id', true);
+						ID = newData[i].id;
+						if (parseInt(ID, 10) > MusicID)
+							MusicID = parseInt(ID, 10);
+					}
+					if (IsExist(newData[i], 'category'))
+						HTMLlist += IsExist(newData[i], 'category', true);
+					if (IsExist(newData[i], 'replace'))
+						HTMLlist += IsExist(newData[i], 'replace', true);
+					if (IsExist(newData[i], 'subtitle'))
+						HTMLlist += IsExist(newData[i], 'subtitle', true);
+					if (Object.prototype.hasOwnProperty.call(newData[i], 'sounds') && Array.isArray(newData[i].sounds))
+					{
+						HTMLlist += '<li class="uk-margin-left"><ul uk-accordion>';
+						const Sounds = newData[i].sounds;
+						let SoundList = '';
+						const SoundArray = [];
+						for (const x in Sounds)
+							if (typeof (Sounds[x]) === 'object')
 							{
-								Link = Sounds[i].name.replace(/(.*):/, '');
-								SoundList += IsExist(Sounds[i], 'name', true);
+								if (IsExist(Sounds[x], 'name'))
+								{
+									Link = Sounds[x].name.replace(/(.*):/, '');
+									SoundList += IsExist(Sounds[x], 'name', true);
+								}
+								if (IsExist(Sounds[x], 'volume'))
+									SoundList += IsExist(Sounds[x], 'volume', true);
+								if (IsExist(Sounds[x], 'pitch'))
+									SoundList += IsExist(Sounds[x], 'pitch', true);
+								if (IsExist(Sounds[x], 'weight'))
+									SoundList += IsExist(Sounds[x], 'weight', true);
+								if (IsExist(Sounds[x], 'stream'))
+									SoundList += IsExist(Sounds[x], 'stream', true);
+								if (IsExist(Sounds[x], 'attenuation_distance'))
+									SoundList += IsExist(Sounds[x], 'attenuation_distance', true);
+								if (IsExist(Sounds[x], 'preload'))
+									SoundList += IsExist(Sounds[x], 'preload', true);
+								if (IsExist(Sounds[x], 'type'))
+									SoundList += IsExist(Sounds[x], 'type', true);
 							}
-							if (IsExist(Sounds[i], 'volume'))
-								SoundList += IsExist(Sounds[i], 'volume', true);
-							if (IsExist(Sounds[i], 'pitch'))
-								SoundList += IsExist(Sounds[i], 'pitch', true);
-							if (IsExist(Sounds[i], 'weight'))
-								SoundList += IsExist(Sounds[i], 'weight', true);
-							if (IsExist(Sounds[i], 'stream'))
-								SoundList += IsExist(Sounds[i], 'stream', true);
-							if (IsExist(Sounds[i], 'attenuation_distance'))
-								SoundList += IsExist(Sounds[i], 'attenuation_distance', true);
-							if (IsExist(Sounds[i], 'preload'))
-								SoundList += IsExist(Sounds[i], 'preload', true);
-							if (IsExist(Sounds[i], 'type'))
-								SoundList += IsExist(Sounds[i], 'type', true);
+							else
+							{
+								SoundArray.push(Sounds[x]);
+							}
+						if (SoundArray)
+						{
+							SoundList += '<li><ul class="uk-list uk-list-square">';
+							for (const z in SoundArray)
+								if (Object.prototype.hasOwnProperty.call(SoundArray, z))
+									SoundList += `<li>${SoundArray[z]}</li>`;
+							SoundList += '</ul></li>';
 						}
-						else
-							SoundArray.push(Sounds[i]);
+						HTMLlist += Template.parseRaw(Template.getRaw('music_list.tp'), { Name: 'sounds', List: SoundList });
+						HTMLlist += '</ul>';
 					}
-					if (SoundArray)
-					{
-						SoundList += '<li><ul class="uk-list uk-list-square">';
-						for (let i in SoundArray)
-							SoundList += '<li>'+ SoundArray[i] +'</li>';
-						SoundList += '</ul></li>';
-					}
-					HTMLlist += Template.parseRaw(Template.getRaw('music_list.tp'), {Name: 'sounds', List: SoundList}) + '</ul>';
+					let Class = '';
+					if (isReload && document.getElementById('music_player').getAttribute('name') === i)
+						Class = 'class="uk-open"';
+					HTML += Template.parseRaw(Template.getRaw('music_list.tp'), { Name: i, Link, ID, Class, List: HTMLlist });
 				}
-				let Class = '';
-				if (isReload && document.getElementById('music_player').getAttribute('name') === i)
-					Class = 'class="uk-open"';
-				HTML += Template.parseRaw(Template.getRaw('music_list.tp'), {Name: i, Link: Link, ID: ID, Class: Class, List: HTMLlist});
-			}
 			Template.renderRaw(document.getElementById('sound-list'), HTML, 'music_list.tp', null);
-			PrintSoundElement();
-			SubmitForm();
+			PrintSoundElement(); // eslint-disable-line
+			SubmitForm(); // eslint-disable-line
 		});
 	}
+
 	static draw()
 	{
 		this.main();
@@ -192,19 +182,21 @@ class MusicComponent
 
 function MusicForm()
 {
-	document.querySelector('#add-music-form-Directory-click').addEventListener('click', () => {
-		let value = document.getElementById('add-music-form-Directory').value;
+	document.querySelector('#add-music-form-Directory-click').addEventListener('click', () =>
+	{
+		let { value } = document.getElementById('add-music-form-Directory');
 		if (!value)
 			value = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 		else
 			value = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds', value);
 		IPC.send('Dialog:open-directory', 'add-music-form-Directory', value);
 	});
-	IPC.receive('Dialog:selected-directory', (data, element) => {
+	IPC.receive('Dialog:selected-directory', (data, element) =>
+	{
 		let BaseLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
-		BaseLink = BaseLink.replace(/(\/)/g, '\/\/');
+		BaseLink = BaseLink.replace(/(\/)/g, '//');
 		BaseLink = BaseLink.replace(/(\\)/g, '\\\\');
-		const regex = new RegExp('(' + BaseLink + ')', 'g');
+		const regex = new RegExp(`(${BaseLink})`, 'g');
 		if (regex.test(data.filePaths[0]))
 		{
 			document.getElementById('add-music-form-Directory-Error').style.display = 'none';
@@ -212,96 +204,97 @@ function MusicForm()
 				document.getElementById(element).value = data.filePaths[0].replace(regex, '');
 		}
 		else if (data.filePaths[0])
+		{
 			document.getElementById('add-music-form-Directory-Error').style.display = 'block';
+		}
 	});
 
-	document.querySelector('#add-music-form').addEventListener('submit', (event) => {
+	document.querySelector('#add-music-form').addEventListener('submit', (event) =>
+	{
 		event.preventDefault();
 		event.stopImmediatePropagation();
 		const DefaultID = 'add-music-form-';
-		const [file] = event.target[DefaultID +'Upload'].files;
-		const Name = event.target[DefaultID +'Name'].value;
-		const JSONDirectory = (event.target[DefaultID +'Directory'].value.replace(/(\\)/g, '/')).replace(/^\//, '');
-		const Directory = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds', event.target[DefaultID +'Directory'].value);
+		const [file] = event.target[`${DefaultID}Upload`].files;
+		const Name = event.target[`${DefaultID}Name`].value;
+		const JSONDirectory = (event.target[`${DefaultID}Directory`].value.replace(/(\\)/g, '/')).replace(/^\//, '');
+		const Directory = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds', event.target[`${DefaultID}Directory`].value);
 		let sounds = fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), 'utf-8');
-		try { sounds = JSON.parse(sounds.trim()) }
-		catch (err) {
-			CreateAlert('warning', document.getElementById('ModalAddMusicError'), 'sounds.json : ' + err);
-			return ;
+		try
+		{
+			sounds = JSON.parse(sounds.trim());
+		}
+		catch (err)
+		{
+			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), `sounds.json : ${err}`);
+			return;
 		}
 		//#region Check error
-		const Error = MCplugin.Lang('Music').Data.Modal.Error;
+		const { Error } = MCplugin.Lang('Music').Data.Modal;
 		let isError = false;
 		if (!file || file.type !== 'audio/ogg' || path.extname(file.name) !== '.ogg')
 		{
 			if (!file)
-				CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoMusic);
+				MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoMusic);
 			else if (file.type !== 'audio/ogg')
-				CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoOGG);
+				MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoOGG);
 			else if (path.extname(file.name) !== '.ogg')
-				CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.IncorrectOGG);
+				MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.IncorrectOGG);
 			isError = true;
 		}
 		if (!Name)
 		{
-			CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoName);
+			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoName);
 			isError = true;
 		}
-		else if (!Name.match(/^[a-z0-9\/._-]+$/g))
+		else if (!Name.match(/^[a-z0-9/._-]+$/g))
 		{
-			CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.ForbiddenName);
+			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.ForbiddenName);
 			isError = true;
 		}
 		if (!fs.existsSync(Directory))
-		{
-			fs.mkdirSync(Directory, {recursive: true});
-			//CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
+			fs.mkdirSync(Directory, { recursive: true });
+			//MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
 			//isError = true;
-		}
 		let BaseLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
-		BaseLink = BaseLink.replace(/(\/)/g, '\/\/');
+		BaseLink = BaseLink.replace(/(\/)/g, '//');
 		BaseLink = BaseLink.replace(/(\\)/g, '\\\\');
-		const regex = new RegExp('(' + BaseLink + ')', 'g');
+		const regex = new RegExp(`(${BaseLink})`, 'g');
 		if (!regex.test(Directory))
 		{
-			CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
+			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
 			isError = true;
 		}
-		if (sounds.hasOwnProperty(Name))
+		if (Object.prototype.isPrototypeOf.call(sounds, Name))
 		{
-			CreateAlert('warning', document.getElementById('ModalAddMusicError'), MCplugin.Lang('Music').Data.Modal.IncorrectPath);
+			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), MCplugin.Lang('Music').Data.Modal.IncorrectPath);
 			isError = true;
 		}
 		if (isError)
-			return ;
+			return;
 		//#endregion
 
 		//#region Add Music
 		++MusicID;
-		const NewName = Namespace + ((!JSONDirectory) ? (Name) : (JSONDirectory + '/' + Name));
+		const NewName = Namespace + ((!JSONDirectory) ? (Name) : (`${JSONDirectory}/${Name}`));
 		sounds[Name] = {
 			id: parseInt(MusicID, 10),
 			sounds: [
-				{
-					name: NewName
-				}
-			]
+				{ name: NewName },
+			],
 		};
 		JsonABC.sortObj(sounds);
-		fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(sounds, null, 4), 'utf-8', (err) => {
+		fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(sounds, null, 4), 'utf-8', (err) =>
+		{
 			if (err)
-			{
-				CreateAlert('danger', document.getElementById('ModalAddMusicError'), err);
-				return ;
-			}
+				MCutilities.CreateAlert('danger', document.getElementById('ModalAddMusicError'), err);
 		});
-		fs.copyFile(file.path, path.join(Directory, Name + '.ogg'), (err) => {
+		fs.copyFile(file.path, path.join(Directory, `${Name}.ogg`), (err) =>
+		{
 			if (err)
 			{
-				CreateAlert('danger', document.getElementById('ModalAddMusicError'), err);
-				return ;
+				MCutilities.CreateAlert('danger', document.getElementById('ModalAddMusicError'), err);
+				return;
 			}
-
 			//MusicModalPreview
 			const MusicDuration = Math.round(document.getElementById('MusicModalPreview').duration) * 20;
 			Music.CreateMusic(parseInt(MusicID, 10), Name, 'none', MusicDuration, false);
@@ -314,239 +307,256 @@ function MusicForm()
 
 function PrintSoundElement()
 {
-	for (let input of document.querySelectorAll('ul[id="sound-list"] > li'))
-	{
-		input.addEventListener('click', (event) => {
+	for (const input of document.querySelectorAll('ul[id="sound-list"] > li'))
+		input.addEventListener('click', () =>
+		{
 			const MusicName = input.getAttribute('music');
-			
-			if (music_player.getAttribute('name') === MusicName)
-				return ;
-			music_player.setAttribute('name', MusicName);
-			music_player.src = path.join(SoundsLink, input.getAttribute('link').replace(/(.*):/, '') + '.ogg');
+			if (music_player.getAttribute('name') === MusicName) // eslint-disable-line
+				return;
+			music_player.setAttribute('name', MusicName); // eslint-disable-line
+			const tempReplace = input.getAttribute('link').replace(/(.*):/, '');
+			music_player.src = path.join(SoundsLink, `${tempReplace}.ogg`); // eslint-disable-line
 			let data = fs.readFileSync(SoundsJsonLink, 'utf-8');
 			data = JSON.parse(data.trim())[MusicName];
-			let Form = new GenerateForm((data.hasOwnProperty('id')) ? (data.id) : (null));
+			const Form = new GenerateForm((Object.prototype.hasOwnProperty.call(data, 'id')) ? (data.id) : (null)); // eslint-disable-line
 			Form.CreateForm(MusicName, data);
-			document.getElementById('name-span').innerText = document.getElementById('name').value.match(/(.*):/)[0];
+			document.getElementById('name-span').innerText = document.getElementById('name').value.match(/(.*):/)[0]; // eslint-disable-line
 			document.getElementById('name').value = document.getElementById('name').value.replace(/(.*):/, '');
 			document.getElementById('music-delete-modal').style.display = 'block';
-		
 			//#region Update Name of file in live
-			document.getElementById('Sound_Name').addEventListener('input', (event) => {
-				if (!event.target.value.match(/^[a-z0-9\/._-]+$/g))
+			document.getElementById('Sound_Name').addEventListener('input', (event) =>
+			{
+				if (!event.target.value.match(/^[a-z0-9/._-]+$/g))
+				{
 					document.getElementById('Sound_Name-Error').style.display = 'block';
+				}
 				else
 				{
 					document.getElementById('Sound_Name-Error').style.display = 'none';
-					let newName = document.getElementById('Sound_Name').value;
-					let Oldname = document.getElementById('name').value.split('/');
+					const newName = document.getElementById('Sound_Name').value;
+					const Oldname = document.getElementById('name').value.split('/');
 					Oldname[Oldname.length - 1] = newName;
 					document.getElementById('name').value = Oldname.join('/');
 				}
 			});
-			document.getElementById('name').addEventListener('input', (event) => {
+			document.getElementById('name').addEventListener('input', (event) =>
+			{
 				if (!event.target.value.match(/^[a-z0-9_/]+$/i))
+				{
 					document.getElementById('name-Error').style.display = 'block';
+				}
 				else
 				{
 					document.getElementById('name-Error').style.display = 'none';
-					let Oldname = document.getElementById('name').value.split('/');
+					const Oldname = document.getElementById('name').value.split('/');
 					document.getElementById('Sound_Name').value = Oldname[Oldname.length - 1];
 				}
 			});
 		//#endregion
 		});
-	}
-	
 }
 
 function SubmitForm()
 {
-	document.getElementById('music-form').addEventListener('submit', (event) => {
+	document.getElementById('music-form').addEventListener('submit', (event) =>
+	{
 		event.preventDefault();
 		event.stopImmediatePropagation();
-	//#region Init
-		WorkProgress.open();
-		
+		//#region Init
+		MCworkInProgress.open();
+
 		const MusicDuration = Math.round(document.getElementById('music_player').duration) * 20;
 
 		function ScreenError(type, err)
 		{
-			CreateAlert(type, document.getElementById('music-error'), err);
-			WorkProgress.close();
+			MCutilities.CreateAlert(type, document.getElementById('music-error'), err);
+			MCworkInProgress.close();
 		}
-		
-		let LinkTemp = {
-			Old: document.querySelector('li[music="'+ document.getElementById('music_player').getAttribute('name') +'"]').getAttribute('link'),
-			New: event.target['name'].value
-		}
-		let NewID = document.querySelector('li[music="'+ document.getElementById('music_player').getAttribute('name') +'"]').getAttribute('id');
+
+		const LinkTemp = {
+			Old: document.querySelector(`li[music="${document.getElementById('music_player').getAttribute('name')}"]`).getAttribute('link'),
+			New: event.target.name.value,
+		};
+		let NewID = document.querySelector(`li[music="${document.getElementById('music_player').getAttribute('name')}"]`).getAttribute('id');
 		NewID = parseInt(NewID, 10);
-		
-		let Vars = {
+
+		const Vars = {
 			id: NewID,
 			duration: MusicDuration,
 			FileName: {
 				NameIsChanging: false,
 				Old: document.getElementById('music_player').getAttribute('name'),
-				New: event.target['Sound_Name'].value
+				New: event.target.Sound_Name.value,
 			},
 			MusicLink: {
 				Old: LinkTemp.Old,
-				New: LinkTemp.New
+				New: LinkTemp.New,
 			},
 			FileLink: {
 				Sounds: SoundsJsonLink,
-				Old: path.join(SoundsLink, LinkTemp.Old + '.ogg'),
-				New: path.join(SoundsLink, LinkTemp.New + '.ogg')
+				Old: path.join(SoundsLink, `${LinkTemp.Old}.ogg`),
+				New: path.join(SoundsLink, `${LinkTemp.New}.ogg`),
 			},
 			JSON: {
 				Old: JSON.parse(fs.readFileSync(SoundsJsonLink, 'utf-8').trim()),
-				New : {}
-			}
-		}
+				New: {},
+			},
+		};
 		if (Vars.FileName.Old !== Vars.FileName.New)
 			Vars.FileName.NameIsChanging = true;
-	//#endregion
-	
-	//#region Check value
-		const Error = MCplugin.Lang('Music').Data.Modal.Error;
+		//#endregion
+
+		//#region Check value
+		const { Error } = MCplugin.Lang('Music').Data.Modal;
 		if (!Vars.FileName.Old || !Vars.FileName.Old.match(/^[a-z0-9_]+$/i))
 		{
-			let str = (!Vars.FileName.Old) ? (Error.FileName.NotExist) : (Error.FileName.ForbiddenCharacters);
+			const str = (!Vars.FileName.Old) ? (Error.FileName.NotExist) : (Error.FileName.ForbiddenCharacters);
 			ScreenError('warning', str);
-			return ;
+			return;
 		}
 		if (!Vars.FileName.New || !Vars.FileName.New.match(/^[a-z0-9_]+$/i))
 		{
-			let str = (!Vars.FileName.Old) ? (Error.FileName.NotExist) : (Error.FileName.ForbiddenCharacters);
+			const str = (!Vars.FileName.Old) ? (Error.FileName.NotExist) : (Error.FileName.ForbiddenCharacters);
 			ScreenError('warning', str);
-			return ;
+			return;
 		}
-		try { fs.accessSync(Vars.FileLink.Old) }
-		catch (err) {
-			ScreenError('warning', Error.FileLink + '.ogg not found');
-			return ;
+		try
+		{
+			fs.accessSync(Vars.FileLink.Old);
+		}
+		catch (err)
+		{
+			ScreenError('warning', `${Error.FileLink}.ogg not found`);
+			return;
 		}
 		if (!Vars.JSON.Old)
 		{
 			ScreenError('warning', Error.SoundsJson);
-			return ;
+			return;
 		}
-	//#endregion
+		//#endregion
 
-	//#region Remove song
+		//#region Remove song
 		const AudioPlayer = document.getElementById('music_player');
 		AudioPlayer.pause();
 		AudioPlayer.currentTime = 0;
 		AudioPlayer.setAttribute('src', '');
-	//#endregion
+		//#endregion
 
-	//#region Create new json
-		Vars.JSON.New['id'] = Vars.id;
-		if (event.target['category'].value !== 'none')
-			Vars.JSON.New['category'] = event.target['category'].value;
-		if (event.target['replace'].checked)
-			Vars.JSON.New['replace'] = event.target['replace'].checked;
-		if (event.target['subtitle'].value)
-			Vars.JSON.New['subtitle'] = event.target['subtitle'].value;
-		
-		Vars.JSON.New['sounds'] = [], Vars.JSON.New['sounds'][0] = {};
-		if (event.target['attenuation_distance'].value && parseFloat(event.target['attenuation_distance'].value) !== 16)
-			Vars.JSON.New.sounds[0]['attenuation_distance'] = parseFloat(event.target['attenuation_distance'].value);
-		Vars.JSON.New.sounds[0]['name'] = Namespace + event.target['name'].value;
-		if (event.target['pitch'].value && parseFloat(event.target['pitch'].value) !== 1)
-			Vars.JSON.New.sounds[0]['pitch'] = parseFloat(event.target['pitch'].value);
-		if (event.target['preload'].checked)
-			Vars.JSON.New.sounds[0]['preload'] = event.target['preload'].checked;
-		if (event.target['stream'].checked)
-			Vars.JSON.New.sounds[0]['stream'] = event.target['stream'].checked;
-		if (event.target['type'].value && event.target['type'].value !== 'sound')
-			Vars.JSON.New.sounds[0]['type'] = event.target['type'].value;
-		if (event.target['volume'].value && parseFloat(event.target['volume'].value) !== 1)
-			Vars.JSON.New.sounds[0]['volume'] = parseFloat(event.target['volume'].value);
-		if (event.target['weight'].value && parseFloat(event.target['weight'].value) !== 1)
-			Vars.JSON.New.sounds[0]['weight'] = parseFloat(event.target['weight'].value);
-	//#endregion
-	
-	//#region Modify
+		//#region Create new json
+		Vars.JSON.New.id = Vars.id;
+		if (event.target.category.value !== 'none')
+			Vars.JSON.New.category = event.target.category.value;
+		if (event.target.replace.checked)
+			Vars.JSON.New.replace = event.target.replace.checked;
+		if (event.target.subtitle.value)
+			Vars.JSON.New.subtitle = event.target.subtitle.value;
+		Vars.JSON.New.sounds = [];
+		Vars.JSON.New.sounds[0] = {};
+		if (event.target.attenuation_distance.value && parseFloat(event.target.attenuation_distance.value) !== 16)
+			Vars.JSON.New.sounds[0].attenuation_distance = parseFloat(event.target.attenuation_distance.value);
+		Vars.JSON.New.sounds[0].name = Namespace + event.target.name.value;
+		if (event.target.pitch.value && parseFloat(event.target.pitch.value) !== 1)
+			Vars.JSON.New.sounds[0].pitch = parseFloat(event.target.pitch.value);
+		if (event.target.preload.checked)
+			Vars.JSON.New.sounds[0].preload = event.target.preload.checked;
+		if (event.target.stream.checked)
+			Vars.JSON.New.sounds[0].stream = event.target.stream.checked;
+		if (event.target.type.value && event.target.type.value !== 'sound')
+			Vars.JSON.New.sounds[0].type = event.target.type.value;
+		if (event.target.volume.value && parseFloat(event.target.volume.value) !== 1)
+			Vars.JSON.New.sounds[0].volume = parseFloat(event.target.volume.value);
+		if (event.target.weight.value && parseFloat(event.target.weight.value) !== 1)
+			Vars.JSON.New.sounds[0].weight = parseFloat(event.target.weight.value);
+		//#endregion
+		//#region Modify
 		if (Vars.FileName.NameIsChanging)
 		{
 			delete Vars.JSON.Old[Vars.FileName.Old];
 			//#region Wait lock for make modification
-			let RepeatInterval = setInterval(RenameFile(), 100);
-			function RenameFile()
+			const RepeatInterval = setInterval(RenameFile(), 100); // eslint-disable-line
+			const RenameFile = () =>
 			{
-				fs.open(Vars.FileLink.Old, 'r+', (err, fd) => {
+				fs.open(Vars.FileLink.Old, 'r+', (err, fd) =>
+				{
 					if (err && err.code === 'EBUSY')
 						;
 					else if (err && err.code === 'ENOENT')
 						clearInterval(RepeatInterval);
 					else
-					{
-						fs.close(fd, () => {
-							fs.rename(Vars.FileLink.Old, Vars.FileLink.New, (err) => {
-								if (err)
-									console.error(err);
+						fs.close(fd, () =>
+						{
+							fs.rename(Vars.FileLink.Old, Vars.FileLink.New, (err2) =>
+							{
+								if (err2)
+									console.error(err2);
 								AudioPlayer.setAttribute('src', Vars.FileLink.New);
 								clearInterval(RepeatInterval);
 							});
 						});
-					}
 				});
-			}
+			};
 			//#endregion
 		}
 		Vars.JSON.Old[Vars.FileName.New] = Vars.JSON.New;
 		Vars.JSON.Old = JsonABC.sortObj(Vars.JSON.Old);
-		
-		let FD = fs.openSync(Vars.FileLink.Sounds, 'w+');
-		fs.writeFileSync(FD, JSON.stringify(Vars.JSON.Old, null, 4), { encoding: 'utf-8', mode: 0755 });
+		const FD = fs.openSync(Vars.FileLink.Sounds, 'w+');
+		fs.writeFileSync(FD, JSON.stringify(Vars.JSON.Old, null, 4), { encoding: 'utf-8', mode: 0o755 });
 		fs.closeSync(FD);
-		
-		Music.CreateMusic(Vars.id, Vars.FileName.New, event.target['category'].value, Vars.duration, true);
+
+		Music.CreateMusic(Vars.id, Vars.FileName.New, event.target.category.value, Vars.duration, true);
 
 		AudioPlayer.setAttribute('name', Vars.FileName.New);
 		MusicComponent.musicList(true);
-		CreateAlert('success', document.getElementById('music-error'), MCplugin.Lang('Music').Data.Success);
-		WorkProgress.close();
+		MCutilities.CreateAlert('success', document.getElementById('music-error'), MCplugin.Lang('Music').Data.Success);
+		MCworkInProgress.close();
 	//#endregion
 	});
 }
 
 function DeleteMusic()
 {
-	const Error = (err) => {
+	const Error = (err) =>
+	{
 		if (err)
 		{
-			CreateAlert('danger', document.getElementById('modal-delete-error'), err);
+			MCutilities.CreateAlert('danger', document.getElementById('modal-delete-error'), err);
 			return (true);
 		}
 		return (false);
-	}
-	
-	document.getElementById('music-delete-ok').addEventListener('click', (event) => {
+	};
+
+	document.getElementById('music-delete-ok').addEventListener('click', () =>
+	{
 		const Name = document.getElementById('music_player').getAttribute('name');
 		const Link = document.getElementById('music_player').getAttribute('src');
-		fs.readFile(SoundsJsonLink, 'utf-8', (err, data) => {
+		fs.readFile(SoundsJsonLink, 'utf-8', (err, data) =>
+		{
+			let newData = data;
 			if (Error(err))
-				return ;
-			try {
-				data = JSON.parse(data.trim());
-			} catch (err) {
-				CreateAlert('warning', document.getElementById('modal-delete-error'), 'sounds.json : ' + err);
-				return ;
+				return;
+			try
+			{
+				newData = JSON.parse(newData.trim());
 			}
-			const ID = data[Name].id;
-			delete data[Name];
-			fs.unlink(Link, (err) => {
-				if (Error(err)) return ;
+			catch (err1)
+			{
+				MCutilities.CreateAlert('warning', document.getElementById('modal-delete-error'), `sounds.json : ${err1}`);
+				return;
+			}
+			const ID = newData[Name].id;
+			delete newData[Name];
+			fs.unlink(Link, (err2) =>
+			{
+				if (Error(err2))
+					return;
 				if (MCutilities.IsEmptyDir(path.dirname(Link)))
-					fs.rmdirSync(path.dirname(Link), {recursive: true, force: true});
+					fs.rmdirSync(path.dirname(Link), { recursive: true, force: true });
 			});
-			fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(data, null, 4), 'utf-8', (err) => {
-				if (Error(err))
-					return ;
+			fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(newData, null, 4), 'utf-8', (err3) =>
+			{
+				if (Error(err3))
+					return;
 				document.getElementById('music-form').innerHTML = '';
 				document.getElementById('music-delete-modal').style.display = 'none';
 				document.getElementById('music_player').setAttribute('name', '');
@@ -562,41 +572,41 @@ class GenerateForm
 {
 	constructor(ID)
 	{
-		const GenerateCommand = (ID) ? ('/scoreboard players set @s MC_Music '+ ID.toString()) : (null);
+		const GenerateCommand = (ID) ? (`/scoreboard players set @s MC_Music ${ID.toString()}`) : (null);
 		this.FromStructure = JSON.parse(fs.readFileSync(path.join(__dirname, 'form_structure.json'), 'utf-8'));
-		this.HTML = Template.parseRaw(Template.getRaw('music_form_id.tp'), {ID: 'ID_File', Copy: MCplugin.Lang('Music').Data.ClickCopy, Command: GenerateCommand});
-		this.HTML += Template.parseRaw(Template.getRaw('music_form_input.tp'), {ID: 'Sound_Name', Name: 'Sound Name', Placeholder: ''});
+		this.HTML = Template.parseRaw(Template.getRaw('music_form_id.tp'), { ID: 'ID_File', Copy: MCplugin.Lang('Music').Data.ClickCopy, Command: GenerateCommand });
+		this.HTML += Template.parseRaw(Template.getRaw('music_form_input.tp'), { ID: 'Sound_Name', Name: 'Sound Name', Placeholder: '' });
 		this.HTML += '<hr class="uk-divider-icon">';
 	}
-	
+
 	CreateForm(MusicName, MusicJson)
 	{
-		for (let key in this.FromStructure)
-		{
+		for (const key in this.FromStructure)
 			if (Object.prototype.toString.call(this.FromStructure[key]) === '[object Array]')
 				this.Redirect(key, this.FromStructure[key][0], this.FromStructure[key]);
 			else
 				this.Redirect(key, this.FromStructure[key], null);
-		}
-		for (let key in this.FromStructure.sounds)
-		{
+		for (const key in this.FromStructure.sounds)
 			if (Object.prototype.toString.call(this.FromStructure.sounds[key]) === '[object Array]')
 				this.Redirect(key, this.FromStructure.sounds[key][0], this.FromStructure.sounds[key]);
 			else
 				this.Redirect(key, this.FromStructure.sounds[key], null);
-		}
 		this.HTML += '<div class="uk-flex uk-flex-right"><button type="submit" class="uk-button uk-button-primary" lang="Submit"></button></div>';
 		Template.renderRaw(document.getElementById('music-form'), this.HTML, 'music_form.tp', null);
 		Template.updateLang(document.getElementById('music-form'), MCplugin.Lang('Music').Data);
-		document.querySelectorAll('input[type="range"]').forEach((element) => {
-			document.getElementById(element.id + '-badge').innerText = element.value;
-			element.addEventListener('input', () => {
-				document.getElementById(element.id + '-badge').innerText = element.value;
-			})
+		document.querySelectorAll('input[type="range"]').forEach((element) =>
+		{
+			document.getElementById(`${element.id}-badge`).innerText = element.value;
+			element.addEventListener('input', () =>
+			{
+				document.getElementById(`${element.id}-badge`).innerText = element.value;
+			});
 		});
 
-		function copyToClipboard(text) {
-			const listener = function(ev) {
+		function copyToClipboard(text)
+		{
+			const listener = (ev) =>
+			{
 				ev.preventDefault();
 				ev.clipboardData.setData('text/plain', text);
 			};
@@ -604,7 +614,8 @@ class GenerateForm
 			document.execCommand('copy');
 			document.removeEventListener('copy', listener);
 		}
-		document.querySelector('div[id="MusicID"]').addEventListener('click', () => {
+		document.querySelector('div[id="MusicID"]').addEventListener('click', () =>
+		{
 			copyToClipboard(document.getElementById('GenerateCommand').innerText);
 		});
 
@@ -617,88 +628,84 @@ class GenerateForm
 		{
 			case 'input':
 				this.Input(name);
-				break ;
+				break;
 			case 'group':
 				this.Group(name);
-				break ;
+				break;
 			case 'switch':
 				this.Switch(name);
-				break ;
+				break;
 			case 'select':
 				this.Select(name, json);
-				break ;
+				break;
 			case 'range':
 				this.Range(name, json);
-				break ;
+				break;
+			default:
+				break;
 		}
 	}
 
 	Input(name)
 	{
-		this.HTML += Template.parseRaw(Template.getRaw('music_form_input.tp'), {ID: name, Name: name, Placeholder: ''});
+		this.HTML += Template.parseRaw(Template.getRaw('music_form_input.tp'), { ID: name, Name: name, Placeholder: '' });
 	}
 
 	Group(name)
 	{
-		this.HTML += Template.parseRaw(Template.getRaw('music_form_group.tp'), {ID: name, Name: name});
+		this.HTML += Template.parseRaw(Template.getRaw('music_form_group.tp'), { ID: name, Name: name });
 	}
 
 	Switch(name)
 	{
-		this.HTML += Template.parseRaw(Template.getRaw('music_form_switch.tp'), {ID: name, Name: name});
+		this.HTML += Template.parseRaw(Template.getRaw('music_form_switch.tp'), { ID: name, Name: name });
 	}
 
 	Select(name, json)
 	{
 		let HTMLlist = '';
-		for (let i in json)
-		{
-			if (i == 0)
-				continue ;
-			HTMLlist += '<option>'+ json[i] +'</option>';
-		}
-		this.HTML += (Template.parseRaw(Template.getRaw('music_form_select.tp'), {ID: name, Name: name, Options: HTMLlist}));
+		for (const i in json)
+			if (i !== 0)
+				HTMLlist += `<option>${json[i]}</option>`;
+		this.HTML += (Template.parseRaw(Template.getRaw('music_form_select.tp'), { ID: name, Name: name, Options: HTMLlist }));
 	}
 
 	Range(name, json)
 	{
-		this.HTML += (Template.parseRaw(Template.getRaw('music_form_range.tp'), {ID: name, Name: name, Value: json[1], Min: json[2], Max: json[3], Step: json[4]}));
+		this.HTML += (Template.parseRaw(Template.getRaw('music_form_range.tp'), { ID: name, Name: name, Value: json[1], Min: json[2], Max: json[3], Step: json[4] }));
 	}
 
 	UpdateInformation(MusicName, MusicJson)
 	{
 		document.getElementById('Sound_Name').value = MusicName;
-		if (MusicJson.hasOwnProperty('id'))
+		if (Object.prototype.hasOwnProperty.call(MusicJson, 'id'))
 			document.getElementById('ID_File').innerText = MusicJson.id.toString();
-		if (MusicJson.hasOwnProperty('category'))
+		if (Object.prototype.hasOwnProperty.call(MusicJson, 'category'))
 			document.getElementById('category').value = MusicJson.category;
-		if (MusicJson.hasOwnProperty('replace'))
+		if (Object.prototype.hasOwnProperty.call(MusicJson, 'replace'))
 			document.getElementById('replace').checked = MusicJson.replace;
-		if (MusicJson.hasOwnProperty('subtitle'))
+		if (Object.prototype.hasOwnProperty.call(MusicJson, 'subtitle'))
 			document.getElementById('subtitle').value = MusicJson.subtitle;
-		for (let key in MusicJson.sounds)
-		{
-			if (typeof(MusicJson.sounds[key]) === 'object')
+		for (const key in MusicJson.sounds)
+			if (typeof (MusicJson.sounds[key]) === 'object')
 			{
-				if (MusicJson.sounds[key].hasOwnProperty('attenuation_distance'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'attenuation_distance'))
 					document.getElementById('attenuation_distance').value = MusicJson.sounds[key].attenuation_distance;
-				if (MusicJson.sounds[key].hasOwnProperty('name'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'name'))
 					document.getElementById('name').value = MusicJson.sounds[key].name;
-				if (MusicJson.sounds[key].hasOwnProperty('pitch'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'pitch'))
 					document.getElementById('pitch').value = MusicJson.sounds[key].pitch;
-				if (MusicJson.sounds[key].hasOwnProperty('preload'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'preload'))
 					document.getElementById('preload').checked = MusicJson.sounds[key].preload;
-				if (MusicJson.sounds[key].hasOwnProperty('stream'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'stream'))
 					document.getElementById('stream').checked = MusicJson.sounds[key].stream;
-				if (MusicJson.sounds[key].hasOwnProperty('type'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'type'))
 					document.getElementById('type').value = MusicJson.sounds[key].type;
-				if (MusicJson.sounds[key].hasOwnProperty('volume'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'volume'))
 					document.getElementById('volume').value = MusicJson.sounds[key].volume;
-				if (MusicJson.sounds[key].hasOwnProperty('weight'))
+				if (Object.prototype.hasOwnProperty.call(MusicJson.sounds[key], 'weight'))
 					document.getElementById('weight').value = MusicJson.sounds[key].weight;
 			}
-		}
-		
 	}
 }
 

@@ -1,10 +1,22 @@
 const fs = require('fs');
 const path = require('path');
-const MC = require('../../../../js/Mapcraft');
 const IPC = require('../../../../js/MCipc');
 const Temp = require('../../../../js/MCtemplate');
+const MCP = require('../../../../js/MCplugin');
+
 const Template = new Temp(__dirname);
-const MCP = require('../../../../js/MCplugin'), MCplugin = new MCP();
+const MCplugin = new MCP();
+
+function DetectClickOnElement()
+{
+	document.querySelectorAll('#main-selection-list li').forEach((element) =>
+	{
+		element.addEventListener('click', () =>
+		{
+			IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
+		});
+	});
+}
 
 class HomeComponent
 {
@@ -12,46 +24,45 @@ class HomeComponent
 	{
 		Template.render(document.getElementById('content'), 'home.tp', null);
 	}
+
 	static list()
 	{
 		let HTML = '';
-		let Component = Template.getRaw('list.tp');
+		const Component = Template.getRaw('list.tp');
 		let Plugins;
-		try { Plugins = JSON.parse(fs.readFileSync(path.join(__dirname, '../../components.json')), 'utf-8') }
-		catch (err) { throw err }
-		for (let i in Plugins)
+		try
 		{
+			Plugins = JSON.parse(fs.readFileSync(path.join(__dirname, '../../components.json')), 'utf-8');
+		}
+		catch (err)
+		{
+			throw new Error(err);
+		}
+		for (const i in Plugins)
 			if (Plugins[i].Name !== '__DEFAULT' && Plugins[i].Name !== 'Main' && Plugins[i].Name !== 'Home' && (typeof Plugins[i].Using === 'undefined' || Plugins[i].Using === true))
 			{
 				const LANG = MCplugin.Lang(Plugins[i].Name);
-				HTML += Template.parseRaw(Component, {id: Plugins[i].Name, title: LANG.Title, icon: LANG.Icon});
+				HTML += Template.parseRaw(Component, { id: Plugins[i].Name, title: LANG.Title, icon: LANG.Icon });
 			}
-		}
 		Template.renderRaw(document.getElementById('main-selection-list'), HTML, 'list.tp', null);
 		DetectClickOnElement();
 	}
-	/* Interface for component */
+
+	/*Interface for component */
 	static draw()
 	{
 		this.content();
 		this.list();
 	}
+
 	static redrawElement()
 	{
-		document.querySelectorAll('#main-selection-list li').forEach((event) => {
+		document.querySelectorAll('#main-selection-list li').forEach((event) =>
+		{
 			event.removeEventListener();
 		});
 		this.list();
-	}	
-}
-
-function DetectClickOnElement()
-{
-	document.querySelectorAll('#main-selection-list li').forEach((element) => {
-		element.addEventListener('click', () => {
-			IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
-		});
-	});
+	}
 }
 
 module.exports = HomeComponent;
