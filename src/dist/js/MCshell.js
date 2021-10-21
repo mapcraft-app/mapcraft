@@ -70,9 +70,7 @@ class MCshell
 					Command: args[0],
 					Player: args[1],
 					Type: args[2],
-					Coordinates: {
-						Point: [stof(args[3]), stof(args[4]), stof(args[5])],
-					},
+					Coordinates: { Point: [stof(args[3]), stof(args[4]), stof(args[5])] },
 				});
 			default:
 				return ({ Command: undefined });

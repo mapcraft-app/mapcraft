@@ -34,7 +34,8 @@ class MCeditor
 	SaveFile(data)
 	{
 		if (this.state.isEdit)
-			fs.writeFile(this.state.link, data, (err) => {
+			fs.writeFile(this.state.link, data, (err) =>
+			{
 				if (err)
 					throw new Error('Editor:', err);
 				this.CloseFile();

@@ -130,9 +130,7 @@ class Cutscene
 		}
 		const TAG = `Cutscene_${ID.toString()}`;
 		const NAME = CUTSCENE.Name;
-		const TIME = {
-			Max: CUTSCENE.Duration * 20,
-		};
+		const TIME = { Max: CUTSCENE.Duration * 20 };
 		const Coordinates = {
 			Position: [POINTS[0].X, POINTS[0].Y, POINTS[0].Z].join(' '),
 			Rotation: [POINTS[0].Rx, POINTS[0].Ry].join(' '),

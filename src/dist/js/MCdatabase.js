@@ -37,7 +37,7 @@ class CreateDB
 
 class ManageDB
 {
-	;
+
 }
 
 module.exports = { CreateDB, ManageDB };

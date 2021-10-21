@@ -2,57 +2,65 @@ const fs = require('fs');
 const path = require('path');
 const IPC = require('../../js/MCipc');
 const Component = require('./components');
-const Up = require('../../../update'), Update = new Up();
+const Up = require('../../../update');
 
-window.addEventListener('DOMContentLoaded', () => {
-	
+const Update = new Up();
+
+window.addEventListener('DOMContentLoaded', () =>
+{
 	document.title = Component.getLang().Update;
 
 	Component.draw();
 
-	ifUpdated = (data, version) => {
-		if (Object.keys(data).length && data.version !== version) return true;
+	const ifUpdated = (data, version) =>
+	{
+		if (Object.keys(data).length && data.version !== version)
+			return true;
 		return false;
 	};
-	
-	let _async = async () => {
+
+	const _async = async () =>
+	{
 		await Update.checkUpdate();
-		let data = Update.getJson();
+		const data = Update.getJson();
 		if (data.count === 0)
 		{
 			IPC.send('Update:close-modal');
-			return ;
+			return;
 		}
-		else if (data.count === 1)
+		if (data.count === 1)
 			document.getElementById('text-title').innerText = Component.getLang().One;
 		else
 			document.getElementById('text-title').innerText = Component.getLang().Multi;
 		document.getElementById('validation-button').style.display = 'block';
-		
+
 		if (ifUpdated(data.software, Update.getCurrentVersion().software))
-			document.getElementById('text-software').innerHTML = '<p><span uk-icon="download" class="span-download"></span>'+ Component.getLang().IsUpdate.Software +'</p>';
+			document.getElementById('text-software').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.Software}</p>`;
 		else
-			document.getElementById('text-software').innerHTML = '<p><span uk-icon="check" class="span-check"></span>'+ Component.getLang().IsNotUpdate.Software +'</p>';
-		
+			document.getElementById('text-software').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.Software}</p>`;
+
 		if (ifUpdated(data.datapack, Update.getCurrentVersion().datapack))
-			document.getElementById('text-datapack').innerHTML = '<p><span uk-icon="download" class="span-download"></span>'+ Component.getLang().IsUpdate.Datapack +'</p>';
+			document.getElementById('text-datapack').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.Datapack}</p>`;
 		else
-			document.getElementById('text-datapack').innerHTML = '<p><span uk-icon="check" class="span-check"></span>'+ Component.getLang().IsNotUpdate.Datapack +'</p>';
-		
+			document.getElementById('text-datapack').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.Datapack}</p>`;
+
 		if (ifUpdated(data.resourcepack, Update.getCurrentVersion().resourcepack))
-			document.getElementById('text-resourcepack').innerHTML = '<p><span uk-icon="download" class="span-download"></span>'+ Component.getLang().IsUpdate.ResourcePack +'</p>';
+			document.getElementById('text-resourcepack').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.ResourcePack}</p>`;
 		else
-			document.getElementById('text-resourcepack').innerHTML = '<p><span uk-icon="check" class="span-check"></span>'+ Component.getLang().IsNotUpdate.ResourcePack +'</p>';
+			document.getElementById('text-resourcepack').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.ResourcePack}</p>`;
 		IPC.send('Update:open-window');
 
-		document.getElementById('close-update').addEventListener('click', () => {
-			IPC.send('Update:close-modal')
+		document.getElementById('close-update').addEventListener('click', () =>
+		{
+			IPC.send('Update:close-modal');
 		});
-		document.getElementById('make-update').addEventListener('click', () => {
+		document.getElementById('make-update').addEventListener('click', () =>
+		{
 			Component.cleanNode(document.getElementById('form'), true);
 			document.body.style.height = '100%';
 			document.getElementById('spinner-update').style.display = 'flex';
-			let _async = async () => {
+			const _async2 = async () =>
+			{
 				if (ifUpdated(data.software, Update.getCurrentVersion().software))
 				{
 					if (ifUpdated(data.datapack, Update.getCurrentVersion().datapack))
@@ -67,12 +75,13 @@ window.addEventListener('DOMContentLoaded', () => {
 						await Update.datapack();
 					if (ifUpdated(data.resourcepack, Update.getCurrentVersion().resourcepack))
 						await Update.resourcepack();
-					fs.rm(path.join(__dirname, 'mapcraftTemp'), { recursive: true, force: true }, () => {
+					fs.rm(path.join(__dirname, 'mapcraftTemp'), { recursive: true, force: true }, () =>
+					{
 						Update.updateManifest();
 						IPC.send('Update:close-modal');
 					});
 				}
-			}; _async();
+			}; _async2();
 		});
 	}; _async();
 });

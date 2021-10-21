@@ -30,7 +30,7 @@ class MClog
 
 	watchLog()
 	{
-		fs.watchFile(this.logLink, { persistent: true, interval: 100 }, (cur, prev) =>
+		fs.watchFile(this.logLink, { persistent: true, interval: 100 }, (cur, prev) => // eslint-disable-line
 		{
 			fs.readFile(this.logLink, 'utf-8', (error, data) =>
 			{

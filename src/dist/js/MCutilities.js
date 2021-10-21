@@ -102,6 +102,26 @@ class MCutilities
 	{
 		return fs.readdirSync(_path).length === 0;
 	}
+
+	/**
+	 * Get lang of component
+	 * @param {string} _dirname __dirname of component
+	 * @param {string} _langPath MC.GetConfig().Env.Lang
+	 * @returns Lang file
+	 */
+	static GetLang(_dirname, _langPath)
+	{
+		let data;
+		try
+		{
+			data = JSON.parse(fs.readFileSync(path.join(_dirname, './lang', `${_langPath}.json`)));
+		}
+		catch (err)
+		{
+			throw new Error(err);
+		}
+		return (data);
+	}
 }
 
 module.exports = MCutilities;
