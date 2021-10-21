@@ -47,7 +47,8 @@ function IfUserExist()
 }
 IfUserExist();
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () =>
+{
 	Component.draw();
 
 	//Submit form
