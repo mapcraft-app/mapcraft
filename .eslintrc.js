@@ -18,6 +18,7 @@ module.exports = {
 		"max-len": ["warn", {"code": 180, "ignoreComments": true, "ignoreStrings": true, "ignoreRegExpLiterals": true, "ignoreTemplateLiterals": true}],
 		"no-console": ["off"],
 		"no-plusplus": ["off", false],
+		"no-loop-func": ["off"],
 		"no-underscore-dangle": "off",
 		"no-restricted-syntax": ["off"],
 		"nonblock-statement-body-position": ["warn", "below"],

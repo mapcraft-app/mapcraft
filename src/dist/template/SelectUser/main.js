@@ -93,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				const sql = db.prepare('INSERT INTO User (Username, UUID) VALUES (?, ?)');
 				const info = sql.run(name, uuid);
 				console.log(info.changes);
-				event.target[1].value = '';  // eslint-disable-line
+				event.target[1].value = ''; // eslint-disable-line
 				Component.tab();
 			}
 			db.close();

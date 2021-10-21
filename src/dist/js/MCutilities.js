@@ -122,6 +122,26 @@ class MCutilities
 		}
 		return (data);
 	}
+
+	/**
+	 * Print alert in DOMelement
+	 * @param {string} type Type of error (primary, success, warning, danger)
+	 * @param {DOMelement} DOMelement
+	 * @param {string} str error string
+	 */
+	static CreateAlert(type, DOMelement, str)
+	{
+		const alert = document.createElement('div');
+		alert.classList.add(`uk-alert-${type}`);
+		alert.setAttribute('uk-alert', '');
+		const closeButton = document.createElement('a');
+		closeButton.classList.add('uk-alert-close');
+		closeButton.setAttribute('uk-close', '');
+		const text = document.createElement('p').appendChild(document.createTextNode(str));
+		alert.appendChild(closeButton);
+		alert.appendChild(text);
+		DOMelement.appendChild(alert);
+	}
 }
 
 module.exports = MCutilities;
