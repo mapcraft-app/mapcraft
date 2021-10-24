@@ -1,22 +1,20 @@
 const { contextBridge } = require('electron');
 const path = require('path');
 const Database = require('better-sqlite3');
-const IPC = require('../../js/MCipc');
-const MClog = require('../../js/MClog');
-const MCP = require('../../js/MCplugin');
+const { MCipc, MClog, MCplugin } = require('mapcraft-api');
 
-const MCplugin = new MCP();
+const Plugins = new MCplugin();
 
 //#region Set ContextBridge
 contextBridge.exposeInMainWorld(
 	'api', {
 		send: (channel, ...args) =>
 		{
-			IPC.send(channel, ...args);
+			MCipc.send(channel, ...args);
 		},
 		receive: (channel, func) =>
 		{
-			IPC.receive(channel, func);
+			MCipc.receive(channel, func);
 		},
 	},
 );
@@ -54,7 +52,7 @@ function UpdateInterface(plugin, name)
 	if (navTitle.childNodes[0])
 		navTitle.childNodes[0].remove();
 	navTitle.appendChild(document.createTextNode(name));
-	const Component = MCplugin.Component(plugin);
+	const Component = Plugins.Component(plugin);
 	if (!Component)
 	{
 		console.error('No plugin exist with is name');
@@ -65,7 +63,7 @@ function UpdateInterface(plugin, name)
 	UpdateSelectedLi();
 }
 
-IPC.receive('Plugin:update-interface', (plugin, name) =>
+MCipc.receive('Plugin:update-interface', (plugin, name) =>
 {
 	UpdateInterface(plugin, name);
 });
@@ -89,22 +87,22 @@ function PrintNotification(Title, Body)
 	const Notif = new Notification(options.title, options);
 	Notif.onclick = () =>
 	{
-		IPC.send('Notification:click-notification');
+		MCipc.send('Notification:click-notification');
 	};
 }
 
-IPC.receive('Shell:new-command', (command) =>
+MCipc.receive('Shell:new-command', (command) =>
 {
 	if (command.Player !== JSON.parse(localStorage.getItem('Mapcraft_User')).Username)
 		return;
 	const plugin = capitalize(command.Command);
-	const Component = MCplugin.Component(plugin);
+	const Component = Plugins.Component(plugin);
 	if (!Component)
 	{
 		console.error('No plugin exist with is name');
 		return;
 	}
-	const LANG = MCplugin.Lang(plugin);
+	const LANG = Plugins.Lang(plugin);
 
 	if (Component.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification') || Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
 	{
@@ -116,7 +114,7 @@ IPC.receive('Shell:new-command', (command) =>
 		PrintNotification(LANG.Title, LANG.Notification);
 		UpdateInterface(plugin, LANG.Title);
 	}*/
-	IPC.send('Shell:send-command', command);
+	MCipc.send('Shell:send-command', command);
 });
 //#endregion
 
@@ -136,7 +134,7 @@ function changeUsername()
 	const db = Database(DBPath);
 	const sql = db.prepare('UPDATE User SET IsConnected = 0 WHERE Username = ?');
 	sql.run(Username);
-	IPC.send('User:change-username');
+	MCipc.send('User:change-username');
 }
 //#endregion
 
@@ -145,22 +143,22 @@ function changeUsername()
 window.addEventListener('DOMContentLoaded', () =>
 {
 	blurWindow();
-	MCplugin.Instance('Main').draw();
-	IPC.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), MCplugin.Default().Title);
-	IPC.receive('User:remove-blur', () =>
+	Plugins.Instance('Main').draw();
+	MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.Default().Title);
+	MCipc.receive('User:remove-blur', () =>
 	{
 		blurWindow();
-		IPC.send('Update:create-modal');
-		MCplugin.Instance('Main').header();
+		MCipc.send('Update:create-modal');
+		Plugins.Instance('Main').header();
 		/*If option plugin is open, reload user table for correct info */
 		if (localStorage.getItem('Mapcraft_Plugin') && localStorage.getItem('Mapcraft_Plugin') === 'Option')
-			MCplugin.Instance('Option').RedrawUserTab();
+			Plugins.Instance('Option').RedrawUserTab();
 		document.getElementById('nav-header-change-username').addEventListener('click', () =>
 		{
 			changeUsername();
 		});
 	});
-	IPC.receive('Log:send-change', (fullFile) =>
+	MCipc.receive('Log:send-change', (fullFile) =>
 	{
 		MClog.PrintToTextArea(fullFile);
 	});

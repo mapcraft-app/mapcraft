@@ -1,13 +1,10 @@
 const path = require('path');
 const fs = require('fs');
-const MC = require('../../js/Mapcraft');
-const MCutilities = require('../../js/MCutilities');
-const IPC = require('../../js/MCipc');
+const { Mapcraft, MCutilities, MCdatabase, MCipc } = require('mapcraft-api');
 const Up = require('../../../update');
 const Component = require('./components');
-const { CreateDB } = require('../../js/MCdatabase');
 
-const LANG = MCutilities.GetLang(__dirname, MC.GetConfig().Env.Lang);
+const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 
 async function MakeInstallationOfBase()
 {
@@ -29,7 +26,7 @@ async function MakeInstallationOfBase()
 	else
 	{
 		fs.rmSync(path.join(LocalMapcraft.TempPath, 'mapcraftTemp'), { recursive: true, force: true });
-		IPC.send('Start:is-selected-world');
+		MCipc.send('Start:is-selected-world');
 	}
 }
 
@@ -39,17 +36,17 @@ window.addEventListener('DOMContentLoaded', () =>
 	/*Options */
 	document.querySelector('#option-TempPath').addEventListener('click', () =>
 	{
-		IPC.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
+		MCipc.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
 	});
 	document.querySelector('#option-GamePath').addEventListener('click', () =>
 	{
-		IPC.send('Dialog:open-directory', 'GamePath', document.getElementById('GamePath').value);
+		MCipc.send('Dialog:open-directory', 'GamePath', document.getElementById('GamePath').value);
 	});
 	document.querySelector('#option-SavePath').addEventListener('click', () =>
 	{
-		IPC.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
+		MCipc.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
 	});
-	IPC.receive('Dialog:selected-directory', (data, element) =>
+	MCipc.receive('Dialog:selected-directory', (data, element) =>
 	{
 		if (data.canceled === false)
 		{
@@ -65,13 +62,13 @@ window.addEventListener('DOMContentLoaded', () =>
 				document.getElementById('ResourcePath').value = 'Mapcraft-resource';
 			if (!document.getElementById('DataPath').value)
 				document.getElementById('DataPath').value = 'Mapcraft-data';
-			MC.UpdateConfig(document.getElementById('TempPath').value, document.getElementById('GamePath').value, document.getElementById('SavePath').value, document.getElementById('option-Lang').value, document.getElementById('ResourcePath').value, document.getElementById('DataPath').value);
+			Mapcraft.UpdateConfig(document.getElementById('TempPath').value, document.getElementById('GamePath').value, document.getElementById('SavePath').value, document.getElementById('option-Lang').value, document.getElementById('ResourcePath').value, document.getElementById('DataPath').value);
 			Component.drawSaveConfig(document.getElementById('start-selection'));
 		}
 	});
 	document.getElementById('option-button-reset').addEventListener('click', () =>
 	{
-		MC.ResetConfigFile();
+		Mapcraft.ResetConfigFile();
 		Component.drawResetConfig(document.getElementById('start-selection'), document.getElementById('start-option'));
 	});
 
@@ -93,23 +90,23 @@ window.addEventListener('DOMContentLoaded', () =>
 			element.classList.add('uk-modal', 'uk-flex', 'uk-open');
 			element.setAttribute('aria-expanded', 'true');
 			const _Name = document.getElementById(_ID).childNodes[3].textContent;
-			const Mapcraft = {
+			const _Mapcraft = {
 				ID: _ID,
 				Name: _Name,
-				SavePath: path.join(MC.GetConfig().Env.SavePath, _Name),
-				TempPath: MC.GetConfig().Env.TempPath,
-				Mapcraft: path.join(MC.GetConfig().Env.SavePath, _Name, 'datapacks', 'mapcraft'),
-				DBPath: path.join(MC.GetConfig().Env.SavePath, _Name, 'data.db'),
+				SavePath: path.join(Mapcraft.GetConfig().Env.SavePath, _Name),
+				TempPath: Mapcraft.GetConfig().Env.TempPath,
+				Mapcraft: path.join(Mapcraft.GetConfig().Env.SavePath, _Name, 'datapacks', 'mapcraft'),
+				DBPath: path.join(Mapcraft.GetConfig().Env.SavePath, _Name, 'data.db'),
 				Data: {
-					DataPack: path.join(MC.GetConfig().Env.SavePath, _Name, 'datapacks', MC.GetConfig().Data.DataPack),
-					ResourcePack: path.join(MC.GetConfig().Env.SavePath, '../resourcepacks', `${_Name}-${MC.GetConfig().Data.ResourcePack}`),
+					DataPack: path.join(Mapcraft.GetConfig().Env.SavePath, _Name, 'datapacks', Mapcraft.GetConfig().Data.DataPack),
+					ResourcePack: path.join(Mapcraft.GetConfig().Env.SavePath, '../resourcepacks', `${_Name}-${Mapcraft.GetConfig().Data.ResourcePack}`),
 				},
 			};
-			localStorage.setItem('Mapcraft', JSON.stringify(Mapcraft));
-			if (!fs.existsSync(Mapcraft.DBPath))
+			localStorage.setItem('Mapcraft', JSON.stringify(_Mapcraft));
+			if (!fs.existsSync(_Mapcraft.DBPath))
 				try
 				{
-					const newDb = new CreateDB(Mapcraft.DBPath);
+					const newDb = new MCdatabase(_Mapcraft.DBPath);
 					if (!newDb)
 						throw new Error('Database creation failed');
 				}

@@ -7,10 +7,11 @@ const OS = require('os');
 const fs = require('fs');
 const axios = require('axios');
 const Database = require('better-sqlite3');
-const MCwindow = require('./dist/js/MCwindow');
+const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
+/*const MCwindow = require('./dist/js/MCwindow');
 const MCshell = require('./dist/js/MCshell');
 const MCeditor = require('./dist/js/MCeditor');
-const MCutilities = require('./dist/js/MCutilities');
+const MCutilities = require('./dist/js/MCutilities');*/
 
 //#region Variables
 MCutilities.GetAppDataPath();

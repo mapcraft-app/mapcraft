@@ -1,11 +1,9 @@
 const { app } = require('electron');
 const Database = require('better-sqlite3');
-const MC = require('../../js/Mapcraft');
-const MCutilities = require('../../js/MCutilities');
-const Temp = require('../../js/MCtemplate');
+const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
 
-const Template = new Temp(__dirname);
-const LANG = MCutilities.GetLang(__dirname, MC.GetConfig().Env.Lang);
+const Template = new MCtemplate(__dirname);
+const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 
 class MainComponent
 {
@@ -19,13 +17,13 @@ class MainComponent
 		let HTML = '';
 		let isUsers = false;
 		const Component = Template.getRaw('table.tp');
-		const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-		if (!Mapcraft.DBPath)
+		const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+		if (!_Mapcraft.DBPath)
 		{
 			app.relaunch();
 			app.quit();
 		}
-		const db = Database(Mapcraft.DBPath, { verbose: console.log });
+		const db = Database(_Mapcraft.DBPath, { verbose: console.log });
 		const sql = db.prepare('SELECT Username, UUID FROM User');
 		for (const user of sql.iterate())
 		{

@@ -1,12 +1,10 @@
 const Database = require('better-sqlite3');
 const https = require('https');
+const { Mapcraft, MCutilities, MCipc } = require('mapcraft-api');
 const Component = require('./components');
-const MC = require('../../js/Mapcraft');
-const MCutilities = require('../../js/MCutilities');
-const IPC = require('../../js/MCipc');
 
-const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const LANG = MCutilities.GetLang(__dirname, MC.GetConfig().Env.Lang);
+const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 
 function CreateAlert(type, DOMelement, str)
 {
@@ -24,7 +22,7 @@ function CreateAlert(type, DOMelement, str)
 
 function UserConnected(Username)
 {
-	const db = Database(Mapcraft.DBPath, { verbose: console.log });
+	const db = Database(_Mapcraft.DBPath, { verbose: console.log });
 	const sql = db.prepare('UPDATE User SET IsConnected = 1 WHERE Username = ?');
 	sql.run(Username);
 	db.close();
@@ -34,14 +32,14 @@ function IfUserExist()
 {
 	if (localStorage.getItem('Mapcraft_User'))
 	{
-		const db = Database(Mapcraft.DBPath, { verbose: console.log });
+		const db = Database(_Mapcraft.DBPath, { verbose: console.log });
 		const sql = db.prepare('SELECT count(*) FROM User');
 		const isUser = sql.get()['count(*)'];
 		const ret = JSON.parse(localStorage.getItem('Mapcraft_User'));
 		if (isUser > 0 && ret.Username && ret.Remember === true)
 		{
 			UserConnected(ret.Username);
-			IPC.send('User:close-window', Mapcraft.DBPath, ret);
+			MCipc.send('User:close-window', _Mapcraft.DBPath, ret);
 		}
 	}
 }
@@ -59,7 +57,7 @@ window.addEventListener('DOMContentLoaded', () =>
 			if (checkbox[i].checked)
 			{
 				const Username = checkbox[i].value;
-				const db = Database(Mapcraft.DBPath, { verbose: console.log });
+				const db = Database(_Mapcraft.DBPath, { verbose: console.log });
 				const sqlUser = db.prepare('SELECT UUID FROM User WHERE Username = ?');
 				const { UUID } = sqlUser.get(Username);
 				db.close();
@@ -71,7 +69,7 @@ window.addEventListener('DOMContentLoaded', () =>
 				};
 				localStorage.setItem('Mapcraft_User', JSON.stringify(ret));
 				UserConnected(Username);
-				IPC.send('User:close-window', Mapcraft.DBPath, ret);
+				MCipc.send('User:close-window', _Mapcraft.DBPath, ret);
 				return;
 			}
 		CreateAlert('danger', document.getElementById('alert-main'), LANG.Modal.Error.NoUser);
@@ -83,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () =>
 		event.preventDefault();
 		const addUserToDB = (name, uuid) =>
 		{
-			const db = Database(Mapcraft.DBPath, { verbose: console.log });
+			const db = Database(_Mapcraft.DBPath, { verbose: console.log });
 			const sqlUser = db.prepare('SELECT Username FROM User WHERE Username = ?');
 			if (sqlUser.get(name) !== undefined && sqlUser.get(name).Username)
 			{

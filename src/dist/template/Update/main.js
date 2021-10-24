@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const IPC = require('../../js/MCipc');
+const { MCipc } = require('mapcraft-api');
 const Component = require('./components');
 const Up = require('../../../update');
 
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () =>
 		const data = Update.getJson();
 		if (data.count === 0)
 		{
-			IPC.send('Update:close-modal');
+			MCipc.send('Update:close-modal');
 			return;
 		}
 		if (data.count === 1)
@@ -48,11 +48,11 @@ window.addEventListener('DOMContentLoaded', () =>
 			document.getElementById('text-resourcepack').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.ResourcePack}</p>`;
 		else
 			document.getElementById('text-resourcepack').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.ResourcePack}</p>`;
-		IPC.send('Update:open-window');
+		MCipc.send('Update:open-window');
 
 		document.getElementById('close-update').addEventListener('click', () =>
 		{
-			IPC.send('Update:close-modal');
+			MCipc.send('Update:close-modal');
 		});
 		document.getElementById('make-update').addEventListener('click', () =>
 		{
@@ -78,7 +78,7 @@ window.addEventListener('DOMContentLoaded', () =>
 					fs.rm(path.join(__dirname, 'mapcraftTemp'), { recursive: true, force: true }, () =>
 					{
 						Update.updateManifest();
-						IPC.send('Update:close-modal');
+						MCipc.send('Update:close-modal');
 					});
 				}
 			}; _async2();

@@ -4,6 +4,7 @@ const MCP = require('../../../../js/MCplugin');
 const MCworkInProgress = require('../../../../js/MCworkInProgress');
 const MCutilities = require('../../../../js/MCutilities');
 const Temp = require('../../../../js/MCtemplate');
+const Model = require('./model');
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);

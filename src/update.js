@@ -3,8 +3,7 @@ const OS = require('os');
 const fs = require('fs');
 const axios = require('axios');
 const AdmZip = require('adm-zip');
-const IPC = require('./dist/js/MCipc');
-const MCutilities = require('./dist/js/MCutilities');
+const { MCipc, MCutilities } = require('mapcraft-api');
 
 class Update
 {
@@ -171,7 +170,7 @@ class Update
 			{
 				clearInterval(interval);
 				fs.rmSync(tempDir, { recursive: true, force: true });
-				IPC.send('Start:is-selected-world');
+				MCipc.send('Start:is-selected-world');
 			}
 			else
 			{
@@ -261,7 +260,7 @@ class Update
 					console.error(err);
 					return;
 				}
-				IPC.send('Update:make-update', mapcraftSoft, tempDir, _path, path.join(__dirname, '../../../'));
+				MCipc.send('Update:make-update', mapcraftSoft, tempDir, _path, path.join(__dirname, '../../../'));
 			});
 		});
 	}
