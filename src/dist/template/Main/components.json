@@ -42,8 +42,8 @@
 	},
 	{
 		"Name": "Advancement",
-		"Component": "./components/Advancement/components",
-		"Lang": "./components/Advancement/lang",
+		"Component": "./components/advancement/components",
+		"Lang": "./components/advancement/lang",
 		"IsNotification": false
 	},
 	{

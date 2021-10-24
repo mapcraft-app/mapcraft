@@ -1,10 +1,9 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const IPC = require('../../../../js/MCipc');
-const MCP = require('../../../../js/MCplugin');
-const MCworkInProgress = require('../../../../js/MCworkInProgress');
-const MCutilities = require('../../../../js/MCutilities');
-const Temp = require('../../../../js/MCtemplate');
+const IPC = require('mapcraft-api').MCipc;
+const MCP = require('mapcraft-api').MCplugin;
+const Temp = require('mapcraft-api').MCtemplate;
+const { MCworkInProgress, MCutilities } = require('mapcraft-api');
 const CutsceneMod = require('../../../../js/built_in/Cutscene');
 
 const MCplugin = new MCP();

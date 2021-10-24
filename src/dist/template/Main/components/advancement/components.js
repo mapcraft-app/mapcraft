@@ -1,18 +1,14 @@
 const path = require('path');
-const IPC = require('../../../../js/MCipc');
-const MCP = require('../../../../js/MCplugin');
-const MCworkInProgress = require('../../../../js/MCworkInProgress');
-const MCutilities = require('../../../../js/MCutilities');
-const Temp = require('../../../../js/MCtemplate');
+const { MCplugin, MCipc, MCworkInProgress, MCutilities, MCtemplate } = require('mapcraft-api');
 const Model = require('./model');
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
+const _MCplugin = new MCplugin();
+const Template = new MCtemplate(__dirname);
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-let LANG = MCplugin.Lang('Advancement');
+let LANG = _MCplugin.Lang('Advancement');
 function UpdateLang()
 {
-	LANG = MCplugin.Lang('Advancement');
+	LANG = _MCplugin.Lang('Advancement');
 }
 
 class Advancement

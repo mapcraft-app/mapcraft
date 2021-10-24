@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const JsonABC = require('jsonabc');
-const MCutilities = require('../../../../js/MCutilities');
-const MCworkInProgress = require('../../../../js/MCworkInProgress');
-const IPC = require('../../../../js/MCipc');
+const { MCutilities, MCworkInProgress } = require('mapcraft-api');
+const IPC = require('mapcraft-api').MCipc;
+const MCP = require('mapcraft-api').MCplugin;
+const Temp = require('mapcraft-api').MCtemplate;
 const Music = require('../../../../js/built_in/Music');
-const MCP = require('../../../../js/MCplugin');
-const Temp = require('../../../../js/MCtemplate');
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);

@@ -4,12 +4,11 @@ const { shell } = require('electron');
 const Database = require('better-sqlite3');
 const MarkdownIt = require('markdown-it');
 const https = require('https');
-const MC = require('../../../../js/Mapcraft');
-const Temp = require('../../../../js/MCtemplate');
-const IPC = require('../../../../js/MCipc');
-const MCP = require('../../../../js/MCplugin');
-const MCworkInProgress = require('../../../../js/MCworkInProgress');
-const MCutilities = require('../../../../js/MCutilities');
+const { MCutilities, MCworkInProgress } = require('mapcraft-api');
+const MC = require('mapcraft-api').Mapcraft;
+const Temp = require('mapcraft-api').MCtemplate;
+const IPC = require('mapcraft-api').MCipc;
+const MCP = require('mapcraft-api').MCplugin;
 
 const md = new MarkdownIt();
 const Template = new Temp(__dirname);

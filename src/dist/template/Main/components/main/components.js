@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const { shell } = require('electron');
-const IPC = require('../../../../js/MCipc');
-const MC = require('../../../../js/Mapcraft');
-const MCP = require('../../../../js/MCplugin');
-const Temp = require('../../../../js/MCtemplate');
+const IPC = require('mapcraft-api').MCipc;
+const MC = require('mapcraft-api').Mapcraft;
+const MCP = require('mapcraft-api').MCplugin;
+const Temp = require('mapcraft-api').MCtemplate;
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);
