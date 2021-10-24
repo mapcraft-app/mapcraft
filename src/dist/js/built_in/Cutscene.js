@@ -2,8 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const Database = require('better-sqlite3');
 const BezierEasing = require('bezier-easing');
-const MCfs = require('../MCfs');
-const MCP = require('../MCplugin');
+const { MCfs } = require('mapcraft-api');
+const MCP = require('mapcraft-api').MCplugin;
 
 const MCplugin = new MCP();
 const LANG = MCplugin.Lang('Cutscene');

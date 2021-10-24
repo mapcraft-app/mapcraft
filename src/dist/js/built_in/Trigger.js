@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const MCfs = require('../MCfs');
+const { MCfs } = require('mapcraft-api');
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const DetectPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/trigger/detect.mcfunction');
