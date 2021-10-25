@@ -2,8 +2,10 @@ const { contextBridge } = require('electron');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
+const _importPlugins = require('../../js/importPlugins');
 
 const Plugins = new MCplugin();
+const importPlugins = new _importPlugins();
 
 //#region Set ContextBridge
 contextBridge.exposeInMainWorld(
@@ -53,12 +55,16 @@ function UpdateInterface(plugin, name)
 		navTitle.childNodes[0].remove();
 	navTitle.appendChild(document.createTextNode(name));
 	const Component = Plugins.Component(plugin);
-	if (!Component)
+	const PluginsComponent = importPlugins.Component(plugin);
+	if (!Component && !PluginsComponent)
 	{
 		console.error('No plugin exist with is name');
 		return;
 	}
-	Component.Instance.draw();
+	if (Component)
+		Component.Instance.draw();
+	else
+		PluginsComponent.instance.main();
 	localStorage.setItem('Mapcraft_Plugin', plugin);
 	UpdateSelectedLi();
 }
@@ -109,11 +115,7 @@ MCipc.receive('Shell:new-command', (command) =>
 		PrintNotification(LANG.Title, LANG.Notification);
 		UpdateInterface(plugin, LANG.Title);
 	}
-	/*if (Component.IsNotification && (!command.hasOwnProperty('NoNotification') || command.hasOwnProperty('NoNotification') && !command.NoNotification))
-	{
-		PrintNotification(LANG.Title, LANG.Notification);
-		UpdateInterface(plugin, LANG.Title);
-	}*/
+
 	MCipc.send('Shell:send-command', command);
 });
 //#endregion
@@ -139,7 +141,6 @@ function changeUsername()
 //#endregion
 
 //#region Main
-
 window.addEventListener('DOMContentLoaded', () =>
 {
 	blurWindow();

@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-
 const process = require('process');
 const child = require('child_process');
 const path = require('path');
@@ -8,10 +7,6 @@ const fs = require('fs');
 const axios = require('axios');
 const Database = require('better-sqlite3');
 const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
-/*const MCwindow = require('./dist/js/MCwindow');
-const MCshell = require('./dist/js/MCshell');
-const MCeditor = require('./dist/js/MCeditor');
-const MCutilities = require('./dist/js/MCutilities');*/
 
 //#region Variables
 MCutilities.GetAppDataPath();
