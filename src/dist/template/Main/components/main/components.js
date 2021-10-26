@@ -1,10 +1,9 @@
-const fs = require('fs');
-const path = require('path');
 const { shell } = require('electron');
 const IPC = require('mapcraft-api').MCipc;
 const MC = require('mapcraft-api').Mapcraft;
 const MCP = require('mapcraft-api').MCplugin;
 const Temp = require('mapcraft-api').MCtemplate;
+const NavMenu = require('../../../../js/createNavMenu');
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);
@@ -66,21 +65,7 @@ class MainComponent
 
 	static list()
 	{
-		let HTML = '';
-		const Component = Template.getRaw('nav.tp');
-		const Plugins = JSON.parse(fs.readFileSync(path.join(__dirname, '../../components.json')), 'utf-8');
-		for (const i in Plugins)
-			if (Plugins[i].Name !== '__DEFAULT' && Plugins[i].Name !== 'Main' && (typeof Plugins[i].Using === 'undefined' || Plugins[i].Using === true))
-			{
-				const LANG = MCplugin.Lang(Plugins[i].Name);
-				HTML += Template.parseRaw(Component, { id: Plugins[i].Name, title: LANG.Title, icon: LANG.Icon });
-			}
-		Template.renderRaw(document.getElementById('toogle-nav'), HTML, 'nav.tp', null);
-		document.querySelectorAll('#toogle-nav li').forEach((element) =>
-		{
-			if (element.id === localStorage.getItem('Mapcraft_Plugin'))
-				element.childNodes[1].classList.add('nav-hover-element-selected');
-		});
+		NavMenu.CreateNavMenu(document.getElementById('toogle-nav'), 'nav.tp');
 		DetectClickOnElement();
 	}
 

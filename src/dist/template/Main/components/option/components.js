@@ -9,6 +9,7 @@ const MC = require('mapcraft-api').Mapcraft;
 const Temp = require('mapcraft-api').MCtemplate;
 const IPC = require('mapcraft-api').MCipc;
 const MCP = require('mapcraft-api').MCplugin;
+const NavMenu = require('../../../../js/createNavMenu');
 
 const md = new MarkdownIt();
 const Template = new Temp(__dirname);
@@ -99,7 +100,6 @@ class OptionComponent
 
 	static RedrawInterface()
 	{
-		console.log(document.getElementById('documentation-link'), MC.GetConfig().Env.Lang);
 		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.GetConfig().Env.Lang}`;
 		UpdateLang();
 		//Header
@@ -108,21 +108,7 @@ class OptionComponent
 		//Side Nav
 		const SideNav = () =>
 		{
-			let HTML = '';
-			const Component = Template.getRaw('../main/nav.tp');
-			const Plugins = JSON.parse(fs.readFileSync(path.join(__dirname, '../../components.json')), 'utf-8');
-			for (const i in Plugins)
-				if (Plugins[i].Name !== '__DEFAULT' && Plugins[i].Name !== 'Main' && (typeof Plugins[i].Using === 'undefined' || Plugins[i].Using === true))
-				{
-					const _LANG = MCplugin.Lang(Plugins[i].Name);
-					HTML += Template.parseRaw(Component, { id: Plugins[i].Name, title: _LANG.Title, icon: _LANG.Icon });
-				}
-			Template.renderRaw(document.getElementById('toogle-nav'), HTML, 'nav.tp', null);
-			document.querySelectorAll('#toogle-nav li').forEach((element) =>
-			{
-				if (element.id === localStorage.getItem('Mapcraft_Plugin'))
-					element.childNodes[1].classList.add('nav-hover-element-selected');
-			});
+			NavMenu.CreateNavMenu(document.getElementById('toogle-nav'), 'nav.tp');
 			document.querySelectorAll('#toogle-nav li').forEach((element) =>
 			{
 				element.addEventListener('click', () =>

@@ -2,10 +2,9 @@ const { contextBridge } = require('electron');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
-const _importPlugins = require('../../js/importPlugins');
+const importPlugins = require('../../js/importPlugins');
 
 const Plugins = new MCplugin();
-const importPlugins = new _importPlugins();
 
 //#region Set ContextBridge
 contextBridge.exposeInMainWorld(

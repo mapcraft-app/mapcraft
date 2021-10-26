@@ -3,17 +3,6 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { Mapcraft } = require('mapcraft-api');
 
-const checksum = (name) => crypto
-	.createHash('sha1')
-	.update(name, 'utf8')
-	.digest('hex')
-	.slice(0, 16);
-
-const randomValue = () => crypto
-	.randomBytes(Math.ceil(16 / 2))
-	.toString('hex')
-	.slice(0, 8);
-
 /**
  * Specialized import plugin based on MCplugin logic, don't use this in your personnal project
  * @private
@@ -24,31 +13,34 @@ class ImportPlugin
 	{
 		this.ifNewPlugin = false;
 		this.BaseLink = Mapcraft.GetConfig().Env.PluginsComponents;
-		this.Components = JSON.parse(fs.readFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), 'utf-8'));
+		this.jsonBase = fs.readFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' });
+		this.Components = JSON.parse(this.jsonBase);
 		this.plugins = [];
 		//eslint-disable-next-line guard-for-in
 		for (const i in this.Components)
 		{
-			if (typeof this.Components[i].checksum === 'undefined')
+			if (typeof this.Components[i].directory === 'undefined')
 			{
-				const _checksum = `${checksum(this.Components[i].name)}${randomValue()}`;
-				const _newDir = `${this.Components[i].name}_${_checksum}`;
+				let newUUID;
+				if (typeof this.Components[i].uuid === 'undefined')
+					newUUID = crypto.randomUUID();
+				else
+					newUUID = this.Components[i].uuid;
 				try
 				{
-					fs.renameSync(path.join(this.BaseLink, this.Components[i].name), path.join(this.BaseLink, _newDir));
+					fs.renameSync(path.join(this.BaseLink, this.Components[i].name), path.join(this.BaseLink, newUUID));
 				}
 				catch (err)
 				{
 					console.error(err);
 				}
-				this.Components[i].checksum = _checksum;
-				this.Components[i].directory = path.join(this.BaseLink, _newDir);
+				this.Components[i].directory = path.join(this.BaseLink, newUUID);
 				this.ifNewPlugin = true;
 			}
 			if ((typeof this.Components[i].using === 'undefined' || this.Components[i].using === true))
 				this.plugins.push({
 					name: this.Components[i].name,
-					checksum: this.Components[i].checksum,
+					uuid: this.Components[i].uuid,
 					directory: this.Components[i].directory,
 					component: this.Components[i].component,
 					isNotification: this.Components[i].isNotification,
@@ -66,40 +58,43 @@ class ImportPlugin
 
 	/**
 	 * Get instance of component
-	 * @param {String} Name Name of component
+	 * @param {String} UUID UUID of component
 	 * @returns Instance function of component, or undefined if error
 	 */
-	Instance(Name)
+	//Instance(Name)
+	Instance(UUID)
 	{
 		for (const i in this.plugins)
-			if (this.plugins[i].name === Name)
+			if (this.plugins[i].uuid === UUID)
 				return (this.plugins[i].instance);
 		return (undefined);
 	}
 
 	/**
 	 * Get component
-	 * @param {String} Name Name of component
+	 * @param {String} UUID UUID of component
 	 * @returns Full component, or undefined if error
 	 */
-	Component(Name)
+	//Component(Name)
+	Component(UUID)
 	{
 		for (const i in this.plugins)
-			if (this.plugins[i].name === Name)
+			if (this.plugins[i].uuid === UUID)
 				return (this.plugins[i]);
 		return (undefined);
 	}
 
 	/**
 	 * Get lang data of component
-	 * @param {String} Name Name of component
+	 * @param {String} UUID UUID of component
 	 * @returns {JSON} Lang data
 	 */
-	Lang(Name)
+	//Lang(Name)
+	Lang(UUID)
 	{
 		let data = null;
 		for (const i in this.plugins)
-			if (this.plugins[i].name === Name)
+			if (this.plugins[i].uuid === UUID)
 			{
 				try
 				{
@@ -124,4 +119,4 @@ class ImportPlugin
 	}
 }
 
-module.exports = ImportPlugin;
+module.exports = new ImportPlugin();
