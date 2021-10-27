@@ -21,7 +21,12 @@
 		"lang": "./components/option/lang",
 		"isNotification": false
 	},
-
+	{
+		"name": "Store",
+		"component": "./components/store/components",
+		"lang": "./components/store/lang",
+		"isNotification": false
+	},
 	{
 		"name": "Trigger",
 		"component": "./components/trigger/components",
