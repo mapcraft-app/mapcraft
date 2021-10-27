@@ -1,0 +1,6 @@
+[HTML]
+<div class="uk-container uk-flex uk-flex-center uk-flex-column">
+	<img data-src="dist/img/construction_cone.png">
+	<h2>The store is coming soon !</h2>	
+</div>
+[/HTML]

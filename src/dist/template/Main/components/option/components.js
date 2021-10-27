@@ -25,7 +25,7 @@ function UpdateLang()
 //#region General tab
 class OptionComponent
 {
-	static main()
+	static _main()
 	{
 		UpdateLang();
 		const str = 'option.tp';
@@ -75,9 +75,9 @@ class OptionComponent
 				DOM[i].removeAttribute('selected');
 	}
 
-	static draw()
+	static main()
 	{
-		this.main();
+		this._main();
 		this.general();
 		AboutComponent.about(); // eslint-disable-line
 		UserComponent.main(); // eslint-disable-line

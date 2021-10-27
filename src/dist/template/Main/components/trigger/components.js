@@ -19,7 +19,7 @@ function UpdateLang()
 
 class TriggerComponent
 {
-	static main()
+	static _main()
 	{
 		Template.render(document.getElementById('content'), 'trigger.tp', null);
 		DetectSubmitForm(); // eslint-disable-line
@@ -52,10 +52,10 @@ class TriggerComponent
 		RemoveTrigger(); // eslint-disable-line
 	}
 
-	static draw()
+	static main()
 	{
 		UpdateLang();
-		this.main();
+		this._main();
 		this.tab();
 		Template.updateLang(document.getElementById('content'), LANG.Data);
 	}

@@ -319,7 +319,7 @@ class RecipeComponent
 		});
 	}
 
-	static draw()
+	static main()
 	{
 		UpdateLang();
 		Template.render(document.getElementById('content'), 'recipe.tp', { Search: LANG.Options.Search });

@@ -61,7 +61,7 @@ function UpdateInterface(plugin, name)
 		return;
 	}
 	if (Component)
-		Component.Instance.draw();
+		Component.instance.main();
 	else
 		PluginsComponent.instance.main();
 	localStorage.setItem('Mapcraft_Plugin', plugin);
@@ -143,7 +143,7 @@ function changeUsername()
 window.addEventListener('DOMContentLoaded', () =>
 {
 	blurWindow();
-	Plugins.Instance('Main').draw();
+	Plugins.Instance('Main').main();
 	MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.Default().Title);
 	MCipc.receive('User:remove-blur', () =>
 	{

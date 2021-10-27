@@ -7,7 +7,7 @@ class Component
 {
 	static main()
 	{
-		TEMPLATE.render(document.getElementById('content'), 'advancement.tp', LANG.Data);
+		TEMPLATE.render(document.getElementById('content'), 'store.tp', LANG.Data);
 	}
 }
 

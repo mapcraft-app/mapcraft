@@ -41,7 +41,7 @@ let MusicID = 0;
 
 class MusicComponent
 {
-	static main()
+	static _main()
 	{
 		Template.render(document.getElementById('content'), 'music.tp', null);
 
@@ -172,9 +172,9 @@ class MusicComponent
 		});
 	}
 
-	static draw()
+	static main()
 	{
-		this.main();
+		this._main();
 		this.musicList();
 	}
 }

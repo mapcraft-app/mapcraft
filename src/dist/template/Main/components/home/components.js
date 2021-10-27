@@ -29,7 +29,7 @@ class HomeComponent
 	}
 
 	/*Interface for component */
-	static draw()
+	static main()
 	{
 		this.content();
 		this.list();

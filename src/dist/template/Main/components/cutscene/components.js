@@ -85,14 +85,14 @@ function EditFile()
 
 class Cutscene
 {
-	static draw()
+	static main()
 	{
 		UpdateLang();
-		this.main();
+		this._main();
 		this.CutsceneList();
 	}
 
-	static main()
+	static _main()
 	{
 		CutsceneID = -1;
 		LastPoint = -1;

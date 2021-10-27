@@ -44,7 +44,7 @@ function OpenExternLink()
 
 class MainComponent
 {
-	static main()
+	static _main()
 	{
 		Template.render(document.body, 'main.tp', null);
 	}
@@ -75,9 +75,9 @@ class MainComponent
 	}
 
 	/*Interface for component */
-	static draw()
+	static main()
 	{
-		this.main();
+		this._main();
 		this.nav();
 		this.list();
 		Template.updateLang(document.getElementsByTagName('*'), MCplugin.Lang('Main'));

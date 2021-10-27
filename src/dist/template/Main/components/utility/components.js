@@ -329,7 +329,7 @@ class UtilityComponent
 	}
 	//#endregion
 
-	static draw()
+	static main()
 	{
 		UpdateLang();
 		this.utility();
