@@ -1,14 +1,6 @@
 /*
 **  Font Definition
 */
-/*@font-face {
-	font-family: 'Roboto';
-	font-style: normal;
-	font-weight: 300;
-	font-display: swap;
-	src: url(../../font/Roboto-Regular.woff) format('woff');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}*/
 @font-face {
 	font-family: 'Roboto';
 	font-style: normal;
@@ -20,9 +12,24 @@
 /*
 **  Main theme
 */
-* {
-	scrollbar-color: #454a4d #202324;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 10px;
 }
+/* Track */
+::-webkit-scrollbar-track {
+	background: #181a1b; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #939393; 
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #b9b9b9;
+}
+
 :focus {
     outline: none;
 }
@@ -48,6 +55,8 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
 .body-max-width {
 	height: 100%;
 }
+
+
 
 /* Audio element */
 audio::-webkit-media-controls-panel
