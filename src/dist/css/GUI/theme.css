@@ -19,7 +19,7 @@
 }
 /* Track */
 ::-webkit-scrollbar-track {
-	background: #181a1b; 
+	background: #383838; 
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
@@ -27,7 +27,7 @@
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-	background: #b9b9b9;
+	background: #ababab;
 }
 
 :focus {

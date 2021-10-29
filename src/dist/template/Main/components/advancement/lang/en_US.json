@@ -3,5 +3,35 @@
 	"Icon": "bookmark",
 	"Notification" : "",
 	"Data" : {
+		"Edit": {
+			"Root": {
+				"_Title": "Root",
+				"Namespace": "Namespace",
+				"BackgroundImage": "Background image"
+			},
+			"Meta": {
+				"_Title": "Meta",
+				"AdvancementName": "Advancement name"
+			},
+			"Display":
+			{
+				"_Title": "Display",
+				"Title": "Title",
+				"Description": "Description",
+				"Icon": "Icon",
+				"Frame": {
+					"Title": "Frame",
+					"Normal": "Normal",
+					"Goal": "Goal",
+					"Challenge": "Challenge"
+				},
+				"NBT": "NBT",
+				"Check": {
+					"Toast": "Show Toast",
+					"Chat": "Announce in the chat",
+					"Hidden": "Hidden"
+				}
+			}
+		}
 	}
 }

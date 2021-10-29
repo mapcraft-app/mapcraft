@@ -209,6 +209,9 @@ exports.advancement = {
 		description: String,
 		frame: String,
 		background: String,
+		show_toast: Boolean,
+		announce_to_chat: Boolean,
+		hidden: Boolean,
 	},
 	rewards: {
 		recipes: [String],

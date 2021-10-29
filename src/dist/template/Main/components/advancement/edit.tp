@@ -1,0 +1,72 @@
+[HTML]
+<div id="edit-root">
+	<h4 class="uk-heading-line uk-text-center"><span lang="Edit.Root._Title"></span></h4>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-root-namespace" lang="Edit.Root.Namespace"></label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="edit-root-namespace" type="text" value="mapcraft">
+        </div>
+	</div>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-root-background" lang="Edit.Root.BackgroundImage"></label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="edit-root-background" type="text" value="minecraft:textures/gui/advancements/backgrounds/stone.png">
+        </div>
+	</div>
+</div>
+<div id="edit-meta">
+	<h4 class="uk-heading-line uk-text-center"><span lang="Edit.Meta._Title"></span></h4>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-meta-advancement-name" lang="Edit.Meta.AdvancementName"></label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="edit-advancement-name" type="text" value="default">
+        </div>
+	</div>
+</div>
+<div id="edit-display">
+	<h4 class="uk-heading-line uk-text-center"><span lang="Edit.Display._Title"></span></h4>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-display-title" lang="Edit.Display.Title"></label>
+		<div id="edit-display-title"></div>
+	</div>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-display-description" lang="Edit.Display.Description"></label>
+		<div id="edit-display-description"></div>
+	</div>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-display-icon" lang="Edit.Display.Icon"></label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="edit-display-icon" type="text" value="Dirt">
+        </div>
+	</div>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-display-frame" lang="Edit.Display.Frame.Title"></label>
+		<select id="edit-display-frame" class="uk-select">
+			<option value="Normal" lang="Edit.Display.Frame.Normal"></option>
+			<option value="Goal" lang="Edit.Display.Frame.Goal"></option>
+			<option value="Challenge" lang="Edit.Display.Frame.Challenge"></option>
+		</select>
+	</div>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-display-nbt" lang="Edit.Display.NBT"></label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="edit-display-nbt" type="text" placeholder="{}">
+        </div>
+	</div>
+	<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+		<label>
+			<input class="uk-checkbox" id="edit-display-check-toast" type="checkbox" checked>
+			<span lang="Edit.Display.Check.Toast"></span>
+		</label>
+		<label>
+			<input class="uk-checkbox" id="edit-display-check-chat" type="checkbox" checked>
+			<span lang="Edit.Display.Check.Chat"></span>
+		</label>
+		<label>
+			<input class="uk-checkbox" id="edit-display-check-hidden" type="checkbox">
+			<span lang="Edit.Display.Check.Hidden"></span>
+		</label>
+	</div>
+</div>
+
+[/HTML]

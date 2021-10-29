@@ -1,0 +1,29 @@
+.MCeditor {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	background-color: #282828;
+	padding: 0.5em;
+}
+.MCeditor-toolbar {
+	display: inline-flex;
+    justify-content: space-evenly;
+    margin-bottom: 0.6em;
+}
+.MCeditor-toolbar img {
+	height: 20px;
+    filter: invert(0.80);
+}
+.MCeditor-toolbar img:hover {
+    filter: invert(1);
+}
+.MCeditor-textarea {
+	height: 100%;
+    border: 1px solid #8c8a8c;
+	background-color: #181a1b;
+    word-break: break-all;
+    inline-size: 11.1em;
+    overflow-wrap: break-word;
+	overflow-y: auto;
+}

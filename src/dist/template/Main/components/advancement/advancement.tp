@@ -18,16 +18,14 @@
 		</ul>
 	</div>
 	<div class="uk-width-3-4 graph">
-		<div style="z-index: -1;">
-			<p>Toto Tutu</p>
+		<div class="block">
+			<h5 class="block-text">Title advancements and to long for this</h5>
+			<img class="block-img" src="./dist/img/assets/block/stone.webp" />
 		</div>
 	</div>
 </div>
-<div class="uk-flex uk-flex-around edition-zone">
-	<p>Hello World !</p>
-	<p>Hello World !</p>
-	<p>Hello World !</p>
-</div>
+<form id="edition-zone" class="uk-flex uk-flex-left edition-zone">
+</form>
 [/HTML]
 
 [CSS]
@@ -37,6 +35,9 @@
 .edition-zone {
 	height: calc(39vh - 80px);
 	padding-top: 0.3rem;
+}
+.edition-zone > div {
+	margin: 0 0.5em;
 }
 .list {
 	border-style: solid;
@@ -48,5 +49,23 @@
 	border: 1px solid #8c8a8c;
 	height: -webkit-fill-available;
 	overflow: auto;
+	padding: 5px;
+}
+.block {
+	background-color: #0870b2;
+	width: 180px;
+    height: 80px;
+    display: flex;
+}
+.block-img {
+	background-color: #c6c7c6;
+    border: 5px inset;
+	margin: 5px;
+}
+.block-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	margin: revert;
 }
 [/CSS]
