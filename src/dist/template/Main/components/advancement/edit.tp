@@ -25,13 +25,95 @@
 </div>
 <div id="edit-display">
 	<h4 class="uk-heading-line uk-text-center"><span lang="Edit.Display._Title"></span></h4>
-	<div class="uk-margin">
-		<label class="uk-form-label" for="edit-display-title" lang="Edit.Display.Title"></label>
-		<div id="edit-display-title"></div>
+	<div class="uk-margin edit-block">
+		<label class="uk-form-label" for="edit-display-title-text" lang="Edit.Display.Title"></label>
+		<input class="uk-input" id="edit-display-title-text" type="text">
+		<label class="uk-form-label" id="edit-display-title-color" lang="Edit.Display.TitleColor"></label>
+		<select id="edit-display-title-color" class="uk-select">
+            <option value="dark_red" lang="Edit.Display.Color.DarkRed"></option>
+        	<option value="red" lang="Edit.Display.Color.Red"></option>
+			<option value="gold" lang="Edit.Display.Color.Gold"></option>
+			<option value="yellow" lang="Edit.Display.Color.Yellow"></option>
+			<option value="dark_green" lang="Edit.Display.Color.DarkGreen"></option>
+			<option value="green" lang="Edit.Display.Color.Green"></option>
+			<option value="dark_aqua" lang="Edit.Display.Color.DarkAqua"></option>
+			<option value="aqua" lang="Edit.Display.Color.Aqua"></option>
+			<option value="dark_blue" lang="Edit.Display.Color.DarkBlue"></option>
+			<option value="blue" lang="Edit.Display.Color.Blue"></option>
+			<option value="dark_purple" lang="Edit.Display.Color.DarkPurple"></option>
+			<option value="purple" lang="Edit.Display.Color.Purple"></option>
+			<option value="black" lang="Edit.Display.Color.Black"></option>
+			<option value="dark_gray" lang="Edit.Display.Color.DarkGray"></option>
+			<option value="gray" lang="Edit.Display.Color.Gray"></option>
+			<option value="white" lang="Edit.Display.Color.White" selected></option>
+        </select>
+		<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+			<label>
+				<input class="uk-checkbox" id="edit-display-title-bold" type="checkbox">
+				<span lang="Edit.Display.Format.Bold"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-title-italic" type="checkbox">
+				<span lang="Edit.Display.Format.Italic"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-title-underlined" type="checkbox">
+				<span lang="Edit.Display.Format.Underlined"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-title-strikethrough" type="checkbox">
+				<span lang="Edit.Display.Format.Strikethrough"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-title-obfuscated" type="checkbox">
+				<span lang="Edit.Display.Format.Obfuscated"></span>
+			</label>
+		</div>
 	</div>
-	<div class="uk-margin">
-		<label class="uk-form-label" for="edit-display-description" lang="Edit.Display.Description"></label>
-		<div id="edit-display-description"></div>
+	<div class="uk-margin edit-block">
+		<label class="uk-form-label" for="edit-display-description-text" lang="Edit.Display.Description"></label>
+		<input class="uk-input" id="edit-display-description-text" type="text">
+		<label class="uk-form-label" id="edit-display-description-color" lang="Edit.Display.DescriptionColor"></label>
+		<select id="edit-display-description-color" class="uk-select">
+            <option value="dark_red" lang="Edit.Display.Color.DarkRed"></option>
+        	<option value="red" lang="Edit.Display.Color.Red"></option>
+			<option value="gold" lang="Edit.Display.Color.Gold"></option>
+			<option value="yellow" lang="Edit.Display.Color.Yellow"></option>
+			<option value="dark_green" lang="Edit.Display.Color.DarkGreen"></option>
+			<option value="green" lang="Edit.Display.Color.Green"></option>
+			<option value="dark_aqua" lang="Edit.Display.Color.DarkAqua"></option>
+			<option value="aqua" lang="Edit.Display.Color.Aqua"></option>
+			<option value="dark_blue" lang="Edit.Display.Color.DarkBlue"></option>
+			<option value="blue" lang="Edit.Display.Color.Blue"></option>
+			<option value="dark_purple" lang="Edit.Display.Color.DarkPurple"></option>
+			<option value="purple" lang="Edit.Display.Color.Purple"></option>
+			<option value="black" lang="Edit.Display.Color.Black"></option>
+			<option value="dark_gray" lang="Edit.Display.Color.DarkGray"></option>
+			<option value="gray" lang="Edit.Display.Color.Gray"></option>
+			<option value="white" lang="Edit.Display.Color.White" selected></option>
+        </select>
+		<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+			<label>
+				<input class="uk-checkbox" id="edit-display-description-bold" type="checkbox">
+				<span lang="Edit.Display.Format.Bold"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-description-italic" type="checkbox">
+				<span lang="Edit.Display.Format.Italic"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-description-underlined" type="checkbox">
+				<span lang="Edit.Display.Format.Underlined"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-description-strikethrough" type="checkbox">
+				<span lang="Edit.Display.Format.Strikethrough"></span>
+			</label>
+			<label>
+				<input class="uk-checkbox" id="edit-display-description-obfuscated" type="checkbox">
+				<span lang="Edit.Display.Format.Obfuscated"></span>
+			</label>
+		</div>
 	</div>
 	<div class="uk-margin">
 		<label class="uk-form-label" for="edit-display-icon" lang="Edit.Display.Icon"></label>
@@ -68,5 +150,14 @@
 		</label>
 	</div>
 </div>
-
+<did id="edit-criteria">
+	<h4 class="uk-heading-line uk-text-center"><span lang="Edit.Criteria._Title"></span></h4>
+	<div class="uk-margin">
+		<label class="uk-form-label" for="edit-criteria-name" lang="Edit.Criteria.Name"></label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="edit-criteria-name" type="text" value="default">
+        </div>
+	</div>
+	<div id="testingIdea"></div>
+</div>
 [/HTML]

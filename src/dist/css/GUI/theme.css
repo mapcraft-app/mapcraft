@@ -508,3 +508,30 @@ input:checked + .uk-switch-span:before {
 .uk-offcanvas-flip .uk-offcanvas-bar {
     right: -60%;
 }
+
+/* Dropdown search */
+.edit-block {
+	background-color: #3e3e3e;
+    padding: 5px;
+}
+.search-dropdown-span {
+	display: none;
+	flex-direction: column;
+	z-index: 1;
+	background-color: #3e3e3e;
+    padding: 5px;
+	overflow-y: auto;
+    max-height: 166px;
+	max-width: 224px;
+}
+.search-dropdown-span-show {
+	display: flex;
+}
+.search-dropdown span {
+    text-decoration: none;
+    cursor: pointer;
+    padding: 2px;
+}
+.search-dropdown span:hover {
+	background-color: #707070;;
+}

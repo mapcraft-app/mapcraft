@@ -1,4 +1,34 @@
 exports.advancement = {
+	parent: String,
+	display: {
+		icon: {
+			item: String,
+			nbt: String,
+		},
+		title: {
+			text: String,
+			color: String,
+			bold: Boolean,
+			italic: Boolean,
+			underlined: Boolean,
+			strikethrough: Boolean,
+			obfuscated: Boolean,
+		},
+		description: {
+			text: String,
+			color: String,
+			bold: Boolean,
+			italic: Boolean,
+			underlined: Boolean,
+			strikethrough: Boolean,
+			obfuscated: Boolean,
+		},
+		frame: String,
+		background: String,
+		show_toast: Boolean,
+		announce_to_chat: Boolean,
+		hidden: Boolean,
+	},
 	criteria: {
 		custom_trigger_name: {
 			trigger: String,
@@ -202,17 +232,6 @@ exports.advancement = {
 		},
 	},
 	requirements: [[String]],
-	parent: String,
-	display: {
-		icon: { item: String },
-		title: String,
-		description: String,
-		frame: String,
-		background: String,
-		show_toast: Boolean,
-		announce_to_chat: Boolean,
-		hidden: Boolean,
-	},
 	rewards: {
 		recipes: [String],
 		loot: [String],

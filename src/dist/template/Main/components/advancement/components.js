@@ -1,6 +1,7 @@
 const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
-const MCeditor = require('../../../../js/editor');
 const MODELS = require('./model');
+
+//const DROPDOWN = require('../../../../res/__SEARCH');
 
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
@@ -42,7 +43,7 @@ class TreeJson
 	}
 }
 
-const Tree = new TreeJson();
+const Tree = new TreeJson(); // eslint-disable-line
 
 class Component
 {
@@ -50,9 +51,8 @@ class Component
 	{
 		TEMPLATE.render(document.getElementById('content'), 'advancement.tp', null);
 		TEMPLATE.render(document.getElementById('edition-zone'), 'edit.tp', null);
+		TEMPLATE.render(document.getElementById('testingIdea'), 'item.tp', { ID: 'toto' });
 		TEMPLATE.updateLang(document.getElementById('edition-zone'), LANG.Data);
-		const EditorDisplayTitle = new MCeditor(document.getElementById('edit-display-title'));
-		const EditorDisplayDescription = new MCeditor(document.getElementById('edit-display-description'));
 	}
 }
 

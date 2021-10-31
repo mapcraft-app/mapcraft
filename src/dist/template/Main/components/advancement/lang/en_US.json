@@ -17,8 +17,35 @@
 			{
 				"_Title": "Display",
 				"Title": "Title",
+				"TitleColor": "Title color",
 				"Description": "Description",
+				"DescriptionColor": "Description color",
 				"Icon": "Icon",
+				"Color": {
+					"DarkRed": "Dark red",
+					"Red": "Red",
+					"Gold": "Gold",
+					"Yellow": "Yellow",
+					"DarkGreen": "Dark green",
+					"Green": "Green",
+					"DarkAqua": "Dark aqua",
+					"Aqua": "Aqua",
+					"DarkBlue": "Dark blue",
+					"Blue": "Blue",
+					"DarkPurple": "Dark purple",
+					"Purple": "Purple",
+					"Black": "Black",
+					"DarkGray": "Dark gray",
+					"Gray": "Gray",
+					"White": "White"
+				},
+				"Format": {
+					"Bold": "Bold",
+					"Italic": "Italic",
+					"Underlined": "Underlined",
+					"Strikethrough": "Strikethrough",
+					"Obfuscated": "Obfuscated"
+				},
 				"Frame": {
 					"Title": "Frame",
 					"Normal": "Normal",
@@ -31,6 +58,27 @@
 					"Chat": "Announce in the chat",
 					"Hidden": "Hidden"
 				}
+			},
+			"Criteria": {
+				"_Title": "Criteria",
+				"Name": "Criteria Name"
+			}
+		},
+		"Item": {
+			"Item": "Item",
+			"EditItem": "Edit item",
+			"NBT": "NBT",
+			"Count": "Count",
+			"Data": "Data",
+			"Tag": "Tag",
+			"Durability": "Durability",
+			"Potion": "Potion",
+			"Minimum": "Minimum",
+			"Maximum": "Maximum",
+			"Enchantments": {
+				"Title": "Enchantments",
+				"Enchantment": "Enchantment",
+				"Levels": "Levels"
 			}
 		}
 	}

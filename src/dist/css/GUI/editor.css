@@ -20,10 +20,14 @@
 }
 .MCeditor-textarea {
 	height: 100%;
+	width: 100%;
     border: 1px solid #8c8a8c;
 	background-color: #181a1b;
     word-break: break-all;
     inline-size: 11.1em;
     overflow-wrap: break-word;
 	overflow-y: auto;
+	resize: none;
+	width: -webkit-fill-available;
+	font-size: 16px;
 }
