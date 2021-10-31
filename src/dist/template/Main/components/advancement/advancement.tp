@@ -24,7 +24,9 @@
 		</div>
 	</div>
 </div>
-<form id="edition-zone" class="uk-flex uk-flex-left edition-zone">
+<form id="edition-zone" class="uk-form-horizontal uk-margin-small">
+	<ul id="edition-zone-template" uk-accordion="multiple: true">
+	</ul>
 </form>
 [/HTML]
 
@@ -36,8 +38,13 @@
 	height: calc(39vh - 80px);
 	padding-top: 0.3rem;
 }
+#edition-zone-template > li {
+	border: 1px solid #1e87f0;
+    padding: 1em;
+}
 .edition-zone > div {
 	margin: 0 0.5em;
+	min-width: 400px;
 }
 .list {
 	border-style: solid;

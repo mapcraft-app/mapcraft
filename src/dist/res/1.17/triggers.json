@@ -4,20 +4,17 @@
 		"description": "Triggers when the player breaks a bee nest or beehive",
 		"form": [
 			{
-				"id": "block",
+				"lang": "Form.Block",
 				"predefined": "__SEARCH_BLOCKS"
 			},
 			{
-				"id": "item",
+				"lang": "Form.Item",
 				"predefined": "__FORM_ITEM"
 			},
 			{
-				"id": "num_bees_inside",
-				"tag": "select",
-				"type": "number",
-				"value": 1,
-				"min": 1,
-				"step": 1
+				"lang": "Form.NumberOfBeesInside",
+				"tag": "input",
+				"type": "number"
 			}
 		]
 	},
@@ -196,17 +193,5 @@
 	{
 		"id": "voluntary_exile",
 		"description": "Triggers when the player causes a raid and checks where the player is"
-	},
-	{
-		"id": "",
-		"description": ""
-	},
-	{
-		"id": "",
-		"description": ""
-	},
-	{
-		"id": "",
-		"description": ""
 	}
 ]

@@ -1,7 +1,8 @@
 const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
 const MODELS = require('./model');
 
-//const DROPDOWN = require('../../../../res/__SEARCH');
+const FORM = require('../../../../res/__FORM');
+const SEARCH = require('../../../../res/__SEARCH');
 
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
@@ -50,9 +51,10 @@ class Component
 	static main()
 	{
 		TEMPLATE.render(document.getElementById('content'), 'advancement.tp', null);
-		TEMPLATE.render(document.getElementById('edition-zone'), 'edit.tp', null);
-		TEMPLATE.render(document.getElementById('testingIdea'), 'item.tp', { ID: 'toto' });
+		TEMPLATE.render(document.getElementById('edition-zone-template'), 'edit.tp', null);
 		TEMPLATE.updateLang(document.getElementById('edition-zone'), LANG.Data);
+		SEARCH.__SEARCH_BLOCKS(document.getElementById('ezfjkerizjfkerz'));
+		document.getElementById('de748efz147ezde').appendChild(FORM.__FORM_ITEM());
 	}
 }
 

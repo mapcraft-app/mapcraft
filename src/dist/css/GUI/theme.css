@@ -509,20 +509,28 @@ input:checked + .uk-switch-span:before {
     right: -60%;
 }
 
+.form-padding-left {
+	padding-left: 2em;
+}
+
 /* Dropdown search */
 .edit-block {
 	background-color: #3e3e3e;
-    padding: 5px;
+    padding: 1em;
+}
+.search-dropdown-input {
+	width: 100%;
 }
 .search-dropdown-span {
 	display: none;
+	position: absolute;
 	flex-direction: column;
 	z-index: 1;
 	background-color: #3e3e3e;
     padding: 5px;
 	overflow-y: auto;
     max-height: 166px;
-	max-width: 224px;
+	width: -webkit-fill-available;
 }
 .search-dropdown-span-show {
 	display: flex;
