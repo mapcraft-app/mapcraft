@@ -61,7 +61,9 @@
 			},
 			"Criteria": {
 				"_Title": "Criteria",
-				"Name": "Criteria Name"
+				"Name": "Criteria Name",
+				"ChooseTrigger": "Choose a trigger",
+				"AddTrigger": "Add a trigger"
 			}
 		},
 		"Item": {

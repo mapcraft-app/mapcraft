@@ -239,3 +239,17 @@ exports.advancement = {
 		function: String,
 	},
 };
+
+exports.criteria = (ID) => `
+<div class="uk-margin">
+	<label class="uk-form-label" for="edit-criteria-name-${ID}" lang="Edit.Criteria.Name"></label>
+	<div class="uk-form-controls">
+		<input class="uk-input" id="edit-criteria-name-${ID}" type="text" value="default">
+	</div>
+</div>
+<div class="uk-margin">
+	<label class="uk-form-label" for="edit-criteria-trigger-${ID}" lang="Edit.Criteria.ChooseTrigger"></label>
+	<div class="uk-form-controls" id="edit-criteria-trigger-${ID}"></div>
+</div>
+<div id="edit-criteria-form-${ID}"></div>
+`;

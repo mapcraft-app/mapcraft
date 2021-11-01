@@ -156,6 +156,9 @@ exports.__FORM_TRIGGER = (triggerName, MinecraftVersion = DefaultMinecraftVersio
 						case '__SEARCH_TRIGGER':
 							__SEARCH.__SEARCH_TRIGGER(newElementForm);
 							break;
+						case '__FORM_ITEM':
+							this.__FORM_ITEM(newElementForm);
+							break;
 						default:
 							console.log('err');
 							//throw new Error('No predefined form');

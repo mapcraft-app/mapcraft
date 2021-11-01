@@ -184,25 +184,13 @@
 	<a class="uk-accordion-title" href="#">
 		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Criteria._Title"></span></h4>
 	</a>
+	
 	<div id="edit-criteria" class="uk-accordion-content padding-accordion">
-		<div class="uk-margin">
-			<label class="uk-form-label" for="edit-criteria-name-1" lang="Edit.Criteria.Name"></label>
-			<div class="uk-form-controls">
-				<input class="uk-input" id="edit-criteria-name-1" type="text" value="default">
-			</div>
-		</div>
-		<div class="uk-margin">
-			<label class="uk-form-label" for="edit-criteria-list-1" lang="Edit.Criteria.Name"></label>
-			<div id="edit-criteria-list-1"></div>
-		</div>
-		<div id="edit-criteria-list">
-			<div class="uk-card uk-card-primary uk-card-body fieldset-card">
-				<p>Triggers when the player breaks a bee nest or beehive</p>
-			</div>
-			<div>
-				<p>toto</p>
-			</div>
-		</div>
+		<button id="edit-criteria-add-trigger" class="uk-button uk-button-primary uk-button-large uk-width-1-1">
+			<span uk-icon="icon: plus"></span>
+			<span lang="Edit.Criteria.AddTrigger"></span>
+		</button>
+		<div id="edit-criteria-list"></div>
 	</div>
 </li>
 <div id="ezfjkerizjfkerz"></div>
@@ -216,4 +204,8 @@
 .fieldset-card {
 	padding: 0.5em;
     text-align: center;
+}
+#edit-criteria-list {
+	margin-top: 1em;
+}
 [/CSS]

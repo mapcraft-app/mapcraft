@@ -71,7 +71,10 @@ exports.__SEARCH_BLOCKS = (DOM, MinecraftVersion = DefaultMinecraftVersion) =>
 	DOMelementSpan.addEventListener('click', (event) =>
 	{
 		if (event.target.tagName === 'SPAN')
+		{
 			DOMelement.Input.value = event.target.getAttribute('value');
+			DOMelement.Input.dispatchEvent(new Event('input'));
+		}
 	});
 	DOM.appendChild(DOMelement.Base);
 	return (idOfSearch);
@@ -115,7 +118,10 @@ exports.__SEARCH_ITEMS = (DOM, MinecraftVersion = DefaultMinecraftVersion) =>
 	DOMelementSpan.addEventListener('click', (event) =>
 	{
 		if (event.target.tagName === 'SPAN')
+		{
 			DOMelement.Input.value = event.target.getAttribute('value');
+			DOMelement.Input.dispatchEvent(new Event('input'));
+		}
 	});
 	DOM.appendChild(DOMelement.Base);
 	return (idOfSearch);
@@ -159,7 +165,10 @@ exports.__SEARCH_POTIONS = (DOM, MinecraftVersion = DefaultMinecraftVersion) =>
 	DOMelementSpan.addEventListener('click', (event) =>
 	{
 		if (event.target.tagName === 'SPAN')
+		{
 			DOMelement.Input.value = event.target.getAttribute('value');
+			DOMelement.Input.dispatchEvent(new Event('input'));
+		}
 	});
 	DOM.appendChild(DOMelement.Base);
 	return (idOfSearch);
@@ -179,7 +188,7 @@ exports.__SEARCH_TRIGGER = (DOM, MinecraftVersion = DefaultMinecraftVersion) =>
 	let ListOfTriggers;
 	try
 	{
-		ListOfTriggers = JSON.parse(fs.readFileSync(path.join(__dirname, `${MinecraftVersion}/potions.json`), { encoding: 'utf-8', flag: 'r' }));
+		ListOfTriggers = JSON.parse(fs.readFileSync(path.join(__dirname, `${MinecraftVersion}/triggers.json`), { encoding: 'utf-8', flag: 'r' }));
 	}
 	catch (err)
 	{
@@ -203,7 +212,10 @@ exports.__SEARCH_TRIGGER = (DOM, MinecraftVersion = DefaultMinecraftVersion) =>
 	DOMelementSpan.addEventListener('click', (event) =>
 	{
 		if (event.target.tagName === 'SPAN')
+		{
 			DOMelement.Input.value = event.target.getAttribute('value');
+			DOMelement.Input.dispatchEvent(new Event('input'));
+		}
 	});
 	DOM.appendChild(DOMelement.Base);
 	return (idOfSearch);

@@ -515,7 +515,7 @@ input:checked + .uk-switch-span:before {
 
 /* Dropdown search */
 .edit-block {
-	background-color: #3e3e3e;
+	background-color: #222222;
     padding: 1em;
 }
 .search-dropdown-input {
