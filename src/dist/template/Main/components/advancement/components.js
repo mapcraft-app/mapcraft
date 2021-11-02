@@ -1,6 +1,6 @@
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 const MODELS = require('./model');
-const __FORM = require('./form/__FORM');
+const Form = require('./form/form');
 
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
@@ -71,7 +71,7 @@ class Component
 			const CriteriaForm = DOMelement.querySelector(`#edit-criteria-form-${GenerateID}`);
 			DOMelement.querySelector(`#search-dropdown-${SearchID}`).addEventListener('input', (eventForm) =>
 			{
-				const FORM = __FORM.__FORM_TRIGGER(eventForm.target.value);
+				const FORM = Form.trigger(eventForm.target.value);
 				TEMPLATE.cleanNode(CriteriaForm);
 				if (FORM)
 				{

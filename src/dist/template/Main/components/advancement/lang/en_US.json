@@ -73,19 +73,42 @@
 					"Tag": "Tag",
 					"Durability": "Durability",
 					"Potion": "Potion",
+					"Levels": "Levels",
 					"Minimum": "Minimum",
 					"Maximum": "Maximum",
-					"Enchantments": {
-						"Title": "Enchantments",
-						"Enchantment": "Enchantment",
-						"Levels": "Levels"
+					"Enchantments": "Enchantments",
+					"StoredEnchantments": "Stored Enchantments",
+					"Enchantment": "Enchantment"
+				},
+				"Entity": {
+					"Entity": "Entity",
+					"EditEntity": "Edit entity",
+					"NBT": "NBT",
+					"Flags": {
+						"Baby": "Is baby",
+						"Fire": "Is on fire",
+						"Sneak": "Is sneaking",
+						"Sprint": "Is sprinting",
+						"Swim": "Is swimming"
+					},
+					"Equipement": {
+						"Equipement": "Equipement",
+						"Head": "Head",
+						"Chest": "Chest",
+						"Legs": "Legs",
+						"Feet": "Feet",
+						"Mainhand": "Mainhand",
+						"Offhand": "Offhand"
 					}
 				},
 				"Form": {
 					"Block": "Block",
 					"Item": "Item",
 					"Trigger": "Trigger",
-					"NumberOfBeesInside": "Number Of Bees Inside"
+					"NumberOfBeesInside": "Number Of Bees Inside",
+					"Child": "Child",
+					"Parent": "Parent",
+					"Partner": "Partner"
 				}
 			}
 		}

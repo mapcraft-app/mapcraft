@@ -30,7 +30,56 @@
 </form>
 [/HTML]
 
+<style>
 [CSS]
+.body-selection {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+.body-selection .top {
+	display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+}
+.body-selection img {
+	width: 5em;
+	image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+.body-selection img:hover {
+	outline: 1px solid white;
+	outline-offset: -1px;
+	cursor: pointer;
+}
+.body-selection .head {
+	width: 5em;
+}
+.body-selection .chest {
+	height: 8.4em;
+}
+.body-selection .hand {
+	width: 2.8em;
+}
+.body-selection .off-hand {
+	transform: scale(-1, 1);
+}
+.body-form {
+	flex-grow: 1;
+	margin: 0 1em;
+	height: 345px;
+}
+.body-tab {
+	display: none;
+	height: 100%;
+    overflow-y: auto;
+}
+
 .graph-zone {
 	height: calc(65vh - 80px);
 }
@@ -83,4 +132,5 @@
     text-overflow: ellipsis;
 	margin: revert;
 }
+</style>
 [/CSS]
