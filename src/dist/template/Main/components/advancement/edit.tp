@@ -184,21 +184,30 @@
 	<a class="uk-accordion-title" href="#">
 		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Criteria._Title"></span></h4>
 	</a>
-	
 	<div id="edit-criteria" class="uk-accordion-content padding-accordion">
+		<div id="edit-criteria-list"></div>
 		<button id="edit-criteria-add-trigger" class="uk-button uk-button-primary uk-button-large uk-width-1-1">
 			<span uk-icon="icon: plus"></span>
 			<span lang="Edit.Criteria.AddTrigger"></span>
 		</button>
-		<div id="edit-criteria-list"></div>
 	</div>
 </li>
-<div id="ezfjkerizjfkerz"></div>
-<div id="de748efz147ezde"></div>
 [/HTML]
 
 [CSS]
 .padding-accordion {
+	padding: 0 2em;
+}
+.min-max-form {
+	display: inline-flex;
+	flex-direction: column;
+	align-content: flex-start;
+	align-items: flex-start;
+}
+.margin-criteria-list-element {
+	margin: 1em 0;
+}
+.padding-criteria-form {
 	padding: 0 2em;
 }
 .fieldset-card {

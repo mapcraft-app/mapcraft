@@ -63,24 +63,30 @@
 				"_Title": "Criteria",
 				"Name": "Criteria Name",
 				"ChooseTrigger": "Choose a trigger",
-				"AddTrigger": "Add a trigger"
-			}
-		},
-		"Item": {
-			"Item": "Item",
-			"EditItem": "Edit item",
-			"NBT": "NBT",
-			"Count": "Count",
-			"Data": "Data",
-			"Tag": "Tag",
-			"Durability": "Durability",
-			"Potion": "Potion",
-			"Minimum": "Minimum",
-			"Maximum": "Maximum",
-			"Enchantments": {
-				"Title": "Enchantments",
-				"Enchantment": "Enchantment",
-				"Levels": "Levels"
+				"AddTrigger": "Add a trigger",
+				"Item": {
+					"Item": "Item",
+					"EditItem": "Edit item",
+					"NBT": "NBT",
+					"Count": "Count",
+					"Data": "Data",
+					"Tag": "Tag",
+					"Durability": "Durability",
+					"Potion": "Potion",
+					"Minimum": "Minimum",
+					"Maximum": "Maximum",
+					"Enchantments": {
+						"Title": "Enchantments",
+						"Enchantment": "Enchantment",
+						"Levels": "Levels"
+					}
+				},
+				"Form": {
+					"Block": "Block",
+					"Item": "Item",
+					"Trigger": "Trigger",
+					"NumberOfBeesInside": "Number Of Bees Inside"
+				}
 			}
 		}
 	}

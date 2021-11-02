@@ -1,8 +1,6 @@
-const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
+const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 const MODELS = require('./model');
-
-const __FORM = require('../../../../res/__FORM');
-const __SEARCH = require('../../../../res/__SEARCH');
+const __FORM = require('./form/__FORM');
 
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
@@ -53,8 +51,6 @@ class Component
 		TEMPLATE.render(document.getElementById('content'), 'advancement.tp', null);
 		TEMPLATE.render(document.getElementById('edition-zone-template'), 'edit.tp', null);
 		TEMPLATE.updateLang(document.getElementById('edition-zone'), LANG.Data);
-		//SEARCH.__SEARCH_BLOCKS(document.getElementById('ezfjkerizjfkerz'));
-		//document.getElementById('de748efz147ezde').appendChild(FORM.__FORM_ITEM());
 		this.addTrigger();
 	}
 
@@ -69,18 +65,25 @@ class Component
 			event.stopPropagation();
 			const DOMelement = document.createElement('div');
 			DOMelement.id = GenerateID;
-			DOMelement.classList.add('edit-block');
+			DOMelement.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
 			DOMelement.innerHTML = MODELS.criteria(GenerateID);
-			const SearchID = __SEARCH.__SEARCH_TRIGGER(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
+			const SearchID = MCsearch.TRIGGER(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
 			const CriteriaForm = DOMelement.querySelector(`#edit-criteria-form-${GenerateID}`);
 			DOMelement.querySelector(`#search-dropdown-${SearchID}`).addEventListener('input', (eventForm) =>
 			{
 				const FORM = __FORM.__FORM_TRIGGER(eventForm.target.value);
+				TEMPLATE.cleanNode(CriteriaForm);
 				if (FORM)
-					CriteriaForm.innerHTML = FORM.outerHTML;
+				{
+					TEMPLATE.cleanNode(CriteriaForm);
+					CriteriaForm.appendChild(FORM);
+				}
 				else
-					CriteriaForm.innerHTML = '';
+				{
+					TEMPLATE.cleanNode(CriteriaForm);
+				}
 			});
+			DOMelement.querySelector(`#edit-criteria-close-${GenerateID}`).addEventListener('click', () => DOMelement.remove());
 			TriggerList.appendChild(DOMelement);
 			TEMPLATE.updateLang(TriggerList, LANG.Data);
 			++GenerateID;

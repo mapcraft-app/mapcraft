@@ -36,15 +36,23 @@
 }
 .edition-zone {
 	height: calc(39vh - 80px);
-	padding-top: 0.3rem;
+	padding-top: .3rem;
 }
 #edition-zone-template > li {
 	border: 1px solid #1e87f0;
     padding: 1em;
 }
 .edition-zone > div {
-	margin: 0 0.5em;
+	margin: 0 .5em;
 	min-width: 400px;
+}
+.edit-block-criteria {
+	position: relative;
+}
+.criteria-close-button {
+	position: absolute;
+    right: .6em;
+    top: .5em;
 }
 .list {
 	border-style: solid;
