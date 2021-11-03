@@ -67,11 +67,11 @@ class Component
 			DOMelement.id = GenerateID;
 			DOMelement.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
 			DOMelement.innerHTML = MODELS.criteria(GenerateID);
-			const SearchID = MCsearch.TRIGGER(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
+			const SearchID = MCsearch.triggers(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
 			const CriteriaForm = DOMelement.querySelector(`#edit-criteria-form-${GenerateID}`);
 			DOMelement.querySelector(`#search-dropdown-${SearchID}`).addEventListener('input', (eventForm) =>
 			{
-				const FORM = Form.trigger(eventForm.target.value);
+				const FORM = Form.printTrigger(eventForm.target.value);
 				TEMPLATE.cleanNode(CriteriaForm);
 				if (FORM)
 				{

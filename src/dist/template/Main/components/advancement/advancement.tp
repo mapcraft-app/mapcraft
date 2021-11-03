@@ -37,6 +37,8 @@
     flex-direction: column;
     align-items: center;
     flex-wrap: nowrap;
+	min-width: 170px;
+	max-width: 170px;
 }
 .body-selection .top {
 	display: flex;
@@ -72,12 +74,24 @@
 .body-form {
 	flex-grow: 1;
 	margin: 0 1em;
-	height: 345px;
+	height: 328px;
 }
 .body-tab {
 	display: none;
 	height: 100%;
+	padding: 0.5em;
     overflow-y: auto;
+}
+.body-tab .uk-form-label
+{
+	display: block;
+    margin-bottom: 5px;
+    width: unset;
+    margin-top: unset;
+    float: unset;
+}
+.body-tab .uk-form-controls {
+	margin-left: unset;
 }
 
 .graph-zone {
@@ -90,6 +104,10 @@
 #edition-zone-template > li {
 	border: 1px solid #1e87f0;
     padding: 1em;
+}
+.modal-accordion-zone > li {
+	border: 1px solid #1e87f0;
+	padding: .5em;
 }
 .edition-zone > div {
 	margin: 0 .5em;
@@ -131,6 +149,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
 	margin: revert;
+}
+
+.insert-form-close {
+	position: relative;
+    margin-bottom: 1em;
+    border: 1px solid #1e87f0;
+    padding: 1em;
+}
+.insert-form-body {
+	position: relative;
+    top: 1.5em;
 }
 </style>
 [/CSS]

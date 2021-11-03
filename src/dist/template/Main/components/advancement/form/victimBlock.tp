@@ -1,0 +1,6 @@
+[HTML]
+<button id="form-victim-modal-list-close" class="uk-button uk-button-link criteria-close-button">
+	<span uk-icon="close"></span>
+</button>
+<div id="form-victim-modal-list-body" class="insert-form-body"></div>
+[/HTML]

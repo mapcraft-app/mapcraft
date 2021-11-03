@@ -80,35 +80,81 @@
 					"StoredEnchantments": "Stored Enchantments",
 					"Enchantment": "Enchantment"
 				},
+				"Distance": {
+					"Distance": "Distance",
+					"EditDistance": "Edit distance",
+					"Absolute": "Absolute",
+					"Horizontal": "Horizontal",
+					"X": "X",
+					"Y": "Y",
+					"Z": "Z"
+				},
+				"Effects": {
+					"Effects": "Effects",
+					"EditEffects": "Edit effects",
+					"Amplifier": "Amplifier",
+					"Duration": "Duration"
+				},
+				"Location": {
+					"Location": "Location",
+					"EditLocation": "Edit location",
+					"Fluid": "Fluid",
+					"ID": "ID",
+					"Dimension": "Dimension",
+					"Feature": "Feature",
+					"Light": "Light",
+					"Position": "Position",
+					"IsSmokey": "Is smokey ?",
+					"Overworld": "Overworld",
+					"Nether": "Nether",
+					"End": "End"
+				},
 				"Entity": {
 					"Entity": "Entity",
 					"EditEntity": "Edit entity",
 					"NBT": "NBT",
+					"Equipement": {
+						"Equipement": "Equipement",
+						"Head": "Head",
+						"Mainhand": "Main hand",
+						"Chest": "Chest",
+						"Offhand": "Off hand",
+						"Legs": "Legs",
+						"Feets": "Feets"
+					},
 					"Flags": {
 						"Baby": "Is baby",
 						"Fire": "Is on fire",
 						"Sneak": "Is sneaking",
 						"Sprint": "Is sprinting",
 						"Swim": "Is swimming"
-					},
-					"Equipement": {
-						"Equipement": "Equipement",
-						"Head": "Head",
-						"Chest": "Chest",
-						"Legs": "Legs",
-						"Feet": "Feet",
-						"Mainhand": "Mainhand",
-						"Offhand": "Offhand"
 					}
 				},
+				"Victims": {
+					"Victims": "Victims",
+					"EditVictims": "Edit victims"
+				},
 				"Form": {
+					"Biome": "Biome",
 					"Block": "Block",
+					"Effect": "Effect",
+					"Enchantement": "Enchantement",
+					"Entity": "Entity",
+					"Distance": "Distance",
 					"Item": "Item",
+					"Potion": "Potion",
+					"Tag": "Tag",
 					"Trigger": "Trigger",
+
 					"NumberOfBeesInside": "Number Of Bees Inside",
 					"Child": "Child",
 					"Parent": "Parent",
-					"Partner": "Partner"
+					"Partner": "Partner",
+					"From": "From",
+					"To": "To",
+					"Level": "Level",
+					"Villager": "Villager",
+					"Zombie": "Zombie"
 				}
 			}
 		}
