@@ -20,7 +20,6 @@ const hexaID = () => crypto
 	.randomBytes(Math.ceil(24 / 2))
 	.toString('hex')
 	.slice(0, 24);
-let GenerateID = 1;
 
 class Form
 {
@@ -85,6 +84,9 @@ class Form
 								MCsearch.triggers(DOMmain);
 								break;
 
+							case '__FORM_DAMAGE':
+								DOMmain.appendChild(this.damage(minecraftVersion));
+								break;
 							case '__FORM_DISTANCE':
 								DOMmain.appendChild(this.distance());
 								break;
@@ -99,6 +101,12 @@ class Form
 								break;
 							case '__FORM_LOCATION':
 								DOMmain.appendChild(this.location(minecraftVersion));
+								break;
+							case '__FORM_STATE':
+								DOMmain.appendChild(this.state(minecraftVersion));
+								break;
+							case '__FORM_TYPE':
+								DOMmain.appendChild(this.type(minecraftVersion));
 								break;
 							case '__FORM_VICTIMS':
 								DOMmain.appendChild(this.victim(minecraftVersion));
@@ -153,6 +161,28 @@ class Form
 				return (newForm);
 			}
 		return undefined;
+	}
+
+	/**
+	 * Get Element form for damage
+	 * @returns {Element} HTMLDivElement form for modal damage
+	 */
+	static damage(minecraftVersion = DefaultMinecraftVersion)
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'damageModal.tp', { ID: hexaID() });
+		//Main entity
+		const mainEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
+		mainEntity.removeAttribute('class');
+		mainEntity.querySelector('button.uk-modal-close-default').remove();
+		MODAL.querySelector('#form-damage-modal-entity').appendChild(mainEntity);
+		//Type
+		const typeEntity = this.type(minecraftVersion).querySelector('div.uk-modal-body');
+		typeEntity.removeAttribute('class');
+		typeEntity.querySelector('button.uk-modal-close-default').remove();
+		MODAL.querySelector('#form-damage-modal-type').appendChild(typeEntity);
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return MODAL;
 	}
 
 	/**
@@ -241,10 +271,12 @@ class Form
 		//Distance
 		const distanceForm = this.distance().querySelector('div.uk-modal-body');
 		distanceForm.removeAttribute('class');
+		distanceForm.querySelector('button.uk-modal-close-default').remove();
 		MODAL.querySelector('#form-entity-modal-distance').appendChild(distanceForm);
 		//Location
 		const locationForm = this.location().querySelector('div.uk-modal-body');
 		locationForm.removeAttribute('class');
+		locationForm.querySelector('button.uk-modal-close-default').remove();
 		locationForm.querySelector('ul').removeAttribute('class');
 		MODAL.querySelector('#form-entity-modal-location').appendChild(locationForm);
 		TEMPLATE.updateLang(MODAL, LANG.Data);
@@ -322,6 +354,52 @@ class Form
 	}
 
 	/**
+	 * Get Element form for block state
+	 * @param {String} minecraftVersion The version of minecraft desired, by default at the highest version supported by Mapcraft
+	 * @returns {Element} HTMLDivElement form for modal block state
+	 */
+	static state()
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'stateModal.tp', { ID: hexaID() });
+		MODAL.querySelector('#form-state-modal-add').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			const newState = document.createElement('div');
+			FORM_TEMPLATE.render(newState, 'stateBlock.tp');
+			newState.querySelector('button.state-block-close').addEventListener('click', () => newState.remove());
+			TEMPLATE.updateLang(newState, LANG.Data);
+			MODAL.querySelector('#form-state-modal-list').appendChild(newState);
+		});
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return MODAL;
+	}
+
+	/**
+	 * Get Element form for type
+	 * @param {String} minecraftVersion The version of minecraft desired, by default at the highest version supported by Mapcraft
+	 * @returns {Element} HTMLDivElement form for modal type
+	 */
+	static type(minecraftVersion = DefaultMinecraftVersion)
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'damageModal.tp', { ID: hexaID() });
+		//Type source entity
+		const typeSourceEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
+		typeSourceEntity.removeAttribute('class');
+		typeSourceEntity.querySelector('button.uk-modal-close-default').remove();
+		MODAL.querySelector('#form-type-modal-type-source-entity').appendChild(typeSourceEntity);
+		//Type direct entity
+		const typeDirectEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
+		typeDirectEntity.removeAttribute('class');
+		typeDirectEntity.querySelector('button.uk-modal-close-default').remove();
+		MODAL.querySelector('#form-type-modal-type-source-entity').appendChild(typeDirectEntity);
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return MODAL;
+	}
+
+	/**
 	 * Get Element form for victims
 	 * @param {String} minecraftVersion The version of minecraft desired, by default at the highest version supported by Mapcraft
 	 * @returns {Element} HTMLDivElement form for modal victim
@@ -330,48 +408,21 @@ class Form
 	{
 		const MODAL = document.createElement('div');
 		FORM_TEMPLATE.render(MODAL, 'victimModal.tp', { ID: hexaID() });
-
-		const VictimList = MODAL.querySelector('#form-victim-modal-victims-list');
-		MODAL.querySelector('#form-victim-modal-add-victims').addEventListener('click', (event) =>
+		MODAL.querySelector('#form-victim-modal-add').addEventListener('click', (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			const newVictim = document.createElement('div');
 			FORM_TEMPLATE.render(newVictim, 'victimBlock.tp');
-			newVictim.classList.add('insert-form-close');
-			newVictim.querySelector('#form-victim-modal-list-close').addEventListener('click', () => newVictim.remove());
-			const newVictimBody = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
-			newVictimBody.removeAttribute('class');
-			newVictimBody.removeChild(newVictimBody.children[0]);
-			newVictim.querySelector('#form-victim-modal-list-body').appendChild(newVictimBody);
+			const entityForm = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
+			entityForm.querySelector('button.uk-modal-close-default').remove();
+			newVictim.querySelector('button.victim-block-close').addEventListener('click', () => newVictim.remove());
+			newVictim.querySelector('div.insert-form-close').appendChild(entityForm);
 			TEMPLATE.updateLang(newVictim, LANG.Data);
-			VictimList.appendChild(newVictim);
+			MODAL.querySelector('#form-victim-modal-list').appendChild(newVictim);
 		});
 		TEMPLATE.updateLang(MODAL, LANG.Data);
 		return MODAL;
-		/*const DOMelement = document.createElement('div');
-		const ID = hexaID();
-		DOMelement.id = ID;
-		DOMelement.innerHTML = MODELS.victimsModal(ID);
-		const VictimsList = DOMelement.querySelector('#form-victims-modal-victims-list');
-		DOMelement.querySelector('#form-victims-modal-add-victims').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			event.stopPropagation();
-			const newVictim = document.createElement('div');
-			newVictim.classList.add('insert-form-close');
-			newVictim.innerHTML = MODELS.effectVictims(GenerateID);
-			const newVictimBody = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
-			newVictimBody.removeAttribute('class');
-			newVictimBody.removeChild(newVictimBody.children[0]);
-			newVictim.querySelector(`#form-victims-modal-list-${GenerateID}-close`).addEventListener('click', () => newVictim.remove());
-			newVictim.querySelector(`#form-victims-modal-list-${GenerateID}-body`).appendChild(newVictimBody);
-			TEMPLATE.updateLang(newVictim, LANG.Data);
-			VictimsList.appendChild(newVictim);
-			++GenerateID;
-		});
-		return (DOMelement);*/
 	}
 }
 

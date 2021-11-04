@@ -80,6 +80,30 @@
 					"StoredEnchantments": "Stored Enchantments",
 					"Enchantment": "Enchantment"
 				},
+				"Damage": {
+					"Damage": "Damage",
+					"Edit": "Edit damage",
+					"Dealt": "Dealt",
+					"Taken": "Taken",
+					"Blocked": "Is blocked ?",
+					"Type": {
+						"Type": "Type",
+						"DirectEntity": "Direct Entity",
+						"SourceEntity": "Source Entity",
+						"Bypasses": {
+							"Armor": "Bypasses armor",
+							"Invulnerability": "Bypasses invulnerability",
+							"Magic": "Bypasses magic"
+						},
+						"Is": {
+							"Explosion": "Is explosion",
+							"Fire":	"Is fire",
+							"Magic": "Is magic",
+							"Projectile": "Is projectile",
+							"Lightning": "Is lightning"
+						}
+					}
+				},
 				"Distance": {
 					"Distance": "Distance",
 					"EditDistance": "Edit distance",
@@ -134,6 +158,13 @@
 					"Victims": "Victims",
 					"EditVictims": "Edit victims"
 				},
+				"State": {
+					"State": "State",
+					"Edit": "Edit state",
+					"Name": "State name",
+					"Value": "Value",
+					"Help": "For more information, click here"
+				},
 				"Form": {
 					"Biome": "Biome",
 					"Block": "Block",
@@ -154,7 +185,9 @@
 					"To": "To",
 					"Level": "Level",
 					"Villager": "Villager",
-					"Zombie": "Zombie"
+					"Zombie": "Zombie",
+					"KillingBlow": "Killing blow",
+					"Rod": "Rod"
 				}
 			}
 		}

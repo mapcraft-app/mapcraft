@@ -1,0 +1,72 @@
+[HTML]
+<div class="uk-margin">
+	<button class="uk-button uk-button-primary uk-width-1-1" type="button" uk-toggle="target: #form-type-modal-{ID}">
+		<span uk-icon="pencil"></span>
+		<span lang="Edit.Criteria.Effects.EditEffects"></span>
+	</button>
+</div>
+<div id="form-type-modal-container-{ID}">
+	<div id="form-type-modal-{ID}" class="uk-flex-top uk-modal" container="form-type-modal-container-{ID}" uk-modal="bg-close:true;stack:true;">
+		<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
+			<div class="uk-modal-header">
+				<h2 class="uk-modal-title" lang="Edit.Criteria.Effects.EditEffects"></h2>
+			</div>
+			<div class="uk-modal-body">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<div class="uk-margin uk-flex uk-flex-wrap uk-flex-left uk-flex-between">
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isExplosion" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Is.Explosion"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isFire" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Is.Fire"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isMagic" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Is.Magic"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isProjectile" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Is.Projectile"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isLightning" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Is.Lightning"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isArmor" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Bypasses.Armor"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isInvulnerability" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Bypasses.Invulnerability"></span>
+					</label>
+					<label>
+						<input class="uk-checkbox" id="form-type-modal-type-isMagic" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Type.Bypasses.Magic"></span>
+					</label>
+				</div>
+				<ul uk-accordion="multiple: true" class="modal-accordion-zone uk-margin">
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Damage.Type.SourceEntity"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content" id="form-type-modal-type-source-entity"></div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Damage.Type.DirectEntity"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content" id="form-type-modal-type-source-entity"></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]

@@ -155,7 +155,6 @@
 	position: relative;
     margin-bottom: 1em;
     border: 1px solid #1e87f0;
-    padding: 1em;
 }
 .insert-form-body {
 	position: relative;

@@ -1,9 +1,25 @@
+const { shell } = require('electron');
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 const MODELS = require('./model');
 const Form = require('./form/form');
 
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
+
+function OpenExternLink()
+{
+	document.querySelectorAll('a[web-link]').forEach((link) =>
+	{
+		const url = link.getAttribute('href');
+		if (url.indexOf('http') === 0)
+			link.addEventListener('click', (event) =>
+			{
+				event.preventDefault();
+				event.stopImmediatePropagation();
+				shell.openExternal(url);
+			});
+	});
+}
 
 class TreeJson
 {
@@ -77,6 +93,7 @@ class Component
 				{
 					TEMPLATE.cleanNode(CriteriaForm);
 					CriteriaForm.appendChild(FORM);
+					OpenExternLink();
 				}
 				else
 				{
