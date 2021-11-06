@@ -99,6 +99,9 @@ class Form
 							case '__FORM_ITEMS':
 								DOMmain.appendChild(this.item(minecraftVersion));
 								break;
+							case '__FORM_ITEMS_LIST':
+								DOMmain.appendChild(this.itemList(minecraftVersion));
+								break;
 							case '__FORM_LOCATION':
 								DOMmain.appendChild(this.location(minecraftVersion));
 								break;
@@ -317,6 +320,7 @@ class Form
 			});
 			BLOCK.querySelector(`#form-item-modal-${baseString}-list-close`).addEventListener('click', () => BLOCK.remove());
 			TEMPLATE.updateLang(BLOCK, LANG.Data);
+			console.log(BLOCK, DOMelement);
 			DOMelement.querySelector(`#form-item-modal-${baseString}-list`).appendChild(BLOCK);
 		});
 	}
@@ -332,8 +336,29 @@ class Form
 		FORM_TEMPLATE.render(MODAL, 'itemModal.tp', { ID: hexaID() });
 		MCsearch.items(MODAL.querySelector('#form-item-modal-item'), minecraftVersion);
 		MCsearch.potions(MODAL.querySelector('#form-item-modal-potion'), minecraftVersion);
-		this.baseEnchantementList(MODAL, 'enchantements', minecraftVersion);
-		this.baseEnchantementList(MODAL, 'stored-enchantements', minecraftVersion);
+		this.baseEnchantementList(MODAL.querySelector('#form-item-modal-enchantements'), 'enchantements', minecraftVersion);
+		this.baseEnchantementList(MODAL.querySelector('#form-item-modal-stored-enchantements'), 'stored-enchantements', minecraftVersion);
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return MODAL;
+	}
+
+	static itemList(minecraftVersion = DefaultMinecraftVersion)
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'itemsListModal.tp', { ID: hexaID() });
+		MODAL.querySelector('#form-item-list-modal-add').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			const newItem = document.createElement('div');
+			FORM_TEMPLATE.render(newItem, 'itemBlock.tp');
+			const typeSourceEntity = this.item(minecraftVersion).querySelector('div.uk-modal-body');
+			typeSourceEntity.classList.add('insert-form-close', 'uk-margin');
+			typeSourceEntity.querySelector('button.uk-modal-close-default').remove();
+			newItem.querySelector('button.item-block-close').addEventListener('click', () => newItem.remove());
+			newItem.querySelector('div.insert-form-close').appendChild(typeSourceEntity);
+			MODAL.querySelector('#form-item-list-modal-list').appendChild(newItem);
+		});
 		TEMPLATE.updateLang(MODAL, LANG.Data);
 		return MODAL;
 	}

@@ -65,7 +65,7 @@
 					<label class="uk-form-label" for="form-item-modal-potion" lang="Edit.Criteria.Item.Potion"></label>
 					<div class="uk-form-controls" id="form-item-modal-potion"></div>
 				</div>
-				<div class="uk-margin">
+				<div id="form-item-modal-enchantements" class="uk-margin">
 					<h3 class="uk-heading-line">
 						<span lang="Edit.Criteria.Item.Enchantments"></span>
 					</h3>
@@ -74,7 +74,7 @@
 						<span uk-icon="icon: plus"></span>
 					</button>
 				</div>
-				<div class="uk-margin">
+				<div id="form-item-modal-stored-enchantements" class="uk-margin">
 					<h3 class="uk-heading-line">
 						<span lang="Edit.Criteria.Item.StoredEnchantments"></span>
 					</h3>

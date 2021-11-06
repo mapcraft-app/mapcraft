@@ -3324,10 +3324,10 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
   integrity sha1-2TPOuSBdgr3PSIb2dCvcK03qFG0=
 
-mapcraft-api@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-1.3.5.tgz#58cdf3a2ce5c2933ba8b19b09fed7366696c6955"
-  integrity sha512-FP3IZwbqMMrLCDSavkeLjEjnNlTE6foUac+AS7Ff6gDNRAWP+XnfxIJdLdnZV5WeCm1DhbfYwU9oQAuJNFpzJQ==
+mapcraft-api@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-1.3.6.tgz#7e9451510e0da81dbaf0fe7cd7d7b2caaba96910"
+  integrity sha512-lRX7dK8YyK/BsLr/otAxdDm3J3Geo6UPU1mK0SLOkgyMWzY5r9AP3X7BSVkHgRh19qRH8RJSFzLeXdhtf1Xe2g==
   dependencies:
     adm-zip "^0.5.9"
     better-sqlite3 "^7.4.3"

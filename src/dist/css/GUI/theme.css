@@ -542,6 +542,11 @@ input:checked + .uk-switch-span:before {
     cursor: pointer;
     padding: 0.2em 0 0 1em;
 }
+.search-dropdown-span span.span-select {
+	outline: 1px solid #1e87f0;
+    outline-offset: -1px;
+}
+
 .search-dropdown-span span:hover {
 	background-color: #707070;;
 }

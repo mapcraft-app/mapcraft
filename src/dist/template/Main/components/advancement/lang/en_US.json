@@ -13,8 +13,7 @@
 				"_Title": "Meta",
 				"AdvancementName": "Advancement name"
 			},
-			"Display":
-			{
+			"Display": {
 				"_Title": "Display",
 				"Title": "Title",
 				"TitleColor": "Title color",
@@ -66,7 +65,9 @@
 				"AddTrigger": "Add a trigger",
 				"Item": {
 					"Item": "Item",
+					"Items": "Items",
 					"EditItem": "Edit item",
+					"EditItems": "Edit items",
 					"NBT": "NBT",
 					"Count": "Count",
 					"Data": "Data",
