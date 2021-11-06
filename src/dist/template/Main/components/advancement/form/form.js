@@ -105,6 +105,9 @@ class Form
 							case '__FORM_LOCATION':
 								DOMmain.appendChild(this.location(minecraftVersion));
 								break;
+							case '__FORM_SLOT':
+								DOMmain.appendChild(this.slot());
+								break;
 							case '__FORM_STATE':
 								DOMmain.appendChild(this.state(minecraftVersion));
 								break;
@@ -342,6 +345,11 @@ class Form
 		return MODAL;
 	}
 
+	/**
+	 * Get Element form for item list
+	 * @param {String} minecraftVersion The version of minecraft desired, by default at the highest version supported by Mapcraft
+	 * @returns {Element} HTMLDivElement form for modal item list
+	 */
 	static itemList(minecraftVersion = DefaultMinecraftVersion)
 	{
 		const MODAL = document.createElement('div');
@@ -376,6 +384,14 @@ class Form
 		MCsearch.blocks(MODAL.querySelector('#form-location-modal-block-block'), minecraftVersion);
 		TEMPLATE.updateLang(MODAL, LANG.Data);
 		return MODAL;
+	}
+
+	static slot()
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'slotModal.tp', { ID: hexaID() });
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return (MODAL);
 	}
 
 	/**
