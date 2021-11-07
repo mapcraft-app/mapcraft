@@ -68,6 +68,8 @@ class Component
 		TEMPLATE.render(document.getElementById('edition-zone-template'), 'edit.tp', null);
 		TEMPLATE.updateLang(document.getElementById('edition-zone'), LANG.Data);
 		this.addTrigger();
+		this.addRecipe();
+		this.addLootTable();
 	}
 
 	static addTrigger()
@@ -78,11 +80,10 @@ class Component
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			event.stopPropagation();
 			const DOMelement = document.createElement('div');
+			TEMPLATE.render(DOMelement, 'criteria.tp', { ID: GenerateID });
 			DOMelement.id = GenerateID;
 			DOMelement.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
-			DOMelement.innerHTML = MODELS.criteria(GenerateID);
 			const SearchID = MCsearch.triggers(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
 			const CriteriaForm = DOMelement.querySelector(`#edit-criteria-form-${GenerateID}`);
 			DOMelement.querySelector(`#search-dropdown-${SearchID}`).addEventListener('input', (eventForm) =>
@@ -104,6 +105,34 @@ class Component
 			TriggerList.appendChild(DOMelement);
 			TEMPLATE.updateLang(TriggerList, LANG.Data);
 			++GenerateID;
+		});
+	}
+
+	static addRecipe()
+	{
+		document.getElementById('edit-rewards-recipes-add').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			const MODEL = document.createElement('div');
+			TEMPLATE.render(MODEL, 'reward_loot.tp');
+			MODEL.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
+			MODEL.querySelector('#edit-reward-loot-close').addEventListener('click', () => MODEL.remove());
+			document.getElementById('edit-rewards-recipes-list').appendChild(MODEL);
+		});
+	}
+
+	static addLootTable()
+	{
+		document.getElementById('edit-rewards-loottables-add').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			const MODEL = document.createElement('div');
+			TEMPLATE.render(MODEL, 'reward_loot.tp');
+			MODEL.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
+			MODEL.querySelector('#edit-reward-loot-close').addEventListener('click', () => MODEL.remove());
+			document.getElementById('edit-rewards-loottables-list').appendChild(MODEL);
 		});
 	}
 }

@@ -114,6 +114,11 @@
 					"Y": "Y",
 					"Z": "Z"
 				},
+				"Durability": {
+					"Durability": "Durability",
+					"Delta": "Delta",
+					"EditDurability": "Edit durability"
+				},
 				"Effects": {
 					"Effects": "Effects",
 					"EditEffects": "Edit effects",
@@ -173,14 +178,16 @@
 					"Full": "Full",
 					"Occupied": "Occupied"
 				},
+				"Lightning": {
+					"Lightning": "Lightning",
+					"Bystander": "Bystander"
+				},
 				"Form": {
 					"Biome": "Biome",
 					"Block": "Block",
 					"Effect": "Effect",
 					"Enchantement": "Enchantement",
-					"Entity": "Entity",
 					"Distance": "Distance",
-					"Item": "Item",
 					"Potion": "Potion",
 					"Tag": "Tag",
 					"Trigger": "Trigger",
@@ -195,8 +202,23 @@
 					"Villager": "Villager",
 					"Zombie": "Zombie",
 					"KillingBlow": "Killing blow",
-					"Rod": "Rod"
+					"Rod": "Rod",
+					"UniqueEntityTypes": "Unique Entity Types",
+					"LootTable": "Loot table",
+					"Recipe": "Recipe",
+					"SignalStrength": "Signal Strength",
+					"Projectile": "Projectile",
+					"Shooter": "Shooter"
 				}
+			},
+			"Rewards": {
+				"Title": "Rewards",
+				"Recipes": "Recipes",
+				"AddRecipe": "Add recipe",
+				"LootTables": "Loot tables",
+				"AddLoot": "Add loot table",
+				"Experience": "Experience",
+				"Function": "Function"
 			}
 		}
 	}

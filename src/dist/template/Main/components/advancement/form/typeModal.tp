@@ -62,7 +62,7 @@
 								<span lang="Edit.Criteria.Damage.Type.DirectEntity"></span>
 							</h3>
 						</a>
-						<div class="uk-accordion-content" id="form-type-modal-type-source-entity"></div>
+						<div class="uk-accordion-content" id="form-type-modal-type-direct-entity"></div>
 					</li>
 				</ul>
 			</div>

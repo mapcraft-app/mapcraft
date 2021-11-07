@@ -1,0 +1,8 @@
+[HTML]
+<button id="edit-reward-loot-close" class="uk-button uk-button-link criteria-close-button">
+	<span uk-icon="close"></span>
+</button>
+<div class="uk-margin">
+	<input class="uk-input" id="edit-reward-loot" type="text">
+</div>
+[/HTML]

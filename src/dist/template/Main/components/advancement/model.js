@@ -239,20 +239,3 @@ exports.advancement = {
 		function: String,
 	},
 };
-
-exports.criteria = (ID) => `
-<button id="edit-criteria-close-${ID}" class="uk-button uk-button-link criteria-close-button">
-	<span uk-icon="close"></span>
-</button>
-<div class="uk-margin">
-	<label class="uk-form-label" for="edit-criteria-name-${ID}" lang="Edit.Criteria.Name"></label>
-	<div class="uk-form-controls">
-		<input class="uk-input" id="edit-criteria-name-${ID}" type="text" value="default">
-	</div>
-</div>
-<div class="uk-margin">
-	<label class="uk-form-label" for="edit-criteria-trigger-${ID}" lang="Edit.Criteria.ChooseTrigger"></label>
-	<div class="uk-form-controls search-dropdown-parent" id="edit-criteria-trigger-${ID}"></div>
-</div>
-<div id="edit-criteria-form-${ID}" class="padding-criteria-form"></div>
-`;

@@ -90,6 +90,9 @@ class Form
 							case '__FORM_DISTANCE':
 								DOMmain.appendChild(this.distance());
 								break;
+							case '__FORM_DURABILITY':
+								DOMmain.appendChild(this.durability(minecraftVersion));
+								break;
 							case '__FORM_EFFECTS':
 								DOMmain.appendChild(this.effect(minecraftVersion));
 								break;
@@ -199,6 +202,22 @@ class Form
 	{
 		const MODAL = document.createElement('div');
 		FORM_TEMPLATE.render(MODAL, 'distanceModal.tp', { ID: hexaID() });
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return MODAL;
+	}
+
+	/**
+	 * Get Element form for durability
+	 * @returns {Element} HTMLDivElement form for durability distance
+	 */
+	static durability(minecraftVersion = DefaultMinecraftVersion)
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'durabilityModal.tp', { ID: hexaID() });
+		const itemForm = this.item(minecraftVersion).querySelector('div.uk-modal-body');
+		itemForm.classList.remove('uk-modal-body');
+		itemForm.querySelector('button.uk-modal-close-default').remove();
+		MODAL.querySelector('#form-durability-modal-item').appendChild(itemForm);
 		TEMPLATE.updateLang(MODAL, LANG.Data);
 		return MODAL;
 	}
@@ -323,7 +342,6 @@ class Form
 			});
 			BLOCK.querySelector(`#form-item-modal-${baseString}-list-close`).addEventListener('click', () => BLOCK.remove());
 			TEMPLATE.updateLang(BLOCK, LANG.Data);
-			console.log(BLOCK, DOMelement);
 			DOMelement.querySelector(`#form-item-modal-${baseString}-list`).appendChild(BLOCK);
 		});
 	}
@@ -361,7 +379,7 @@ class Form
 			const newItem = document.createElement('div');
 			FORM_TEMPLATE.render(newItem, 'itemBlock.tp');
 			const typeSourceEntity = this.item(minecraftVersion).querySelector('div.uk-modal-body');
-			typeSourceEntity.classList.add('insert-form-close', 'uk-margin');
+			typeSourceEntity.classList.add('uk-margin');
 			typeSourceEntity.querySelector('button.uk-modal-close-default').remove();
 			newItem.querySelector('button.item-block-close').addEventListener('click', () => newItem.remove());
 			newItem.querySelector('div.insert-form-close').appendChild(typeSourceEntity);
@@ -391,7 +409,7 @@ class Form
 		const MODAL = document.createElement('div');
 		FORM_TEMPLATE.render(MODAL, 'slotModal.tp', { ID: hexaID() });
 		TEMPLATE.updateLang(MODAL, LANG.Data);
-		return (MODAL);
+		return MODAL;
 	}
 
 	/**
@@ -425,7 +443,7 @@ class Form
 	static type(minecraftVersion = DefaultMinecraftVersion)
 	{
 		const MODAL = document.createElement('div');
-		FORM_TEMPLATE.render(MODAL, 'damageModal.tp', { ID: hexaID() });
+		FORM_TEMPLATE.render(MODAL, 'typeModal.tp', { ID: hexaID() });
 		//Type source entity
 		const typeSourceEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
 		typeSourceEntity.removeAttribute('class');
@@ -435,7 +453,7 @@ class Form
 		const typeDirectEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
 		typeDirectEntity.removeAttribute('class');
 		typeDirectEntity.querySelector('button.uk-modal-close-default').remove();
-		MODAL.querySelector('#form-type-modal-type-source-entity').appendChild(typeDirectEntity);
+		MODAL.querySelector('#form-type-modal-type-direct-entity').appendChild(typeDirectEntity);
 		TEMPLATE.updateLang(MODAL, LANG.Data);
 		return MODAL;
 	}

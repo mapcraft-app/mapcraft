@@ -192,6 +192,41 @@
 		</button>
 	</div>
 </li>
+<li>
+	<a class="uk-accordion-title" href="#">
+		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Rewards.Title"></span></h4>
+	</a>
+	<div id="edit-rewards" class="uk-accordion-content padding-accordion">
+		<div class="uk-margin padding-criteria-form">
+			<h5 class="uk-heading-line"><span lang="Edit.Rewards.Recipes"></span></h5>
+			<div id="edit-rewards-recipes-list"></div>
+			<button id="edit-rewards-recipes-add" class="uk-button uk-button-primary uk-button-large uk-width-1-1">
+				<span uk-icon="icon: plus"></span>
+				<span lang="Edit.Rewards.AddRecipe"></span>
+			</button>
+		</div>
+		<div class="uk-margin padding-criteria-form">
+			<h5 class="uk-heading-line"><span lang="Edit.Rewards.LootTables"></span></h5>
+			<div id="edit-rewards-loottables-list"></div>
+			<button id="edit-rewards-loottables-add" class="uk-button uk-button-primary uk-button-large uk-width-1-1">
+				<span uk-icon="icon: plus"></span>
+				<span lang="Edit.Rewards.AddLoot"></span>
+			</button>
+		</div>
+		<div class="uk-margin">
+			<label class="uk-form-label" for="edit-rewards-experience" lang="Edit.Rewards.Experience"></label>
+			<div class="uk-form-controls">
+				<input class="uk-input" id="edit-rewards-experience" type="number" min="0">
+			</div>
+		</div>
+		<div class="uk-margin">
+			<label class="uk-form-label" for="edit-rewards-function" lang="Edit.Rewards.Function"></label>
+			<div class="uk-form-controls">
+				<input class="uk-input" id="edit-rewards-function" type="text">
+			</div>
+		</div>
+	</div>
+</li>
 [/HTML]
 
 [CSS]
