@@ -5,15 +5,10 @@ const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 const LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
 const FORM_TEMPLATE = new MCtemplate(__dirname);
-const DefaultMinecraftVersion = '1.17';
+
+const DefaultMinecraftVersion = Mapcraft.GetConfig().Minecraft.LastestVersion;
 const PreGenerateList = {
-	blocks: MCutilities.GetDataGameElement('blocks'),
-	effects: MCutilities.GetDataGameElement('effects'),
 	enchantements: MCutilities.GetDataGameElement('enchantements'),
-	entities: MCutilities.GetDataGameElement('entities'),
-	items: MCutilities.GetDataGameElement('items'),
-	potions: MCutilities.GetDataGameElement('potions'),
-	tags: MCutilities.GetDataGameElement('tags'),
 	triggers: MCutilities.GetDataGameElement('triggers'),
 };
 const hexaID = () => crypto
@@ -57,31 +52,34 @@ class Form
 						switch (input.predefined)
 						{
 							case '__SEARCH_BIOMES':
-								MCsearch.biomes(DOMmain);
+								MCsearch.biomes(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_BLOCKS':
-								MCsearch.blocks(DOMmain);
+								MCsearch.blocks(DOMmain, minecraftVersion);
+								break;
+							case '__SEARCH_BLOCKSITEMS':
+								MCsearch.blocksItems(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_EFFECTS':
-								MCsearch.effects(DOMmain);
+								MCsearch.effects(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_ENCHANTEMENTS':
-								MCsearch.enchantements(DOMmain);
+								MCsearch.enchantements(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_ENTITIES':
-								MCsearch.entities(DOMmain);
+								MCsearch.entities(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_ITEMS':
-								MCsearch.items(DOMmain);
+								MCsearch.items(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_POTIONS':
-								MCsearch.potions(DOMmain);
+								MCsearch.potions(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_STRUCTURES':
-								MCsearch.structures(DOMmain);
+								MCsearch.structures(DOMmain, minecraftVersion);
 								break;
 							case '__SEARCH_TRIGGERS':
-								MCsearch.triggers(DOMmain);
+								MCsearch.triggers(DOMmain, minecraftVersion);
 								break;
 
 							case '__FORM_DAMAGE':
@@ -112,7 +110,7 @@ class Form
 								DOMmain.appendChild(this.slot());
 								break;
 							case '__FORM_STATE':
-								DOMmain.appendChild(this.state(minecraftVersion));
+								DOMmain.appendChild(this.state());
 								break;
 							case '__FORM_TYPE':
 								DOMmain.appendChild(this.type(minecraftVersion));
@@ -414,7 +412,6 @@ class Form
 
 	/**
 	 * Get Element form for block state
-	 * @param {String} minecraftVersion The version of minecraft desired, by default at the highest version supported by Mapcraft
 	 * @returns {Element} HTMLDivElement form for modal block state
 	 */
 	static state()

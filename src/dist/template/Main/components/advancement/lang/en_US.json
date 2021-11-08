@@ -3,6 +3,9 @@
 	"Icon": "bookmark",
 	"Notification" : "",
 	"Data" : {
+		"Graph": {
+			"Generate": "Generate advancement"
+		},
 		"Edit": {
 			"Root": {
 				"_Title": "Root",
@@ -208,7 +211,8 @@
 					"Recipe": "Recipe",
 					"SignalStrength": "Signal Strength",
 					"Projectile": "Projectile",
-					"Shooter": "Shooter"
+					"Shooter": "Shooter",
+					"Name": "Name"
 				}
 			},
 			"Rewards": {
@@ -220,6 +224,9 @@
 				"Experience": "Experience",
 				"Function": "Function"
 			}
+		},
+		"Error": {
+			"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)"
 		}
 	}
 }

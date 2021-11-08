@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const { MCutilities } = require('mapcraft-api').MCutilities;
+const { MCutilities } = require('mapcraft-api');
 const IPC = require('mapcraft-api').MCipc;
 const MCP = require('mapcraft-api').MCplugin;
 const Temp = require('mapcraft-api').MCtemplate;

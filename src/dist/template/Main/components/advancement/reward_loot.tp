@@ -3,6 +3,9 @@
 	<span uk-icon="close"></span>
 </button>
 <div class="uk-margin">
-	<input class="uk-input" id="edit-reward-loot" type="text">
+	<label class="uk-form-label" for="edit-reward-loot" lang="Edit.Criteria.Form.Name"></label>
+	<div class="uk-form-controls">
+		<input class="uk-input" id="edit-reward-loot" type="text">
+	</div>
 </div>
 [/HTML]

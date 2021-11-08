@@ -1,10 +1,21 @@
 const { shell } = require('electron');
+const crypto = require('crypto');
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 const MODELS = require('./model');
 const Form = require('./form/form');
 
+const randomString = () => crypto.randomBytes(8).toString('hex');
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
+
+const TRIGGERFORM = MCutilities.GetDataGameElement('triggers', Mapcraft.GetConfig().Minecraft.SelectedVersion);
+const GetTriggerForm = (id) =>
+{
+	for (const trigger of TRIGGERFORM)
+		if (trigger.id === id)
+			return trigger.form;
+	return undefined;
+};
 
 function OpenExternLink()
 {
@@ -60,16 +71,217 @@ class TreeJson
 
 const Tree = new TreeJson(); // eslint-disable-line
 
+class Json
+{
+	constructor()
+	{
+		this.json = {
+			display: {
+				icon: {
+					item: String('minecraft:dirt'),
+					nbt: String(''),
+				},
+				announce_to_chat: Boolean(false),
+				frame: String('task'),
+				hidden: Boolean(false),
+				show_toast: Boolean(false),
+			},
+			criteria: {},
+			requirements: [],
+			rewards: {
+				recipes: [],
+				loot: [],
+				experience: Number(0),
+				function: String(''),
+			},
+		};
+	}
+
+	generate()
+	{
+		const LIST = document.querySelectorAll('ul[id="edition-zone-template"] > li');
+		for (const ListItem of LIST)
+			switch (ListItem.querySelector('div.uk-accordion-content').id)
+			{
+				default:
+				case 'edit-root':
+					this.root(ListItem.querySelector('div.uk-accordion-content'));
+					break;
+				case 'edit-meta':
+					this.meta(ListItem.querySelector('div.uk-accordion-content'));
+					break;
+				case 'edit-display':
+					this.display(ListItem.querySelector('div.uk-accordion-content'));
+					break;
+				case 'edit-criteria':
+					this.criteria(ListItem.querySelector('div.uk-accordion-content'));
+					break;
+				case 'edit-rewards':
+					break;
+			}
+		console.log(this.json);
+	}
+
+	input(input)
+	{
+		if (!input.value)
+			return undefined;
+		switch (input.type.toLowerCase())
+		{
+			default:
+			case 'string':
+				if (!MCutilities.CheckIfStringIsLegalCharacter(String(input.value)))
+					throw new Error(LANG.Data.Error.ContainIllegalCharacter);
+				return String(input.value);
+			case 'number':
+				return Number(input.value);
+			case 'checkbox':
+				return Boolean(input.checked);
+			case 'color':
+				return String(input.value);
+		}
+	}
+
+	//#region Generate JSON
+	root(ListItem)
+	{
+		const namespace = this.input(ListItem.querySelector('#edit-root-namespace'));
+		const backgroundImage = ListItem.querySelector('#edit-root-background').value;
+		this.json.display.namespace = { text: namespace };
+		this.json.display.background = backgroundImage;
+	}
+
+	meta(ListItem)
+	{
+		const advancement = this.input(ListItem.querySelector('#edit-advancement-name'));
+		console.log(advancement);
+	}
+
+	display(ListItem)
+	{
+		const TitleModel = {
+			text: String(''),
+			color: String(''),
+			bold: Boolean(false),
+			italic: Boolean(false),
+			underlined: Boolean(false),
+			strikethrough: Boolean(false),
+			obfuscated: Boolean(false),
+		};
+		const displayTitle = (input, type, arg) =>
+		{
+			if (!this.json.display[type])
+				this.json.display[type] = TitleModel;
+			this.json.display[type][arg] = (input.type === 'checkbox') ? input.checked : input.value.trim();
+		};
+		this.json.display.frame = String('task');
+		const lengthString = 'edit-display-'.length;
+		const displayForm = document.createElement('form');
+		displayForm.appendChild(ListItem.cloneNode(true));
+		const _form = displayForm.elements;
+		for (const element of _form)
+		{
+			const ID = element.id.substr(lengthString);
+			if (element.classList.contains('search-dropdown-input'))
+			{
+				const value = MCsearch.GetValue(element);
+				if (value)
+					this.json.display.icon.item = `minecraft:${value}`;
+			}
+			else if (element.value.trim())
+			{
+				if (/^(title-)/.test(ID))
+					displayTitle(element, 'title', /(?<=title-)(.*)/.exec(ID)[0]);
+				else if (/^(description-)/.test(ID))
+					displayTitle(element, 'description', /(?<=description-)(.*)/.exec(ID)[0]);
+				switch (ID)
+				{
+					case 'nbt':
+						this.json.display.nbt = element.value.trim();
+						break;
+					case 'frame':
+						this.json.display.frame = element.value.trim();
+						break;
+					case 'check-toast':
+						this.json.display.show_toast = element.checked;
+						break;
+					case 'check-chat':
+						this.json.display.announce_to_chat = element.checked;
+						break;
+					case 'check-hidden':
+						this.json.display.hidden = element.checked;
+						break;
+					default:
+				}
+			}
+		}
+	}
+
+	criteria(ListItem)
+	{
+		const triggerList = ListItem.querySelectorAll('div[id="edit-criteria-list"] > div');
+		for (const trigger of triggerList)
+		{
+			const criteriaJson = {
+				trigger: String(''),
+				conditions: {},
+			};
+			const TriggerForm = trigger.querySelectorAll('div.padding-criteria-form > div > div.uk-margin');
+			const ID = MCsearch.GetValue(trigger.querySelector('div.search-dropdown-parent'));
+			if (!ID)
+				continue; //eslint-disable-line no-continue
+			criteriaJson.trigger = ID;
+			const boilerplate = GetTriggerForm(ID);
+			let x = 0;
+			for (const element of boilerplate)
+			{
+				if (typeof element.predefined !== 'undefined')
+				{
+					if (/^__SEARCH/.test(element.predefined))
+					{
+						const value = MCsearch.GetValue(TriggerForm[x].querySelector('div.search-dropdown'));
+						switch (element.predefined)
+						{
+							default:
+							case '__SEARCH_BIOMES':
+								criteriaJson.conditions.biome = `minecraft:${value}`;
+								break;
+							case '__SEARCH_BLOCKS':
+								criteriaJson.conditions.block = `minecraft:${value}`;
+								break;
+						}
+					}
+				}
+				else
+				{
+					const displayForm = document.createElement('form');
+					displayForm.appendChild(ListItem.cloneNode(true));
+					const form = displayForm.elements;
+				}
+				++x;
+			}
+			console.log(criteriaJson);
+		}
+	}
+	//#endregion
+}
+
 class Component
 {
 	static main()
 	{
 		TEMPLATE.render(document.getElementById('content'), 'advancement.tp', null);
 		TEMPLATE.render(document.getElementById('edition-zone-template'), 'edit.tp', null);
-		TEMPLATE.updateLang(document.getElementById('edition-zone'), LANG.Data);
+		TEMPLATE.updateLang(document.getElementById('content'), LANG.Data);
+		MCsearch.blocksItems(document.getElementById('edit-display-icon'), Mapcraft.GetConfig().Minecraft.SelectedVersion);
 		this.addTrigger();
 		this.addRecipe();
 		this.addLootTable();
+		document.getElementById('content').querySelector('#generate-json').addEventListener('click', () =>
+		{
+			const json = new Json();
+			json.generate();
+		});
 	}
 
 	static addTrigger()
@@ -81,8 +293,9 @@ class Component
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			const DOMelement = document.createElement('div');
-			TEMPLATE.render(DOMelement, 'criteria.tp', { ID: GenerateID });
+			TEMPLATE.render(DOMelement, 'criteria.tp', { ID: GenerateID, DefaultValue: `default_${randomString()}` });
 			DOMelement.id = GenerateID;
+			DOMelement.removeAttribute('tp');
 			DOMelement.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
 			const SearchID = MCsearch.triggers(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
 			const CriteriaForm = DOMelement.querySelector(`#edit-criteria-form-${GenerateID}`);
@@ -116,8 +329,10 @@ class Component
 			event.stopImmediatePropagation();
 			const MODEL = document.createElement('div');
 			TEMPLATE.render(MODEL, 'reward_loot.tp');
+			MODEL.removeAttribute('tp');
 			MODEL.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
 			MODEL.querySelector('#edit-reward-loot-close').addEventListener('click', () => MODEL.remove());
+			TEMPLATE.updateLang(MODEL, LANG.Data);
 			document.getElementById('edit-rewards-recipes-list').appendChild(MODEL);
 		});
 	}
@@ -130,8 +345,10 @@ class Component
 			event.stopImmediatePropagation();
 			const MODEL = document.createElement('div');
 			TEMPLATE.render(MODEL, 'reward_loot.tp');
+			MODEL.removeAttribute('tp');
 			MODEL.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
 			MODEL.querySelector('#edit-reward-loot-close').addEventListener('click', () => MODEL.remove());
+			TEMPLATE.updateLang(MODEL, LANG.Data);
 			document.getElementById('edit-rewards-loottables-list').appendChild(MODEL);
 		});
 	}

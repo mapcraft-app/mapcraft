@@ -24,6 +24,10 @@
 		</div>
 	</div>
 </div>
+<button class="uk-button uk-button-success" id="generate-json">
+	<span uk-icon="heart"></span>
+	<span lang="Graph.Generate"></span>
+</button>
 <form id="edition-zone" class="uk-form-horizontal uk-margin-small">
 	<ul id="edition-zone-template" uk-accordion="multiple: true">
 	</ul>

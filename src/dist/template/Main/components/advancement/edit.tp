@@ -144,17 +144,15 @@
 		</div>
 		<div class="uk-margin">
 			<label class="uk-form-label" for="edit-display-icon" lang="Edit.Display.Icon"></label>
-			<div class="uk-form-controls">
-				<input class="uk-input" id="edit-display-icon" type="text" value="Dirt">
-			</div>
+			<div class="uk-form-controls" id="edit-display-icon"></div>
 		</div>
 		<div class="uk-margin">
 			<label class="uk-form-label" for="edit-display-frame" lang="Edit.Display.Frame.Title"></label>
 			<div class="uk-form-controls">
 				<select id="edit-display-frame" class="uk-select">
-					<option value="Normal" lang="Edit.Display.Frame.Normal"></option>
-					<option value="Goal" lang="Edit.Display.Frame.Goal"></option>
-					<option value="Challenge" lang="Edit.Display.Frame.Challenge"></option>
+					<option value="task" lang="Edit.Display.Frame.Normal"></option>
+					<option value="goal" lang="Edit.Display.Frame.Goal"></option>
+					<option value="challenge" lang="Edit.Display.Frame.Challenge"></option>
 				</select>
 			</div>
 		</div>
