@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 const MODELS = require('./model');
 const Form = require('./form/form');
+const GetForm = require('./form/get');
 
 const randomString = () => crypto.randomBytes(8).toString('hex');
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
@@ -119,7 +120,7 @@ class Json
 				case 'edit-rewards':
 					break;
 			}
-		console.log(this.json);
+		console.log('%j', this.json);
 	}
 
 	input(input)
@@ -226,6 +227,7 @@ class Json
 				trigger: String(''),
 				conditions: {},
 			};
+			const CriteriaName = trigger.querySelector(`input[id="edit-criteria-name-${trigger.id}"]`).value;
 			const TriggerForm = trigger.querySelectorAll('div.padding-criteria-form > div > div.uk-margin');
 			const ID = MCsearch.GetValue(trigger.querySelector('div.search-dropdown-parent'));
 			if (!ID)
@@ -237,30 +239,58 @@ class Json
 			{
 				if (typeof element.predefined !== 'undefined')
 				{
+					if (typeof element.key === 'undefined')
+						throw new Error('No key declare');
+					const { key } = element;
 					if (/^__SEARCH/.test(element.predefined))
 					{
-						const value = MCsearch.GetValue(TriggerForm[x].querySelector('div.search-dropdown'));
+						const searchJson = GetForm.search(element.predefined, MCsearch.GetValue(TriggerForm[x].querySelector('div.search-dropdown')));
+						criteriaJson.conditions[key] = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
+					}
+					else if (/^__FORM/.test(element.predefined))
+					{
 						switch (element.predefined)
 						{
+							case '__FORM_ITEMS':
+								criteriaJson.conditions[key] = GetForm.items(TriggerForm[x].querySelector('div.uk-modal-body'));
+								break;
+							case '__FORM_ENTITIES':
+								criteriaJson.conditions[key] = GetForm.entity(TriggerForm[x].querySelector('div.uk-modal-body'));
+								break;
 							default:
-							case '__SEARCH_BIOMES':
-								criteriaJson.conditions.biome = `minecraft:${value}`;
-								break;
-							case '__SEARCH_BLOCKS':
-								criteriaJson.conditions.block = `minecraft:${value}`;
-								break;
 						}
+					}
+				}
+				else if (typeof element.element !== 'undefined' && element.element.tag === 'div' && typeof element.element.childs !== 'undefined')
+				{
+					criteriaJson.conditions[element.element.id] = {};
+					for (const child of element.element.childs)
+					{
+						const input = TriggerForm[x].querySelector(`input[id="${child.id}"]`);
+						if (input.nodeName === 'INPUT')
+							if (input.type === 'number')
+								criteriaJson.conditions[element.element.id][input.id] = Number(input.value);
+							else
+								criteriaJson.conditions[element.element.id][input.id] = String(input.value);
+						else if (input.nodeName === 'SELECT')
+							criteriaJson.conditions[element.element.id][input.id] = String(input.value);
 					}
 				}
 				else
 				{
 					const displayForm = document.createElement('form');
-					displayForm.appendChild(ListItem.cloneNode(true));
+					displayForm.appendChild(TriggerForm[x].cloneNode(true));
 					const form = displayForm.elements;
+					for (const input of form)
+						if (input.value)
+							if (input.type === 'number')
+								criteriaJson.conditions[input.id] = Number(input.value);
+							else
+								criteriaJson.conditions[input.id] = String(input.value);
 				}
 				++x;
 			}
-			console.log(criteriaJson);
+			this.json.criteria[CriteriaName] = criteriaJson;
 		}
 	}
 	//#endregion
