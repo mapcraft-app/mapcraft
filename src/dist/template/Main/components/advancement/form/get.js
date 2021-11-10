@@ -11,6 +11,19 @@ const getMinMax = (min, max) =>
 	return undefined;
 };
 
+/**
+ * Insert value in json if exist
+ * @param {json} json json object
+ * @param {string} key key of value
+ * @param {string} value value of key
+ * @param {constructor} type Specified object constructor, default to undefined
+ */
+const insert = (json, key, value, type = undefined) =>
+{
+	if (value)
+		json[key] = (type) ? type(value) : value; //eslint-disable-line no-param-reassign
+};
+
 class GetForm
 {
 	static search(element, value)
@@ -46,28 +59,14 @@ class GetForm
 	static items(modal)
 	{
 		const json = {};
-		let ret = MCsearch.GetValue(modal.querySelector('#form-item-modal-item'));
-		if (ret)
-			json.item = String(`minecraft:${ret}`);
-		ret = modal.querySelector('#form-item-modal-nbt').value;
-		if (ret)
-			json.nbt = String(ret);
-		ret = modal.querySelector('#form-item-modal-data').value;
-		if (ret)
-			json.data = Number(ret);
-		ret = modal.querySelector('#form-item-modal-tag').value;
-		if (ret)
-			json.tag = String(ret);
-		ret = getMinMax(modal.querySelector('#form-item-modal-count-min').value, modal.querySelector('#form-item-modal-count-max').value);
-		if (ret)
-			json.count = ret;
-		ret = getMinMax(modal.querySelector('#form-item-modal-durability-min').value, modal.querySelector('#form-item-modal-durability-max').value);
-		if (ret)
-			json.durability = ret;
-		ret = MCsearch.GetValue(modal.querySelector('#form-item-modal-potion'));
-		if (ret)
-			json.potion = `minecraft:${ret}`;
-			//enchantement form-item-modal-stored-enchantements-list
+		insert(json, 'item', MCsearch.GetValue(modal.querySelector('#form-item-modal-item')));
+		insert(json, 'nbt', modal.querySelector('#form-item-modal-nbt').value);
+		insert(json, 'data', modal.querySelector('#form-item-modal-data').value, Number);
+		insert(json, 'tag', modal.querySelector('#form-item-modal-tag').value);
+		insert(json, 'count', getMinMax(modal.querySelector('#form-item-modal-count-min').value, modal.querySelector('#form-item-modal-count-max').value));
+		insert(json, 'durability', getMinMax(modal.querySelector('#form-item-modal-durability-min').value, modal.querySelector('#form-item-modal-durability-max').value));
+		insert(json, 'potion', MCsearch.GetValue(modal.querySelector('#form-item-modal-potion')));
+		//enchantement form-item-modal-stored-enchantements-list
 		const enchantementsList = modal.querySelectorAll('#form-item-modal-enchantements-list > div');
 		if (enchantementsList.length > 0)
 		{
@@ -78,10 +77,8 @@ class GetForm
 				if (value)
 				{
 					const retJson = {};
-					ret = getMinMax(enchantement.querySelector('#form-item-modal-enchantements-list-level-min').value, enchantement.querySelector('#form-item-modal-enchantements-list-level-max').value);
+					insert(retJson, 'levels', getMinMax(enchantement.querySelector('#form-item-modal-enchantements-list-level-min').value, enchantement.querySelector('#form-item-modal-enchantements-list-level-max').value));
 					retJson.enchantement = String(value);
-					if (ret)
-						retJson.levels = ret;
 					json.enchantements.push(retJson);
 				}
 			}
@@ -97,10 +94,8 @@ class GetForm
 				if (value)
 				{
 					const retJson = {};
-					ret = getMinMax(enchantement.querySelector('#form-item-modal-stored-enchantements-list-level-min').value, enchantement.querySelector('#form-item-modal-stored-enchantements-list-level-max').value);
+					insert(retJson, 'levels', getMinMax(enchantement.querySelector('#form-item-modal-stored-enchantements-list-level-min').value, enchantement.querySelector('#form-item-modal-stored-enchantements-list-level-max').value));
 					retJson.enchantement = String(value);
-					if (ret)
-						retJson.levels = ret;
 					json.stored_enchantments.push(retJson);
 				}
 			}
@@ -115,12 +110,8 @@ class GetForm
 	static entity(modal)
 	{
 		const json = {};
-		let ret = MCsearch.GetValue(modal.querySelector('#form-entity-modal-entity'));
-		if (ret)
-			json.type = String(ret);
-		ret = modal.querySelector('#form-entity-modal-nbt').value;
-		if (ret)
-			json.nbt = String(ret);
+		insert(json, 'type', MCsearch.GetValue(modal.querySelector('#form-entity-modal-entity')));
+		insert(json, 'nbt', modal.querySelector('#form-entity-modal-nbt').value);
 		json.flags = {
 			is_baby: Boolean(modal.querySelector('#form-entity-modal-check-baby').checked),
 			is_on_fire: Boolean(modal.querySelector('#form-entity-modal-check-fire').checked),
@@ -168,26 +159,11 @@ class GetForm
 	static distance(modal)
 	{
 		const json = {};
-		let ret;
-		ret = getMinMax(modal.querySelector('#form-distance-modal-absolute-min').value, modal.querySelector('#form-distance-modal-absolute-max').value);
-		if (ret)
-			json.absolute = ret;
-
-		ret = getMinMax(modal.querySelector('#form-distance-modal-horizontal-min').value, modal.querySelector('#form-distance-modal-horizontal-max').value);
-		if (ret)
-			json.horizontal = ret;
-
-		ret = getMinMax(modal.querySelector('#form-distance-modal-x-min').value, modal.querySelector('#form-distance-modal-x-max').value);
-		if (ret)
-			json.x = ret;
-
-		ret = getMinMax(modal.querySelector('#form-distance-modal-y-min').value, modal.querySelector('#form-distance-modal-y-max').value);
-		if (ret)
-			json.y = ret;
-
-		ret = getMinMax(modal.querySelector('#form-distance-modal-z-min').value, modal.querySelector('#form-distance-modal-z-max').value);
-		if (ret)
-			json.z = ret;
+		insert(json, 'absolute', getMinMax(modal.querySelector('#form-distance-modal-absolute-min').value, modal.querySelector('#form-distance-modal-absolute-max').value));
+		insert(json, 'horizontal', getMinMax(modal.querySelector('#form-distance-modal-horizontal-min').value, modal.querySelector('#form-distance-modal-horizontal-max').value));
+		insert(json, 'x', getMinMax(modal.querySelector('#form-distance-modal-x-min').value, modal.querySelector('#form-distance-modal-x-max').value));
+		insert(json, 'y', getMinMax(modal.querySelector('#form-distance-modal-y-min').value, modal.querySelector('#form-distance-modal-y-max').value));
+		insert(json, 'z', getMinMax(modal.querySelector('#form-distance-modal-z-min').value, modal.querySelector('#form-distance-modal-z-max').value));
 		return json;
 	}
 
@@ -198,19 +174,10 @@ class GetForm
 	static location(modal)
 	{
 		const json = {};
-		let ret = MCsearch.GetValue(modal.querySelector('#form-location-modal-biome'));
-		if (ret)
-			json.biome = String(`minecraft:${ret}`);
-		ret = modal.querySelector('#form-location-modal-dimension').value;
-		if (ret)
-			json.dimension = String(ret);
-		ret = MCsearch.GetValue(modal.querySelector('#form-location-modal-feature'));
-		if (ret)
-			json.feature = String(ret);
-		ret = modal.querySelector('#form-location-modal-check-smokey').checked;
-		if (ret)
-			json.smokey = Boolean(ret);
-
+		insert(json, 'biome', MCsearch.GetValue(modal.querySelector('#form-location-modal-biome')));
+		insert(json, 'dimension', modal.querySelector('#form-location-modal-dimension').value);
+		insert(json, 'feature', MCsearch.GetValue(modal.querySelector('#form-location-modal-feature')));
+		insert(json, 'smokey', modal.querySelector('#form-location-modal-check-smokey').checked);
 		//Block
 		const tabBlock = {
 			block: MCsearch.GetValue(modal.querySelector('#form-location-modal-block-block')),
@@ -260,9 +227,9 @@ class GetForm
 		}
 
 		//Light
-		ret = getMinMax(modal.querySelector('#form-location-modal-light-min').value, modal.querySelector('#form-location-modal-light-max').value);
-		if (ret)
-			json.light = { light: ret };
+		const retLight = getMinMax(modal.querySelector('#form-location-modal-light-min').value, modal.querySelector('#form-location-modal-light-max').value);
+		if (retLight)
+			json.light = { light: retLight };
 		return json;
 	}
 }
