@@ -21,6 +21,7 @@
 					<label class="uk-form-label" for="form-location-modal-dimension" lang="Edit.Criteria.Location.Dimension"></label>
 					<div class="uk-form-controls">
 						<select class="uk-select" id="form-location-modal-dimension">
+							<option value="default" lang="Edit.Criteria.Location.Default"></option>
 							<option value="overworld" lang="Edit.Criteria.Location.Overworld"></option>
 							<option value="the_nether" lang="Edit.Criteria.Location.Nether"></option>
 							<option value="the_end" lang="Edit.Criteria.Location.End"></option>

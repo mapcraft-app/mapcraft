@@ -120,7 +120,7 @@ class Json
 				case 'edit-rewards':
 					break;
 			}
-		console.log('%j', this.json);
+		console.log(this.json);
 	}
 
 	input(input)
@@ -232,7 +232,7 @@ class Json
 			const ID = MCsearch.GetValue(trigger.querySelector('div.search-dropdown-parent'));
 			if (!ID)
 				continue; //eslint-disable-line no-continue
-			criteriaJson.trigger = ID;
+			criteriaJson.trigger = `minecraft:${ID}`;
 			const boilerplate = GetTriggerForm(ID);
 			let x = 0;
 			for (const element of boilerplate)
@@ -245,20 +245,37 @@ class Json
 					if (/^__SEARCH/.test(element.predefined))
 					{
 						const searchJson = GetForm.search(element.predefined, MCsearch.GetValue(TriggerForm[x].querySelector('div.search-dropdown')));
-						criteriaJson.conditions[key] = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
+						if (Object.values(searchJson)[0])
+							if (key === '__ROOT')
+								criteriaJson.conditions = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
+							else
+								criteriaJson.conditions[key] = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
 					}
 					else if (/^__FORM/.test(element.predefined))
 					{
-						switch (element.predefined)
-						{
-							case '__FORM_ITEMS':
-								criteriaJson.conditions[key] = GetForm.items(TriggerForm[x].querySelector('div.uk-modal-body'));
-								break;
-							case '__FORM_ENTITIES':
-								criteriaJson.conditions[key] = GetForm.entity(TriggerForm[x].querySelector('div.uk-modal-body'));
-								break;
-							default:
-						}
+						const formJson = GetForm.form(element.predefined, TriggerForm[x].querySelector('div.uk-modal-body'));
+						if (Object.keys(formJson).length)
+							if (key === '__ROOT')
+							{
+								criteriaJson.conditions = formJson;
+							}
+							else if (Array.isArray(key))
+							{
+								const lastElement = key.length - 1;
+								let bubbleNode = criteriaJson.conditions;
+								key.forEach((item, i) =>
+								{
+									if (i === lastElement)
+										bubbleNode[item] = formJson;
+									else if (!criteriaJson.conditions[item])
+										bubbleNode[item] = {};
+									bubbleNode = bubbleNode[item];
+								});
+							}
+							else
+							{
+								criteriaJson.conditions[key] = formJson;
+							}
 					}
 				}
 				else if (typeof element.element !== 'undefined' && element.element.tag === 'div' && typeof element.element.childs !== 'undefined')

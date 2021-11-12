@@ -106,6 +106,9 @@ class Form
 							case '__FORM_LOCATION':
 								DOMmain.appendChild(this.location(minecraftVersion));
 								break;
+							case '__FORM_PLAYER':
+								DOMmain.appendChild(this.player());
+								break;
 							case '__FORM_SLOT':
 								DOMmain.appendChild(this.slot());
 								break;
@@ -240,7 +243,7 @@ class Form
 			FORM_TEMPLATE.render(newEffect, 'effectBlock.tp');
 			newEffect.classList.add('edit-block', 'edit-block-criteria', 'uk-margin');
 			newEffect.querySelector('#form-effects-block-close').addEventListener('click', () => newEffect.remove());
-			MCsearch.blocks(newEffect.querySelector('#form-effects-block-search'), minecraftVersion);
+			MCsearch.effects(newEffect.querySelector('#form-effects-block-search'), minecraftVersion);
 			TEMPLATE.updateLang(newEffect, LANG.Data);
 			Node.List.appendChild(newEffect);
 		});
@@ -398,6 +401,24 @@ class Form
 		MCsearch.biomes(MODAL.querySelector('#form-location-modal-biome'), minecraftVersion);
 		MCsearch.structures(MODAL.querySelector('#form-location-modal-feature'), minecraftVersion);
 		MCsearch.blocks(MODAL.querySelector('#form-location-modal-block-block'), minecraftVersion);
+		TEMPLATE.updateLang(MODAL, LANG.Data);
+		return MODAL;
+	}
+
+	static player()
+	{
+		const MODAL = document.createElement('div');
+		FORM_TEMPLATE.render(MODAL, 'playerModal.tp', { ID: hexaID() });
+		MODAL.querySelector('#form-player-modal-add').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			const newState = document.createElement('div');
+			FORM_TEMPLATE.render(newState, 'playerBlock.tp');
+			newState.querySelector('button.state-block-close').addEventListener('click', () => newState.remove());
+			TEMPLATE.updateLang(newState, LANG.Data);
+			MODAL.querySelector('#form-player-modal-list').appendChild(newState);
+		});
 		TEMPLATE.updateLang(MODAL, LANG.Data);
 		return MODAL;
 	}

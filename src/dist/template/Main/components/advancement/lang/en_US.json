@@ -128,6 +128,25 @@
 					"Amplifier": "Amplifier",
 					"Duration": "Duration"
 				},
+				"Player":
+				{
+					"Player": "Player",
+					"EditPlayer": "Edit player",
+					"Gamemode" : {
+						"Gamemode": "Gamemode",
+						"Adventure": "Adventure",
+						"Creative": "Creative",
+						"Spectator": "Spectator",
+						"Survival": "Survival"
+					},
+					"Stats":
+					{
+						"Stats": "Stats",
+						"Type": "Type",
+						"Stat": "Stat",
+						"Value": "Value"
+					}
+				},
 				"Location": {
 					"Location": "Location",
 					"EditLocation": "Edit location",
@@ -138,6 +157,7 @@
 					"Light": "Light",
 					"Position": "Position",
 					"IsSmokey": "Is smokey ?",
+					"Default": "Select dimension",
 					"Overworld": "Overworld",
 					"Nether": "Nether",
 					"End": "End"
