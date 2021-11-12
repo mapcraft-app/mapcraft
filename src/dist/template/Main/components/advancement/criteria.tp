@@ -5,7 +5,7 @@
 <div class="uk-margin">
 	<label class="uk-form-label" for="edit-criteria-name-{ID}" lang="Edit.Criteria.Name"></label>
 	<div class="uk-form-controls">
-		<input class="uk-input" id="edit-criteria-name-{ID}" type="text" value="{DefaultValue}">
+		<input class="uk-input" id="edit-criteria-name-{ID}" type="text" defaultId="{DefaultValue}" value="{DefaultValue}">
 	</div>
 </div>
 <div class="uk-margin">

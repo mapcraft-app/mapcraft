@@ -192,6 +192,19 @@
 </li>
 <li>
 	<a class="uk-accordion-title" href="#">
+		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Requirements.Title"></span></h4>
+	</a>
+	<div id="edit-requirements" class="uk-accordion-content padding-accordion">
+		<div id="edit-requirements-error"></div>
+		<div id="edit-requirements-list"></div>
+		<button id="edit-requirements-add" class="uk-button uk-button-primary uk-button-large uk-width-1-1">
+			<span uk-icon="icon: plus"></span>
+			<span lang="Edit.Requirements.Add"></span>
+		</button>
+	</div>
+</li>
+<li>
+	<a class="uk-accordion-title" href="#">
 		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Rewards.Title"></span></h4>
 	</a>
 	<div id="edit-rewards" class="uk-accordion-content padding-accordion">

@@ -235,6 +235,10 @@
 					"Name": "Name"
 				}
 			},
+			"Requirements": {
+				"Title": "Requirements",
+				"Add": "Add requirement"
+			},
 			"Rewards": {
 				"Title": "Rewards",
 				"Recipes": "Recipes",
@@ -246,7 +250,8 @@
 			}
 		},
 		"Error": {
-			"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)"
+			"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)",
+			"NoCriteria": "No criteria was created"
 		}
 	}
 }

@@ -117,7 +117,11 @@ class Json
 				case 'edit-criteria':
 					this.criteria(ListItem.querySelector('div.uk-accordion-content'));
 					break;
+				case 'edit-requirements':
+					this.requirements(ListItem.querySelector('div.uk-accordion-content'));
+					break;
 				case 'edit-rewards':
+					this.rewards(ListItem.querySelector('div.uk-accordion-content'));
 					break;
 			}
 		console.log(this.json);
@@ -310,6 +314,47 @@ class Json
 			this.json.criteria[CriteriaName] = criteriaJson;
 		}
 	}
+
+	requirements(ListItem)
+	{
+		const requirementsList = ListItem.querySelectorAll('div[id="edit-requirements-list"] > div');
+		if (!requirementsList.length)
+		{
+			const newRequirement = [];
+			const triggerList = document.querySelectorAll('div[id="edit-criteria-list"] > div');
+			for (const trigger of triggerList)
+				newRequirement.push(trigger.querySelector(`input[id="edit-criteria-name-${trigger.id}"]`).value);
+			this.json.requirements.push(newRequirement);
+		}
+		else
+		{
+			for (const requirement of requirementsList)
+			{
+				const inputs = requirement.querySelectorAll('input.uk-checkbox');
+				let isEmpty = 0;
+				const newRequirement = [];
+				for (const input of inputs)
+					if (!input.checked)
+						++isEmpty;
+					else
+						newRequirement.push(String(input.value));
+				if (isEmpty < inputs.length)
+					this.json.requirements.push(newRequirement);
+			}
+		}
+	}
+
+	rewards(ListItem)
+	{
+		const recipesList = ListItem.querySelectorAll('#edit-rewards-recipes-list input[id="edit-reward-loot"]');
+		for (const recipe of recipesList)
+			this.json.rewards.recipes.push(this.input(recipe));
+		const lootList = ListItem.querySelectorAll('#edit-rewards-loottables-list input[id="edit-reward-loot"]');
+		for (const loot of lootList)
+			this.json.rewards.loot.push(this.input(loot));
+		this.json.rewards.experience = this.input(ListItem.querySelector('#edit-rewards-experience'));
+		this.json.rewards.function = this.input(ListItem.querySelector('#edit-rewards-function'));
+	}
 	//#endregion
 }
 
@@ -322,6 +367,7 @@ class Component
 		TEMPLATE.updateLang(document.getElementById('content'), LANG.Data);
 		MCsearch.blocksItems(document.getElementById('edit-display-icon'), Mapcraft.GetConfig().Minecraft.SelectedVersion);
 		this.addTrigger();
+		this.addRequirement();
 		this.addRecipe();
 		this.addLootTable();
 		document.getElementById('content').querySelector('#generate-json').addEventListener('click', () =>
@@ -346,6 +392,18 @@ class Component
 			DOMelement.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
 			const SearchID = MCsearch.triggers(DOMelement.querySelector(`#edit-criteria-trigger-${GenerateID}`));
 			const CriteriaForm = DOMelement.querySelector(`#edit-criteria-form-${GenerateID}`);
+			DOMelement.querySelector(`#edit-criteria-name-${GenerateID}`).addEventListener('input', (eventName) =>
+			{
+				const defaultID = eventName.target.getAttribute('defaultId');
+				console.log(defaultID, eventName.target.value);
+				const requirementList = document.querySelectorAll(`#edit-requirements-list input[defaultId="${defaultID}"]`);
+				if (requirementList.length)
+					for (const input of requirementList)
+					{
+						input.setAttribute('value', eventName.target.value);
+						input.nextSibling.innerText = String(eventName.target.value);
+					}
+			});
 			DOMelement.querySelector(`#search-dropdown-${SearchID}`).addEventListener('input', (eventForm) =>
 			{
 				const FORM = Form.printTrigger(eventForm.target.value);
@@ -361,10 +419,97 @@ class Component
 					TEMPLATE.cleanNode(CriteriaForm);
 				}
 			});
-			DOMelement.querySelector(`#edit-criteria-close-${GenerateID}`).addEventListener('click', () => DOMelement.remove());
+			DOMelement.querySelector(`#edit-criteria-close-${GenerateID}`).addEventListener('click', () =>
+			{
+				DOMelement.remove();
+				const criteriaList = document.querySelectorAll('div[id="edit-criteria-list"] > div');
+				if (!criteriaList.length)
+				{
+					const oldRequirements = document.querySelectorAll('div[id="edit-requirements-list"] > div');
+					for (const requirement of oldRequirements)
+						requirement.remove();
+				}
+				else
+				{
+					this.regenerateRequirementList();
+				}
+			});
 			TriggerList.appendChild(DOMelement);
 			TEMPLATE.updateLang(TriggerList, LANG.Data);
 			++GenerateID;
+			this.regenerateRequirementList();
+		});
+	}
+
+	static generateRequirementList()
+	{
+		const newCheckbox = (value, defaultId) =>
+		{
+			const labelCheck = document.createElement('label');
+			const inputCheck = document.createElement('input');
+			const spanCheck = document.createElement('span');
+			inputCheck.classList.add('uk-checkbox', 'uk-margin-right');
+			inputCheck.setAttribute('type', 'checkbox');
+			inputCheck.setAttribute('value', String(value));
+			inputCheck.setAttribute('defaultId', String(defaultId));
+			spanCheck.innerText = String(value);
+			labelCheck.appendChild(inputCheck);
+			labelCheck.appendChild(spanCheck);
+			return labelCheck;
+		};
+
+		const triggerList = document.querySelectorAll('div[id="edit-criteria-list"] > div');
+		const checkList = document.createElement('div');
+		checkList.classList.add('uk-flex', 'uk-flex-around', 'uk-flex-middle', 'uk-flex-wrap');
+		checkList.setAttribute('id', 'edit-requirement-list');
+		for (const trigger of triggerList)
+		{
+			const input = trigger.querySelector(`input[id="edit-criteria-name-${trigger.id}"]`);
+			checkList.appendChild(newCheckbox(input.value, input.getAttribute('defaultId')));
+		}
+		return checkList;
+	}
+
+	static regenerateRequirementList()
+	{
+		const checkList = this.generateRequirementList();
+		const oldRequirement = document.querySelectorAll('#edit-requirements-list div.uk-margin > div');
+		for (const requirementList of oldRequirement)
+		{
+			const newList = checkList.cloneNode(true);
+			const inputs = requirementList.querySelectorAll('input[type="checkbox"]');
+			for (const input of inputs)
+			{
+				const selectInput = newList.querySelector(`input[value="${input.value}"]`);
+				if (selectInput && input.checked)
+					selectInput.checked = true;
+				else if (selectInput)
+					selectInput.checked = false;
+			}
+			requirementList.replaceWith(newList);
+		}
+	}
+
+	static addRequirement()
+	{
+		document.getElementById('edit-requirements-add').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (!document.querySelectorAll('div[id="edit-criteria-list"] > div').length)
+			{
+				MCutilities.CreateAlert('warning', document.getElementById('edit-requirements-error'), LANG.Data.Error.NoCriteria);
+				return;
+			}
+			const MODEL = document.createElement('div');
+			TEMPLATE.render(MODEL, 'requirement.tp');
+			MODEL.removeAttribute('tp');
+			MODEL.classList.add('edit-block', 'margin-criteria-list-element', 'edit-block-criteria');
+			MODEL.querySelector('#edit-requirement-checkbox').replaceWith(this.generateRequirementList());
+			this.regenerateRequirementList();
+			MODEL.querySelector('#edit-requirement-close').addEventListener('click', () => MODEL.remove());
+			TEMPLATE.updateLang(MODEL, LANG.Data);
+			document.getElementById('edit-requirements-list').appendChild(MODEL);
 		});
 	}
 
