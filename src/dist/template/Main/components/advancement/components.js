@@ -76,6 +76,8 @@ class Json
 {
 	constructor()
 	{
+		this.isError = false;
+		this.errors = [];
 		this.json = {
 			display: {
 				icon: {
@@ -100,8 +102,17 @@ class Json
 
 	generate()
 	{
+		this.isError = false;
+		this.errors = [];
 		const LIST = document.querySelectorAll('ul[id="edition-zone-template"] > li');
 		for (const ListItem of LIST)
+		{
+			const inputs = ListItem.querySelectorAll('input.uk-form-danger');
+			for (const input of inputs)
+			{
+				input.classList.remove('uk-form-danger');
+				input.nextSibling.remove();
+			}
 			switch (ListItem.querySelector('div.uk-accordion-content').id)
 			{
 				default:
@@ -124,7 +135,17 @@ class Json
 					this.rewards(ListItem.querySelector('div.uk-accordion-content'));
 					break;
 			}
-		console.log(this.json);
+		}
+		if (!this.isError)
+			return this.json;
+		for (const error of this.errors)
+		{
+			const span = document.createElement('span');
+			span.innerText = String(error.message);
+			error.element.parentNode.insertBefore(span, error.element.nextSibling);
+			error.element.classList.add('uk-form-danger');
+		}
+		return undefined;
 	}
 
 	input(input)
@@ -134,9 +155,13 @@ class Json
 		switch (input.type.toLowerCase())
 		{
 			default:
-			case 'string':
+			case 'text':
 				if (!MCutilities.CheckIfStringIsLegalCharacter(String(input.value)))
-					throw new Error(LANG.Data.Error.ContainIllegalCharacter);
+				{
+					this.isError = true;
+					this.errors.push({ message: LANG.Data.Error.ContainIllegalCharacter, element: input });
+					return undefined;
+				}
 				return String(input.value);
 			case 'number':
 				return Number(input.value);
@@ -353,7 +378,7 @@ class Json
 		for (const loot of lootList)
 			this.json.rewards.loot.push(this.input(loot));
 		this.json.rewards.experience = this.input(ListItem.querySelector('#edit-rewards-experience'));
-		this.json.rewards.function = this.input(ListItem.querySelector('#edit-rewards-function'));
+		this.json.rewards.function = ListItem.querySelector('#edit-rewards-function').value;
 	}
 	//#endregion
 }
@@ -372,8 +397,10 @@ class Component
 		this.addLootTable();
 		document.getElementById('content').querySelector('#generate-json').addEventListener('click', () =>
 		{
-			const json = new Json();
-			json.generate();
+			const newJson = new Json();
+			const json = newJson.generate();
+			if (json)
+				console.log(json);
 		});
 	}
 
