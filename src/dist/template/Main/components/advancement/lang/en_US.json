@@ -4,17 +4,15 @@
 	"Notification" : "",
 	"Data" : {
 		"Graph": {
-			"Generate": "Generate advancement"
+			"NewAdvancement": "New advancement",
+			"Generate": "Generate advancement",
+			"Title": "Title of advancement"
 		},
 		"Edit": {
 			"Root": {
 				"_Title": "Root",
 				"Namespace": "Namespace",
 				"BackgroundImage": "Background image"
-			},
-			"Meta": {
-				"_Title": "Meta",
-				"AdvancementName": "Advancement name"
 			},
 			"Display": {
 				"_Title": "Display",

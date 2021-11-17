@@ -1,0 +1,14 @@
+/**
+|
+O --
+
+*/
+[HTML]
+<div class="line-block">
+	<button class="uk-icon-button uk-icon" uk-icon="more"></button>
+	<svg viewBox="0 0 50 94">
+		<line x1="25" y1="47" x2="50" y2="47" style="stroke:#0870b2;stroke-width:2"></line>
+		<line x1="25" y1="0" x2="25" y2="48" style="stroke:#0870b2;stroke-width:2"></line>
+	</svg>
+</div>
+[/HTML]

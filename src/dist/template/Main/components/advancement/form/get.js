@@ -21,7 +21,7 @@ const isEmpty = (json) => (!Object.keys(json).length);
  */
 const insert = (json, key, value, type = undefined) =>
 {
-	if ((typeof value === 'string' && value) || (typeof value === 'object' && Object.keys(value).length))
+	if (value || (typeof value === 'object' && Object.keys(value).length))
 		json[key] = (type) ? type(value) : value; //eslint-disable-line no-param-reassign
 };
 
@@ -94,8 +94,8 @@ class GetForm
 		insert(json, 'dealt', getMinMax(modal.querySelector('#form-damage-modal-dealt-min').value, modal.querySelector('#form-damage-modal-dealt-max').value));
 		insert(json, 'taken', getMinMax(modal.querySelector('#form-damage-modal-taken-min').value, modal.querySelector('#form-damage-modal-taken-max').value));
 		insert(json, 'blocked', modal.querySelector('#form-damage-modal-blocked').checked, Boolean);
-		insert(json, 'type', modal.querySelector('#form-damage-modal-type > div'));
-		insert(json, 'source_entity', modal.querySelector('#form-damage-modal-entity > div'));
+		insert(json, 'type', this.type(modal.querySelector('#form-damage-modal-type > div')));
+		insert(json, 'source_entity', this.entity(modal.querySelector('#form-damage-modal-entity > div')));
 		return json;
 	}
 
@@ -148,6 +148,7 @@ class GetForm
 		insert(json, 'type', MCsearch.GetValue(modal.querySelector('#form-entity-modal-entity')));
 		insert(json, 'nbt', modal.querySelector('#form-entity-modal-nbt').value);
 		//flags
+		json.flags = {};
 		const flagsList = {
 			is_baby: Boolean(modal.querySelector('#form-entity-modal-check-baby').checked),
 			is_on_fire: Boolean(modal.querySelector('#form-entity-modal-check-fire').checked),
@@ -155,16 +156,11 @@ class GetForm
 			is_sprinting: Boolean(modal.querySelector('#form-entity-modal-check-sprint').checked),
 			is_swimming: Boolean(modal.querySelector('#form-entity-modal-check-swim').checked),
 		};
-		if (flagsList.is_baby || flagsList.is_on_fire || flagsList.is_sneaking
-			|| flagsList.is_sprinting || flagsList.is_swimming)
-		{
-			json.flags = {};
-			insert(json.flags, 'is_baby', flagsList.is_baby);
-			insert(json.flags, 'is_on_fire', flagsList.is_on_fire);
-			insert(json.flags, 'is_sneaking', flagsList.is_sneaking);
-			insert(json.flags, 'is_sprinting', flagsList.is_sprinting);
-			insert(json.flags, 'is_swimming', flagsList.is_swimming);
-		}
+		insert(json.flags, 'is_baby', flagsList.is_baby, Boolean);
+		insert(json.flags, 'is_on_fire', flagsList.is_on_fire, Boolean);
+		insert(json.flags, 'is_sneaking', flagsList.is_sneaking, Boolean);
+		insert(json.flags, 'is_sprinting', flagsList.is_sprinting, Boolean);
+		insert(json.flags, 'is_swimming', flagsList.is_swimming, Boolean);
 		//effects
 		const effectsList = modal.querySelectorAll('#form-entity-modal-effect-list > div');
 		if (effectsList.length > 0)
@@ -183,6 +179,23 @@ class GetForm
 					jsoneffect.duration = { min: Number(duration), max: Number(duration) };
 				json.effects[`minecraft:${name}`] = jsoneffect;
 			}
+		}
+		//distance
+		const distanceList = {
+			absolute: getMinMax(modal.querySelector('#form-distance-modal-absolute-min').value, modal.querySelector('#form-distance-modal-absolute-max').value),
+			horizontal: getMinMax(modal.querySelector('#form-distance-modal-horizontal-min').value, modal.querySelector('#form-distance-modal-horizontal-max').value),
+			x: getMinMax(modal.querySelector('#form-distance-modal-x-min').value, modal.querySelector('#form-distance-modal-x-max').value),
+			y: getMinMax(modal.querySelector('#form-distance-modal-y-min').value, modal.querySelector('#form-distance-modal-y-max').value),
+			z: getMinMax(modal.querySelector('#form-distance-modal-z-min').value, modal.querySelector('#form-distance-modal-z-max').value),
+		};
+		if (distanceList.absolute || distanceList.horizontal || distanceList.x || distanceList.y || distanceList.z)
+		{
+			json.distance = {};
+			insert(json.distance, 'absolute', distanceList.absolute);
+			insert(json.distance, 'horizontal', distanceList.horizontal);
+			insert(json.distance, 'x', distanceList.x);
+			insert(json.distance, 'y', distanceList.y);
+			insert(json.distance, 'z', distanceList.z);
 		}
 		//location
 		insert(json, 'location', this.location(modal.querySelector('#form-entity-modal-location > div')));
@@ -400,15 +413,13 @@ class GetForm
 
 	static victim(modal)
 	{
-		const json = {};
+		const json = [];
 		const victimList = modal.querySelectorAll('#form-victim-modal-list div.uk-modal-body');
-		if (victimList.length > 0)
-			json.victims = [];
 		for (const victim of victimList)
 		{
 			const newVictim = this.entity(victim);
 			if (Object.keys(newVictim).length)
-				json.victims.push(newVictim);
+				json.push(newVictim);
 		}
 		return json;
 	}

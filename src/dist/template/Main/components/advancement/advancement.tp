@@ -2,32 +2,24 @@
 <div id="advancement-error"></div>
 <div class="uk-flex graph-zone">
 	<div class="uk-width-1-4 list">
-		<ul id="sound-list" class="uk-list uk-list-striped list-border uk-accordion" uk-accordion="multiple: false">
-			<li>One</li>
-			<li>Two</li>
-			<li>One</li>
-			<li>Two</li>
-			<li>One</li>
-			<li>Two</li>
-			<li>One</li>
-			<li>Two</li>
-			<li>One</li>
-			<li>Two</li>
-			<li>One</li>
-			<li>Two</li>
+		<button class="uk-button uk-button-success uk-margin-top uk-margin-left uk-margin-right uk-margin-bottom" id="create-new-advancement">
+			<span lang="Graph.NewAdvancement"></span>
+		</button>
+		<ul id="advancement-list" class="uk-list uk-list-striped list-border uk-accordion" uk-accordion="multiple: false">
 		</ul>
 	</div>
-	<div class="uk-width-3-4 graph">
-		<div class="block">
-			<h5 class="block-text">Title advancements and to long for this</h5>
-			<img class="block-img" src="./dist/img/assets/block/stone.webp" />
+	<div class="uk-width-3-4" style="position: relative;">
+		<div class="graph"></div>
+		<div class="graph-input">
+			<input class="uk-input" id="name-advancement" type="text"/>
+			<button class="uk-button uk-button-success" id="generate-advancement">
+				<span uk-icon="heart"></span>
+				<span lang="Graph.Generate"></span>
+			</button>
 		</div>
 	</div>
 </div>
-<button class="uk-button uk-button-success" id="generate-json">
-	<span uk-icon="heart"></span>
-	<span lang="Graph.Generate"></span>
-</button>
+
 <form id="edition-zone" class="uk-form-horizontal uk-margin-small">
 	<ul id="edition-zone-template" uk-accordion="multiple: true">
 	</ul>
@@ -125,34 +117,105 @@
     right: .6em;
     top: .5em;
 }
+
 .list {
+	display: flex;
+	flex-direction: column;
 	border-style: solid;
     border-width: 0 0 1px 0;
     border-color: #8c8a8c;
-	overflow: auto;
 }
+
 .graph {
 	border: 1px solid #8c8a8c;
 	height: -webkit-fill-available;
 	overflow: auto;
 	padding: 5px;
 }
-.block {
-	background-color: #0870b2;
-	width: 180px;
-    height: 80px;
-    display: flex;
+
+.graph-input {
+	position: absolute;
+	display: flex;
+    flex-direction: column;
+    z-index: 2;
+    bottom: 0;
+    right: 0;
+    border: 1px solid #8c8a8c;
 }
-.block-img {
+
+#sound-list {
+    overflow: auto;
+    margin-bottom: unset;
+}
+#advancement-list {
+	overflow: auto;
+	margin: 0;
+}
+#advancement-list li {
+    padding-left: 0.8em;
+	transition: ease .5s;
+}
+#advancement-list li:hover {
+	cursor: pointer;
+    padding-left: 1.5em;
+}
+
+.block {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 5px 5px 0;
+	padding: 0 0 0 .5em;
+	width: 250px;
+    height: 80px;
+	border: 2px solid #0870b2;
+}
+.block:hover {
+	cursor: pointer;
+}
+.block > img {
 	background-color: #c6c7c6;
     border: 5px inset;
 	margin: 5px;
 }
-.block-text {
+.block > h5 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 	margin: revert;
+}
+
+.line-node {
+	display: flex;
+    padding: 0 0 0 .5em;
+}
+.line-node:hover {
+	background-color: #343434;
+}
+
+.line-node-hide {
+	display: none;
+}
+.line-block {
+	position: relative;
+	width: 50px;
+}
+.line-block > * {
+	position: absolute;
+}
+.line-block > button {
+	left: 12px;
+    top: 33px;
+    width: 26px;
+    height: 26px;
+    z-index: 1;
+}
+.line-block > svg {
+	height: -webkit-fill-available;
+}
+.line-block > svg line
+{
+	stroke: #0870b2;
+	stroke-width: 2;
 }
 
 .insert-form-close {

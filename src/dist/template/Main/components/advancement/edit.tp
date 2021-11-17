@@ -20,19 +20,6 @@
 </li>
 <li>
 	<a class="uk-accordion-title" href="#">
-		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Meta._Title"></span></h4>
-	</a>
-	<div id="edit-meta" class="uk-accordion-content padding-accordion">
-		<div class="uk-margin">
-			<label class="uk-form-label" for="edit-meta-advancement-name" lang="Edit.Meta.AdvancementName"></label>
-			<div class="uk-form-controls">
-				<input class="uk-input" id="edit-advancement-name" type="text" value="default">
-			</div>
-		</div>
-	</div>
-</li>
-<li>
-	<a class="uk-accordion-title" href="#">
 		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Display._Title"></span></h4>
 	</a>
 	<div id="edit-display" class="uk-accordion-content padding-accordion">
@@ -44,7 +31,7 @@
 				</div>
 			</div>
 			<div class="uk-margin">
-				<label class="uk-form-label" id="edit-display-title-color" lang="Edit.Display.TitleColor"></label>
+				<label class="uk-form-label" for="edit-display-title-color" lang="Edit.Display.TitleColor"></label>
 				<div class="uk-form-controls">
 					<select id="edit-display-title-color" class="uk-select">
 						<option value="aqua" lang="Edit.Display.Color.Aqua"></option>
@@ -97,7 +84,7 @@
 				</div>
 			</div>
 			<div class="uk-margin">
-				<label class="uk-form-label" id="edit-display-description-color" lang="Edit.Display.DescriptionColor"></label>
+				<label class="uk-form-label" for="edit-display-description-color" lang="Edit.Display.DescriptionColor"></label>
 				<div class="uk-form-controls">
 					<select id="edit-display-description-color" class="uk-select">
 						<option value="aqua" lang="Edit.Display.Color.Aqua"></option>
