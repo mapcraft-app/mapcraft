@@ -272,7 +272,7 @@ class GetForm
 	static itemsList(modal)
 	{
 		const json = [];
-		const itemsList = modal.querySelector('#form-item-list-modal-list div.uk-modal-body');
+		const itemsList = modal.querySelectorAll('#form-item-list-modal-list div.uk-modal-body');
 		if (itemsList.length > 0)
 			for (const item of itemsList)
 			{

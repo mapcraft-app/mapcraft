@@ -1,33 +1,29 @@
 /*eslint-disable no-param-reassign*/
-const crypto = require('crypto');
 const path = require('path');
 const { Mapcraft, MCsearch, MCtemplate, MCutilities } = require('mapcraft-api');
-
 const FORM = require('./form');
+
 const ListOfEnchantements = MCutilities.GetDataGameElement('enchantements');
 const LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
 const FORM_TEMPLATE = new MCtemplate(__dirname);
 
 const isEmpty = (json) => (!Object.keys(json).length);
-const hexaID = () => crypto
-	.randomBytes(Math.ceil(24 / 2))
-	.toString('hex')
-	.slice(0, 24);
 
 /**
  * Set value in input
  * @param {Element} form Element where value is set
  * @param {JSON} json json data
  * @param {String} key key of data
- * @param {Boolean} ifNamespace set to true if data contain `minecraft:` namespace
+ * @param {Boolean} isMCsearch set to true if data is MCsearch
+ * @param {Boolen} keepNamespace set to true if you want to keep minecraft namespace
  */
-const setValue = (form, json, key, isMCsearch = false) =>
+const setValue = (form, json, key, isMCsearch = false, keepNamespace = false) =>
 {
 	if (form && Object.prototype.hasOwnProperty.call(json, key))
 	{
 		let value = json[key];
-		if (/^minecraft:/.test(value))
+		if (/^minecraft:/.test(value) && !keepNamespace)
 			value = value.slice(10);
 		if (isMCsearch)
 			MCsearch.SetValue(form, String(value));
@@ -49,6 +45,53 @@ const setValue = (form, json, key, isMCsearch = false) =>
 
 class Set
 {
+	static main(name, form, json)
+	{
+		switch (name)
+		{
+			default:
+			case '__FORM_DAMAGE':
+				this.damage(form, json);
+				break;
+			case '__FORM_DISTANCE':
+				this.distance(form, json);
+				break;
+			case '__FORM_DURABILITY':
+				this.durability(form, json);
+				break;
+			case '__FORM_EFFECTS':
+				this.effect(form, json);
+				break;
+			case '__FORM_ENTITIES':
+				this.entity(form, json);
+				break;
+			case '__FORM_ITEMS':
+				this.item(form, json);
+				break;
+			case '__FORM_ITEMS_LIST':
+				this.itemList(form, json);
+				break;
+			case '__FORM_LOCATION':
+				this.location(form, json);
+				break;
+			case '__FORM_PLAYER':
+				this.player(form, json);
+				break;
+			case '__FORM_SLOT':
+				this.slot(form, json);
+				break;
+			case '__FORM_STATE':
+				this.state(form, json);
+				break;
+			case '__FORM_TYPE':
+				this.type(form, json);
+				break;
+			case '__FORM_VICTIMS':
+				this.victim(form, json);
+				break;
+		}
+	}
+
 	static damage(form, json)
 	{
 		setValue(form.querySelector('#form-damage-modal-blocked'), json, 'blocked');
@@ -63,16 +106,51 @@ class Set
 			setValue(form.querySelector('#form-damage-modal-taken-max'), json.taken, 'max');
 		}
 	}
-/*
-	static distance(form)
+
+	static distance(form, json)
 	{
-	
+		if (Object.prototype.hasOwnProperty.call(json, 'absolute'))
+		{
+			setValue(form.querySelector('#form-distance-modal-absolute-min'), json.absolute, 'min');
+			setValue(form.querySelector('#form-distance-modal-absolute-max'), json.absolute, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'horizontal'))
+		{
+			setValue(form.querySelector('#form-distance-modal-horizontal-min'), json.horizontal, 'min');
+			setValue(form.querySelector('#form-distance-modal-horizontal-max'), json.horizontal, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'x'))
+		{
+			setValue(form.querySelector('#form-distance-modal-x-min'), json.x, 'min');
+			setValue(form.querySelector('#form-distance-modal-x-max'), json.x, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'y'))
+		{
+			setValue(form.querySelector('#form-distance-modal-y-min'), json.y, 'min');
+			setValue(form.querySelector('#form-distance-modal-y-max'), json.y, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'z'))
+		{
+			setValue(form.querySelector('#form-distance-modal-z-min'), json.z, 'min');
+			setValue(form.querySelector('#form-distance-modal-z-max'), json.z, 'max');
+		}
 	}
 
-	static durability(form)
+	static durability(form, json)
 	{
-	
-	}*/
+		if (Object.prototype.hasOwnProperty.call(json, 'delta'))
+		{
+			setValue(form.querySelector('#form-durability-modal-delta-min'), json.delta, 'min');
+			setValue(form.querySelector('#form-durability-modal-delta-max'), json.delta, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'durability'))
+		{
+			setValue(form.querySelector('#form-durability-modal-durability-min'), json.durability, 'min');
+			setValue(form.querySelector('#form-durability-modal-durability-max'), json.durability, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'item'))
+			this.item(form.querySelector('#form-durability-modal-item'), json.item);
+	}
 
 	static effect(form, json)
 	{
@@ -126,33 +204,7 @@ class Set
 					EffectList.appendChild(newEffect);
 				}
 		if (Object.prototype.hasOwnProperty.call(json, 'distance'))
-		{
-			if (Object.prototype.hasOwnProperty.call(json.distance, 'absolute'))
-			{
-				setValue(form.querySelector('#form-distance-modal-absolute-min'), json.distance.absolute, 'min');
-				setValue(form.querySelector('#form-distance-modal-absolute-max'), json.distance.absolute, 'max');
-			}
-			if (Object.prototype.hasOwnProperty.call(json.distance, 'horizontal'))
-			{
-				setValue(form.querySelector('#form-distance-modal-horizontal-min'), json.distance.horizontal, 'min');
-				setValue(form.querySelector('#form-distance-modal-horizontal-max'), json.distance.horizontal, 'max');
-			}
-			if (Object.prototype.hasOwnProperty.call(json.distance, 'x'))
-			{
-				setValue(form.querySelector('#form-distance-modal-x-min'), json.distance.x, 'min');
-				setValue(form.querySelector('#form-distance-modal-x-max'), json.distance.x, 'max');
-			}
-			if (Object.prototype.hasOwnProperty.call(json.distance, 'y'))
-			{
-				setValue(form.querySelector('#form-distance-modal-y-min'), json.distance.y, 'min');
-				setValue(form.querySelector('#form-distance-modal-y-max'), json.distance.y, 'max');
-			}
-			if (Object.prototype.hasOwnProperty.call(json.distance, 'z'))
-			{
-				setValue(form.querySelector('#form-distance-modal-z-min'), json.distance.z, 'min');
-				setValue(form.querySelector('#form-distance-modal-z-max'), json.distance.z, 'max');
-			}
-		}
+			this.distance(form.querySelector('#form-entity-modal-distance > div'), json.distance);
 		if (Object.prototype.hasOwnProperty.call(json, 'location'))
 			this.location(form.querySelector('#form-entity-modal-location > div'), json.location);
 		if (Object.prototype.hasOwnProperty.call(json, 'equipement'))
@@ -228,12 +280,23 @@ class Set
 			for (const enchantement of json.stored_enchantments)
 				addEnchantement('stored-enchantements', enchantement);
 	}
-	/*
-		static itemList(form)
+
+	static itemList(form, json)
+	{
+		const LIST = form.querySelector('#form-item-list-modal-list');
+		for (const item of json)
 		{
-			
+			const newItem = document.createElement('div');
+			FORM_TEMPLATE.render(newItem, 'itemBlock.tp');
+			const typeSourceEntity = FORM.item().querySelector('div.uk-modal-body');
+			typeSourceEntity.classList.add('uk-margin');
+			typeSourceEntity.querySelector('button.uk-modal-close-default').remove();
+			newItem.querySelector('button.item-block-close').addEventListener('click', () => newItem.remove());
+			newItem.querySelector('div.insert-form-close').appendChild(typeSourceEntity);
+			this.item(typeSourceEntity, item);
+			LIST.appendChild(newItem);
 		}
-	*/
+	}
 
 	static location(form, json)
 	{
@@ -276,17 +339,54 @@ class Set
 			setValue(form.querySelector('#form-location-modal-light-max'), json.light.light, 'max');
 		}
 	}
-	/*
-		static player(form)
+
+	static player(form, json)
+	{
+		setValue(form.querySelector('#form-player-modal-gamemode'), json, 'gamemode');
+		if (Object.prototype.hasOwnProperty.call(json, 'level'))
 		{
-			
+			setValue(form.querySelector('#form-player-modal-level-min'), json.level, 'min');
+			setValue(form.querySelector('#form-player-modal-level-max'), json.level, 'max');
 		}
-	
-		static slot(form)
+		if (Object.prototype.hasOwnProperty.call(json, 'stats'))
 		{
-			
+			const LIST = form.querySelector('#form-player-modal-list');
+			for (const stat of json.stats)
+			{
+				const newState = document.createElement('div');
+				FORM_TEMPLATE.render(newState, 'playerBlock.tp');
+				newState.querySelector('button.state-block-close').addEventListener('click', () => newState.remove());
+				setValue(newState.querySelector('#player-form-type'), stat, 'type', false, true);
+				setValue(newState.querySelector('#state-form-stat'), stat, 'stat');
+				if (Object.prototype.hasOwnProperty.call(stat, 'value'))
+				{
+					setValue(newState.querySelector('#player-form-value-min'), stat.value, 'min');
+					setValue(newState.querySelector('#player-form-value-max'), stat.value, 'max');
+				}
+				TEMPLATE.updateLang(newState, LANG.Data);
+				LIST.appendChild(newState);
+			}
 		}
-	*/
+	}
+
+	static slot(form, json)
+	{
+		if (Object.prototype.hasOwnProperty.call(json, 'empty'))
+		{
+			setValue(form.querySelector('#form-slot-modal-empty-min'), json.empty, 'min');
+			setValue(form.querySelector('#form-slot-modal-empty-max'), json.empty, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'full'))
+		{
+			setValue(form.querySelector('#form-slot-modal-full-min'), json.full, 'min');
+			setValue(form.querySelector('#form-slot-modal-full-max'), json.full, 'max');
+		}
+		if (Object.prototype.hasOwnProperty.call(json, 'occupied'))
+		{
+			setValue(form.querySelector('#form-slot-modal-occupied-min'), json.occupied, 'min');
+			setValue(form.querySelector('#form-slot-modal-occupied-max'), json.occupied, 'max');
+		}
+	}
 
 	static state(form, json)
 	{
@@ -303,7 +403,7 @@ class Set
 				LIST.appendChild(newState);
 			}
 	}
-	
+
 	static type(form, json)
 	{
 		setValue(form.querySelector('#form-type-modal-type-isExplosion'), json, 'is_explosion');

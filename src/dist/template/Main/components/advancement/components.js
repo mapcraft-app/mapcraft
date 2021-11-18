@@ -178,49 +178,16 @@ class SetJson
 							else if (/^__FORM/.test(form.predefined))
 							{
 								const MODAL = CriteriaForm.querySelector(`label.uk-form-label[lang="${form.lang}"]`).nextSibling.querySelector('div.uk-modal-body');
-								switch (form.predefined)
-								{
-									default:
-									case '__FORM_DAMAGE':
-										SetForm.damage(MODAL, advancement[x].conditions[form.key]);
-										break;
-									/*case '__FORM_DISTANCE':
-										SetForm.distance(MODAL, advancement[x].conditions[form.key]);
-										break;
-									case '__FORM_DURABILITY':
-										SetForm.durability(MODAL, advancement[x].conditions[form.key]);
-										break;*/
-									case '__FORM_EFFECTS':
-										SetForm.effect(MODAL, advancement[x].conditions[form.key]);
-										break;
-									case '__FORM_ENTITIES':
-										SetForm.entity(MODAL, advancement[x].conditions[form.key]);
-										break;
-									case '__FORM_ITEMS':
-										SetForm.item(MODAL, advancement[x].conditions[form.key]);
-										break;
-									/*case '__FORM_ITEMS_LIST':
-										SetForm.itemList(MODAL, advancement[x].conditions[form.key]);
-										break;*/
-									case '__FORM_LOCATION':
-										SetForm.location(MODAL, advancement[x].conditions[form.key]);
-										break;
-									/*case '__FORM_PLAYER':
-										SetForm.player(MODAL, advancement[x].conditions[form.key]);
-										break;
-									case '__FORM_SLOT':
-										SetForm.slot(MODAL, advancement[x].conditions[form.key]);
-										break;*/
-									case '__FORM_STATE':
-										SetForm.state(MODAL, advancement[x].conditions[form.key]);
-										break;
-									case '__FORM_TYPE':
-										SetForm.type(MODAL, advancement[x].conditions[form.key]);
-										break;
-									case '__FORM_VICTIMS':
-										SetForm.victim(MODAL, advancement[x].conditions[form.key]);
-										break;
-								}
+								let data;
+								if (Array.isArray(form.key))
+									for (let y = 0; y < form.key.length; y++)
+										if (y === 0)
+											data = advancement[x].conditions[form.key[y]];
+										else
+											data = data[form.key[y]];
+								else
+									data = advancement[x].conditions[form.key];
+								SetForm.main(form.predefined, MODAL, data);
 							}
 						}
 						else
