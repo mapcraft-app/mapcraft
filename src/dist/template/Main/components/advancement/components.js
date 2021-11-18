@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
+const { Mapcraft, MCutilities, MCtemplate, MCsearch, MCworkInProgress } = require('mapcraft-api');
 
 const Form = require('./form/form');
 const GetForm = require('./form/get');
@@ -63,29 +63,38 @@ class SetJson
 {
 	static set(advancement)
 	{
-		console.log(advancement);
+		MCworkInProgress.open();
 		TEMPLATE.cleanNode(document.querySelector('div[id="edit-criteria-list"]'));
 		const LIST = document.querySelectorAll('ul[id="edition-zone-template"] > li');
-		for (const ListItem of LIST)
-			switch (ListItem.querySelector('div.uk-accordion-content').id)
-			{
-				default:
-				case 'edit-root':
-					this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
-					break;
-				case 'edit-display':
-					this.setDisplay(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
-					break;
-				case 'edit-criteria':
-					this.setCriteria(ListItem.querySelector('div.uk-accordion-content'), advancement.criteria);
-					break;
-				case 'edit-requirements':
-					this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
-					break;
-				case 'edit-rewards':
-					this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
-					break;
-			}
+		try
+		{
+			for (const ListItem of LIST)
+				switch (ListItem.querySelector('div.uk-accordion-content').id)
+				{
+					default:
+					case 'edit-root':
+						this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+						break;
+					case 'edit-display':
+						this.setDisplay(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+						break;
+					case 'edit-criteria':
+						this.setCriteria(ListItem.querySelector('div.uk-accordion-content'), advancement.criteria);
+						break;
+					case 'edit-requirements':
+						this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
+						break;
+					case 'edit-rewards':
+						this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
+						break;
+				}
+		}
+		catch (err)
+		{
+			MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
+			MCworkInProgress.close();
+		}
+		MCworkInProgress.close();
 	}
 
 	static input(input, value)
@@ -724,7 +733,11 @@ class Component
 				event.stopImmediatePropagation();
 				const element = searchInJson('id', BLOCK.querySelector('div.block').getAttribute('node'));
 				if (Object.prototype.hasOwnProperty.call(element, 'json') && Object.keys(element.json).length)
+				{
+					MCworkInProgress.open();
 					SetJson.set(element.json);
+					MCworkInProgress.close();
+				}
 			});
 		};
 

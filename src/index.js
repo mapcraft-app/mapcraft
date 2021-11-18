@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+require('v8-compile-cache');
 const process = require('process');
 const child = require('child_process');
 const path = require('path');
