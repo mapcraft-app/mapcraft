@@ -3,11 +3,19 @@
 	"Icon": "bookmark",
 	"Notification" : "",
 	"Data" : {
+		"Modal": {
+			"Text": "Are you sure you want to remove complete advancement ?",
+			"Save": "You have selected a different advancement without saving the current one. Would you like to save it ?",
+			"Yes": "Yes",
+			"No": "No"
+		},
 		"Graph": {
 			"NewAdvancement": "New advancement",
-			"Generate": "Generate advancement",
-			"AddAdvancement": "Add advancement",
+			"Generate": "Generate complete advancement",
+			"Delete": "Delete complete advancement",
+			"AddParent": "Add parent",
 			"AddChild": "Add child",
+			"Save": "Save current advancement",
 			"Title": "Title of advancement"
 		},
 		"Edit": {
@@ -251,6 +259,7 @@
 		},
 		"Error": {
 			"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)",
+			"NoAdvancement": "No advancement is selected",
 			"NoCriteria": "No criteria was created"
 		}
 	}

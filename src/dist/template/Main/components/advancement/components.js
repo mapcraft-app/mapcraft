@@ -13,6 +13,7 @@ const randomString = () => crypto.randomBytes(8).toString('hex');
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
 let ADVANCEMENT = {};
+let CurrentID = String('');
 
 //Add directory to datapack if not exist
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
@@ -29,6 +30,23 @@ const GetTriggerForm = (id) =>
 	return undefined;
 };
 
+const BaseModel = () => ({
+	id: `advancement_${randomString()}`,
+	name: 'New advancement',
+	data: {
+		id: randomString(),
+		json: {
+			display: {
+				icon: { item: 'minecraft:stone' },
+				namespace: { text: 'mapcraft' },
+				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
+				title: { text: 'Advancement' },
+				description: { text: 'Description' },
+			},
+		},
+	},
+});
+
 function OpenExternLink()
 {
 	document.querySelectorAll('a[web-link]').forEach((link) =>
@@ -44,11 +62,15 @@ function OpenExternLink()
 	});
 }
 
-function searchInJson(key, value, json = ADVANCEMENT.data)
+function searchInJson(key, value, json = ADVANCEMENT.data, saveJson = undefined)
 {
 	let ret;
 	if (json[key] === value)
+	{
+		if (saveJson !== undefined)
+			json.json = saveJson; //eslint-disable-line no-param-reassign
 		return json;
+	}
 	if (Object.prototype.hasOwnProperty.call(json, 'childs'))
 		for (const child of json.childs)
 		{
@@ -98,19 +120,24 @@ class SetJson
 			{
 				default:
 				case 'edit-root':
-					this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+					if (advancement.display)
+						this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
 					break;
 				case 'edit-display':
-					this.setDisplay(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+					if (advancement.display)
+						this.setDisplay(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
 					break;
 				case 'edit-criteria':
-					this.setCriteria(ListItem.querySelector('div.uk-accordion-content'), advancement.criteria);
+					if (advancement.criteria)
+						this.setCriteria(ListItem.querySelector('div.uk-accordion-content'), advancement.criteria);
 					break;
 				case 'edit-requirements':
-					this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
+					if (advancement.criteria && advancement.requirements)
+						this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
 					break;
 				case 'edit-rewards':
-					this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
+					if (advancement.rewards)
+						this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
 					break;
 			}
 		MCworkInProgress.close();
@@ -254,7 +281,6 @@ class SetJson
 
 	static setRequirements(ListItem, advancement)
 	{
-		TEMPLATE.cleanNode(ListItem.querySelector('#edit-requirements-list'));
 		const generate = (criteriaArray, selectedArray) =>
 		{
 			const newCheckbox = (value) =>
@@ -646,6 +672,7 @@ class Component
 		this.drawList();
 
 		MCsearch.blocksItems(document.getElementById('edit-display-icon'), Mapcraft.GetConfig().Minecraft.SelectedVersion);
+		this.addParentChild();
 		this.addTrigger();
 		this.addRequirement();
 		this.addRecipe();
@@ -659,12 +686,18 @@ class Component
 			const Dir = path.join(RecipesDirectory, 'data');
 			const json = {
 				id: `advancement_${randomString()}`,
-				name: 'new advancement',
+				name: 'New advancement',
 				data: {
 					id: randomString(),
-					title: 'Advancement',
-					icon: 'dirt',
-					json: {},
+					json: {
+						display: {
+							icon: { item: 'minecraft:stone' },
+							namespace: { text: 'mapcraft' },
+							background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
+							title: { text: 'Advancement' },
+							description: { text: 'Description' },
+						},
+					},
 				},
 			};
 			if (!fs.existsSync(Dir))
@@ -675,7 +708,7 @@ class Component
 					MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
 				ADVANCEMENT = JSON.parse(JSON.stringify(json)); //deepcopy of json, structuredClone() not work
 				this.drawGraph(ADVANCEMENT.data);
-				document.getElementById('name-advancement').value = ADVANCEMENT.name;
+				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
 				const li = document.createElement('li');
 				li.setAttribute('advancement-id', json.id);
 				li.innerText = json.name;
@@ -685,17 +718,18 @@ class Component
 		});
 
 		//Update name of advancement if input change
-		document.getElementById('name-advancement').addEventListener('input', (event) =>
+		document.getElementById('input-zone-name-advancement').addEventListener('input', (event) =>
 		{
-			if (Object.keys(ADVANCEMENT).length)
-				ADVANCEMENT.name = event.target.value;
-			console.log(ADVANCEMENT);
+			const LIST = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
+			ADVANCEMENT.name = (Object.keys(ADVANCEMENT).length) ? event.target.value : 'undefined';
+			for (const list of LIST)
+				if (!list.style.display)
+					list.nextSibling.innerText = ADVANCEMENT.name;
 		});
 
 		//Select advancement in list and display
 		document.getElementById('advancement-list').addEventListener('click', (event) =>
 		{
-			document.getElementById('zone').style.display = '';
 			const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
 			for (const icon of ICONS)
 				icon.style.display = 'none';
@@ -709,18 +743,61 @@ class Component
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
 				this.drawGraph(ADVANCEMENT.data);
-				document.getElementById('name-advancement').value = ADVANCEMENT.name;
+				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
 			});
 		});
 
 		//Generate advancement
-		document.getElementById('content').querySelector('#generate-advancement').addEventListener('click', () =>
+		document.getElementById('input-zone-generate-advancement').addEventListener('click', () =>
 		{
+			if (!Object.keys(ADVANCEMENT).length)
+			{
+				MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), LANG.Data.Error.NoAdvancement);
+				return;
+			}
 			const newJson = new Json();
 			const json = newJson.generate();
 			if (json)
 				console.log(json);
 		});
+
+		document.getElementById('edit-display-title-text').addEventListener('input', (event) =>
+		{
+			if (!document.getElementById('zone').style.display)
+				document.querySelector('div.line-node-selected h5').innerText = event.target.value;
+		});
+
+		document.getElementById('generate-advancement').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			this.generateAdvancement();
+		});
+	}
+
+	static saveFile()
+	{
+		fs.writeFile(path.join(RecipesDirectory, 'data', `${ADVANCEMENT.id}.json`), JSON.stringify(ADVANCEMENT, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
+		{
+			if (err)
+				MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
+		});
+	}
+
+	static generateAdvancement()
+	{
+		if (!Object.keys(ADVANCEMENT).length)
+		{
+			MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), LANG.Data.Error.NoAdvancement);
+			return;
+		}
+		const newJson = new Json();
+		const json = newJson.generate();
+		if (json)
+		{
+			searchInJson('id', CurrentID, ADVANCEMENT.data, json);
+			this.saveFile();
+		}
 	}
 
 	static drawList()
@@ -749,7 +826,71 @@ class Component
 		});
 	}
 
-	static drawGraph(json)
+	static addParentChild()
+	{
+		const AddParent = (data, parent = undefined) =>
+		{
+			let ret;
+			if (data.id === CurrentID)
+			{
+				console.log(parent.childs);
+				parent.childs.push(BaseModel().data);
+				return data;
+			}
+			if (Object.prototype.hasOwnProperty.call(data, 'childs'))
+				for (const child of data.childs)
+				{
+					ret = AddParent(child, data);
+					if (ret)
+						break;
+				}
+			return ret;
+		};
+
+		const addAdvancement = () =>
+		{
+			if (CurrentID === ADVANCEMENT.data.id)
+			{
+				//root
+				if (!ADVANCEMENT.data.childs)
+					ADVANCEMENT.data.childs = [];
+				ADVANCEMENT.data.childs.push(BaseModel().data);
+			}
+			else
+			{
+				AddParent(ADVANCEMENT.data);
+			}
+			this.saveFile();
+			SetJson.cleanForm();
+			this.drawGraph(ADVANCEMENT.data, true);
+		};
+
+		document.getElementById('add-advancement').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			addAdvancement();
+		});
+		document.getElementById('add-child').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			if (CurrentID === ADVANCEMENT.data.id)
+			{
+				addAdvancement();
+				return;
+			}
+			const element = searchInJson('id', CurrentID);
+			if (!Object.prototype.hasOwnProperty.call(element, 'childs'))
+				element.childs = [];
+			element.childs.push(BaseModel().data);
+			this.saveFile();
+			SetJson.cleanForm();
+			this.drawGraph(ADVANCEMENT.data, true);
+		});
+	}
+
+	static drawGraph(json, ifAdding = false)
 	{
 		const graph = document.querySelector('div.graph');
 
@@ -758,12 +899,14 @@ class Component
 			const testBlockPath = path.join(__dirname, '../../../../img/assets/block', item);
 			const testItemPath = path.join(__dirname, '../../../../img/assets/item', item);
 			if (fs.existsSync(`${testBlockPath}.png`))
-				return `./dist/img/assets/block/${item}.png`;
+				return { src: `./dist/img/assets/block/${item}.png`, class: 'item-img' };
 			if (fs.existsSync(`${testBlockPath}.webp`))
-				return `./dist/img/assets/block/${item}.webp`;
+				return { src: `./dist/img/assets/block/${item}.webp`, class: 'item-img' };
 			if (fs.existsSync(`${testItemPath}.png`))
-				return `./dist/img/assets/item/${item}.png`;
-			return `./dist/img/assets/item/${item}.webp`;
+				return { src: `./dist/img/assets/item/${item}.png`, class: 'item-img' };
+			if (fs.existsSync(`${testItemPath}.webp`))
+				return { src: `./dist/img/assets/item/${item}.webp`, class: 'item-img' };
+			return { src: './dist/img/assets/no_data.png', class: 'item-img' };
 		};
 
 		const getAdvancementData = (BLOCK) =>
@@ -772,7 +915,12 @@ class Component
 			{
 				event.preventDefault();
 				event.stopImmediatePropagation();
-				const element = searchInJson('id', BLOCK.querySelector('div.block').getAttribute('node'));
+				CurrentID = String(BLOCK.querySelector('div.block').getAttribute('node'));
+				if (ADVANCEMENT.data.id === CurrentID)
+					document.getElementById('add-child').style.display = 'none';
+				else
+					document.getElementById('add-child').style.display = '';
+				const element = searchInJson('id', CurrentID);
 				const GRAPH = document.querySelectorAll('div.graph div.line-node');
 				for (const line of GRAPH)
 					line.classList.remove('line-node-selected');
@@ -782,6 +930,7 @@ class Component
 					SetJson.set(element.json);
 				else
 					SetJson.cleanForm();
+				document.getElementById('zone').style.display = '';
 			});
 		};
 
@@ -820,6 +969,8 @@ class Component
 					let isChilds = false;
 					const BLOCK = document.createElement('div');
 					BLOCK.classList.add('line-node');
+					if (ifAdding && CurrentID === childJson[key].id)
+						BLOCK.classList.add('line-node-selected');
 					for (let empty = emptyNode; empty > 0; empty--)
 						TEMPLATE.render(BLOCK, 'line/empty.tp');
 					for (let deep = emptyNode; deep < deepNode; deep++)
@@ -845,15 +996,16 @@ class Component
 					{
 						TEMPLATE.render(BLOCK, 'line/children.tp');
 					}
-					TEMPLATE.render(BLOCK, 'line/node.tp', { node: childJson[key].id, parent: parentId, title: childJson[key].title, icon: getSrcImage(childJson[key].icon) });
+					const srcImage = getSrcImage(childJson[key].json.display.icon.item.slice(10));
+					TEMPLATE.render(BLOCK, 'line/node.tp', { node: childJson[key].id, parent: parentId, title: childJson[key].json.display.title.text, icon: srcImage.src, class: srcImage.class });
 					TEMPLATE.render(BLOCK, 'line/remove_advancement.tp', { node: childJson[key].id });
 					const BUTTON = BLOCK.querySelector('button.uk-button-danger');
 					BUTTON.addEventListener('click', (event) =>
 					{
 						event.preventDefault();
 						event.stopImmediatePropagation();
+						document.getElementById('zone').style.display = 'none';
 						const nodeID = BUTTON.parentNode.getAttribute('node');
-						//let data = searchInJson('id', BUTTON.parentNode.getAttribute('node'));
 						const deleteJson = (data, sliceID = undefined, parent = undefined) =>
 						{
 							let ret;
@@ -874,6 +1026,7 @@ class Component
 							return ret;
 						};
 						deleteJson(ADVANCEMENT.data, ADVANCEMENT.data);
+						this.generateAdvancement();
 						TEMPLATE.cleanNode(document.querySelector('div.graph'));
 						this.drawGraph(ADVANCEMENT.data);
 					});
@@ -890,10 +1043,14 @@ class Component
 
 		if (Object.keys(json).length)
 		{
+			TEMPLATE.cleanNode(graph);
 			const BLOCK = document.createElement('div');
 			BLOCK.classList.add('line-node');
 			TEMPLATE.render(BLOCK, 'line/root.tp');
-			TEMPLATE.render(BLOCK, 'line/node.tp', { node: json.id, parent: json.id, title: json.title, icon: getSrcImage(json.icon) });
+			const srcImage = getSrcImage(json.json.display.icon.item.slice(10));
+			TEMPLATE.render(BLOCK, 'line/node.tp', { node: json.id, parent: json.id, title: String(json.json.display.title.text), icon: srcImage.src, class: srcImage.class });
+			if (ifAdding && json.id === CurrentID)
+				BLOCK.classList.add('line-node-selected');
 			BLOCK.removeAttribute('tp');
 			getAdvancementData(BLOCK);
 			graph.appendChild(BLOCK);

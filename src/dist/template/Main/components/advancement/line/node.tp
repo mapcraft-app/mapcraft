@@ -1,6 +1,6 @@
 [HTML]
 <div class="block" node="{node}" parent="{parent}">
 	<h5>{title}</h5>
-	<img src="{icon}" />
+	<img class="{class}" src="{icon}" />
 </div>
 [/HTML]
