@@ -10,20 +10,30 @@
 	</div>
 	<div class="uk-width-3-4" style="position: relative;">
 		<div class="graph"></div>
-		<div class="graph-input">
-			<input class="uk-input" id="name-advancement" type="text"/>
-			<button class="uk-button uk-button-success" id="generate-advancement">
-				<span uk-icon="heart"></span>
-				<span lang="Graph.Generate"></span>
-			</button>
-		</div>
 	</div>
 </div>
-
-<form id="edition-zone" class="uk-form-horizontal uk-margin-small">
-	<ul id="edition-zone-template" uk-accordion="multiple: true">
-	</ul>
-</form>
+<div id="zone" style="display: none;" class="uk-margin">
+	<div class="uk-flex uk-flex-between uk-margin">
+		<input id="name-advancement" class="uk-input uk-width-1-4" type="text"/>
+		<button id="generate-advancement" class="uk-button uk-button-success" >
+			<span uk-icon="cog"></span>
+			<span lang="Graph.Generate"></span>
+		</button>
+		<div style="outline: 0.1em solid #1e87f0;"></div>
+		<button id="add-advancement" class="uk-button uk-button-success uk-margin-right">
+			<span uk-icon="plus"></span>
+			<span lang="Graph.AddAdvancement"></span>
+		</button>
+		<button id="add-child" class="uk-button uk-button-warning uk-margin-right">
+			<span uk-icon="list"></span>
+			<span lang="Graph.AddChild"></span>
+		</button>
+	</div>
+	<form id="edition-zone" class="uk-form-horizontal uk-margin-small">
+		<ul id="edition-zone-template" uk-accordion="multiple: true">
+		</ul>
+	</form>
+</div>
 [/HTML]
 
 <style>
@@ -125,22 +135,11 @@
     border-width: 0 0 1px 0;
     border-color: #8c8a8c;
 }
-
 .graph {
 	border: 1px solid #8c8a8c;
 	height: -webkit-fill-available;
 	overflow: auto;
 	padding: 5px;
-}
-
-.graph-input {
-	position: absolute;
-	display: flex;
-    flex-direction: column;
-    z-index: 2;
-    bottom: 0;
-    right: 0;
-    border: 1px solid #8c8a8c;
 }
 
 #sound-list {
@@ -191,6 +190,9 @@
 .line-node:hover {
 	background-color: #343434;
 }
+.line-node-selected {
+	background-color: #424242;
+}
 
 .line-node-hide {
 	display: none;
@@ -216,6 +218,33 @@
 {
 	stroke: #0870b2;
 	stroke-width: 2;
+}
+
+.add-child {
+	left: unset !important;
+	top: unset !important;
+	width: 35px !important;
+	height: -webkit-fill-available !important;
+	padding: unset !important;
+	margin: 10px !important;
+	z-index: 1 !important;
+}
+.add-child > span {
+	width: 24px !important;
+}
+.block-add-child {
+	display: flex;
+    justify-content: center;
+    margin: 7px 5px 7px 0;
+    padding: 0 0 0 .5em;
+    width: 250px;
+    height: 80px;
+	border: unset;
+}
+.block-add-child > button {
+	width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    margin: 3px 0;
 }
 
 .insert-form-close {

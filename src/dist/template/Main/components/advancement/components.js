@@ -61,39 +61,58 @@ function searchInJson(key, value, json = ADVANCEMENT.data)
 
 class SetJson
 {
+	static cleanForm()
+	{
+		const FORM = document.getElementById('edition-zone');
+		const FORMinput = FORM.getElementsByTagName('input');
+		const FORMselect = FORM.getElementsByTagName('select');
+		for (const input of FORMinput)
+			switch (input.type.toLowerCase())
+			{
+				default:
+				case 'text':
+				case 'color':
+					input.value = String('');
+					break;
+				case 'number':
+					input.value = Number(0);
+					break;
+				case 'checkbox':
+					input.checked = Boolean(false);
+			}
+		for (const select of FORMselect)
+			select.selectedIndex = 0;
+		TEMPLATE.cleanNode(document.getElementById('edit-criteria-list'));
+		TEMPLATE.cleanNode(document.getElementById('edit-requirements-list'));
+		TEMPLATE.cleanNode(document.getElementById('edit-rewards-recipes-list'));
+		TEMPLATE.cleanNode(document.getElementById('edit-rewards-loottables-list'));
+	}
+
 	static set(advancement)
 	{
 		MCworkInProgress.open();
-		TEMPLATE.cleanNode(document.querySelector('div[id="edit-criteria-list"]'));
+		SetJson.cleanForm();
 		const LIST = document.querySelectorAll('ul[id="edition-zone-template"] > li');
-		try
-		{
-			for (const ListItem of LIST)
-				switch (ListItem.querySelector('div.uk-accordion-content').id)
-				{
-					default:
-					case 'edit-root':
-						this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
-						break;
-					case 'edit-display':
-						this.setDisplay(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
-						break;
-					case 'edit-criteria':
-						this.setCriteria(ListItem.querySelector('div.uk-accordion-content'), advancement.criteria);
-						break;
-					case 'edit-requirements':
-						this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
-						break;
-					case 'edit-rewards':
-						this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
-						break;
-				}
-		}
-		catch (err)
-		{
-			MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
-			MCworkInProgress.close();
-		}
+		for (const ListItem of LIST)
+			switch (ListItem.querySelector('div.uk-accordion-content').id)
+			{
+				default:
+				case 'edit-root':
+					this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+					break;
+				case 'edit-display':
+					this.setDisplay(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+					break;
+				case 'edit-criteria':
+					this.setCriteria(ListItem.querySelector('div.uk-accordion-content'), advancement.criteria);
+					break;
+				case 'edit-requirements':
+					this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
+					break;
+				case 'edit-rewards':
+					this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
+					break;
+			}
 		MCworkInProgress.close();
 	}
 
@@ -159,71 +178,78 @@ class SetJson
 	static setCriteria(ListItem, advancement)
 	{
 		let GenerateID = 0;
+		const DataTrigger = MCutilities.GetDataGameElement('triggers');
+		const newDOM = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
+		const newDOMbody = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
+		newDOM.documentElement.appendChild(newDOMbody);
+		const newList = newDOMbody;
 		for (const x in advancement)
 			if (Object.prototype.hasOwnProperty.call(advancement, x))
-			{
-				const ID = Component.newTrigger(GenerateID, x); //eslint-disable-line no-use-before-define
-				MCsearch.SetValue(ListItem.querySelector(`div[id="${ID}"] div.search-dropdown-input`), advancement[x].trigger.slice(10));
-				const CriteriaForm = ListItem.querySelector(`#edit-criteria-form-${GenerateID++}`);
-				const FORM = Form.printTrigger(advancement[x].trigger.slice(10));
-				if (FORM)
+				setTimeout(() =>
 				{
-					TEMPLATE.cleanNode(CriteriaForm);
-					CriteriaForm.appendChild(FORM);
-					OpenExternLink();
-					const TRIGGER = MCutilities.GetDataGameElement('triggers').find((element) =>
-					//eslint-disable-next-line arrow-body-style
+					const ID = Component.newTrigger(GenerateID, x, newList, false); //eslint-disable-line no-use-before-define
+					MCsearch.SetValue(newList.querySelector(`div[id="${ID}"] div.search-dropdown-input`), advancement[x].trigger.slice(10));
+					const CriteriaForm = newList.querySelector(`#edit-criteria-form-${GenerateID++}`);
+					const FORM = Form.printTrigger(advancement[x].trigger.slice(10));
+					if (FORM)
 					{
-						return element.id === advancement[x].trigger.slice(10);
-					});
-					for (const form of TRIGGER.form)
-						if (Object.prototype.hasOwnProperty.call(form, 'predefined'))
+						TEMPLATE.cleanNode(CriteriaForm);
+						CriteriaForm.appendChild(FORM);
+						OpenExternLink();
+						const TRIGGER = DataTrigger.find((element) =>
+						//eslint-disable-next-line arrow-body-style
 						{
-							if (/^__SEARCH/.test(form.predefined))
+							return element.id === advancement[x].trigger.slice(10);
+						});
+						for (const form of TRIGGER.form)
+							if (Object.prototype.hasOwnProperty.call(form, 'predefined'))
 							{
-								const SearchInput = CriteriaForm.querySelector(`label[lang="${form.lang}"]`);
-								MCsearch.SetValue(SearchInput.nextSibling, advancement[x].conditions[form.key].slice(10));
-							}
-							else if (/^__FORM/.test(form.predefined))
-							{
-								const MODAL = CriteriaForm.querySelector(`label.uk-form-label[lang="${form.lang}"]`).nextSibling.querySelector('div.uk-modal-body');
-								let data;
-								if (Array.isArray(form.key))
-									for (let y = 0; y < form.key.length; y++)
-										if (y === 0)
-											data = advancement[x].conditions[form.key[y]];
-										else
-											data = data[form.key[y]];
-								else
-									data = advancement[x].conditions[form.key];
-								SetForm.main(form.predefined, MODAL, data);
-							}
-						}
-						else
-						{
-							const searchChilds = (searchInput, criteriaData, childs) =>
-							{
-								for (const child of childs)
+								if (/^__SEARCH/.test(form.predefined))
 								{
-									const search = searchInput.querySelector(`${child.tag}[id="${child.id}"]`);
-									if (criteriaData[child.id])
-										search.setAttribute('value', criteriaData[child.id]);
-									else if (Object.prototype.hasOwnProperty.call(child, 'childs'))
-										searchChilds(search, criteriaData[child.id], child);
+									const SearchInput = CriteriaForm.querySelector(`label[lang="${form.lang}"]`);
+									MCsearch.SetValue(SearchInput.nextSibling, advancement[x].conditions[form.key].slice(10));
 								}
-							};
-							const SearchInput = CriteriaForm.querySelector(`${form.element.tag}[id="${form.element.id}"]`);
-							if (Object.prototype.hasOwnProperty.call(form.element, 'childs'))
-								searchChilds(SearchInput, advancement[x].conditions[form.element.id], form.element.childs);
+								else if (/^__FORM/.test(form.predefined))
+								{
+									const MODAL = CriteriaForm.querySelector(`label.uk-form-label[lang="${form.lang}"]`).nextSibling.querySelector('div.uk-modal-body');
+									let data;
+									if (Array.isArray(form.key))
+										for (let y = 0; y < form.key.length; y++)
+											if (y === 0)
+												data = advancement[x].conditions[form.key[y]];
+											else
+												data = data[form.key[y]];
+									else
+										data = advancement[x].conditions[form.key];
+									SetForm.main(form.predefined, MODAL, data);
+								}
+							}
 							else
-								SearchInput.setAttribute('value', advancement[x].conditions[form.element.id]);
-						}
-				}
-				else
-				{
-					TEMPLATE.cleanNode(CriteriaForm);
-				}
-			}
+							{
+								const searchChilds = (searchInput, criteriaData, childs) =>
+								{
+									for (const child of childs)
+									{
+										const search = searchInput.querySelector(`${child.tag}[id="${child.id}"]`);
+										if (criteriaData[child.id])
+											search.setAttribute('value', criteriaData[child.id]);
+										else if (Object.prototype.hasOwnProperty.call(child, 'childs'))
+											searchChilds(search, criteriaData[child.id], child);
+									}
+								};
+								const SearchInput = CriteriaForm.querySelector(`${form.element.tag}[id="${form.element.id}"]`);
+								if (Object.prototype.hasOwnProperty.call(form.element, 'childs'))
+									searchChilds(SearchInput, advancement[x].conditions[form.element.id], form.element.childs);
+								else
+									SearchInput.setAttribute('value', advancement[x].conditions[form.element.id]);
+							}
+					}
+					else
+					{
+						TEMPLATE.cleanNode(CriteriaForm);
+					}
+					ListItem.querySelector('#edit-criteria-list').appendChild(newList.querySelector(`div[id="${ID}"]`));
+				}, 0);
 	}
 
 	static setRequirements(ListItem, advancement)
@@ -669,12 +695,19 @@ class Component
 		//Select advancement in list and display
 		document.getElementById('advancement-list').addEventListener('click', (event) =>
 		{
-			fs.readFile(event.target.getAttribute('advancement-file'), { encoding: 'utf-8', flag: 'r' }, (err, data) =>
+			document.getElementById('zone').style.display = '';
+			const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
+			for (const icon of ICONS)
+				icon.style.display = 'none';
+			const BASE = (event.target.tagName === 'SPAN') ? (event.target.parentNode) : event.target;
+			BASE.childNodes[0].style.display = '';
+			fs.readFile(BASE.getAttribute('advancement-file'), { encoding: 'utf-8', flag: 'r' }, (err, data) =>
 			{
 				if (err)
 					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err);
 				ADVANCEMENT = JSON.parse(data);
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
+				SetJson.cleanForm();
 				this.drawGraph(ADVANCEMENT.data);
 				document.getElementById('name-advancement').value = ADVANCEMENT.name;
 			});
@@ -703,8 +736,14 @@ class Component
 				const json = JSON.parse(fs.readFileSync(path.join(Dir, file), { encoding: 'utf-8', flag: 'r' }));
 				const li = document.createElement('li');
 				li.setAttribute('advancement-id', json.id);
-				li.innerText = json.name;
+				const spanOne = document.createElement('span');
+				spanOne.setAttribute('uk-icon', 'chevron-right');
+				spanOne.style.display = 'none';
+				const spanTwo = document.createElement('span');
+				spanTwo.innerText = json.name;
 				li.setAttribute('advancement-file', path.join(Dir, file));
+				li.appendChild(spanOne);
+				li.appendChild(spanTwo);
 				List.appendChild(li);
 			}
 		});
@@ -713,6 +752,7 @@ class Component
 	static drawGraph(json)
 	{
 		const graph = document.querySelector('div.graph');
+
 		const getSrcImage = (item) =>
 		{
 			const testBlockPath = path.join(__dirname, '../../../../img/assets/block', item);
@@ -725,6 +765,7 @@ class Component
 				return `./dist/img/assets/item/${item}.png`;
 			return `./dist/img/assets/item/${item}.webp`;
 		};
+
 		const getAdvancementData = (BLOCK) =>
 		{
 			BLOCK.querySelector('div.block').addEventListener('click', (event) =>
@@ -732,12 +773,15 @@ class Component
 				event.preventDefault();
 				event.stopImmediatePropagation();
 				const element = searchInJson('id', BLOCK.querySelector('div.block').getAttribute('node'));
+				const GRAPH = document.querySelectorAll('div.graph div.line-node');
+				for (const line of GRAPH)
+					line.classList.remove('line-node-selected');
+				BLOCK.classList.add('line-node-selected');
+				//line-node-selected
 				if (Object.prototype.hasOwnProperty.call(element, 'json') && Object.keys(element.json).length)
-				{
-					MCworkInProgress.open();
 					SetJson.set(element.json);
-					MCworkInProgress.close();
-				}
+				else
+					SetJson.cleanForm();
 			});
 		};
 
@@ -802,6 +846,37 @@ class Component
 						TEMPLATE.render(BLOCK, 'line/children.tp');
 					}
 					TEMPLATE.render(BLOCK, 'line/node.tp', { node: childJson[key].id, parent: parentId, title: childJson[key].title, icon: getSrcImage(childJson[key].icon) });
+					TEMPLATE.render(BLOCK, 'line/remove_advancement.tp', { node: childJson[key].id });
+					const BUTTON = BLOCK.querySelector('button.uk-button-danger');
+					BUTTON.addEventListener('click', (event) =>
+					{
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						const nodeID = BUTTON.parentNode.getAttribute('node');
+						//let data = searchInJson('id', BUTTON.parentNode.getAttribute('node'));
+						const deleteJson = (data, sliceID = undefined, parent = undefined) =>
+						{
+							let ret;
+							if (data.id === nodeID)
+							{
+								parent.childs.splice(sliceID, 1);
+								if (!parent.childs.length)
+									delete parent.childs; //eslint-disable-line no-param-reassign
+								return data;
+							}
+							if (Object.prototype.hasOwnProperty.call(data, 'childs'))
+								for (const child of data.childs)
+								{
+									ret = deleteJson(child, data.childs.indexOf(child), data);
+									if (ret)
+										break;
+								}
+							return ret;
+						};
+						deleteJson(ADVANCEMENT.data, ADVANCEMENT.data);
+						TEMPLATE.cleanNode(document.querySelector('div.graph'));
+						this.drawGraph(ADVANCEMENT.data);
+					});
 					BLOCK.removeAttribute('tp');
 					getAdvancementData(BLOCK);
 					graph.appendChild(BLOCK);
@@ -830,9 +905,8 @@ class Component
 		}
 	}
 
-	static newTrigger(GenerateID, defaultValue)
+	static newTrigger(GenerateID, defaultValue, TriggerList = document.getElementById('edit-criteria-list'), RegenerateRequirement = true)
 	{
-		const TriggerList = document.getElementById('edit-criteria-list');
 		const DOMelement = document.createElement('div');
 		TEMPLATE.render(DOMelement, 'criteria.tp', { ID: GenerateID, DefaultValue: defaultValue });
 		DOMelement.id = GenerateID;
@@ -883,7 +957,8 @@ class Component
 		});
 		TriggerList.appendChild(DOMelement);
 		TEMPLATE.updateLang(TriggerList, LANG.Data);
-		this.regenerateRequirementList();
+		if (RegenerateRequirement)
+			this.regenerateRequirementList();
 		return GenerateID;
 	}
 

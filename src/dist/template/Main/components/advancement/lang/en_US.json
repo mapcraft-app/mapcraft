@@ -6,6 +6,8 @@
 		"Graph": {
 			"NewAdvancement": "New advancement",
 			"Generate": "Generate advancement",
+			"AddAdvancement": "Add advancement",
+			"AddChild": "Add child",
 			"Title": "Title of advancement"
 		},
 		"Edit": {
