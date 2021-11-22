@@ -960,85 +960,89 @@ class Component
 			});
 		};
 
-		const childs = (childJson, parentId, deepNode, emptyNode) =>
+		const addBlock = (BLOCK, child, ParentID) =>
 		{
-			for (const key in childJson)
-				if (Object.prototype.hasOwnProperty.call(childJson, key))
+			const srcImage = getSrcImage(child.json.display.icon.item.slice(10));
+			TEMPLATE.render(BLOCK, 'line/node.tp', { node: child.id, parent: ParentID, title: child.json.display.title.text, icon: srcImage.src, class: srcImage.class });
+			TEMPLATE.render(BLOCK, 'line/remove_advancement.tp', { node: child.id });
+			const BUTTON = BLOCK.querySelector('button.uk-button-danger');
+			BUTTON.addEventListener('click', (event) =>
+			{
+				event.preventDefault();
+				event.stopImmediatePropagation();
+				document.getElementById('zone').style.display = 'none';
+				const nodeID = BUTTON.parentNode.getAttribute('node');
+				const deleteJson = (data, sliceID = undefined, parent = undefined) =>
 				{
-					const lastChild = (childJson[key] === childJson[childJson.length - 1]);
-					let isChilds = false;
-					const BLOCK = document.createElement('div');
-					BLOCK.classList.add('line-node');
-					if (ifAdding && CurrentID === childJson[key].id)
-						BLOCK.classList.add('line-node-selected');
-					for (let empty = emptyNode; empty > 0; empty--)
-						TEMPLATE.render(BLOCK, 'line/empty.tp');
-					for (let deep = emptyNode; deep < deepNode; deep++)
-						TEMPLATE.render(BLOCK, 'line/line.tp');
-					if (Object.prototype.hasOwnProperty.call(childJson[key], 'childs'))
+					let ret;
+					if (data.id === nodeID)
 					{
-						if (lastChild)
-						{
-							TEMPLATE.render(BLOCK, 'line/lastCollapse.tp');
-							emptyNode++; //eslint-disable-line no-param-reassign
-						}
-						else
-						{
-							TEMPLATE.render(BLOCK, 'line/collapse.tp');
-						}
-						isChilds = true;
+						parent.childs.splice(sliceID, 1);
+						if (!parent.childs.length)
+							delete parent.childs; //eslint-disable-line no-param-reassign
+						return data;
 					}
-					else if (lastChild)
+					if (Object.prototype.hasOwnProperty.call(data, 'childs'))
+						for (const children of data.childs)
+						{
+							ret = deleteJson(children, data.childs.indexOf(children), data);
+							if (ret)
+								break;
+						}
+					return ret;
+				};
+				deleteJson(ADVANCEMENT.data);
+				this.generateAdvancement();
+				TEMPLATE.cleanNode(document.querySelector('div.graph'));
+				this.drawGraph(ADVANCEMENT.data);
+			});
+		};
+
+		const childs = (Childs, ParentID, arrayLine) =>
+		{
+			const isLastChild = (child) => (child === Childs[Childs.length - 1]);
+			for (const child of Childs)
+			{
+				let saveSVG;
+				const BLOCK = document.createElement('div');
+				BLOCK.classList.add('line-node');
+				if (ifAdding && CurrentID === child.id)
+					BLOCK.classList.add('line-node-selected');
+				for (const line of arrayLine)
+					TEMPLATE.render(BLOCK, `line/${line}.tp`);
+				if (Object.prototype.hasOwnProperty.call(child, 'childs'))
+				{
+					if (!isLastChild(child))
 					{
-						TEMPLATE.render(BLOCK, 'line/angle.tp');
+						TEMPLATE.render(BLOCK, 'line/collapse.tp');
+						saveSVG = 'line';
 					}
 					else
 					{
-						TEMPLATE.render(BLOCK, 'line/children.tp');
+						TEMPLATE.render(BLOCK, 'line/lastCollapse.tp');
+						saveSVG = 'empty';
 					}
-					const srcImage = getSrcImage(childJson[key].json.display.icon.item.slice(10));
-					TEMPLATE.render(BLOCK, 'line/node.tp', { node: childJson[key].id, parent: parentId, title: childJson[key].json.display.title.text, icon: srcImage.src, class: srcImage.class });
-					TEMPLATE.render(BLOCK, 'line/remove_advancement.tp', { node: childJson[key].id });
-					const BUTTON = BLOCK.querySelector('button.uk-button-danger');
-					BUTTON.addEventListener('click', (event) =>
-					{
-						event.preventDefault();
-						event.stopImmediatePropagation();
-						document.getElementById('zone').style.display = 'none';
-						const nodeID = BUTTON.parentNode.getAttribute('node');
-						const deleteJson = (data, sliceID = undefined, parent = undefined) =>
-						{
-							let ret;
-							if (data.id === nodeID)
-							{
-								parent.childs.splice(sliceID, 1);
-								if (!parent.childs.length)
-									delete parent.childs; //eslint-disable-line no-param-reassign
-								return data;
-							}
-							if (Object.prototype.hasOwnProperty.call(data, 'childs'))
-								for (const child of data.childs)
-								{
-									ret = deleteJson(child, data.childs.indexOf(child), data);
-									if (ret)
-										break;
-								}
-							return ret;
-						};
-						deleteJson(ADVANCEMENT.data, ADVANCEMENT.data);
-						this.generateAdvancement();
-						TEMPLATE.cleanNode(document.querySelector('div.graph'));
-						this.drawGraph(ADVANCEMENT.data);
-					});
-					BLOCK.removeAttribute('tp');
-					getAdvancementData(BLOCK);
-					graph.appendChild(BLOCK);
-					if (isChilds)
-					{
-						collapse(BLOCK);
-						childs(childJson[key].childs, childJson[key].id, deepNode + 1, emptyNode);
-					}
+					addBlock(BLOCK, child, ParentID, arrayLine);
+					collapse(BLOCK);
 				}
+				else
+				{
+					if (!isLastChild(child))
+						TEMPLATE.render(BLOCK, 'line/children.tp');
+					else
+						TEMPLATE.render(BLOCK, 'line/angle.tp');
+					addBlock(BLOCK, child, ParentID, arrayLine);
+				}
+				BLOCK.removeAttribute('tp');
+				getAdvancementData(BLOCK);
+				graph.appendChild(BLOCK);
+				if (Object.prototype.hasOwnProperty.call(child, 'childs'))
+				{
+					const newArray = [...arrayLine];
+					newArray.push(saveSVG);
+					childs(child.childs, child.id, newArray); //eslint-disable-line
+				}
+			}
 		};
 
 		if (Object.keys(json).length)
@@ -1047,6 +1051,7 @@ class Component
 			const BLOCK = document.createElement('div');
 			BLOCK.classList.add('line-node');
 			TEMPLATE.render(BLOCK, 'line/root.tp');
+			console.log(json);
 			const srcImage = getSrcImage(json.json.display.icon.item.slice(10));
 			TEMPLATE.render(BLOCK, 'line/node.tp', { node: json.id, parent: json.id, title: String(json.json.display.title.text), icon: srcImage.src, class: srcImage.class });
 			if (ifAdding && json.id === CurrentID)
@@ -1057,7 +1062,7 @@ class Component
 			if (Object.prototype.hasOwnProperty.call(json, 'childs'))
 			{
 				collapse(BLOCK, true);
-				childs(json.childs, json.id, Number(1), Number(1));
+				childs(json.childs, json.id, ['empty']);
 			}
 		}
 	}
