@@ -1,4 +1,3 @@
-/*eslint-disable curly */
 const { shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
@@ -945,7 +944,6 @@ class Component
 				const LINES = document.getElementsByClassName('line-node');
 				BLOCK.toggleAttribute('isReplied');
 				for (let x = 0; x < LINES.length; x++)
-				{
 					if (LINES[x].getAttribute('graph-accordion') > accordionID)
 					{
 						LINES[x].classList.toggle('line-node-hide');
@@ -958,7 +956,6 @@ class Component
 							x--;
 						}
 					}
-				}
 			});
 		};
 
