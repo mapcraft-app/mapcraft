@@ -1,3 +1,4 @@
+/*eslint-disable curly */
 const { shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
@@ -934,28 +935,29 @@ class Component
 			});
 		};
 
-		const collapse = (BLOCK, isRoot = false) =>
+		const collapse = (BLOCK) =>
 		{
 			BLOCK.querySelector('button.uk-icon-button').addEventListener('click', (event) =>
 			{
 				event.preventDefault();
 				event.stopImmediatePropagation();
-				const LINES = graph.querySelectorAll('div.line-node');
-				const blockNode = BLOCK.querySelector('div.block').getAttribute('node');
-				const blockParent = BLOCK.querySelector('div.block').getAttribute('parent');
-				let isFound = false;
-				for (const line of LINES)
+				const accordionID = BLOCK.getAttribute('graph-accordion');
+				const LINES = document.getElementsByClassName('line-node');
+				BLOCK.toggleAttribute('isReplied');
+				for (let x = 0; x < LINES.length; x++)
 				{
-					const parent = line.querySelector('div.block').getAttribute('parent');
-					if (isFound && parent === blockParent && !isRoot)
-						break;
-					if (isFound)
-						if (parent !== blockNode)
-							line.classList.add('line-node-hide');
-						else
-							line.classList.toggle('line-node-hide');
-					if (line === BLOCK)
-						isFound = true;
+					if (LINES[x].getAttribute('graph-accordion') > accordionID)
+					{
+						LINES[x].classList.toggle('line-node-hide');
+						if (LINES[x].hasAttribute('isReplied'))
+						{
+							const repliedID = LINES[x].getAttribute('graph-accordion');
+							x++;
+							while (LINES[x].getAttribute('graph-accordion') > repliedID)
+								x++;
+							x--;
+						}
+					}
 				}
 			});
 		};
@@ -998,7 +1000,7 @@ class Component
 			});
 		};
 
-		const childs = (Childs, ParentID, arrayLine) =>
+		const childs = (Childs, ParentID, arrayLine, accordionID) =>
 		{
 			const isLastChild = (child) => (child === Childs[Childs.length - 1]);
 			for (const child of Childs)
@@ -1033,6 +1035,7 @@ class Component
 						TEMPLATE.render(BLOCK, 'line/angle.tp');
 					addBlock(BLOCK, child, ParentID, arrayLine);
 				}
+				BLOCK.setAttribute('graph-accordion', accordionID);
 				BLOCK.removeAttribute('tp');
 				getAdvancementData(BLOCK);
 				graph.appendChild(BLOCK);
@@ -1040,7 +1043,7 @@ class Component
 				{
 					const newArray = [...arrayLine];
 					newArray.push(saveSVG);
-					childs(child.childs, child.id, newArray); //eslint-disable-line
+					childs(child.childs, child.id, newArray, (Number(accordionID) + 1)); //eslint-disable-line
 				}
 			}
 		};
@@ -1056,13 +1059,14 @@ class Component
 			TEMPLATE.render(BLOCK, 'line/node.tp', { node: json.id, parent: json.id, title: String(json.json.display.title.text), icon: srcImage.src, class: srcImage.class });
 			if (ifAdding && json.id === CurrentID)
 				BLOCK.classList.add('line-node-selected');
+			BLOCK.setAttribute('graph-accordion', Number(0));
 			BLOCK.removeAttribute('tp');
 			getAdvancementData(BLOCK);
 			graph.appendChild(BLOCK);
 			if (Object.prototype.hasOwnProperty.call(json, 'childs'))
 			{
 				collapse(BLOCK, true);
-				childs(json.childs, json.id, ['empty']);
+				childs(json.childs, json.id, ['empty'], 1);
 			}
 		}
 	}

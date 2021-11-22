@@ -70,6 +70,10 @@ async function UpdateSystem()
 		}
 		UpdateExecutableIsPresent = true;
 	});
+	setTimeout(() =>
+	{
+		UpdateExecutableIsPresent = true;
+	}, 10 * 1000);
 }
 UpdateSystem();
 //#endregion
@@ -444,18 +448,21 @@ ipcMain.on('Update:make-update', (event, executePath, tempPath, zipPath, unzipPa
 		executable = 'update';
 
 	const EXECUTABLE = path.join(process.env.AppDataPath, executable);
-	const update = child.spawn(EXECUTABLE, {
-		detached: true,
-		stdio: ['ignore', 'ignore', 'ignore'],
-		env: {
-			EXECUTE_PATH: executePath,
-			TEMP_PATH: tempPath,
-			ZIP_PATH: zipPath,
-			UNZIP_PATH: unzipPath,
-		},
-	});
-	update.unref();
-	app.exit();
+	if (fs.existsSync(EXECUTABLE))
+	{
+		const update = child.spawn(EXECUTABLE, {
+			detached: true,
+			stdio: ['ignore', 'ignore', 'ignore'],
+			env: {
+				EXECUTE_PATH: executePath,
+				TEMP_PATH: tempPath,
+				ZIP_PATH: zipPath,
+				UNZIP_PATH: unzipPath,
+			},
+		});
+		update.unref();
+		app.exit();
+	}
 });
 //#endregion
 //#endregion
