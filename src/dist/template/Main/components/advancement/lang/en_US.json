@@ -260,7 +260,8 @@
 		"Error": {
 			"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)",
 			"NoAdvancement": "No advancement is selected",
-			"NoCriteria": "No criteria was created"
+			"NoCriteria": "No criteria was created",
+			"MakeDirectoryError": "The folder cannot be created"
 		}
 	}
 }

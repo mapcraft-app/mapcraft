@@ -13,7 +13,7 @@ const randomString = () => crypto.randomBytes(8).toString('hex');
 const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
 let ADVANCEMENT = {};
-let CurrentID = String('');
+let CurrentID;
 
 //Add directory to datapack if not exist
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
@@ -30,21 +30,24 @@ const GetTriggerForm = (id) =>
 	return undefined;
 };
 
+const newChild = () => ({
+	id: randomString(),
+	json: {
+		display: {
+			icon: { item: 'minecraft:stone' },
+			title: { text: 'Advancement' },
+			description: { text: 'Description' },
+		},
+	},
+	childs: [],
+});
+
 const BaseModel = () => ({
 	id: `advancement_${randomString()}`,
 	name: 'New advancement',
-	data: {
-		id: randomString(),
-		json: {
-			display: {
-				icon: { item: 'minecraft:stone' },
-				namespace: { text: 'mapcraft' },
-				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
-				title: { text: 'Advancement' },
-				description: { text: 'Description' },
-			},
-		},
-	},
+	namespace: 'mapcraft-data',
+	background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
+	data: newChild(),
 });
 
 function OpenExternLink()
@@ -62,23 +65,19 @@ function OpenExternLink()
 	});
 }
 
-function searchInJson(key, value, json = ADVANCEMENT.data, saveJson = undefined)
+function getSrcImage(item)
 {
-	let ret;
-	if (json[key] === value)
-	{
-		if (saveJson !== undefined)
-			json.json = saveJson; //eslint-disable-line no-param-reassign
-		return json;
-	}
-	if (Object.prototype.hasOwnProperty.call(json, 'childs'))
-		for (const child of json.childs)
-		{
-			ret = searchInJson(key, value, child);
-			if (ret)
-				break;
-		}
-	return ret;
+	const testBlockPath = path.join(__dirname, '../../../../img/assets/block', item);
+	const testItemPath = path.join(__dirname, '../../../../img/assets/item', item);
+	if (fs.existsSync(`${testBlockPath}.png`))
+		return { src: `./dist/img/assets/block/${item}.png`, class: 'item-img' };
+	if (fs.existsSync(`${testBlockPath}.webp`))
+		return { src: `./dist/img/assets/block/${item}.webp`, class: 'item-img' };
+	if (fs.existsSync(`${testItemPath}.png`))
+		return { src: `./dist/img/assets/item/${item}.png`, class: 'item-img' };
+	if (fs.existsSync(`${testItemPath}.webp`))
+		return { src: `./dist/img/assets/item/${item}.webp`, class: 'item-img' };
+	return { src: './dist/img/assets/no_data.png', class: 'item-img' };
 }
 
 class SetJson
@@ -121,7 +120,7 @@ class SetJson
 				default:
 				case 'edit-root':
 					if (advancement.display)
-						this.setRoot(ListItem.querySelector('div.uk-accordion-content'), advancement.display);
+						this.setRoot(ListItem.querySelector('div.uk-accordion-content'), ADVANCEMENT);
 					break;
 				case 'edit-display':
 					if (advancement.display)
@@ -173,7 +172,7 @@ class SetJson
 
 	static setRoot(ListItem, advancement)
 	{
-		this.input(ListItem.querySelector('#edit-root-namespace'), advancement.namespace.text);
+		this.input(ListItem.querySelector('#edit-root-namespace'), advancement.namespace);
 		this.input(ListItem.querySelector('#edit-root-background'), advancement.background);
 	}
 
@@ -194,7 +193,10 @@ class SetJson
 		this.input(ListItem.querySelector('#edit-display-description-strikethrough'), advancement.description.strikethrough);
 		this.input(ListItem.querySelector('#edit-display-description-obfuscated'), advancement.description.obfuscated);
 		if (advancement.icon.item)
-			MCsearch.SetValue(ListItem.querySelector('#edit-display-icon'), advancement.icon.item);
+		{
+			MCsearch.SetValue(ListItem.querySelector('#edit-display-icon'), advancement.icon.item.slice(10));
+			ListItem.querySelector('#edit-display-icon input').dispatchEvent(new Event('input'));
+		}
 		this.input(ListItem.querySelector('#edit-display-frame'), advancement.frame);
 		this.input(ListItem.querySelector('#edit-display-nbt'), advancement.nbt);
 		this.input(ListItem.querySelector('#edit-display-check-toast'), advancement.show_toast);
@@ -216,6 +218,7 @@ class SetJson
 				{
 					const ID = Component.newTrigger(GenerateID, x, newList, false); //eslint-disable-line no-use-before-define
 					MCsearch.SetValue(newList.querySelector(`div[id="${ID}"] div.search-dropdown-input`), advancement[x].trigger.slice(10));
+					newList.querySelector(`div[id="${ID}"] div.search-dropdown-input input`).dispatchEvent(new Event('input'));
 					const CriteriaForm = newList.querySelector(`#edit-criteria-form-${GenerateID++}`);
 					const FORM = Form.printTrigger(advancement[x].trigger.slice(10));
 					if (FORM)
@@ -259,16 +262,18 @@ class SetJson
 									{
 										const search = searchInput.querySelector(`${child.tag}[id="${child.id}"]`);
 										if (criteriaData[child.id])
-											search.setAttribute('value', criteriaData[child.id]);
+											this.input(search, criteriaData[child.id]);
 										else if (Object.prototype.hasOwnProperty.call(child, 'childs'))
 											searchChilds(search, criteriaData[child.id], child);
 									}
 								};
 								const SearchInput = CriteriaForm.querySelector(`${form.element.tag}[id="${form.element.id}"]`);
-								if (Object.prototype.hasOwnProperty.call(form.element, 'childs'))
+								if (form.element.tag === 'select')
+									this.input(SearchInput, advancement[x].conditions[form.element.id]);
+								else if (Object.prototype.hasOwnProperty.call(form.element, 'childs'))
 									searchChilds(SearchInput, advancement[x].conditions[form.element.id], form.element.childs);
 								else
-									SearchInput.setAttribute('value', advancement[x].conditions[form.element.id]);
+									this.input(SearchInput, advancement[x].conditions[form.element.id]);
 							}
 					}
 					else
@@ -626,9 +631,16 @@ class Json
 		{
 			const newRequirement = [];
 			const triggerList = document.querySelectorAll('div[id="edit-criteria-list"] > div');
-			for (const trigger of triggerList)
-				newRequirement.push(trigger.querySelector(`input[id="edit-criteria-name-${trigger.id}"]`).value);
-			this.json.requirements.push(newRequirement);
+			if (!triggerList.length)
+			{
+				this.json.requirements = [];
+			}
+			else
+			{
+				for (const trigger of triggerList)
+					newRequirement.push(trigger.querySelector(`input[id="edit-criteria-name-${trigger.id}"]`).value);
+				this.json.requirements.push(newRequirement);
+			}
 		}
 		else
 		{
@@ -662,6 +674,117 @@ class Json
 	//#endregion
 }
 
+class GenerateAdvancements
+{
+	constructor()
+	{
+		this.MapcraftLocalStorage = JSON.parse(localStorage.getItem('Mapcraft'));
+		this.NAMESPACE = (!ADVANCEMENT.namespace.length) ? 'mapcraft-data' : ADVANCEMENT.namespace;
+		this.pathOfDirectory = path.join(this.MapcraftLocalStorage.Data.DataPack, 'data/', this.NAMESPACE, 'advancements');
+		this.createdFile = [];
+		fs.mkdirSync(this.pathOfDirectory, { recursive: true });
+	}
+
+	generate()
+	{
+		if (Object.prototype.hasOwnProperty.call(ADVANCEMENT, 'data'))
+			if (Object.prototype.hasOwnProperty.call(ADVANCEMENT.data, 'json'))
+			{
+				const FILE = path.join(this.pathOfDirectory, `${ADVANCEMENT.data.id}.json`);
+				this.createdFile.push(FILE);
+				const data = ADVANCEMENT.data.json;
+				data.display.background = ADVANCEMENT.background;
+				fs.writeFile(FILE, JSON.stringify(data, null, 4), { encoding: 'utf-8', mode: 0o666, flag: 'w' }, (err) =>
+				{
+					if (err)
+						throw new Error(err);
+				});
+				if (Object.prototype.hasOwnProperty.call(ADVANCEMENT.data, 'childs'))
+					for (const child of ADVANCEMENT.data.childs)
+						this.iterate(child, ADVANCEMENT.data.id);
+			}
+	}
+
+	iterate(child, parent)
+	{
+		if (Object.prototype.hasOwnProperty.call(child, 'json'))
+		{
+			const FILE = path.join(this.pathOfDirectory, `${child.id}.json`);
+			this.createdFile.push(FILE);
+			const data = child.json;
+			data.parent = `${this.NAMESPACE}:${parent}`;
+			fs.writeFile(FILE, JSON.stringify(data, null, 4), { encoding: 'utf-8', mode: 0o666, flag: 'w' }, (err) =>
+			{
+				if (err)
+					throw new Error(err);
+			});
+			if (Object.prototype.hasOwnProperty.call(child, 'childs'))
+				for (const children of child.childs)
+					this.iterate(children, child.id);
+		}
+	}
+}
+
+class EditAdvancement
+{
+	static search(key, value, json = ADVANCEMENT.data, parent = ADVANCEMENT.data)
+	{
+		let ret;
+		if (json[key] === value)
+			return { child: json, parent };
+		if (Object.prototype.hasOwnProperty.call(json, 'childs'))
+			for (const child of json.childs)
+			{
+				ret = this.search(key, value, child, json);
+				if (ret)
+					break;
+			}
+		return ret;
+	}
+
+	static addChild(id)
+	{
+		if (!document.getElementsByClassName('line-node-selected').length)
+			return;
+		const element = this.search('id', id);
+		element.child.childs.push(newChild());
+		Component.saveFile();	//eslint-disable-line no-use-before-define
+	}
+
+	static addParent(id)
+	{
+		if (!document.getElementsByClassName('line-node-selected').length)
+			return;
+		const element = this.search('id', id);
+		element.parent.childs.push(newChild());
+		Component.saveFile();	//eslint-disable-line no-use-before-define
+	}
+
+	static remove(id)
+	{
+		const _remove = (data, sliceID = undefined, parent = undefined) =>
+		{
+			if (data.id === id)
+			{
+				parent.childs.splice(sliceID, 1);
+				return;
+			}
+			if (Object.prototype.hasOwnProperty.call(data, 'childs'))
+				for (const children of data.childs)
+					_remove(children, data.childs.indexOf(children), data);
+		};
+		_remove(ADVANCEMENT.data);
+		Component.saveFile();	//eslint-disable-line no-use-before-define
+	}
+
+	static edit(key, value, data)
+	{
+		const element = this.search(key, value);
+		element.child.json = JSON.parse(JSON.stringify(data));
+		Component.saveFile();	//eslint-disable-line no-use-before-define
+	}
+}
+
 class Component
 {
 	static main()
@@ -684,22 +807,7 @@ class Component
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			const Dir = path.join(RecipesDirectory, 'data');
-			const json = {
-				id: `advancement_${randomString()}`,
-				name: 'New advancement',
-				data: {
-					id: randomString(),
-					json: {
-						display: {
-							icon: { item: 'minecraft:stone' },
-							namespace: { text: 'mapcraft' },
-							background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
-							title: { text: 'Advancement' },
-							description: { text: 'Description' },
-						},
-					},
-				},
-			};
+			const json = BaseModel();
 			if (!fs.existsSync(Dir))
 				fs.mkdirSync(Dir);
 			fs.writeFile(path.join(Dir, `${json.id}.json`), JSON.stringify(json, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
@@ -707,17 +815,13 @@ class Component
 				if (err)
 					MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
 				ADVANCEMENT = JSON.parse(JSON.stringify(json)); //deepcopy of json, structuredClone() not work
-				this.drawGraph(ADVANCEMENT.data);
 				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
-				const li = document.createElement('li');
-				li.setAttribute('advancement-id', json.id);
-				li.innerText = json.name;
-				li.setAttribute('advancement-file', path.join(Dir, `${json.id}.json`));
-				document.getElementById('advancement-list').appendChild(li);
+				TEMPLATE.cleanNode(document.getElementById('advancement-list'));
+				this.drawList();
 			});
 		});
 
-		//Update name of advancement if input change
+		//Update name and icon of advancement if input change
 		document.getElementById('input-zone-name-advancement').addEventListener('input', (event) =>
 		{
 			const LIST = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
@@ -726,10 +830,20 @@ class Component
 				if (!list.style.display)
 					list.nextSibling.innerText = ADVANCEMENT.name;
 		});
+		document.getElementById('input-zone-name-advancement').addEventListener('focusout', () =>
+		{
+			this.saveFile();
+		});
+		document.querySelector('#edit-display-icon input.search-dropdown-input').addEventListener('input', (event) =>
+		{
+			if (!document.getElementById('zone').style.display)
+				document.querySelector('div.line-node-selected img').src = getSrcImage(event.target.value).src;
+		});
 
 		//Select advancement in list and display
 		document.getElementById('advancement-list').addEventListener('click', (event) =>
 		{
+			CurrentID = undefined;
 			const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
 			for (const icon of ICONS)
 				icon.style.display = 'none';
@@ -740,6 +854,7 @@ class Component
 				if (err)
 					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err);
 				ADVANCEMENT = JSON.parse(data);
+				document.getElementById('input-zone').style.removeProperty('display');
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
 				this.drawGraph(ADVANCEMENT.data);
@@ -747,41 +862,69 @@ class Component
 			});
 		});
 
-		//Generate advancement
+		//Generate complete advancement
 		document.getElementById('input-zone-generate-advancement').addEventListener('click', () =>
 		{
-			if (!Object.keys(ADVANCEMENT).length)
+			MCworkInProgress.open();
+			this.generateAdvancement();
+			const Generate = new GenerateAdvancements();
+			try
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), LANG.Data.Error.NoAdvancement);
-				return;
+				Generate.generate();
 			}
-			const newJson = new Json();
-			const json = newJson.generate();
-			if (json)
-				console.log(json);
+			catch (err)
+			{
+				MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err.message);
+				Generate.createdFile.forEach((_file) =>
+				{
+					fs.rm(_file, (err2) =>
+					{
+						if (err2)
+							MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err2.message);
+					});
+				});
+			}
+			MCworkInProgress.close();
 		});
 
+		//Modify name of advancement
 		document.getElementById('edit-display-title-text').addEventListener('input', (event) =>
 		{
 			if (!document.getElementById('zone').style.display)
+			{
 				document.querySelector('div.line-node-selected h5').innerText = event.target.value;
+				ADVANCEMENT.name = event.target.value;
+			}
 		});
-
-		document.getElementById('generate-advancement').addEventListener('click', (event) =>
+		//Save selected advancement
+		document.getElementById('save-advancement').addEventListener('click', (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			this.generateAdvancement();
 		});
+		//Delete selected advancement
+		document.getElementById('modal-confirm-yes').addEventListener('click', () =>
+		{
+			CurrentID = undefined;
+			const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
+			fs.rm(ICONS[0].parentNode.getAttribute('advancement-file'), (err) =>
+			{
+				if (err)
+					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err.message);
+				TEMPLATE.cleanNode(ICONS[0].parentNode, true);
+				TEMPLATE.cleanNode(document.querySelector('div.graph'));
+				SetJson.cleanForm();
+				document.getElementById('input-zone').style.setProperty('display', 'none');
+				document.getElementById('zone').style.setProperty('display', 'none');
+				document.getElementById('input-zone-name-advancement').value = '';
+			});
+		});
 	}
 
 	static saveFile()
 	{
-		fs.writeFile(path.join(RecipesDirectory, 'data', `${ADVANCEMENT.id}.json`), JSON.stringify(ADVANCEMENT, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
-		{
-			if (err)
-				MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
-		});
+		fs.writeFileSync(path.join(RecipesDirectory, 'data', `${ADVANCEMENT.id}.json`), JSON.stringify(ADVANCEMENT, null, 4), { encoding: 'utf-8', flag: 'w' });
 	}
 
 	static generateAdvancement()
@@ -791,12 +934,12 @@ class Component
 			MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), LANG.Data.Error.NoAdvancement);
 			return;
 		}
-		const newJson = new Json();
-		const json = newJson.generate();
-		if (json)
+		if (CurrentID)
 		{
-			searchInJson('id', CurrentID, ADVANCEMENT.data, json);
-			this.saveFile();
+			const newJson = new Json();
+			const json = newJson.generate();
+			if (json)
+				EditAdvancement.edit('id', CurrentID, json);
 		}
 	}
 
@@ -828,65 +971,26 @@ class Component
 
 	static addParentChild()
 	{
-		const AddParent = (data, parent = undefined) =>
-		{
-			let ret;
-			if (data.id === CurrentID)
-			{
-				console.log(parent.childs);
-				parent.childs.push(BaseModel().data);
-				return data;
-			}
-			if (Object.prototype.hasOwnProperty.call(data, 'childs'))
-				for (const child of data.childs)
-				{
-					ret = AddParent(child, data);
-					if (ret)
-						break;
-				}
-			return ret;
-		};
-
-		const addAdvancement = () =>
-		{
-			if (CurrentID === ADVANCEMENT.data.id)
-			{
-				//root
-				if (!ADVANCEMENT.data.childs)
-					ADVANCEMENT.data.childs = [];
-				ADVANCEMENT.data.childs.push(BaseModel().data);
-			}
-			else
-			{
-				AddParent(ADVANCEMENT.data);
-			}
-			this.saveFile();
-			SetJson.cleanForm();
-			this.drawGraph(ADVANCEMENT.data, true);
-		};
-
-		document.getElementById('add-advancement').addEventListener('click', (event) =>
+		document.getElementById('add-parent').addEventListener('click', (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			addAdvancement();
+
+			CurrentID = document.querySelector('div.graph div.line-node-selected div.block').getAttribute('node');
+			EditAdvancement.addParent(CurrentID);
+			this.drawGraph(ADVANCEMENT.data, true);
+			SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
 		});
 		document.getElementById('add-child').addEventListener('click', (event) =>
 		{
+			//child
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			if (CurrentID === ADVANCEMENT.data.id)
-			{
-				addAdvancement();
-				return;
-			}
-			const element = searchInJson('id', CurrentID);
-			if (!Object.prototype.hasOwnProperty.call(element, 'childs'))
-				element.childs = [];
-			element.childs.push(BaseModel().data);
-			this.saveFile();
-			SetJson.cleanForm();
+
+			CurrentID = document.querySelector('div.graph div.line-node-selected div.block').getAttribute('node');
+			EditAdvancement.addChild(CurrentID);
 			this.drawGraph(ADVANCEMENT.data, true);
+			SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
 		});
 	}
 
@@ -894,43 +998,38 @@ class Component
 	{
 		const graph = document.querySelector('div.graph');
 
-		const getSrcImage = (item) =>
-		{
-			const testBlockPath = path.join(__dirname, '../../../../img/assets/block', item);
-			const testItemPath = path.join(__dirname, '../../../../img/assets/item', item);
-			if (fs.existsSync(`${testBlockPath}.png`))
-				return { src: `./dist/img/assets/block/${item}.png`, class: 'item-img' };
-			if (fs.existsSync(`${testBlockPath}.webp`))
-				return { src: `./dist/img/assets/block/${item}.webp`, class: 'item-img' };
-			if (fs.existsSync(`${testItemPath}.png`))
-				return { src: `./dist/img/assets/item/${item}.png`, class: 'item-img' };
-			if (fs.existsSync(`${testItemPath}.webp`))
-				return { src: `./dist/img/assets/item/${item}.webp`, class: 'item-img' };
-			return { src: './dist/img/assets/no_data.png', class: 'item-img' };
-		};
-
 		const getAdvancementData = (BLOCK) =>
 		{
 			BLOCK.querySelector('div.block').addEventListener('click', (event) =>
 			{
 				event.preventDefault();
 				event.stopImmediatePropagation();
-				CurrentID = String(BLOCK.querySelector('div.block').getAttribute('node'));
+				if (CurrentID)
+				{
+					const newJson = new Json();
+					EditAdvancement.edit('id', CurrentID, newJson.generate());
+					this.saveFile();
+				}
+				CurrentID = BLOCK.querySelector('div.block').getAttribute('node');
+				//#region Display child button if selected node is not main
 				if (ADVANCEMENT.data.id === CurrentID)
-					document.getElementById('add-child').style.display = 'none';
+					document.getElementById('add-child').style.setProperty('display', 'none');
 				else
-					document.getElementById('add-child').style.display = '';
-				const element = searchInJson('id', CurrentID);
+					document.getElementById('add-child').style.removeProperty('display');
+				//#endregion
+
+				//#region Set selected line
 				const GRAPH = document.querySelectorAll('div.graph div.line-node');
 				for (const line of GRAPH)
 					line.classList.remove('line-node-selected');
 				BLOCK.classList.add('line-node-selected');
-				//line-node-selected
-				if (Object.prototype.hasOwnProperty.call(element, 'json') && Object.keys(element.json).length)
-					SetJson.set(element.json);
-				else
-					SetJson.cleanForm();
-				document.getElementById('zone').style.display = '';
+				//#endregion
+
+				//#region Fill form with data of current selected block
+				SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
+				if (document.getElementById('zone').style.display)
+					document.getElementById('zone').style.removeProperty('display');
+				//#endregion
 			});
 		};
 
@@ -971,27 +1070,7 @@ class Component
 				event.stopImmediatePropagation();
 				document.getElementById('zone').style.display = 'none';
 				const nodeID = BUTTON.parentNode.getAttribute('node');
-				const deleteJson = (data, sliceID = undefined, parent = undefined) =>
-				{
-					let ret;
-					if (data.id === nodeID)
-					{
-						parent.childs.splice(sliceID, 1);
-						if (!parent.childs.length)
-							delete parent.childs; //eslint-disable-line no-param-reassign
-						return data;
-					}
-					if (Object.prototype.hasOwnProperty.call(data, 'childs'))
-						for (const children of data.childs)
-						{
-							ret = deleteJson(children, data.childs.indexOf(children), data);
-							if (ret)
-								break;
-						}
-					return ret;
-				};
-				deleteJson(ADVANCEMENT.data);
-				this.generateAdvancement();
+				EditAdvancement.remove(nodeID);
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				this.drawGraph(ADVANCEMENT.data);
 			});
@@ -1009,7 +1088,7 @@ class Component
 					BLOCK.classList.add('line-node-selected');
 				for (const line of arrayLine)
 					TEMPLATE.render(BLOCK, `line/${line}.tp`);
-				if (Object.prototype.hasOwnProperty.call(child, 'childs'))
+				if (child.childs.length)
 				{
 					if (!isLastChild(child))
 					{
@@ -1051,7 +1130,6 @@ class Component
 			const BLOCK = document.createElement('div');
 			BLOCK.classList.add('line-node');
 			TEMPLATE.render(BLOCK, 'line/root.tp');
-			console.log(json);
 			const srcImage = getSrcImage(json.json.display.icon.item.slice(10));
 			TEMPLATE.render(BLOCK, 'line/node.tp', { node: json.id, parent: json.id, title: String(json.json.display.title.text), icon: srcImage.src, class: srcImage.class });
 			if (ifAdding && json.id === CurrentID)
@@ -1060,7 +1138,7 @@ class Component
 			BLOCK.removeAttribute('tp');
 			getAdvancementData(BLOCK);
 			graph.appendChild(BLOCK);
-			if (Object.prototype.hasOwnProperty.call(json, 'childs'))
+			if (json.childs.length)
 			{
 				collapse(BLOCK, true);
 				childs(json.childs, json.id, ['empty'], 1);

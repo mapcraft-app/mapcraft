@@ -26,7 +26,7 @@
 <div id="zone" style="display: none;" class="uk-margin">
 	<div class="uk-flex uk-flex-around uk-margin">
 		<div>
-			<button id="add-advancement" class="uk-button uk-button-success uk-margin-right">
+			<button id="add-parent" class="uk-button uk-button-success uk-margin-right">
 				<span uk-icon="plus"></span>
 				<span lang="Graph.AddParent"></span>
 			</button>
@@ -36,7 +36,7 @@
 			</button>
 		</div>
 		<div>
-			<button id="generate-advancement" class="uk-button uk-button-success uk-margin-right">
+			<button id="save-advancement" class="uk-button uk-button-success uk-margin-right">
 				<span uk-icon="pull"></span>
 				<span lang="Graph.Save"></span>
 			</button>
