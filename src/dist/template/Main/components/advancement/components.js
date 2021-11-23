@@ -10,7 +10,11 @@ const GetForm = require('./form/get');
 const SetForm = require('./form/set');
 
 const randomString = () => crypto.randomBytes(8).toString('hex');
-const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+function UpdateLang()
+{
+	LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+}
 const TEMPLATE = new MCtemplate(__dirname);
 let ADVANCEMENT = {};
 let CurrentID;
@@ -90,16 +94,16 @@ class SetJson
 		for (const input of FORMinput)
 			switch (input.type.toLowerCase())
 			{
-				default:
-				case 'text':
-				case 'color':
-					input.value = String('');
-					break;
 				case 'number':
 					input.value = Number(0);
 					break;
 				case 'checkbox':
 					input.checked = Boolean(false);
+					break;
+				case 'text':
+				case 'color':
+				default:
+					input.value = String('');
 			}
 		for (const select of FORMselect)
 			select.selectedIndex = 0;
@@ -117,7 +121,6 @@ class SetJson
 		for (const ListItem of LIST)
 			switch (ListItem.querySelector('div.uk-accordion-content').id)
 			{
-				default:
 				case 'edit-root':
 					if (advancement.display)
 						this.setRoot(ListItem.querySelector('div.uk-accordion-content'), ADVANCEMENT);
@@ -135,6 +138,7 @@ class SetJson
 						this.setRequirements(ListItem.querySelector('div.uk-accordion-content'), advancement);
 					break;
 				case 'edit-rewards':
+				default:
 					if (advancement.rewards)
 						this.setRewards(ListItem.querySelector('div.uk-accordion-content'), advancement.rewards);
 					break;
@@ -157,16 +161,17 @@ class SetJson
 		else
 			switch (input.type.toLowerCase())
 			{
-				default:
-				case 'text':
-				case 'color':
-					input.value = String(value); //eslint-disable-line
-					break;
 				case 'number':
 					input.value = Number(value); //eslint-disable-line
 					break;
 				case 'checkbox':
 					input.checked = Boolean(value); //eslint-disable-line
+					break;
+				case 'text':
+				case 'color':
+				default:
+					input.value = String(value); //eslint-disable-line
+					break;
 			}
 	}
 
@@ -408,7 +413,6 @@ class Json
 			}
 			switch (ListItem.querySelector('div.uk-accordion-content').id)
 			{
-				default:
 				case 'edit-root':
 					this.root(ListItem.querySelector('div.uk-accordion-content'));
 					break;
@@ -422,6 +426,7 @@ class Json
 					this.requirements(ListItem.querySelector('div.uk-accordion-content'));
 					break;
 				case 'edit-rewards':
+				default:
 					this.rewards(ListItem.querySelector('div.uk-accordion-content'));
 					break;
 			}
@@ -444,7 +449,6 @@ class Json
 			return undefined;
 		switch (input.type.toLowerCase())
 		{
-			default:
 			case 'text':
 				if (!MCutilities.CheckIfStringIsLegalCharacter(String(input.value)))
 				{
@@ -458,6 +462,7 @@ class Json
 			case 'checkbox':
 				return Boolean(input.checked);
 			case 'color':
+			default:
 				return String(input.value);
 		}
 	}
@@ -789,6 +794,7 @@ class Component
 {
 	static main()
 	{
+		UpdateLang();
 		TEMPLATE.render(document.getElementById('content'), 'advancement.tp', null);
 		TEMPLATE.render(document.getElementById('edition-zone-template'), 'edit.tp', null);
 		TEMPLATE.updateLang(document.getElementById('content'), LANG.Data);

@@ -1,3 +1,4 @@
+/*eslint-disable prefer-regex-literals*/
 const path = require('path');
 const fs = require('fs');
 const { MCutilities } = require('mapcraft-api');

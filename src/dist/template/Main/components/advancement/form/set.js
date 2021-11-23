@@ -4,7 +4,12 @@ const { Mapcraft, MCsearch, MCtemplate, MCutilities } = require('mapcraft-api');
 const FORM = require('./form');
 
 const ListOfEnchantements = MCutilities.GetDataGameElement('enchantements');
-const LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+function UpdateLang()
+{
+	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+}
+
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
 const FORM_TEMPLATE = new MCtemplate(__dirname);
 
@@ -30,7 +35,6 @@ const setValue = (form, json, key, isMCsearch = false, keepNamespace = false) =>
 		else
 			switch (form.type)
 			{
-				default:
 				case 'text':
 					form.value = String(value);
 					break;
@@ -38,6 +42,7 @@ const setValue = (form, json, key, isMCsearch = false, keepNamespace = false) =>
 					form.checked = Boolean(value);
 					break;
 				case 'Number':
+				default:
 					form.value = Number(value);
 			}
 	}
@@ -47,9 +52,9 @@ class Set
 {
 	static main(name, form, json)
 	{
+		UpdateLang();
 		switch (name)
 		{
-			default:
 			case '__FORM_DAMAGE':
 				this.damage(form, json);
 				break;
@@ -87,6 +92,7 @@ class Set
 				this.type(form, json);
 				break;
 			case '__FORM_VICTIMS':
+			default:
 				this.victim(form, json);
 				break;
 		}

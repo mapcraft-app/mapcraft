@@ -2,7 +2,11 @@ const path = require('path');
 const crypto = require('crypto');
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 
-const LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+function UpdateLang()
+{
+	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+}
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
 const FORM_TEMPLATE = new MCtemplate(__dirname);
 
@@ -25,6 +29,7 @@ class Form
 	 */
 	static printTrigger(triggerName, minecraftVersion = DefaultMinecraftVersion)
 	{
+		UpdateLang();
 		const formID = hexaID();
 		const ListOfTriggers = (minecraftVersion !== DefaultMinecraftVersion) ? MCutilities.GetDataGameElement('triggers', minecraftVersion) : PreGenerateList.triggers;
 		for (const trigger of ListOfTriggers)

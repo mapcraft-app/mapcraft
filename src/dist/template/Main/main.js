@@ -7,18 +7,16 @@ const importPlugins = require('../../js/importPlugins');
 const Plugins = new MCplugin();
 
 //#region Set ContextBridge
-contextBridge.exposeInMainWorld(
-	'api', {
-		send: (channel, ...args) =>
-		{
-			MCipc.send(channel, ...args);
-		},
-		receive: (channel, func) =>
-		{
-			MCipc.receive(channel, func);
-		},
+contextBridge.exposeInMainWorld('api', {
+	send: (channel, ...args) =>
+	{
+		MCipc.send(channel, ...args);
 	},
-);
+	receive: (channel, func) =>
+	{
+		MCipc.receive(channel, func);
+	},
+});
 //#endregion
 
 //#region Log file

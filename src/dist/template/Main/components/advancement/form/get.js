@@ -31,8 +31,6 @@ class GetForm
 	{
 		switch (type)
 		{
-			default:
-				throw new Error('No predefined form');
 			case '__FORM_DAMAGE':
 				return this.damage(modal);
 			case '__FORM_DISTANCE':
@@ -59,6 +57,8 @@ class GetForm
 				return this.type(modal);
 			case '__FORM_VICTIMS':
 				return this.victim(modal);
+			default:
+				throw new Error('No predefined form');
 		}
 	}
 
@@ -66,8 +66,6 @@ class GetForm
 	{
 		switch (element)
 		{
-			default:
-				throw new Error('No predefined search');
 			case '__SEARCH_BIOMES':
 				return { biome: `minecraft:${value}` };
 			case '__SEARCH_BLOCKS':
@@ -85,6 +83,8 @@ class GetForm
 				return { potion: `minecraft:${value}` };
 			case '__SEARCH_STRUCTURES':
 				return { structure: `minecraft:${value}` };
+			default:
+				throw new Error('No predefined search');
 		}
 	}
 

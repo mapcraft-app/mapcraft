@@ -390,25 +390,27 @@ function CreateUser()
 			db.close();
 		};
 		//#region Check online if player exist
-		const req = https.request({
-			hostname: 'api.mojang.com',
-			path: `/users/profiles/minecraft/${event.target[1].value}`,
-			method: 'GET',
-		},
-		(res) =>
-		{
-			if (res.statusCode !== 200)
+		const req = https.request(
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.UserNotExist);
-				MCworkInProgress.close();
-				return;
-			}
-			res.on('data', (data) =>
+				hostname: 'api.mojang.com',
+				path: `/users/profiles/minecraft/${event.target[1].value}`,
+				method: 'GET',
+			},
+			(res) =>
 			{
-				const JsonData = JSON.parse(data);
-				addUserToDB(JsonData.name, JsonData.id);
-			});
-		});
+				if (res.statusCode !== 200)
+				{
+					MCutilities.CreateAlert('warning', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.UserNotExist);
+					MCworkInProgress.close();
+					return;
+				}
+				res.on('data', (data) =>
+				{
+					const JsonData = JSON.parse(data);
+					addUserToDB(JsonData.name, JsonData.id);
+				});
+			},
+		);
 		req.end();
 		//#endregion
 		MCworkInProgress.close();
