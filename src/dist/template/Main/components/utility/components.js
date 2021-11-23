@@ -3,18 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const MCP = require('mapcraft-api').MCplugin;
 const Temp = require('mapcraft-api').MCtemplate;
+const { MCutilities } = require('mapcraft-api');
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);
-
-const Data = {
-	Blocks: path.join(__dirname, '/list/blocks'),
-	Items: path.join(__dirname, '/list/items'),
-	Tags: path.join(__dirname, '/list/tags'),
-};
-
 let LANG = MCplugin.Lang('Utility').Data;
-
 const UpdateLang = () =>
 {
 	LANG = MCplugin.Lang('Utility').Data;
@@ -111,7 +104,7 @@ class UtilityComponent
 	{
 		let x = 0;
 		const list = document.getElementById('blocks-list');
-		const jsonData = JSON.parse(fs.readFileSync(path.join(Data.Blocks, `${version}.json`), 'utf-8'));
+		const jsonData = MCutilities.GetDataGameElement('blocks', version);
 		Template.cleanNode(list);
 		for (const id of jsonData)
 		{
@@ -172,7 +165,7 @@ class UtilityComponent
 	{
 		let x = 0;
 		const list = document.getElementById('items-list');
-		const jsonData = JSON.parse(fs.readFileSync(path.join(Data.Items, `${version}.json`), 'utf-8'));
+		const jsonData = MCutilities.GetDataGameElement('items', version);
 		Template.cleanNode(list);
 		for (const id of jsonData)
 		{
@@ -231,7 +224,7 @@ class UtilityComponent
 	static _generateTagItem(version)
 	{
 		const list = document.getElementById('tags-list');
-		const jsonData = JSON.parse(fs.readFileSync(path.join(Data.Tags, `${version}.json`), 'utf-8'));
+		const jsonData = MCutilities.GetDataGameElement('tags', version);
 		const isTag = new RegExp('^#.+');
 		Template.cleanNode(list);
 		for (const col in jsonData)
