@@ -9,14 +9,13 @@ const Models = require('./model');
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);
-const LastMinecraftVersion = '1.17';
 let IsLoadRecipe = false;
 const outputRegExp = new RegExp('(?:formOutput$)', 'gm');
 const checkedShapeless = new RegExp('(?:shapeless$)', 'gm');
 const checkedExactPosition = new RegExp('(?:exactPosition$)', 'gm');
 const Data = {
-	Blocks: path.join(__dirname, '../utility/list/blocks', `${LastMinecraftVersion}.json`),
-	Items: path.join(__dirname, '../utility/list/items', `${LastMinecraftVersion}.json`),
+	Blocks: MCutilities.GetDataGameElement('blocks'),
+	Items: MCutilities.GetDataGameElement('items'),
 };
 let LANG = MCplugin.Lang('Recipe').Data;
 function UpdateLang()
@@ -981,7 +980,7 @@ class GenerateList
 	_generateListBlock()
 	{
 		const list = document.getElementById('blocks-list');
-		const jsonData = JSON.parse(fs.readFileSync(path.join(Data.Blocks), 'utf-8'));
+		const jsonData = Data.Blocks;
 		Template.cleanNode(list);
 		const trash = document.createElement('img'); trash.src = path.join(__dirname, '../../../../img/assets/trash.png'); trash.id = 'trash';
 		trash.setAttribute('uk-tooltip', `title:${LANG.Options.DeleteCase}; pos: right`);
@@ -1003,7 +1002,7 @@ class GenerateList
 	_generateListItem()
 	{
 		const list = document.getElementById('items-list');
-		const jsonData = JSON.parse(fs.readFileSync(path.join(Data.Items), 'utf-8'));
+		const jsonData = Data.Items;
 		Template.cleanNode(list);
 		const trash = document.createElement('img'); trash.src = path.join(__dirname, '../../../../img/assets/trash.png'); trash.id = 'trash';
 		trash.setAttribute('uk-tooltip', `title:${LANG.Options.DeleteCase}; pos: right`);

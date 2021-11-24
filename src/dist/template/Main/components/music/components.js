@@ -26,7 +26,7 @@ const SoundsLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds
 const Namespace = 'mapcraft:';
 
 if (!fs.existsSync(SoundsJsonLink))
-	fs.writeFileSync(SoundsJsonLink, JSON.stringify(BaseSoundsJson, null, 4), { encoding: 'utf-8', mode: 'w' });
+	fs.writeFileSync(SoundsJsonLink, JSON.stringify(BaseSoundsJson, null, 4), { encoding: 'utf-8', flag: 'w' });
 if (!fs.existsSync(SoundsLink))
 {
 	fs.mkdirSync(SoundsLink, { recursive: true });

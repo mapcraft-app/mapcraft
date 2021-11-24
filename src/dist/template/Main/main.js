@@ -68,7 +68,7 @@ function UpdateInterface(plugin, name)
 
 MCipc.receive('Plugin:update-interface', (plugin, name) =>
 {
-	UpdateInterface(plugin, name);
+	setTimeout(UpdateInterface(plugin, name), 0);
 });
 //#endregion
 
