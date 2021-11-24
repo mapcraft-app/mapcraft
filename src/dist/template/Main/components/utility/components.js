@@ -18,7 +18,7 @@ function searchInList(input, list, error)
 {
 	const newError = error;
 	const tr = list.getElementsByTagName('tr');
-	const isNumber = (!Number.isNaN(input.value));
+	const isNumber = (!Number.isNaN(input.value)); //eslint-disable-line no-unused-vars
 	let isExist = false;
 	const regex = new RegExp(input.value);
 	if (!input.value)
@@ -30,33 +30,19 @@ function searchInList(input, list, error)
 	else
 	{
 		for (const i of tr)
-		{
-			if (isNumber)
+			if (regex.test(i.getElementsByTagName('td')[2].innerText))
 			{
-				if (i.getElementsByTagName('td')[1].innerText !== input.value)
-				{
-					i.style.display = 'none';
-				}
-				else
-				{
-					i.style.display = 'table-row';
-					isExist = true;
-				}
-			}
-			else if (!isNumber && regex.test(i.getElementsByTagName('td')[2].innerText))
-			{
-				i.style.display = 'table-row';
+				i.style.removeProperty('display');
 				isExist = true;
 			}
-			else if (!isNumber)
+			else
 			{
 				i.style.display = 'none';
 			}
-			if (!isExist)
-				newError.style.display = 'block';
-			else
-				newError.style.display = 'none';
-		}
+		if (!isExist)
+			newError.style.removeProperty('display');
+		else
+			newError.style.display = 'none';
 	}
 }
 
