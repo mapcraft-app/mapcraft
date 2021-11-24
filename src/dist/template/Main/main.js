@@ -1,150 +1,163 @@
 const { contextBridge } = require('electron');
 const path = require('path');
 const Database = require('better-sqlite3');
-const IPC = require('../../js/MCipc');
-const MClog = require('../../js/MClog');
-const MCP = require('../../js/MCplugin'), MCplugin = new MCP();
+const { MCipc, MClog, MCplugin } = require('mapcraft-api');
+const importPlugins = require('../../js/importPlugins');
+
+const Plugins = new MCplugin();
 
 //#region Set ContextBridge
-contextBridge.exposeInMainWorld(
-	"api", {
-		send: (channel, ...args) => {
-			IPC.send(channel, ...args);
-		},
-		receive: (channel, func) => {
-			IPC.receive(channel, func);
-		}
-	}
-);
+contextBridge.exposeInMainWorld('api', {
+	send: (channel, ...args) =>
+	{
+		MCipc.send(channel, ...args);
+	},
+	receive: (channel, func) =>
+	{
+		MCipc.receive(channel, func);
+	},
+});
 //#endregion
 
 //#region Log file
 MClog.watchLog();
 //#endregion
 
-//#region Shell system
-const capitalize = (s) => {
-	if (typeof s !== 'string') return '';
-	return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function PrintNotification(Title, Body)
-{
-	const options = {
-		title: 'Mapcraft - ' + Title,
-		body: Body,
-		icon: path.join(__dirname, '../../img/icon/icon.png')
-	};
-	const Notif = new Notification(options.title, options);
-	Notif.onclick = () => {
-		IPC.send('Notification:click-notification');
-	};
-}
-
-IPC.receive('Shell:new-command', (command) => {
-	if (command.Player !== JSON.parse(localStorage.getItem('Mapcraft_User')).Username)
-		return ;
-	let plugin = capitalize(command.Command);
-	let Component = MCplugin.Component(plugin);
-	if (!Component)
-	{
-		console.error('No plugin exist with is name');
-		return ;
-	}
-	let LANG = MCplugin.Lang(plugin);
-	if (Component.IsNotification && (!command.hasOwnProperty('NoNotification') || command.hasOwnProperty('NoNotification') && !command.NoNotification))
-	{
-		PrintNotification(LANG.Title, LANG.Notification);
-		UpdateInterface(plugin, LANG.Title);
-	}
-	IPC.send('Shell:send-command', command);
-});
-//#endregion
-
 //#region Interface
-function UpdateInterface(plugin, name)
-{
-	cleanSpecificRender(localStorage.getItem('Mapcraft_Plugin'));
-	let navTitle = document.getElementById('nav-title');
-	if (navTitle.childNodes[0])
-		navTitle.childNodes[0].remove();
-	navTitle.appendChild(document.createTextNode(name));
-	const Component = MCplugin.Component(plugin);
-	if (!Component)
-	{
-		console.error('No plugin exist with is name');
-		return ;
-	}
-	Component.Instance.draw();
-	localStorage.setItem('Mapcraft_Plugin', plugin);
-	UpdateSelectedLi();
-}
-
 function UpdateSelectedLi()
 {
-	document.querySelectorAll('#toogle-nav li').forEach((element) => {
+	document.querySelectorAll('#toogle-nav li').forEach((element) =>
+	{
 		if (element.id === localStorage.getItem('Mapcraft_Plugin'))
 			element.childNodes[1].classList.add('nav-hover-element-selected');
 		else
 			element.childNodes[1].classList.remove('nav-hover-element-selected');
-		
 	});
 }
 
 function cleanSpecificRender(oldTemplate)
 {
-	let templateElement = oldTemplate.toLowerCase() + '.tp';
-	let DOMelement = document.querySelectorAll('[tp="'+ templateElement +'"]')[0];
+	const templateElement = `${oldTemplate.toLowerCase()}.tp`;
+	const DOMelement = document.querySelectorAll(`[tp="${templateElement}"]`)[0];
 	if (DOMelement && DOMelement.hasChildNodes())
-	{
-		while (DOMelement.firstChild) {
+		while (DOMelement.firstChild)
 			DOMelement.removeChild(DOMelement.firstChild);
-		}
-	}
 }
 
-IPC.receive('Plugin:update-interface', (plugin, name) => {
-	UpdateInterface(plugin, name);
+function UpdateInterface(plugin, name)
+{
+	cleanSpecificRender(localStorage.getItem('Mapcraft_Plugin'));
+	const navTitle = document.getElementById('nav-title');
+	if (navTitle.childNodes[0])
+		navTitle.childNodes[0].remove();
+	navTitle.appendChild(document.createTextNode(name));
+	const Component = Plugins.Component(plugin);
+	const PluginsComponent = importPlugins.Component(plugin);
+	if (!Component && !PluginsComponent)
+	{
+		console.error('No plugin exist with is name');
+		return;
+	}
+	if (Component)
+		Component.instance.main();
+	else
+		PluginsComponent.instance.main();
+	localStorage.setItem('Mapcraft_Plugin', plugin);
+	UpdateSelectedLi();
+}
+
+MCipc.receive('Plugin:update-interface', (plugin, name) =>
+{
+	setTimeout(UpdateInterface(plugin, name), 0);
+});
+//#endregion
+
+//#region Shell system
+const capitalize = (s) =>
+{
+	if (typeof s !== 'string')
+		return '';
+	return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+function PrintNotification(Title, Body)
+{
+	const options = {
+		title: `Mapcraft - ${Title}`,
+		body: Body,
+		icon: path.join(__dirname, '../../img/icon/icon.png'),
+	};
+	const Notif = new Notification(options.title, options);
+	Notif.onclick = () =>
+	{
+		MCipc.send('Notification:click-notification');
+	};
+}
+
+MCipc.receive('Shell:new-command', (command) =>
+{
+	if (command.Player !== JSON.parse(localStorage.getItem('Mapcraft_User')).Username)
+		return;
+	const plugin = capitalize(command.Command);
+	const Component = Plugins.Component(plugin);
+	if (!Component)
+	{
+		console.error('No plugin exist with is name');
+		return;
+	}
+	const LANG = Plugins.Lang(plugin);
+
+	if (Component.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification') || Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
+	{
+		PrintNotification(LANG.Title, LANG.Notification);
+		UpdateInterface(plugin, LANG.Title);
+	}
+
+	MCipc.send('Shell:send-command', command);
 });
 //#endregion
 
 //#region Username system
-function changeUsername()
-{
-	blurWindow();
-	const Username = JSON.parse(localStorage.getItem('Mapcraft_User')).Username;
-	const DBPath = JSON.parse(localStorage.getItem('Mapcraft')).DBPath;
-	localStorage.removeItem('Mapcraft_User');
-	let db = Database(DBPath);
-	const sql = db.prepare('UPDATE User SET IsConnected = 0 WHERE Username = ?');
-	sql.run(Username);
-	IPC.send('User:change-username');
-}
-//#endregion
-
-//#region Main
 function blurWindow()
 {
 	document.documentElement.classList.toggle('html-blur');
 	document.body.classList.toggle('body-blur');
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+function changeUsername()
+{
 	blurWindow();
-	MCplugin.Instance('Main').draw();
-	IPC.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), MCplugin.Default().Title);
-	IPC.receive('User:remove-blur', () => {
+	const { Username } = JSON.parse(localStorage.getItem('Mapcraft_User'));
+	const { DBPath } = JSON.parse(localStorage.getItem('Mapcraft'));
+	localStorage.removeItem('Mapcraft_User');
+	const db = Database(DBPath);
+	const sql = db.prepare('UPDATE User SET IsConnected = 0 WHERE Username = ?');
+	sql.run(Username);
+	MCipc.send('User:change-username');
+}
+//#endregion
+
+//#region Main
+window.addEventListener('DOMContentLoaded', () =>
+{
+	blurWindow();
+	Plugins.Instance('Main').main();
+	MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.Default().Title);
+	MCipc.receive('User:remove-blur', () =>
+	{
 		blurWindow();
-		IPC.send('Update:create-modal');
-		MCplugin.Instance('Main').header();
-		/* If option plugin is open, reload user table for correct info */
+		MCipc.send('Update:create-modal');
+		Plugins.Instance('Main').header();
+		/*If option plugin is open, reload user table for correct info */
 		if (localStorage.getItem('Mapcraft_Plugin') && localStorage.getItem('Mapcraft_Plugin') === 'Option')
-			MCplugin.Instance('Option').RedrawUserTab();
-		document.getElementById('nav-header-change-username').addEventListener('click', () => {
+			Plugins.Instance('Option').RedrawUserTab();
+		document.getElementById('nav-header-change-username').addEventListener('click', () =>
+		{
 			changeUsername();
 		});
 	});
-	IPC.receive('Log:send-change', (fullFile, newData) => {
+	MCipc.receive('Log:send-change', (fullFile) =>
+	{
 		MClog.PrintToTextArea(fullFile);
 	});
 });

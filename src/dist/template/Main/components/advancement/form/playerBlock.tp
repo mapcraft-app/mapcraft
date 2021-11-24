@@ -1,0 +1,59 @@
+[HTML]
+<div class="edit-block state-block uk-margin">
+	<button class="uk-button uk-button-link state-block-close">
+		<span uk-icon="close"></span>
+	</button>
+	<div class="state-form">
+		<div class="uk-margin">
+			<label class="uk-form-label" for="player-form-type" lang="Edit.Criteria.Player.Stats.Type"></label>
+			<div class="uk-form-controls">
+				<select id="player-form-type" class="uk-select">
+					<option value="minecraft:broken" selected>minecraft:broken</option>
+					<option value="minecraft:crafted">minecraft:crafted</option>
+					<option value="minecraft:custom">minecraft:custom</option>
+					<option value="minecraft:dropped">minecraft:dropped</option>
+					<option value="minecraft:killed">minecraft:killed</option>
+					<option value="minecraft:killed_by">minecraft:killed_by</option>
+					<option value="minecraft:mined">minecraft:mined</option>
+					<option value="minecraft:picked_up">minecraft:picked_up</option>
+					<option value="minecraft:used">minecraft:used</option>
+				</select>
+			</div>
+		</div>
+		<div class="uk-margin">
+			<label class="uk-form-label" for="player-form-stat" lang="Edit.Criteria.Player.Stats.Stat"></label>
+			<div class="uk-form-controls">
+				<input id="state-form-stat" class="uk-input" type="text">
+			</div>
+		</div>
+		<div class="uk-margin">
+			<label class="uk-form-label" for="player-form-value" lang="Edit.Criteria.Player.Stats.Value"></label>
+			<div class="uk-form-controls" id="player-form-value">
+				<div class="min-max-form">
+					<label for="player-form-value-min" lang="Edit.Criteria.Item.Minimum"></label>
+					<input class="uk-input uk-form-width-small" id="player-form-value-min" type="number" min="0">
+				</div>
+				<div class="min-max-form">
+					<label for="player-form-value-max" lang="Edit.Criteria.Item.Maximum"></label>
+					<input class="uk-input uk-form-width-small" id="player-form-value-max" type="number" min="0">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]
+
+[CSS]
+.state-block {
+	position: relative;
+}
+.state-block-close {
+	position: absolute;
+	z-index: 1;
+	right: .5em;
+	top: .5em;
+}
+.state-form {
+	margin-top: 1.2em;
+}
+[/CSS]

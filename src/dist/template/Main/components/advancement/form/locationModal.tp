@@ -1,0 +1,162 @@
+[HTML]
+<div class="uk-margin">
+	<button class="uk-button uk-button-primary uk-width-1-1" type="button" uk-toggle="target: #form-location-modal-{ID}">
+		<span uk-icon="pencil"></span>
+		<span lang="Edit.Criteria.Location.EditLocation"></span>
+	</button>
+</div>
+<div id="form-location-modal-container-{ID}">
+	<div id="form-location-modal-{ID}" class="uk-flex-top uk-modal" container="form-location-modal-container-{ID}" uk-modal="bg-close:true;stack:true;">
+		<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
+			<div class="uk-modal-header">
+				<h2 class="uk-modal-title" lang="Edit.Criteria.Location.EditLocation"></h2>
+			</div>
+			<div class="uk-modal-body">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-location-modal-biome" lang="Edit.Criteria.Form.Biome"></label>
+					<div class="uk-form-controls" id="form-location-modal-biome"></div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-location-modal-dimension" lang="Edit.Criteria.Location.Dimension"></label>
+					<div class="uk-form-controls">
+						<select class="uk-select" id="form-location-modal-dimension">
+							<option value="default" lang="Edit.Criteria.Location.Default"></option>
+							<option value="overworld" lang="Edit.Criteria.Location.Overworld"></option>
+							<option value="the_nether" lang="Edit.Criteria.Location.Nether"></option>
+							<option value="the_end" lang="Edit.Criteria.Location.End"></option>
+						</select>
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-location-modal-feature" lang="Edit.Criteria.Location.Feature"></label>
+					<div class="uk-form-controls" id="form-location-modal-feature"></div>
+				</div>
+				<div class="uk-margin uk-flex uk-flex-left uk-flex-between">
+					<label>
+						<input class="uk-checkbox" id="form-location-modal-check-smokey" type="checkbox">
+						<span lang="Edit.Criteria.Location.IsSmokey"></span>
+					</label>
+				</div>
+				<ul uk-accordion="multiple: true" class="modal-accordion-zone">
+					<li class="uk-open">
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Form.Block"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-block-block" lang="Edit.Criteria.Form.Block"></label>
+								<div class="uk-form-controls" id="form-location-modal-block-block"></div>
+							</div>
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-block-tag" lang="Edit.Criteria.Form.Tag"></label>
+								<div class="uk-form-controls">
+									<input class="uk-input" id="form-location-modal-block-tag" type="text">
+								</div>
+							</div>
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-block-nbt" lang="Edit.Criteria.Item.NBT"></label>
+								<div class="uk-form-controls">
+									<input class="uk-input" id="form-location-modal-block-nbt" type="text">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Location.Fluid"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-fluid-id" lang="Edit.Criteria.Location.ID"></label>
+								<div class="uk-form-controls">
+									<input class="uk-input" id="form-location-modal-fluid-id" type="text">
+								</div>
+							</div>
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-fluid-tag" lang="Edit.Criteria.Form.Tag"></label>
+								<div class="uk-form-controls">
+									<input class="uk-input" id="form-location-modal-fluid-tag" type="text">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Location.Position"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-x" lang="Edit.Criteria.Distance.X"></label>
+								<div class="uk-form-controls" id="form-location-modal-x">
+									<div class="min-max-form">
+										<label for="form-location-modal-x-min" lang="Edit.Criteria.Item.Minimum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-x-min" type="number">
+									</div>
+									<div class="min-max-form">
+										<label for="form-location-modal-x-max" lang="Edit.Criteria.Item.Maximum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-x-max" type="number">
+									</div>
+								</div>
+							</div>
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-y" lang="Edit.Criteria.Distance.Y"></label>
+								<div class="uk-form-controls" id="form-location-modal-y">
+									<div class="min-max-form">
+										<label for="form-location-modal-y-min" lang="Edit.Criteria.Item.Minimum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-y-min" type="number">
+									</div>
+									<div class="min-max-form">
+										<label for="form-location-modal-y-max" lang="Edit.Criteria.Item.Maximum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-y-max" type="number">
+									</div>
+								</div>
+							</div>
+							<div class="uk-margin">
+								<label class="uk-form-label" for="form-location-modal-z" lang="Edit.Criteria.Distance.Z"></label>
+								<div class="uk-form-controls" id="form-location-modal-z">
+									<div class="min-max-form">
+										<label for="form-location-modal-z-min" lang="Edit.Criteria.Item.Minimum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-z-min" type="number">
+									</div>
+									<div class="min-max-form">
+										<label for="form-location-modal-z-max" lang="Edit.Criteria.Item.Maximum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-z-max" type="number">
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Location.Light"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<div class="uk-form-controls" id="form-location-modal-light">
+									<div class="min-max-form">
+										<label for="form-location-modal-light-min" lang="Edit.Criteria.Item.Minimum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-light-min" type="number">
+									</div>
+									<div class="min-max-form">
+										<label for="form-location-modal-light-max" lang="Edit.Criteria.Item.Maximum"></label>
+										<input class="uk-input uk-form-width-small" id="form-location-modal-light-max" type="number">
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]

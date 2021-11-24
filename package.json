@@ -29,7 +29,7 @@
     "distWindows": "electron-builder -w --x64",
     "distLinux": "electron-builder -l --x64",
     "postinstall": "electron-builder install-app-deps",
-    "lint": "echo \"No linting configured\""
+    "lint": "eslint ."
   },
   "config": {
     "forge": {
@@ -44,7 +44,6 @@
     "copyright": "Copyright (C) 2020 - 2021, Clément Bertrand",
     "asar": true,
     "npmRebuild": false,
-   
     "directories": {
       "buildResources": "build",
       "output": "out"
@@ -76,7 +75,7 @@
       "icon": "src/dist/img/icon/icon.icns",
       "artifactName": "${productName}_${os}.${ext}",
       "target": [
-      	"dmg",
+        "dmg",
         "zip"
       ]
     },
@@ -113,20 +112,27 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.5",
-    "axios": "^0.23.0",
-    "better-sqlite3": "^7.4.0",
+    "axios": "^0.24.0",
+    "better-sqlite3": "^7.4.5",
     "bezier-easing": "^2.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "jsonabc": "^2.3.1",
+    "mapcraft-api": "^1.4.0",
     "markdown-it": "^12.0.6",
+    "node-abi": "^3.5.0",
     "read-last-lines": "^1.8.0",
-    "node-abi": "^3.2.0"
+    "v8-compile-cache": "^2.3.0"
   },
-  "resolutions": { "**/node-abi": "^3.2.0" },
+  "resolutions": {
+    "**/node-abi": "^3.2.0"
+  },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.59",
-    "dmg-builder": "^22.11.11",
-    "electron": "15.1.2",
-    "electron-builder": "^22.11.7"
+    "dmg-builder": "^22.14.7",
+    "electron": "^16.0.0",
+    "electron-builder": "^22.14.5",
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3"
   }
 }

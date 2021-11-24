@@ -1,0 +1,30 @@
+[HTML]
+<div class="uk-margin">
+	<button class="uk-button uk-button-primary uk-width-1-1" type="button" uk-toggle="target: #form-state-modal-{ID}">
+		<span uk-icon="pencil"></span>
+		<span lang="Edit.Criteria.State.Edit"></span>
+	</button>
+</div>
+<div id="form-state-modal-container-{ID}">
+	<div id="form-state-modal-{ID}" class="uk-flex-top uk-modal" container="form-state-modal-container-{ID}" uk-modal="bg-close:true;stack:true;">
+		<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
+			<div class="uk-modal-header">
+				<h2 class="uk-modal-title" lang="Edit.Criteria.State.Edit"></h2>
+			</div>
+			<div class="uk-modal-body">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<div class="uk-card uk-card-primary uk-card-body fieldset-card uk-margin">
+					<span lang="Edit.Criteria.State.Help"></span>
+					<a web-link href="https://minecraft.fandom.com/wiki/Block_states" class="uk-icon-button uk-margin-small-right" uk-icon="world"></a>
+				</div>
+				<div>
+					<div id="form-state-modal-list"></div>
+					<button id="form-state-modal-add" class="uk-button uk-button-primary uk-width-1-1">
+						<span uk-icon="icon: plus"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]

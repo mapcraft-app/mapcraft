@@ -1,14 +1,6 @@
 /*
 **  Font Definition
 */
-/*@font-face {
-	font-family: 'Roboto';
-	font-style: normal;
-	font-weight: 300;
-	font-display: swap;
-	src: url(../../font/Roboto-Regular.woff) format('woff');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}*/
 @font-face {
 	font-family: 'Roboto';
 	font-style: normal;
@@ -20,9 +12,24 @@
 /*
 **  Main theme
 */
-* {
-	scrollbar-color: #454a4d #202324;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 10px;
 }
+/* Track */
+::-webkit-scrollbar-track {
+	background: #383838; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #939393; 
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #ababab;
+}
+
 :focus {
     outline: none;
 }
@@ -48,6 +55,8 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6, .uk-head
 .body-max-width {
 	height: 100%;
 }
+
+
 
 /* Audio element */
 audio::-webkit-media-controls-panel
@@ -498,4 +507,49 @@ input:checked + .uk-switch-span:before {
 }
 .uk-offcanvas-flip .uk-offcanvas-bar {
     right: -60%;
+}
+
+.form-padding-left {
+	padding-left: 2em;
+}
+
+/* Dropdown search */
+.edit-block {
+	background-color: #222222;
+    padding: 1em;
+}
+.search-dropdown {
+	position: relative;
+}
+.search-dropdown-parent {
+	position: relative;
+}
+.search-dropdown-input {
+	width: 100%;
+}
+.search-dropdown-span {
+	display: none;
+	position: absolute;
+	z-index: 10;
+	flex-direction: column;
+	background-color: #3e3e3e;
+	overflow-y: auto;
+    max-height: 166px;
+	width: 100%;
+}
+.search-dropdown-span span {
+	text-decoration: none;
+    cursor: pointer;
+    padding: 0.2em 0 0 1em;
+}
+.search-dropdown-span span.span-select {
+	outline: 1px solid #1e87f0;
+    outline-offset: -1px;
+}
+
+.search-dropdown-span span:hover {
+	background-color: #707070;;
+}
+.search-dropdown-span-show {
+	display: flex;
 }

@@ -1,0 +1,21 @@
+[HTML]
+<div class="item-block">
+	<button class="uk-button uk-button-link item-block-close">
+		<span uk-icon="close"></span>
+	</button>
+	<div class="insert-form-close"></div>
+</div>
+
+[/HTML]
+
+[CSS]
+.item-block {
+	position: relative;
+}
+.item-block-close {
+	position: absolute;
+	z-index: 1;
+	right: .5em;
+	top: .5em;
+}
+[/CSS]

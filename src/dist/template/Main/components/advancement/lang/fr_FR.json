@@ -1,0 +1,267 @@
+{
+	"Title": "Progrès",
+	"Icon": "bookmark",
+	"Notification" : "",
+	"Data" : {
+		"Modal": {
+			"Text": "Êtes-vous sûr de vouloir supprimer l'intégralité du progrès ?",
+			"Save": "Vous avez sélectionné un autre progrès sans sauvegarder l'ancien progrès. Voulez-vous le sauvegarder ?",
+			"Yes": "Oui",
+			"No": "Non"
+		},
+		"Graph": {
+			"NewAdvancement": "Nouveau progrès",
+			"Generate": "Générer l'intégralité du progrès",
+			"Delete": "Supprimer l'intégralité du progrès",
+			"AddParent": "Ajouter un parent",
+			"AddChild": "Ajouter un enfant",
+			"Save": "Sauvegarder le progrès courant",
+			"Title": "Nom du progrès"
+		},
+		"Edit": {
+			"Root": {
+				"_Title": "Racine",
+				"Namespace": "Espace de nom",
+				"BackgroundImage": "Image de fond"
+			},
+			"Display": {
+				"_Title": "Affichage",
+				"Title": "Titre",
+				"TitleColor": "Couleur du titre",
+				"Description": "Description",
+				"DescriptionColor": "Couleur de la description",
+				"Icon": "Icône",
+				"Color": {
+					"DarkRed": "Rouge foncé",
+					"Red": "Rouge",
+					"Gold": "Or",
+					"Yellow": "Jaune",
+					"DarkGreen": "Vert foncé",
+					"Green": "Vert",
+					"DarkAqua": "Bleu marine foncé",
+					"Aqua": "Bleu marine",
+					"DarkBlue": "Bleu foncé",
+					"Blue": "Bleu",
+					"DarkPurple": "Violet foncé",
+					"Purple": "Violet",
+					"Black": "Noir",
+					"DarkGray": "Gris foncé",
+					"Gray": "Gris",
+					"White": "Blanc"
+				},
+				"Format": {
+					"Bold": "En gras",
+					"Italic": "Italique",
+					"Underlined": "Souligné",
+					"Strikethrough": "Barré",
+					"Obfuscated": "Obfusqué"
+				},
+				"Frame": {
+					"Title": "Cadre",
+					"Normal": "Normal",
+					"Goal": "Objectif",
+					"Challenge": "Défi"
+				},
+				"NBT": "NBT",
+				"Check": {
+					"Toast": "Montrer la notification",
+					"Chat": "Annoncer dans le tchat",
+					"Hidden": "Cacher"
+				}
+			},
+			"Criteria": {
+				"_Title": "Critères",
+				"Name": "Nom du critère",
+				"ChooseTrigger": "Choisir un déclencheur",
+				"AddTrigger": "Ajouter un déclencheur",
+				"Item": {
+					"Item": "Élément",
+					"Items": "Éléments",
+					"EditItem": "Modifier un élément",
+					"EditItems": "Modifier les éléments",
+					"NBT": "NBT",
+					"Count": "Compteur",
+					"Data": "Données",
+					"Tag": "Étiquette",
+					"Durability": "Durabilité",
+					"Potion": "Potion",
+					"Levels": "Niveaux",
+					"Minimum": "Minimum",
+					"Maximum": "Maximum",
+					"Enchantments": "Enchantements",
+					"StoredEnchantments": "Enchantements entreposés",
+					"Enchantment": "Enchantement"
+				},
+				"Damage": {
+					"Damage": "Dégâts",
+					"Edit": "Modifier les dégâts",
+					"Dealt": "Traité",
+					"Taken": "Pris",
+					"Blocked": "Est-il bloqué ?",
+					"Type": {
+						"Type": "Type",
+						"DirectEntity": "Entité directe",
+						"SourceEntity": "Entité source",
+						"Bypasses": {
+							"Armor": "Contourne les armures",
+							"Invulnerability": "Contourne l'invulnérabilité",
+							"Magic": "Contourne la magie"
+						},
+						"Is": {
+							"Explosion": "Est une explosion",
+							"Fire":	"Est un feu",
+							"Magic": "Est magique",
+							"Projectile": "Est un projectile",
+							"Lightning": "Est la foudre"
+						}
+					}
+				},
+				"Distance": {
+					"Distance": "Distance",
+					"EditDistance": "Modifier la distance",
+					"Absolute": "Absolu",
+					"Horizontal": "Horizontal",
+					"X": "X",
+					"Y": "Y",
+					"Z": "Z"
+				},
+				"Durability": {
+					"Durability": "Durabilité",
+					"Delta": "Delta",
+					"EditDurability": "Modifier la durabilité"
+				},
+				"Effects": {
+					"Effects": "Effets",
+					"EditEffects": "Modifier les effects",
+					"Amplifier": "Amplificateur",
+					"Duration": "Durée"
+				},
+				"Player":
+				{
+					"Player": "Joueur",
+					"EditPlayer": "Modifier le joueur",
+					"Gamemode" : {
+						"Gamemode": "Mode de jeu",
+						"Adventure": "Aventure",
+						"Creative": "Créatif",
+						"Spectator": "Spectateur",
+						"Survival": "Survie"
+					},
+					"Stats":
+					{
+						"Stats": "Statistiques",
+						"Type": "Type",
+						"Stat": "Statistique",
+						"Value": "Valeur"
+					}
+				},
+				"Location": {
+					"Location": "Localisation",
+					"EditLocation": "Modifier la localisation",
+					"Fluid": "Fluide",
+					"ID": "ID",
+					"Dimension": "Dimension",
+					"Feature": "Fonctionnalité",
+					"Light": "Léger",
+					"Position": "Position",
+					"IsSmokey": "Est-ce enfumée ?",
+					"Default": "Sélectionner la dimension",
+					"Overworld": "La surface",
+					"Nether": "L'enfer",
+					"End": "La fin"
+				},
+				"Entity": {
+					"Entity": "Entité",
+					"EditEntity": "Modifier l'entité",
+					"NBT": "NBT",
+					"Equipement": {
+						"Equipement": "Équipement",
+						"Head": "Tête",
+						"Mainhand": "Main principal",
+						"Chest": "Poitrine",
+						"Offhand": "Main secondaire",
+						"Legs": "Jambes",
+						"Feets": "Pieds"
+					},
+					"Flags": {
+						"Baby": "Est un bébé",
+						"Fire": "Est en feu",
+						"Sneak": "Est furtif",
+						"Sprint": "Est en course",
+						"Swim": "Est en nage"
+					}
+				},
+				"Victims": {
+					"Victims": "Victimes",
+					"EditVictims": "Modifier les victimes"
+				},
+				"State": {
+					"State": "État",
+					"Edit": "Modifier l'état",
+					"Name": "Nom de l'état",
+					"Value": "Valeur",
+					"Help": "Pour plus d'informations, cliquez ici"
+				},
+				"Slots": {
+					"Slots": "Emplacements",
+					"Edit": "Modifier les emplacements",
+					"Empty": "Vide",
+					"Full": "Complet",
+					"Occupied": "Occupé"
+				},
+				"Lightning": {
+					"Lightning": "Foudre",
+					"Bystander": "Témoin"
+				},
+				"Form": {
+					"Biome": "Biome",
+					"Block": "Bloc",
+					"Effect": "Effet",
+					"Enchantement": "Enchantement",
+					"Distance": "Distance",
+					"Potion": "Potion",
+					"Tag": "Étiquette",
+					"Trigger": "Déclencheur",
+
+					"NumberOfBeesInside": "Nombre d'abeilles à l'intérieur",
+					"Child": "Enfant",
+					"Parent": "Parent",
+					"Partner": "Partenaire",
+					"From": "De",
+					"To": "A",
+					"Level": "Niveau",
+					"Villager": "Villageois",
+					"Zombie": "Zombie",
+					"KillingBlow": "Coup mortel",
+					"Rod": "Canne",
+					"UniqueEntityTypes": "Types d'entités uniques",
+					"LootTable": "Table de butin",
+					"Recipe": "Recette",
+					"SignalStrength": "Force du signal",
+					"Projectile": "Projectile",
+					"Shooter": "Tireur",
+					"Name": "Nom"
+				}
+			},
+			"Requirements": {
+				"Title": "Conditions requises",
+				"Add": "Ajouter une condition"
+			},
+			"Rewards": {
+				"Title": "Récompenses",
+				"Recipes": "Recettes",
+				"AddRecipe": "Ajouter une recette",
+				"LootTables": "Tables de butin",
+				"AddLoot": "Ajouter une tables de butin",
+				"Experience": "Expérience",
+				"Function": "Fonction"
+			}
+		},
+		"Error": {
+			"ContainIllegalCharacter": "contient des caractères illégaux, voici ceux qui sont autorisés: ([a-z], [0-9], _, -, /, .)",
+			"NoAdvancement": "No advancement is selected",
+			"NoCriteria": "Aucun critère n'a été défini",
+			"MakeDirectoryError": "Le dossier ne peut être créé"
+		}
+	}
+}

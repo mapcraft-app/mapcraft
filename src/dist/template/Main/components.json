@@ -1,55 +1,66 @@
 [
 	{
-		"Name": "__DEFAULT",
-		"Component": "Home"
+		"name": "__DEFAULT",
+		"component": "Home"
 	},
 	{
-		"Name": "Main",
-		"Component": "./components/main/components",
-		"Lang": "./components/main/lang",
-		"IsNotification" : false
+		"name": "Main",
+		"component": "./components/main/components",
+		"lang": "./components/main/lang",
+		"isNotification" : false
 	},
 	{
-		"Name": "Home",
-		"Component": "./components/home/components",
-		"Lang": "./components/home/lang",
-		"IsNotification": false
+		"name": "Home",
+		"component": "./components/home/components",
+		"lang": "./components/home/lang",
+		"isNotification": false
 	},
 	{
-		"Name": "Option",
-		"Component": "./components/option/components",
-		"Lang": "./components/option/lang",
-		"IsNotification": false
-	},
-
-	{
-		"Name": "Trigger",
-		"Component": "./components/trigger/components",
-		"Lang": "./components/trigger/lang",
-		"IsNotification": true
+		"name": "Option",
+		"component": "./components/option/components",
+		"lang": "./components/option/lang",
+		"isNotification": false
 	},
 	{
-		"Name": "Music",
-		"Component": "./components/music/components",
-		"Lang": "./components/music/lang",
-		"IsNotification": true
+		"name": "Store",
+		"component": "./components/store/components",
+		"lang": "./components/store/lang",
+		"isNotification": false
 	},
 	{
-		"Name": "Cutscene",
-		"Component": "./components/cutscene/components",
-		"Lang": "./components/cutscene/lang",
-		"IsNotification": true
+		"name": "Trigger",
+		"component": "./components/trigger/components",
+		"lang": "./components/trigger/lang",
+		"isNotification": true
 	},
 	{
-		"Name": "Recipe",
-		"Component": "./components/recipe/components",
-		"Lang": "./components/recipe/lang",
-		"IsNotification": false
+		"name": "Music",
+		"component": "./components/music/components",
+		"lang": "./components/music/lang",
+		"isNotification": true
 	},
 	{
-		"Name": "Utility",
-		"Component": "./components/utility/components",
-		"Lang": "./components/utility/lang",
-		"IsNotification": false
+		"name": "Cutscene",
+		"component": "./components/cutscene/components",
+		"lang": "./components/cutscene/lang",
+		"isNotification": true
+	},
+	{
+		"name": "Advancement",
+		"component": "./components/advancement/components",
+		"lang": "./components/advancement/lang",
+		"isNotification": false
+	},
+	{
+		"name": "Recipe",
+		"component": "./components/recipe/components",
+		"lang": "./components/recipe/lang",
+		"isNotification": false
+	},
+	{
+		"name": "Utility",
+		"component": "./components/utility/components",
+		"lang": "./components/utility/lang",
+		"isNotification": false
 	}
 ]

@@ -1,30 +1,29 @@
-const fs = require('fs');
-const path = require('path');
-const MC = require('../../js/Mapcraft');
-const Temp = require('../../js/MCtemplate'), Template = new Temp(__dirname);
+const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
 
-function GetLang()
-{
-	let data;
-	try { data = JSON.parse(fs.readFileSync(path.join(__dirname, './lang', MC.GetConfig().Env.Lang + '.json'))) }
-	catch (err) { throw err }
-	return (data);
-}; let LANG = GetLang();
+const Template = new MCtemplate(__dirname);
+let LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 
 class Component
-{	
-	/* Component */
-	static getLang() { return LANG = GetLang(); }
+{
+	/*Component*/
+	static getLang()
+	{
+		LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+		return LANG;
+	}
+
 	static main()
 	{
 		Template.render(document.body, 'main.tp', null);
 	}
+
 	static draw()
 	{
-		LANG = GetLang();
+		LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
 		this.main();
 		Template.updateLang(document.body, LANG);
 	}
+
 	static cleanNode(node, RemoveParent)
 	{
 		Template.cleanNode(node, RemoveParent);
