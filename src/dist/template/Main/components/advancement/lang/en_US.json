@@ -12,6 +12,7 @@
 		"Graph": {
 			"NewAdvancement": "New advancement",
 			"Generate": "Generate complete advancement",
+			"SuccessGeneration": "Generation has been successfully completed",
 			"Delete": "Delete complete advancement",
 			"AddParent": "Add parent",
 			"AddChild": "Add child",

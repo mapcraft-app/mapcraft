@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const MCP = require('mapcraft-api').MCplugin;
 const Temp = require('mapcraft-api').MCtemplate;
-const { MCutilities } = require('mapcraft-api');
+const { Mapcraft, MCutilities } = require('mapcraft-api');
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);
@@ -78,6 +78,23 @@ function _searchInTagList(input, list, error)
 }
 //#endregion
 
+//Generate version list
+function generateVersion(DOMelement)
+{
+	const select = document.createElement('select');
+	const minecraft = Mapcraft.GetConfig().Minecraft;
+	minecraft.Versions.forEach((element) =>
+	{
+		const option = document.createElement('option');
+		option.innerText = element;
+		option.value = element;
+		if (element === minecraft.SelectedVersion)
+			option.selected = true;
+		select.appendChild(option);
+	});
+	DOMelement.innerHTML = select.innerHTML; //eslint-disable-line no-param-reassign
+}
+
 class UtilityComponent
 {
 	static utility()
@@ -117,6 +134,7 @@ class UtilityComponent
 	static blocks()
 	{
 		Template.render(document.getElementById('utility-tab-blocks'), 'blocks.tp', { Search: LANG.Search, Download: LANG.Download });
+		generateVersion(document.getElementById('blocks-version'));
 		this._generateListBlock(document.getElementById('blocks-version').value);
 		document.getElementById('disabled-form').addEventListener('submit', (event) =>
 		{
@@ -177,6 +195,7 @@ class UtilityComponent
 	static items()
 	{
 		Template.render(document.getElementById('utility-tab-items'), 'items.tp', { Search: LANG.Search, Download: LANG.Download });
+		generateVersion(document.getElementById('items-version'));
 		this._generateListItem(document.getElementById('items-version').value);
 		document.getElementById('disabled-form').addEventListener('submit', (event) =>
 		{
@@ -280,6 +299,7 @@ class UtilityComponent
 	static tags()
 	{
 		Template.render(document.getElementById('utility-tab-tags'), 'tags.tp', { Search: LANG.Search, Download: LANG.Download });
+		generateVersion(document.getElementById('tags-version'));
 		this._generateTagItem(document.getElementById('tags-version').value);
 		document.getElementById('disabled-form').addEventListener('submit', (event) =>
 		{

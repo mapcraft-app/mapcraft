@@ -9,7 +9,7 @@
 		</ul>
 	</div>
 	<div class="uk-width-3-4 list-right">
-		<div id="input-zone" class="uk-flex uk-flex-around">
+		<div id="input-zone" style="display: none;" class="uk-flex uk-flex-around">
 			<input id="input-zone-name-advancement" class="uk-input uk-width-1-4" type="text"/>
 			<button id="input-zone-generate-advancement" class="uk-button uk-button-success" >
 				<span uk-icon="cog"></span>

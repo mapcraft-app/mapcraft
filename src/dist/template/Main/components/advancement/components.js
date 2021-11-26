@@ -890,6 +890,7 @@ class Component
 					});
 				});
 			}
+			MCutilities.CreateAlert('success', document.getElementById('advancement-error'), LANG.Data.Graph.SuccessGeneration);
 			MCworkInProgress.close();
 		});
 
