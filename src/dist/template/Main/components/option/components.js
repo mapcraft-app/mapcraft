@@ -10,6 +10,7 @@ const Temp = require('mapcraft-api').MCtemplate;
 const IPC = require('mapcraft-api').MCipc;
 const MCP = require('mapcraft-api').MCplugin;
 const NavMenu = require('../../../../js/createNavMenu');
+const importPlugins = require('../../../../js/importPlugins');
 
 const md = new MarkdownIt();
 const Template = new Temp(__dirname);
@@ -251,6 +252,10 @@ class PluginComponent
 					{
 						if (err)
 							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+						if (isBuiltin)
+							MCplugin.Toogle(value);
+						else
+							importPlugins.Toogle(value);
 						this.updateNav();
 					});
 					return;
@@ -267,6 +272,7 @@ class PluginComponent
 					{
 						if (err)
 							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+						importPlugins.Toogle(value, false);
 						this.updateNav();
 					});
 					return;

@@ -96,36 +96,31 @@ function PrintNotification(Title, Body)
 
 MCipc.receive('Shell:new-command', (command) =>
 {
-	console.log('shell', command);
 	if (command.Player !== JSON.parse(localStorage.getItem('Mapcraft_User')).Username)
 		return;
 	const plugin = capitalize(command.Command);
 	const Component = Plugins.Component(plugin);
 	const PluginsComponent = importPlugins.Component(command.UUID);
-
-	if (!Component || !PluginsComponent)
+	if (Component && Component.active)
+	{
+		const LANG = Plugins.Lang(plugin);
+		if (Component.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification')
+		|| Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
+			PrintNotification(LANG.Title, LANG.Notification);
+		UpdateInterface(plugin, LANG.Title);
+	}
+	else if (PluginsComponent && PluginsComponent.active)
+	{
+		const LANG = importPlugins.Lang(command.UUID);
+		if (PluginsComponent.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification')
+		|| Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
+			PrintNotification(LANG.Title, LANG.Notification);
+		UpdateInterface(command.UUID, LANG.Title);
+	}
+	else
 	{
 		console.error('No plugin exist with is name');
 		return;
-	}
-
-	if (Component)
-	{
-		const LANG = Plugins.Lang(plugin);
-		if (Component.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification') || Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
-		{
-			PrintNotification(LANG.Title, LANG.Notification);
-			UpdateInterface(plugin, LANG.Title);
-		}
-	}
-	else if (PluginsComponent)
-	{
-		const LANG = importPlugins.Lang(command.UUID);
-		if (PluginsComponent.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification') || Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
-		{
-			PrintNotification(LANG.Title, LANG.Notification);
-			UpdateInterface(command.UUID, LANG.Title);
-		}
 	}
 	MCipc.send('Shell:send-command', command);
 });

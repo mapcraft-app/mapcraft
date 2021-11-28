@@ -15,46 +15,47 @@ class ImportPlugin
 		this.BaseLink = Mapcraft.GetConfig().Env.PluginsComponents;
 		this.jsonBase = fs.readFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' });
 		this.Components = JSON.parse(this.jsonBase);
-		this.plugins = [];
-		//eslint-disable-next-line guard-for-in
 		for (const i in this.Components)
-		{
-			if (typeof this.Components[i].directory === 'undefined')
-			{
-				let newUUID;
-				if (typeof this.Components[i].uuid === 'undefined')
-					newUUID = crypto.randomUUID();
-				else
-					newUUID = this.Components[i].uuid;
-				try
+			if (Object.prototype.hasOwnProperty.call(this.Components, i))
+				if (typeof this.Components[i].directory === 'undefined')
 				{
-					fs.renameSync(path.join(this.BaseLink, this.Components[i].name), path.join(this.BaseLink, newUUID));
+					let newUUID;
+					if (typeof this.Components[i].uuid === 'undefined')
+						newUUID = crypto.randomUUID();
+					else
+						newUUID = this.Components[i].uuid;
+					try
+					{
+						fs.renameSync(path.join(this.BaseLink, this.Components[i].name), path.join(this.BaseLink, newUUID));
+					}
+					catch (err)
+					{
+						console.error(err);
+					}
+					this.Components[i].directory = path.join(this.BaseLink, newUUID);
+					this.ifNewPlugin = true;
 				}
-				catch (err)
-				{
-					console.error(err);
-				}
-				this.Components[i].directory = path.join(this.BaseLink, newUUID);
-				this.ifNewPlugin = true;
-			}
-			this.plugins.push({
-				name: this.Components[i].name,
-				uuid: this.Components[i].uuid,
-				directory: this.Components[i].directory,
-				component: this.Components[i].component,
-				active: (this.Components[i].active) ? this.Components[i].active : true,
-				isNotification: this.Components[i].isNotification,
-				lang: this.Components[i].lang,
-				instance: require(path.join(this.Components[i].directory, this.Components[i].component)) // eslint-disable-line
-			});
-		}
-		MCshell.add(this.plugins);
 		if (this.ifNewPlugin)
-			fs.writeFile(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
-			{
-				if (err)
-					throw new Error(err);
-			});
+			fs.writeFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' });
+		if (!global.ImportPluginSave)
+		{
+			console.log('import constructor');
+			global.ImportPluginSave = [];
+			for (const i in this.Components)
+				if (Object.prototype.hasOwnProperty.call(this.Components, i))
+					global.ImportPluginSave.push({
+						name: this.Components[i].name,
+						uuid: this.Components[i].uuid,
+						directory: this.Components[i].directory,
+						component: this.Components[i].component,
+						active: this.Components[i].active,
+						isNotification: this.Components[i].isNotification,
+						lang: this.Components[i].lang,
+						instance: require(path.join(this.Components[i].directory, this.Components[i].component)) // eslint-disable-line
+					});
+		}
+		this.plugins = global.ImportPluginSave;
+		MCshell.add(global.ImportPluginSave);
 	}
 
 	/**
@@ -76,13 +77,31 @@ class ImportPlugin
 	 * @param {String} UUID UUID of component
 	 * @returns Full component, or undefined if error
 	 */
-	//Component(Name)
 	Component(UUID)
 	{
 		for (const i in this.plugins)
 			if (this.plugins[i].uuid === UUID)
 				return (this.plugins[i]);
 		return (undefined);
+	}
+
+	/**
+	 * Toogle component
+	 * @param {String} UUID Name of component
+	 * @param {Boolean} forceValue Set to true/false if you want to force activate/desactivate plugin
+	 */
+	Toogle(UUID, forceValue = undefined)
+	{
+		for (const i in global.ImportPluginSave)
+			if (global.ImportPluginSave[i].uuid === UUID)
+			{
+				if (forceValue === undefined)
+					global.ImportPluginSave[i].active = !(global.ImportPluginSave[i].active);
+				else
+					global.ImportPluginSave[i].active = Boolean(forceValue);
+				this.plugins = global.ImportPluginSave;
+				break;
+			}
 	}
 
 	/**
