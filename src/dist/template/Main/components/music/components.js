@@ -30,7 +30,7 @@ if (!fs.existsSync(SoundsJsonLink))
 if (!fs.existsSync(SoundsLink))
 {
 	fs.mkdirSync(SoundsLink, { recursive: true });
-	MCutilities.download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) =>
+	MCutilities.Download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) =>
 	{
 		if (err)
 			console.error(err);

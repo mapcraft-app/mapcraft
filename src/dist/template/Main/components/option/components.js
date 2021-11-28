@@ -15,6 +15,11 @@ const md = new MarkdownIt();
 const Template = new Temp(__dirname);
 const MCplugin = new MCP();
 
+const pluginsList = {
+	builtin: JSON.parse(fs.readFileSync(path.join(__dirname, '../../', 'components.json'), { encoding: 'utf-8', flag: 'r' })),
+	addons: JSON.parse(fs.readFileSync(path.join(MC.GetConfig().Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' })),
+};
+
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 let LANG = MCplugin.Lang('Option');
 function UpdateLang()
@@ -29,7 +34,7 @@ class OptionComponent
 	{
 		UpdateLang();
 		const str = 'option.tp';
-		Template.render(document.getElementById('content'), str, { GeneralIcon: LANG.Data.Menu.GeneralIcon, UserIcon: LANG.Data.Menu.UserIcon, AboutIcon: LANG.Data.Menu.AboutIcon });
+		Template.render(document.getElementById('content'), str, { GeneralIcon: LANG.Data.Menu.GeneralIcon, UserIcon: LANG.Data.Menu.UserIcon, PluginIcon: LANG.Data.Menu.PluginIcon, AboutIcon: LANG.Data.Menu.AboutIcon });
 		this.UpdateLangComponent(str);
 	}
 
@@ -79,6 +84,7 @@ class OptionComponent
 	{
 		this._main();
 		this.general();
+		PluginComponent.main(); // eslint-disable-line
 		AboutComponent.about(); // eslint-disable-line
 		UserComponent.main(); // eslint-disable-line
 	}
@@ -126,6 +132,7 @@ class OptionComponent
 		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.Lang('Main'));
 		this.UpdateLangComponent('option.tp');
 		this.general();
+		PluginComponent.updateLang(); // eslint-disable-line
 		UserComponent.UpdateLangComponent('user.tp'); // eslint-disable-line
 		MCutilities.CreateAlert('success', document.getElementById('option-error'), LANG.Data.General.Success);
 	}
@@ -135,6 +142,188 @@ class OptionComponent
 		UserComponent.table(); // eslint-disable-line
 	}
 }
+
+//#region Plugin system
+class PluginComponent
+{
+	static main()
+	{
+		Template.render(document.getElementById('option-tab-plugin'), 'plugin.tp', null);
+		this.updateLang();
+		this.generateList();
+	}
+
+	static updateLang()
+	{
+		Template.updateLang(document.getElementById('option-tab-plugin'), LANG.Data);
+	}
+
+	static updateNav()
+	{
+		NavMenu.CreateNavMenu(document.getElementById('toogle-nav'), 'nav.tp');
+		document.querySelectorAll('#toogle-nav li').forEach((element) =>
+		{
+			element.addEventListener('click', () =>
+			{
+				document.querySelectorAll('#toogle-nav li').forEach((elem) =>
+				{
+					elem.childNodes[1].classList.remove('nav-hover-element-selected');
+				});
+				element.childNodes[1].classList.add('nav-hover-element-selected');
+				IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
+			});
+		});
+	}
+
+	static generateList()
+	{
+		let ID = Number(0);
+		const LIST_BUILT = document.querySelector('#table-builtin tbody');
+		const LIST_ADDON = document.querySelector('#table-plugin tbody');
+
+		const builtin = () =>
+		{
+			const newDOM = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
+			const newDOMbody = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
+			newDOM.documentElement.appendChild(newDOMbody);
+			for (const object of pluginsList.builtin)
+			{
+				if (object.name === '__DEFAULT')
+					continue; //eslint-disable-line
+				const div = document.createElement('div');
+				Template.render(div, 'plugin-table.tp', { id: ID++, uuid: object.name, icon: './dist/img/icon/default_logo.png', name: object.name, version: 'latest', author: 'Vex345', description: object.description });
+				if (object.desactivable === false)
+				{
+					div.getElementsByClassName('uk-switch-span')[0].classList.add('uk-switch-span-disabled');
+					div.getElementsByTagName('input')[0].disabled = true;
+				}
+				if (object.active === true)
+					div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
+				div.getElementsByTagName('button')[0].disabled = true;
+				newDOMbody.appendChild(div.getElementsByTagName('tr')[0]);
+			}
+			LIST_BUILT.innerHTML = newDOMbody.innerHTML;
+		};
+
+		const addons = () =>
+		{
+			const newDOM = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
+			const newDOMbody = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
+			newDOM.documentElement.appendChild(newDOMbody);
+			const _path = MC.GetConfig().Env.PluginsComponents;
+			for (const object of pluginsList.addons)
+			{
+				const testManifest = () =>
+				{
+					const testOne = path.join(object.directory, 'manifest.json');
+					const testTwo = path.join(_path, object.name, 'manifest.json');
+					if (fs.existsSync(testOne))
+						return testOne;
+					return testTwo;
+				};
+				const manifest = JSON.parse(fs.readFileSync(testManifest(), { encoding: 'utf-8', flag: 'r' }));
+				const div = document.createElement('div');
+				const data = {
+					id: ID++,
+					uuid: object.uuid,
+					icon: (fs.existsSync(path.join(object.directory, manifest.icon))) ? path.join(object.directory, manifest.icon) : path.join(object.directory, '../../src/dist/img/icon/default_logo.png'),
+					name: manifest.name,
+					version: manifest.version,
+					author: manifest.author,
+					description: manifest.description,
+				};
+				Template.render(div, 'plugin-table.tp', data);
+				if (object.active === true)
+					div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
+				newDOMbody.appendChild(div.getElementsByTagName('tr')[0]);
+			}
+			LIST_ADDON.innerHTML = newDOMbody.innerHTML;
+		};
+
+		const updateJSON = (data, key, value, newValue, isBuiltin = true) =>
+		{
+			for (const object of data)
+				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
+				{
+					object.active = newValue;
+					const _path = (isBuiltin) ? path.join(__dirname, '../../', 'components.json') : path.join(MC.GetConfig().Env.PluginsComponents, 'components.json');
+					fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
+					{
+						if (err)
+							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+						this.updateNav();
+					});
+					return;
+				}
+		};
+
+		const removeJson = (key, value) =>
+		{
+			for (const object of pluginsList.addons)
+				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
+				{
+					pluginsList.addons.splice(pluginsList.addons.indexOf(object), 1);
+					fs.writeFile(path.join(MC.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(pluginsList.addons, null, 4), { encoding: 'utf-8' }, (err) =>
+					{
+						if (err)
+							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+						this.updateNav();
+					});
+					return;
+				}
+		};
+
+		setImmediate(() =>
+		{
+			builtin();
+			addons();
+			//#region Switcher
+			const inputs = document.getElementById('option-tab-plugin').getElementsByTagName('input');
+			for (const input of inputs)
+				input.addEventListener('click', (event) =>
+				{
+					event.stopImmediatePropagation();
+					const TR = event.target.closest('tr');
+					if (event.target.checked)
+						if (event.target.closest('.table-builtin'))
+							updateJSON(pluginsList.builtin, 'name', TR.getAttribute('uuid'), true);
+						else
+							updateJSON(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), true, false);
+					else if (!event.target.checked)
+						if (event.target.closest('.table-builtin'))
+							updateJSON(pluginsList.builtin, 'name', TR.getAttribute('uuid'), false);
+						else
+							updateJSON(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), false, false);
+				});
+			//#endregion
+
+			//#region Delete
+			const buttons = document.getElementById('table-plugin').getElementsByTagName('button');
+			for (const button of buttons)
+				button.addEventListener('click', (event) =>
+				{
+					event.preventDefault();
+					event.stopImmediatePropagation();
+					const TR = event.target.closest('tr');
+					fs.rm(path.join(MC.GetConfig().Env.PluginsComponents, TR.getAttribute('uuid')), { recursive: true, force: true }, (err) =>
+					{
+						if (err)
+						{
+							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+						}
+						else
+						{
+							removeJson('uuid', TR.getAttribute('uuid'));
+							Template.cleanNode(TR, true);
+							MCutilities.CreateAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
+						}
+					});
+				});
+			//#endregion
+		});
+	}
+}
+//#endregion
 
 function ChangeNameRessourcePack()
 {
@@ -263,7 +452,7 @@ class UserComponent
 		Template.render(document.getElementById('option-tab-user'), str, null);
 		this.UpdateLangComponent(str);
 		this.table();
-		CreateUser(); // eslint-disable-line
+		CreateUser(); //eslint-disable-line
 	}
 
 	static table()

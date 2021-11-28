@@ -1,0 +1,54 @@
+[HTML]
+<ul class="uk-flex-center" uk-tab>
+    <li>
+		<a href="#" lang="Plugin.BuiltIn"></a>
+	</li>
+    <li>
+		<a href="#" lang="Plugin.Installed"></a>
+	</li>
+</ul>
+<ul class="uk-switcher uk-margin">
+    <li>
+		<table id="table-builtin" class="uk-table uk-table-striped uk-table-middle table-builtin">
+			<thead>
+				<tr>
+					<th class="uk-width-small"></th>
+					<th lang="Plugin.Name"></th>
+					<th lang="Plugin.Version"></th>
+					<th lang="Plugin.Author"></th>
+					<th lang="Plugin.Description"></th>
+					<th lang="Plugin.Activate"></th>
+					<th lang="Plugin.Delete"></th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</li>
+    <li>
+		<div class="uk-flex uk-flex-right uk-margin-top uk-margin-bottom">
+			<button class="uk-button uk-button-warning">
+				<span uk-icon="icon: database"></span>
+				<span lang="Plugin.UpdatePlugins"></span>
+			</button>
+		</div>
+		<table id="table-plugin" class="uk-table uk-table-striped uk-table-middle table-plugin">
+			<thead>
+				<tr>
+					<th class="uk-width-small"></th>
+					<th lang="Plugin.Name"></th>
+					<th lang="Plugin.Version"></th>
+					<th lang="Plugin.Author"></th>
+					<th lang="Plugin.Description"></th>
+					<th lang="Plugin.Activate"></th>
+					<th lang="Plugin.Delete"></th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</li>
+</ul>
+
+
+[/HTML]

@@ -76,7 +76,7 @@ class Update
 		if (!fs.existsSync(tempDir))
 			fs.mkdirSync(tempDir, { recursive: true });
 		if (!fs.existsSync(LocalMapcraft.Data.ResourcePack))
-			MCutilities.download('https://download.mapcraft.app/srcs/res/resourcepacks.zip', resourcepackPath, (err) =>
+			MCutilities.Download('https://download.mapcraft.app/srcs/res/resourcepacks.zip', resourcepackPath, (err) =>
 			{
 				if (err)
 				{
@@ -90,7 +90,7 @@ class Update
 		else
 			ret.data = true;
 		if (!fs.existsSync(LocalMapcraft.Data.DataPack))
-			MCutilities.download('https://download.mapcraft.app/srcs/res/datapacks.zip', datapackPath, (err) =>
+			MCutilities.Download('https://download.mapcraft.app/srcs/res/datapacks.zip', datapackPath, (err) =>
 			{
 				if (err)
 				{
@@ -127,7 +127,7 @@ class Update
 		if (!fs.existsSync(LocalMapcraft.Mapcraft))
 		{
 			console.log(this.json.datapack.url, datapackPath);
-			MCutilities.download(this.json.datapack.url, datapackPath, (err) =>
+			MCutilities.Download(this.json.datapack.url, datapackPath, (err) =>
 			{
 				if (err)
 				{
@@ -146,7 +146,7 @@ class Update
 		if (!fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
 		{
 			console.log(this.json.resourcepack.url, resourcepackPath);
-			MCutilities.download(this.json.resourcepack.url, resourcepackPath, (err) =>
+			MCutilities.Download(this.json.resourcepack.url, resourcepackPath, (err) =>
 			{
 				if (err)
 				{
@@ -186,7 +186,7 @@ class Update
 		fs.mkdir(tempDir, { recursive: true }, () =>
 		{
 			const _path = path.join(tempDir, `${this.json.datapack.version}.zip`);
-			MCutilities.download(this.json.datapack.url, _path, (err) =>
+			MCutilities.Download(this.json.datapack.url, _path, (err) =>
 			{
 				if (err)
 				{
@@ -206,7 +206,7 @@ class Update
 		fs.mkdir(tempDir, { recursive: true }, () =>
 		{
 			const _path = path.join(tempDir, `${this.json.resourcepack.version}.zip`);
-			MCutilities.download(this.json.resourcepack.url, _path, (err) =>
+			MCutilities.Download(this.json.resourcepack.url, _path, (err) =>
 			{
 				if (err)
 				{
@@ -253,7 +253,7 @@ class Update
 				mapcraftSoft = path.join(__dirname, '../../../', 'mapcraft');
 			}
 			const _path = path.join(tempDir, 'update_archive.zip');
-			MCutilities.download(downloadUrl, _path, (err) =>
+			MCutilities.Download(downloadUrl, _path, (err) =>
 			{
 				if (err)
 				{

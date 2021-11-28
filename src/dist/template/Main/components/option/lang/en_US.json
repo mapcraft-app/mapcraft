@@ -7,6 +7,8 @@
 			"General": "General",
 			"GeneralIcon": "settings",
 			"User": "User",
+			"Plugin": "Plugin",
+			"PluginIcon": "thumbnails",
 			"UserIcon": "users",
 			"About": "About",
 			"AboutIcon": "info"
@@ -29,6 +31,19 @@
 				"NotMinecraftSaveDirectory" : "Is probably not minecraft save directory, check save path in option",
 				"IncorrectString": "String not well formated"
 			}
+		},
+		"Plugin": {
+			"Installed": "Installed",
+			"BuiltIn": "Built-in",
+			"Name": "Name",
+			"Version": "Version",
+			"Author": "Author",
+			"Description": "Description",
+			"Update": "Update",
+			"UpdatePlugins": "Update every plugins",
+			"Activate": "Activate",
+			"Delete": "Delete",
+			"DeleteSuccess": "The deletion of the plugin has been correctly done"
 		},
 		"User": {
 			"SelectEveryUser": "Select all users",

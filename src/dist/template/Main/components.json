@@ -1,66 +1,96 @@
 [
-	{
-		"name": "__DEFAULT",
-		"component": "Home"
-	},
-	{
-		"name": "Main",
-		"component": "./components/main/components",
-		"lang": "./components/main/lang",
-		"isNotification" : false
-	},
-	{
-		"name": "Home",
-		"component": "./components/home/components",
-		"lang": "./components/home/lang",
-		"isNotification": false
-	},
-	{
-		"name": "Option",
-		"component": "./components/option/components",
-		"lang": "./components/option/lang",
-		"isNotification": false
-	},
-	{
-		"name": "Store",
-		"component": "./components/store/components",
-		"lang": "./components/store/lang",
-		"isNotification": false
-	},
-	{
-		"name": "Trigger",
-		"component": "./components/trigger/components",
-		"lang": "./components/trigger/lang",
-		"isNotification": true
-	},
-	{
-		"name": "Music",
-		"component": "./components/music/components",
-		"lang": "./components/music/lang",
-		"isNotification": true
-	},
-	{
-		"name": "Cutscene",
-		"component": "./components/cutscene/components",
-		"lang": "./components/cutscene/lang",
-		"isNotification": true
-	},
-	{
-		"name": "Advancement",
-		"component": "./components/advancement/components",
-		"lang": "./components/advancement/lang",
-		"isNotification": false
-	},
-	{
-		"name": "Recipe",
-		"component": "./components/recipe/components",
-		"lang": "./components/recipe/lang",
-		"isNotification": false
-	},
-	{
-		"name": "Utility",
-		"component": "./components/utility/components",
-		"lang": "./components/utility/lang",
-		"isNotification": false
-	}
+    {
+        "name": "__DEFAULT",
+        "component": "Home"
+    },
+    {
+        "name": "Main",
+        "component": "./components/main/components",
+        "lang": "./components/main/lang",
+        "description": "Contains everything needed to make all other plugins work",
+        "desactivable": false,
+        "active": true,
+        "isNotification": false
+    },
+    {
+        "name": "Home",
+        "component": "./components/home/components",
+        "lang": "./components/home/lang",
+        "description": "Main selection panel",
+        "desactivable": false,
+        "active": true,
+        "isNotification": false
+    },
+    {
+        "name": "Option",
+        "component": "./components/option/components",
+        "lang": "./components/option/lang",
+        "description": "Allows tp configure the software",
+        "desactivable": false,
+        "active": true,
+        "isNotification": false
+    },
+    {
+        "name": "Store",
+        "component": "./components/store/components",
+        "lang": "./components/store/lang",
+        "description": "Allows direct access via the application to the store ",
+        "desactivable": false,
+        "active": true,
+        "isNotification": false
+    },
+    {
+        "name": "Trigger",
+        "component": "./components/trigger/components",
+        "lang": "./components/trigger/lang",
+        "description": "Create your triggers in the game",
+        "desactivable": true,
+        "active": true,
+        "isNotification": true
+    },
+    {
+        "name": "Music",
+        "component": "./components/music/components",
+        "lang": "./components/music/lang",
+        "description": "Music and sound effects manager",
+        "desactivable": true,
+        "active": true,
+        "isNotification": true
+    },
+    {
+        "name": "Cutscene",
+        "component": "./components/cutscene/components",
+        "lang": "./components/cutscene/lang",
+        "description": "Create cutscenes in the game",
+        "desactivable": true,
+        "active": true,
+        "isNotification": true
+    },
+    {
+        "name": "Advancement",
+        "component": "./components/advancement/components",
+        "lang": "./components/advancement/lang",
+        "description": "Create, modify or delete your own advancements",
+        "desactivable": true,
+        "active": true,
+        "isNotification": false
+    },
+    {
+        "name": "Recipe",
+        "component": "./components/recipe/components",
+        "lang": "./components/recipe/lang",
+        "description": "Create, modify or delete recipes",
+        "desactivable": true,
+        "active": true,
+        "isNotification": false
+    },
+    {
+        "name": "Utility",
+        "component": "./components/utility/components",
+        "lang": "./components/utility/lang",
+        "description": "Easily search for blocks or items in the game via a search system",
+        "desactivable": true,
+        "active": true,
+        "isNotification": false
+    }
 ]

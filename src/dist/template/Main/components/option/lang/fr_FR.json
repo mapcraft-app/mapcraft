@@ -8,6 +8,8 @@
 			"GeneralIcon": "settings",
 			"User": "Utilisateurs",
 			"UserIcon": "users",
+			"Plugin": "Modules",
+			"PluginIcon": "thumbnails",
 			"About": "A propos",
 			"AboutIcon": "info"
 		},
@@ -29,6 +31,19 @@
 				"NotMinecraftSaveDirectory" : "Ce n'est probablement pas le répertoire de sauvegarde de Minecraft, vérifiez le chemin dans les options",
 				"IncorrectString": "La chaine n'est pas correctement formaté"
 			}
+		},
+		"Plugin": {
+			"Installed": "Installé",
+			"BuiltIn": "Intégré",
+			"Name": "Nom",
+			"Version": "Version",
+			"Author": "Auteur",
+			"Description": "Description",
+			"Update": "Mise à jour",
+			"UpdatePlugins": "Mise à jour de tous les modules",
+			"Activate": "Activer",
+			"Delete": "Supprimer",
+			"DeleteSuccess": "La suppression du module a été correctement réalisé"
 		},
 		"User": {
 			"SelectEveryUser": "Sélectionner tous les utilisateurs",

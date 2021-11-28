@@ -13,6 +13,11 @@
 			</a>
 		</li>
 		<li>
+			<a href="#" lang="Plugin">
+				<span class="space-icon-nav" uk-icon="icon: {PluginIcon}; ratio: 1"></span>
+			</a>
+		</li>
+		<li>
 			<a href="#" lang="About">
 				<span class="space-icon-nav" uk-icon="icon: {AboutIcon}; ratio: 1"></span>
 			</a>
@@ -21,6 +26,7 @@
 	<ul class="uk-switcher">
 		<li id="option-tab-general"></li>
 		<li id="option-tab-user"></li>
+		<li id="option-tab-plugin"></li>
 		<li id="option-tab-about"></li>
 	</ul>
 </div>

@@ -33,19 +33,19 @@ exports.CreateNavMenu = (DOMelement, TEMPLATE, ISHOME = false) =>
 
 	//Built-in plugins
 	for (const i in Plugins)
-		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && (typeof Plugins[i].using === 'undefined' || Plugins[i].using === true))
+		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && (typeof Plugins[i].active === 'undefined' || Plugins[i].active === true))
 		{
 			const _LANG = builtinPlugins.Lang(Plugins[i].name);
 			HTML += Template.parseRaw(Component, { id: Plugins[i].name, title: _LANG.Title, icon: _LANG.Icon });
 		}
-		else if (Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && Plugins[i].name !== 'Home' && (typeof Plugins[i].using === 'undefined' || Plugins[i].using === true))
+		else if (Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && Plugins[i].name !== 'Home' && (typeof Plugins[i].active === 'undefined' || Plugins[i].active === true))
 		{
 			const _LANG = builtinPlugins.Lang(Plugins[i].name);
 			HTML += Template.parseRaw(Component, { id: Plugins[i].name, title: _LANG.Title, icon: _LANG.Icon });
 		}
 	//User plugins
 	for (const i in UserPlugins)
-		if (typeof UserPlugins[i].using === 'undefined' || UserPlugins[i].using === true)
+		if (typeof UserPlugins[i].active === 'undefined' || UserPlugins[i].active === true)
 		{
 			const _LANG = importPlugins.Lang(UserPlugins[i].uuid);
 			HTML += Template.parseRaw(Component, { id: UserPlugins[i].uuid, importPlugins: 'userplugin', title: _LANG.Title, icon: _LANG.Icon });

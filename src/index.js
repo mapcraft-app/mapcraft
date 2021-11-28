@@ -8,6 +8,7 @@ const fs = require('fs');
 const axios = require('axios');
 const Database = require('better-sqlite3');
 const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
+require('./dist/js/importPlugins');
 
 //#region Variables
 MCutilities.GetAppDataPath();
@@ -61,7 +62,7 @@ async function UpdateSystem()
 	}
 	if (fs.existsSync(access))
 		fs.rmSync(access, { force: true });
-	MCutilities.download(_url, access, (err) =>
+	MCutilities.Download(_url, access, (err) =>
 	{
 		if (err)
 		{

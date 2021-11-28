@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-const { Mapcraft } = require('mapcraft-api');
+const { Mapcraft, MCshell } = require('mapcraft-api');
 
 /**
  * Specialized import plugin based on MCplugin logic, don't use this in your personnal project
@@ -37,17 +37,18 @@ class ImportPlugin
 				this.Components[i].directory = path.join(this.BaseLink, newUUID);
 				this.ifNewPlugin = true;
 			}
-			if ((typeof this.Components[i].using === 'undefined' || this.Components[i].using === true))
-				this.plugins.push({
-					name: this.Components[i].name,
-					uuid: this.Components[i].uuid,
-					directory: this.Components[i].directory,
-					component: this.Components[i].component,
-					isNotification: this.Components[i].isNotification,
-					lang: this.Components[i].lang,
-					instance: require(path.join(this.Components[i].directory, this.Components[i].component)) // eslint-disable-line
-				});
+			this.plugins.push({
+				name: this.Components[i].name,
+				uuid: this.Components[i].uuid,
+				directory: this.Components[i].directory,
+				component: this.Components[i].component,
+				active: (this.Components[i].active) ? this.Components[i].active : true,
+				isNotification: this.Components[i].isNotification,
+				lang: this.Components[i].lang,
+				instance: require(path.join(this.Components[i].directory, this.Components[i].component)) // eslint-disable-line
+			});
 		}
+		MCshell.add(this.plugins);
 		if (this.ifNewPlugin)
 			fs.writeFile(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
 			{
@@ -98,7 +99,13 @@ class ImportPlugin
 			{
 				try
 				{
-					data = JSON.parse(fs.readFileSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.GetConfig().Env.Lang}.json`)));
+					if (!fs.existsSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.GetConfig().Env.Lang}.json`)))
+						if (!fs.existsSync(path.join(this.plugins[i].directory, this.plugins[i].lang, 'en_US.json')))
+							throw new Error('No lang data is found');
+						else
+							data = JSON.parse(fs.readFileSync(path.join(this.plugins[i].directory, this.plugins[i].lang, 'en_US.json')));
+					else
+						data = JSON.parse(fs.readFileSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.GetConfig().Env.Lang}.json`)));
 				}
 				catch (err)
 				{
