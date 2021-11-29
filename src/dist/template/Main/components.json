@@ -36,7 +36,7 @@
         "lang": "./components/store/lang",
         "description": "Allows direct access via the application to the store ",
         "desactivable": false,
-        "active": true,
+        "active": false,
         "isNotification": false
     },
     {

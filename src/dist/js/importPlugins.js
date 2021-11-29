@@ -35,11 +35,8 @@ class ImportPlugin
 					this.Components[i].directory = path.join(this.BaseLink, newUUID);
 					this.ifNewPlugin = true;
 				}
-		if (this.ifNewPlugin)
-			fs.writeFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' });
 		if (!global.ImportPluginSave)
 		{
-			console.log('import constructor');
 			global.ImportPluginSave = [];
 			for (const i in this.Components)
 				if (Object.prototype.hasOwnProperty.call(this.Components, i))
@@ -55,6 +52,8 @@ class ImportPlugin
 					});
 		}
 		this.plugins = global.ImportPluginSave;
+		if (this.ifNewPlugin)
+			fs.writeFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' });
 		MCshell.add(global.ImportPluginSave);
 	}
 

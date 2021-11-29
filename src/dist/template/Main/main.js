@@ -1,4 +1,5 @@
 const { contextBridge } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
@@ -80,18 +81,15 @@ const capitalize = (s) =>
 	return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-function PrintNotification(Title, Body)
+function PrintNotification(Title, Body, Icon)
 {
 	const options = {
 		title: `Mapcraft - ${Title}`,
 		body: Body,
-		icon: path.join(__dirname, '../../img/icon/icon.png'),
+		icon: Icon,
 	};
 	const Notif = new Notification(options.title, options);
-	Notif.onclick = () =>
-	{
-		MCipc.send('Notification:click-notification');
-	};
+	Notif.addEventListener('click', () => MCipc.send('Notification:click-notification'));
 }
 
 MCipc.receive('Shell:new-command', (command) =>
@@ -104,17 +102,26 @@ MCipc.receive('Shell:new-command', (command) =>
 	if (Component && Component.active)
 	{
 		const LANG = Plugins.Lang(plugin);
-		if (Component.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification')
-		|| Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
-			PrintNotification(LANG.Title, LANG.Notification);
+		if (Component.IsNotification)
+			PrintNotification(LANG.Title, LANG.Notification, path.join(__dirname, '../../img/icon/icon.png'));
 		UpdateInterface(plugin, LANG.Title);
 	}
 	else if (PluginsComponent && PluginsComponent.active)
 	{
 		const LANG = importPlugins.Lang(command.UUID);
-		if (PluginsComponent.IsNotification && (!Object.prototype.isPrototypeOf.call(command, 'NoNotification')
-		|| Object.prototype.isPrototypeOf.call(command, 'NoNotification')) && !command.NoNotification)
-			PrintNotification(LANG.Title, LANG.Notification);
+		if (PluginsComponent.isNotification)
+		{
+			//eslint-disable-next-line
+			const manifest = require(path.join(PluginsComponent.directory, 'manifest.json'));
+			const icon = path.join(PluginsComponent.directory, manifest.icon);
+			fs.stat(icon, (err) =>
+			{
+				if (err)
+					PrintNotification(LANG.Title, LANG.Notification, path.join(__dirname, '../../img/icon/icon.png'));
+				else
+					PrintNotification(LANG.Title, LANG.Notification, icon);
+			});
+		}
 		UpdateInterface(command.UUID, LANG.Title);
 	}
 	else
