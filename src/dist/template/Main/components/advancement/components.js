@@ -18,6 +18,7 @@ function UpdateLang()
 const TEMPLATE = new MCtemplate(__dirname);
 let ADVANCEMENT = {};
 let CurrentID;
+localStorage.setItem('Advancement_Select', '');
 
 //Add directory to datapack if not exist
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
@@ -820,21 +821,32 @@ class Component
 			{
 				if (err)
 					MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
+
+				localStorage.setItem('Advancement_Select', json.id);
 				ADVANCEMENT = JSON.parse(JSON.stringify(json)); //deepcopy of json, structuredClone() not work
-				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
+				//#region Rewrite list and select new advancement
 				TEMPLATE.cleanNode(document.getElementById('advancement-list'));
-				this.drawList();
+				this.drawList(true);
+				const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
+				for (const icon of ICONS)
+					icon.style.display = 'none';
+				//#endregion
+				//#region Graph
+				TEMPLATE.cleanNode(document.querySelector('div.graph'));
+				SetJson.cleanForm();
+				this.drawGraph(ADVANCEMENT.data);
+				//#endregion
+				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
+				document.getElementById('input-zone').style.removeProperty('display');
 			});
 		});
 
 		//Update name and icon of advancement if input change
 		document.getElementById('input-zone-name-advancement').addEventListener('input', (event) =>
 		{
-			const LIST = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
 			ADVANCEMENT.name = (Object.keys(ADVANCEMENT).length) ? event.target.value : 'undefined';
-			for (const list of LIST)
-				if (!list.style.display)
-					list.nextSibling.innerText = ADVANCEMENT.name;
+			const LIST = document.querySelector(`li[advancement-id="${localStorage.getItem('Advancement_Select')}"] > span`);
+			LIST.nextSibling.innerText = ADVANCEMENT.name;
 		});
 		document.getElementById('input-zone-name-advancement').addEventListener('focusout', () =>
 		{
@@ -855,16 +867,17 @@ class Component
 				icon.style.display = 'none';
 			const BASE = (event.target.tagName === 'SPAN') ? (event.target.parentNode) : event.target;
 			BASE.childNodes[0].style.display = '';
+			localStorage.setItem('Advancement_Select', BASE.getAttribute('advancement-id'));
 			fs.readFile(BASE.getAttribute('advancement-file'), { encoding: 'utf-8', flag: 'r' }, (err, data) =>
 			{
 				if (err)
 					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err);
 				ADVANCEMENT = JSON.parse(data);
-				document.getElementById('input-zone').style.removeProperty('display');
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
 				this.drawGraph(ADVANCEMENT.data);
 				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
+				document.getElementById('input-zone').style.removeProperty('display');
 			});
 		});
 
@@ -914,17 +927,18 @@ class Component
 		document.getElementById('modal-confirm-yes').addEventListener('click', () =>
 		{
 			CurrentID = undefined;
-			const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
-			fs.rm(ICONS[0].parentNode.getAttribute('advancement-file'), (err) =>
+			const ICONS = document.querySelector(`#advancement-list li[advancement-id=${localStorage.getItem('Advancement_Select')}]`);
+			fs.rm(ICONS.getAttribute('advancement-file'), (err) =>
 			{
 				if (err)
 					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err.message);
-				TEMPLATE.cleanNode(ICONS[0].parentNode, true);
+				TEMPLATE.cleanNode(ICONS, true);
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
 				document.getElementById('input-zone').style.setProperty('display', 'none');
 				document.getElementById('zone').style.setProperty('display', 'none');
 				document.getElementById('input-zone-name-advancement').value = '';
+				localStorage.setItem('Advancement_Select', '');
 			});
 		});
 	}
@@ -950,7 +964,7 @@ class Component
 		}
 	}
 
-	static drawList()
+	static drawList(addAdvancement = false)
 	{
 		const Dir = path.join(RecipesDirectory, 'data');
 		const List = document.getElementById('advancement-list');
@@ -972,6 +986,13 @@ class Component
 				li.appendChild(spanOne);
 				li.appendChild(spanTwo);
 				List.appendChild(li);
+			}
+			if (addAdvancement)
+			{
+				const ICONS = List.querySelectorAll('span[uk-icon="chevron-right"]');
+				for (const icon of ICONS)
+					icon.style.display = 'none';
+				List.querySelector(`li[advancement-id="${localStorage.getItem('Advancement_Select')}"] span[uk-icon="chevron-right"]`).style.display = '';
 			}
 		});
 	}
