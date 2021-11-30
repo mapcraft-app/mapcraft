@@ -18,6 +18,7 @@ const MCplugin = new MCP();
 
 const pluginsList = {
 	builtin: JSON.parse(fs.readFileSync(path.join(__dirname, '../../', 'components.json'), { encoding: 'utf-8', flag: 'r' })),
+	builtinActive: JSON.parse(fs.readFileSync(MC.GetConfig().Env.ActiveComponents, { encoding: 'utf-8', flag: 'r' })),
 	addons: JSON.parse(fs.readFileSync(path.join(MC.GetConfig().Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' })),
 };
 
@@ -198,7 +199,7 @@ class PluginComponent
 					div.getElementsByClassName('uk-switch-span')[0].classList.add('uk-switch-span-disabled');
 					div.getElementsByTagName('input')[0].disabled = true;
 				}
-				if (object.active === true)
+				if (MCplugin.Active(object.name) === true)
 					div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
 				div.getElementsByTagName('button')[0].disabled = true;
 				newDOMbody.appendChild(div.getElementsByTagName('tr')[0]);
@@ -247,7 +248,7 @@ class PluginComponent
 				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
 				{
 					object.active = newValue;
-					const _path = (isBuiltin) ? path.join(__dirname, '../../', 'components.json') : path.join(MC.GetConfig().Env.PluginsComponents, 'components.json');
+					const _path = (isBuiltin) ? MC.GetConfig().Env.ActiveComponents : path.join(MC.GetConfig().Env.PluginsComponents, 'components.json');
 					fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
 					{
 						if (err)
@@ -292,12 +293,12 @@ class PluginComponent
 					const TR = event.target.closest('tr');
 					if (event.target.checked)
 						if (event.target.closest('.table-builtin'))
-							updateJSON(pluginsList.builtin, 'name', TR.getAttribute('uuid'), true);
+							updateJSON(pluginsList.builtinActive, 'name', TR.getAttribute('uuid'), true);
 						else
 							updateJSON(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), true, false);
 					else if (!event.target.checked)
 						if (event.target.closest('.table-builtin'))
-							updateJSON(pluginsList.builtin, 'name', TR.getAttribute('uuid'), false);
+							updateJSON(pluginsList.builtinActive, 'name', TR.getAttribute('uuid'), false);
 						else
 							updateJSON(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), false, false);
 				});

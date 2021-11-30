@@ -33,12 +33,12 @@ exports.CreateNavMenu = (DOMelement, TEMPLATE, ISHOME = false) =>
 
 	//Built-in plugins
 	for (const i in Plugins)
-		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && (typeof Plugins[i].active === 'undefined' || Plugins[i].active === true))
+		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && builtinPlugins.Active(Plugins[i].name) === true)
 		{
 			const _LANG = builtinPlugins.Lang(Plugins[i].name);
 			HTML += Template.parseRaw(Component, { id: Plugins[i].name, title: _LANG.Title, icon: _LANG.Icon });
 		}
-		else if (Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && Plugins[i].name !== 'Home' && (typeof Plugins[i].active === 'undefined' || Plugins[i].active === true))
+		else if (Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && Plugins[i].name !== 'Home' && builtinPlugins.Active(Plugins[i].name) === true)
 		{
 			const _LANG = builtinPlugins.Lang(Plugins[i].name);
 			HTML += Template.parseRaw(Component, { id: Plugins[i].name, title: _LANG.Title, icon: _LANG.Icon });

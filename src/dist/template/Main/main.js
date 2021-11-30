@@ -2,6 +2,9 @@ const { contextBridge } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
+
+global.__base = process.env.__base;
+global.requireModule = (id) => require(`${__base}${id}`); //eslint-disable-line
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
 const importPlugins = require('../../js/importPlugins');
 
@@ -99,7 +102,7 @@ MCipc.receive('Shell:new-command', (command) =>
 	const plugin = capitalize(command.Command);
 	const Component = Plugins.Component(plugin);
 	const PluginsComponent = importPlugins.Component(command.UUID);
-	if (Component && Component.active)
+	if (Component && Plugins.Active(plugin) === true)
 	{
 		const LANG = Plugins.Lang(plugin);
 		if (Component.IsNotification)

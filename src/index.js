@@ -7,6 +7,11 @@ const OS = require('os');
 const fs = require('fs');
 const axios = require('axios');
 const Database = require('better-sqlite3');
+
+process.env.__base = path.join(app.getAppPath(), 'node_modules/');
+global.__base = process.env.__base;
+global.requireModule = (id) => require(`${__base}${id}`); //eslint-disable-line
+
 const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
 require('./dist/js/importPlugins');
 
