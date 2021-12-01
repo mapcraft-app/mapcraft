@@ -86,6 +86,8 @@ class OptionComponent
 	{
 		this._main();
 		this.general();
+		if (pluginsList.builtinActive.length <= 0)
+			pluginsList.builtinActive = JSON.parse(fs.readFileSync(MC.GetConfig().Env.ActiveComponents, { encoding: 'utf-8', flag: 'r' }));
 		PluginComponent.main(); // eslint-disable-line
 		AboutComponent.about(); // eslint-disable-line
 		UserComponent.main(); // eslint-disable-line
