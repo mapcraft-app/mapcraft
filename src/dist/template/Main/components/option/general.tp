@@ -1,5 +1,14 @@
 [HTML]
 <form id="start-option" class="uk-form-horizontal">
+	<div id="option-general-version">
+		<div class="uk-margin">
+			<label class="uk-form-label" for="option-Version" lang="TagVersion"></label>
+			<div class="uk-form-controls">
+				<select class="uk-select" id="option-Version">
+				</select>
+			</div>
+		</div>
+	</div>
 	<div id="option-general-path"></div>
 	<div id="option-general-lang">
 		<div class="uk-margin">

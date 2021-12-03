@@ -23,6 +23,7 @@ const pluginsList = {
 };
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+const MinecraftVersion = MC.GetConfig().Minecraft;
 let LANG = MCplugin.Lang('Option');
 function UpdateLang()
 {
@@ -67,6 +68,16 @@ class OptionComponent
 			if (Object.prototype.hasOwnProperty.call(JsonLangList, i))
 				HTML += Template.parseRaw(ComponentLang, { Code: i, Lang: JsonLangList[i] });
 		Template.renderRaw(document.getElementById('option-Lang'), HTML, 'general_lang.tp', null);
+		//Minecraft Version
+		for (const object of MinecraftVersion.Versions)
+		{
+			const element = document.createElement('option');
+			element.value = object.Release;
+			element.innerText = object.Release;
+			if (object.Release === global.MinecraftSelectedVersion)
+				element.selected = true;
+			document.getElementById('option-Version').appendChild(element);
+		}
 		this.UpdateLangComponent(str);
 		this.setSelectLang();
 		DetectClick(); // eslint-disable-line
@@ -446,8 +457,44 @@ function DetectClick()
 			return;
 
 		MC.UpdateConfig(document.getElementById('TempPath').value, document.getElementById('GamePath').value, document.getElementById('SavePath').value, document.getElementById('option-Lang').value, document.getElementById('ResourcePath').value, document.getElementById('DataPath').value);
-		ChangeNameRessourcePack();
-		OptionComponent.RedrawInterface();
+		MC.SetSelectedVersion(document.getElementById('option-Version').value);
+		//#region Update mcmeta
+		const mcmeta = {
+			datapack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+			resourcePack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+			officialData: JSON.parse(fs.readFileSync(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+			officialResource: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+		};
+		let num = Number();
+		for (const object of MinecraftVersion.Versions)
+			if (object.Release === global.MinecraftSelectedVersion)
+			{
+				num = Number(object.Number);
+				break;
+			}
+		mcmeta.datapack.pack.pack_format = num;
+		mcmeta.resourcePack.pack.pack_format = num;
+		mcmeta.officialData.pack.pack_format = num;
+		mcmeta.officialResource.pack.pack_format = num;
+		const _writeFile = (_path, data) =>
+		{
+			fs.writeFile(_path, data, { encoding: 'utf-8' }, (err) =>
+			{
+				if (err)
+					console.error(err);
+			});
+		};
+		_writeFile(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), JSON.stringify(mcmeta.datapack, null, 4));
+		_writeFile(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), JSON.stringify(mcmeta.officialData, null, 4));
+		_writeFile(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), JSON.stringify(mcmeta.officialResource, null, 4));
+		fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), JSON.stringify(mcmeta.resourcePack, null, 4), { encoding: 'utf-8' }, (err) =>
+		{
+			if (err)
+				console.error(err);
+			ChangeNameRessourcePack();
+			OptionComponent.RedrawInterface();
+		});
+		//#endregion
 	});
 }
 //#endregion

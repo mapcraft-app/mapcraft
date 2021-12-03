@@ -18,6 +18,7 @@
 			"TagGame": "Chemin vers le dossier du jeu",
 			"TagSave": "Chemin vers le dossier des sauvegardes",
 			"TagLang": "Définir la langue",
+			"TagVersion": "Version utilisée de Minecraft",
 			"TagResource" : "Nom du pack de ressource",
 			"TagData" : "Nom du pack de données",
 			"Success": "Les modifications ont été réalisé avec succès",

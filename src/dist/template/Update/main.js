@@ -71,11 +71,12 @@ window.addEventListener('DOMContentLoaded', () =>
 				}
 				else
 				{
+					const localMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 					if (ifUpdated(data.datapack, Update.getCurrentVersion().datapack))
 						await Update.datapack();
 					if (ifUpdated(data.resourcepack, Update.getCurrentVersion().resourcepack))
 						await Update.resourcepack();
-					fs.rm(path.join(__dirname, 'mapcraftTemp'), { recursive: true, force: true }, () =>
+					fs.rm(path.join(localMapcraft.TempPath, 'mapcraftTemp'), { recursive: true, force: true }, () =>
 					{
 						Update.updateManifest();
 						MCipc.send('Update:close-modal');

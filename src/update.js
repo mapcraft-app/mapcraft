@@ -9,8 +9,17 @@ class Update
 {
 	constructor()
 	{
-		const pack = JSON.parse(fs.readFileSync(path.join(__dirname, './manifest'), { encoding: 'utf-8', flag: 'r' }));
-		this.APIVersion = pack.version;
+		const localMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+		const pack = {
+			AppData: JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'manifest'), { encoding: 'utf-8', flag: 'r' })),
+			Datapack: fs.readFileSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' }),
+			ResourcePack: fs.readFileSync(path.join(localMapcraft.Data.ResourcePack, '..', 'mapcraft', 'version'), { encoding: 'utf-8', flag: 'r' }),
+		};
+		this.APIVersion = {
+			datapack: String(pack.Datapack),
+			resourcepack: String(pack.ResourcePack),
+			software: String(pack.AppData.version.software),
+		};
 		this._OSType = OS.platform();
 		this.json = {};
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
@@ -183,50 +192,52 @@ class Update
 	{
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		const tempDir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'datapack');
-		fs.mkdir(tempDir, { recursive: true }, () =>
+		const promise = new Promise((resolve, reject) =>
 		{
-			const _path = path.join(tempDir, `${this.json.datapack.version}.zip`);
-			MCutilities.Download(this.json.datapack.url, _path, (err) =>
+			fs.mkdir(tempDir, { recursive: true }, () =>
 			{
-				if (err)
+				const _path = path.join(tempDir, `${this.json.datapack.version}.zip`);
+				MCutilities.Download(this.json.datapack.url, _path, (err) =>
 				{
-					console.error(err);
-					return;
-				}
-				const Resource = new AdmZip(_path);
-				Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
+					if (err)
+						reject(err.message);
+					const Resource = new AdmZip(_path);
+					Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
+					resolve('200');
+				});
 			});
 		});
+		return Promise.resolve(await promise);
 	}
 
 	async resourcepack()
 	{
 		const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		const tempDir = path.join(LocalMapcraft.TempPath, 'mapcraftTemp', 'resourcepack');
-		fs.mkdir(tempDir, { recursive: true }, () =>
+		const promise = new Promise((resolve, reject) =>
 		{
-			const _path = path.join(tempDir, `${this.json.resourcepack.version}.zip`);
-			MCutilities.Download(this.json.resourcepack.url, _path, (err) =>
+			fs.mkdir(tempDir, { recursive: true }, () =>
 			{
-				if (err)
+				const _path = path.join(tempDir, `${this.json.resourcepack.version}.zip`);
+				MCutilities.Download(this.json.resourcepack.url, _path, (err) =>
 				{
-					console.error(err);
-					return;
-				}
-				const Resource = new AdmZip(_path);
-				Resource.extractAllTo(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), true);
+					if (err)
+						reject(err.message);
+					const Resource = new AdmZip(_path);
+					Resource.extractAllTo(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), true);
+					resolve('200');
+				});
 			});
 		});
+		return Promise.resolve(await promise);
 	}
 
 	updateManifest()
 	{
-		const data = JSON.parse(fs.readFileSync(path.join(__dirname, './manifest'), { encoding: 'utf-8', flag: 'r' }));
-		data.version.datapack = this.json.datapack.version;
-		data.version.resourcepack = this.json.resourcepack.version;
+		const data = JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'manifest'), { encoding: 'utf-8', flag: 'r' }));
 		data.version.software = this.json.software.version;
 		data.version.update = this.json.updateProgram.version;
-		fs.writeFileSync(path.join(__dirname, './manifest'), JSON.stringify(data, null, 4));
+		fs.writeFileSync(path.join(process.env.AppDataPath, 'manifest'), JSON.stringify(data, null, 4));
 	}
 
 	async software()

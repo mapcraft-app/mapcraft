@@ -30,12 +30,22 @@ const SaveCurrentUser = {
 };
 //#endregion
 
+//Copy manifest if not exist
+try
+{
+	fs.copyFileSync(path.join(__dirname, 'manifest'), path.join(process.env.AppDataPath, 'manifest'), fs.constants.COPYFILE_EXCL);
+}
+catch (err)
+{
+	console.error(`main/${err.message}`);
+}
+const MainManifest = JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'manifest'), { encoding: 'utf-8', flag: 'r' }));
+
 //#region Main system
 //#region Update updateSystem
 let UpdateExecutableIsPresent = false;
 async function UpdateSystem()
 {
-	const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, './manifest'), { encoding: 'utf-8', flag: 'r' }));
 	const plateform = OS.platform();
 	//const cwd = process.cwd();
 	const json = await axios({
@@ -60,7 +70,7 @@ async function UpdateSystem()
 		executable = 'update';
 	}
 	const access = path.join(process.env.AppDataPath, executable);
-	if (manifest.version.update === json.data.version && fs.existsSync(access))
+	if (MainManifest.version.update === json.data.version && fs.existsSync(access))
 	{
 		UpdateExecutableIsPresent = true;
 		return;
@@ -75,6 +85,12 @@ async function UpdateSystem()
 			return;
 		}
 		UpdateExecutableIsPresent = true;
+		MainManifest.version.update = json.data.version;
+		fs.writeFile(path.join(process.env.AppDataPath, 'manifest'), JSON.stringify(MainManifest, null, 4), { encoding: 'utf-8', flag: 'w' }, (err2) =>
+		{
+			if (err2)
+				console.error(`main/${err2}`);
+		});
 	});
 	setTimeout(() =>
 	{

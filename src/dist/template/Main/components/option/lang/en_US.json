@@ -18,6 +18,7 @@
 			"TagGame": "Path to game directory",
 			"TagSave": "Path to save directory",
 			"TagLang": "Set language",
+			"TagVersion": "Used version of Minecraft",
 			"TagResource" : "Name of resourcepack",
 			"TagData" : "Name of datapack",
 			"Success": "The modifications have been successfully completed",
