@@ -420,7 +420,7 @@ ipcMain.on('Update:create-modal', () =>
 		height: 480,
 		center: true,
 		show: false,
-		resizable: false,
+		resizable: true, //here
 		titleBarStyle: 'hidden',
 		parent: MainWindow,
 		modal: true,

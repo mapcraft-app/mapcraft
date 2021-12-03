@@ -5,16 +5,25 @@
 		<dd id="text-software">
 			<div uk-spinner></div>
 		</dd>
+		<div class="uk-animation-fade uk-animation-fast description hidden" target="text-software">
+			<p>No changelog</p>
+		</div>
 		
 		<dt lang="Datapack"></dt>
 		<dd id="text-datapack">
 			<div uk-spinner></div>
 		</dd>
+		<div class="uk-animation-fade uk-animation-fast description hidden" target="text-datapack">
+			<p>No changelog</p>
+		</div>
 		
 		<dt lang="ResourcePack"></dt>
 		<dd id="text-resourcepack">
 			<div uk-spinner></div>
 		</dd>
+		<div class="uk-animation-fade uk-animation-fast description hidden" target="text-resourcepack">
+			<p>No changelog</p>
+		</div>
 	</dl>
 	<div id="validation-button">
 		<h3 id="text-title"></h3>
@@ -30,12 +39,28 @@
 </div>
 [/HTML]
 
+[JS]
+const list = document.getElementsByTagName('dd');
+for (const element of list)
+{
+	element.addEventListener('click', (event) => 
+	{
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		const el = document.querySelector(`[target="${element.getAttribute('id')}"]`).classList.toggle('hidden');
+	});
+}
+[/JS]
+
 [CSS]
 html {
 	height: 100%;
 }
 body {
 	height: 90%;
+}
+dd {
+	cursor: pointer;
 }
 .body-height {
 	height: 100%;
@@ -57,5 +82,14 @@ body {
 }
 #validation-button {
 	display: none;
+}
+
+.description {
+	display: block;
+	background-color: #27292a;
+    padding: 0.3em;
+}
+.hidden {
+	display: none !important;
 }
 [/CSS]

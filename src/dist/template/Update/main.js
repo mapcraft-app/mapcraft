@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const Md = require('markdown-it');
 const { MCipc } = require('mapcraft-api');
 const Component = require('./components');
 const Up = require('../../../update');
 
 const Update = new Up();
+const Markdown = new Md();
 
 window.addEventListener('DOMContentLoaded', () =>
 {
@@ -35,19 +37,33 @@ window.addEventListener('DOMContentLoaded', () =>
 		document.getElementById('validation-button').style.display = 'block';
 
 		if (ifUpdated(data.software, Update.getCurrentVersion().software))
+		{
 			document.getElementById('text-software').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.Software}</p>`;
+			document.querySelector('[target="text-software"]').innerHTML = Markdown.render(data.software.description);
+		}
 		else
+		{
 			document.getElementById('text-software').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.Software}</p>`;
+		}
 
 		if (ifUpdated(data.datapack, Update.getCurrentVersion().datapack))
+		{
 			document.getElementById('text-datapack').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.Datapack}</p>`;
+			document.querySelector('[target="text-datapack"]').innerHTML = Markdown.render(data.datapack.description);
+		}
 		else
+		{
 			document.getElementById('text-datapack').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.Datapack}</p>`;
-
+		}
 		if (ifUpdated(data.resourcepack, Update.getCurrentVersion().resourcepack))
+		{
 			document.getElementById('text-resourcepack').innerHTML = `<p><span uk-icon="download" class="span-download"></span>${Component.getLang().IsUpdate.ResourcePack}</p>`;
+			document.querySelector('[target="text-resourcepack"]').innerHTML = Markdown.render(data.resourcepack.description);
+		}
 		else
+		{
 			document.getElementById('text-resourcepack').innerHTML = `<p><span uk-icon="check" class="span-check"></span>${Component.getLang().IsNotUpdate.ResourcePack}</p>`;
+		}
 		MCipc.send('Update:open-window');
 
 		document.getElementById('close-update').addEventListener('click', () =>
