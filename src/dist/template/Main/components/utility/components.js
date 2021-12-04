@@ -1,13 +1,17 @@
 /*eslint-disable prefer-regex-literals*/
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const MCP = require('mapcraft-api').MCplugin;
 const Temp = require('mapcraft-api').MCtemplate;
-const { Mapcraft, MCutilities } = require('mapcraft-api');
+const { MCutilities } = require('mapcraft-api');
+
+//global.MinecraftSelectedVersion
 
 const MCplugin = new MCP();
 const Template = new Temp(__dirname);
 let LANG = MCplugin.Lang('Utility').Data;
+const randomString = () => crypto.randomBytes(12).toString('hex');
 const UpdateLang = () =>
 {
 	LANG = MCplugin.Lang('Utility').Data;
@@ -78,28 +82,27 @@ function _searchInTagList(input, list, error)
 }
 //#endregion
 
-//Generate version list
-function generateVersion(DOMelement)
-{
-	const select = document.createElement('select');
-	const minecraft = Mapcraft.GetConfig().Minecraft;
-	minecraft.Versions.forEach((element) =>
-	{
-		const option = document.createElement('option');
-		option.innerText = element;
-		option.value = element;
-		if (element === minecraft.SelectedVersion)
-			option.selected = true;
-		select.appendChild(option);
-	});
-	DOMelement.innerHTML = select.innerHTML; //eslint-disable-line no-param-reassign
-}
-
 class UtilityComponent
 {
 	static utility()
 	{
 		Template.render(document.getElementById('content'), 'utility.tp', { BlocksIcon: LANG.Menu.Blocks.Icon, ItemsIcon: LANG.Menu.Items.Icon, TagsIcon: LANG.Menu.Tags.Icon });
+	}
+
+	static downloadFile(type)
+	{
+		const tempPath = JSON.parse(localStorage.getItem('Mapcraft')).TempPath;
+		const newID = randomString();
+		const _path = path.join(tempPath, `${newID}.json`);
+		fs.writeFile(_path, JSON.stringify(MCutilities.GetDataGameElement(type, global.MinecraftSelectedVersion), null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
+		{
+			if (err)
+				MCutilities.CreateAlert('warning', document.getElementById('utility-error'), err.message);
+			const link = document.createElement('a');
+			link.download = `${newID}.json`;
+			link.href = _path;
+			link.click();
+		});
 	}
 
 	//#region Blocks
@@ -134,8 +137,7 @@ class UtilityComponent
 	static blocks()
 	{
 		Template.render(document.getElementById('utility-tab-blocks'), 'blocks.tp', { Search: LANG.Search, Download: LANG.Download });
-		generateVersion(document.getElementById('blocks-version'));
-		this._generateListBlock(document.getElementById('blocks-version').value);
+		this._generateListBlock(global.MinecraftSelectedVersion);
 		document.getElementById('disabled-form').addEventListener('submit', (event) =>
 		{
 			event.preventDefault();
@@ -147,20 +149,7 @@ class UtilityComponent
 			event.stopImmediatePropagation();
 			searchInList(event.target, document.getElementById('blocks-list'), document.getElementById('error-block-list'));
 		});
-		document.getElementById('blocks-version').addEventListener('change', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			this._generateListBlock(event.target.value);
-			document.getElementById('blocks-search').value = '';
-		});
-		document.getElementById('block-download').addEventListener('click', () =>
-		{
-			const link = document.createElement('a');
-			link.download = `${document.getElementById('blocks-version').value}.json`;
-			link.href = path.join(__dirname, 'list/blocks', link.download);
-			link.click();
-		});
+		document.getElementById('block-download').addEventListener('click', () => this.downloadFile('blocks'));
 	}
 	//#endregion
 
@@ -195,8 +184,7 @@ class UtilityComponent
 	static items()
 	{
 		Template.render(document.getElementById('utility-tab-items'), 'items.tp', { Search: LANG.Search, Download: LANG.Download });
-		generateVersion(document.getElementById('items-version'));
-		this._generateListItem(document.getElementById('items-version').value);
+		this._generateListItem(global.MinecraftSelectedVersion);
 		document.getElementById('disabled-form').addEventListener('submit', (event) =>
 		{
 			event.preventDefault();
@@ -208,20 +196,7 @@ class UtilityComponent
 			event.stopImmediatePropagation();
 			searchInList(event.target, document.getElementById('items-list'), document.getElementById('error-item-list'));
 		});
-		document.getElementById('items-version').addEventListener('change', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			this._generateListItem(event.target.value);
-			document.getElementById('items-search').value = '';
-		});
-		document.getElementById('item-download').addEventListener('click', () =>
-		{
-			const link = document.createElement('a');
-			link.download = `${document.getElementById('items-version').value}.json`;
-			link.href = path.join(__dirname, 'list/items', link.download);
-			link.click();
-		});
+		document.getElementById('item-download').addEventListener('click', () => this.downloadFile('items'));
 	}
 	//#endregion
 
@@ -299,8 +274,7 @@ class UtilityComponent
 	static tags()
 	{
 		Template.render(document.getElementById('utility-tab-tags'), 'tags.tp', { Search: LANG.Search, Download: LANG.Download });
-		generateVersion(document.getElementById('tags-version'));
-		this._generateTagItem(document.getElementById('tags-version').value);
+		this._generateTagItem(global.MinecraftSelectedVersion);
 		document.getElementById('disabled-form').addEventListener('submit', (event) =>
 		{
 			event.preventDefault();
@@ -312,20 +286,7 @@ class UtilityComponent
 			event.stopImmediatePropagation();
 			_searchInTagList(event.target, document.getElementById('tags-list'), document.getElementById('error-tags-list'));
 		});
-		document.getElementById('tags-version').addEventListener('change', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			this._generateTagItem(event.target.value);
-			document.getElementById('tags-search').value = '';
-		});
-		document.getElementById('tags-download').addEventListener('click', () =>
-		{
-			const link = document.createElement('a');
-			link.download = `${document.getElementById('tags-version').value}.json`;
-			link.href = path.join(__dirname, 'list/tags', link.download);
-			link.click();
-		});
+		document.getElementById('tags-download').addEventListener('click', () => this.downloadFile('tags'));
 	}
 	//#endregion
 

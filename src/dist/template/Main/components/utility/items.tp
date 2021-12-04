@@ -4,8 +4,6 @@
 		<span class="uk-search-icon-flip" uk-search-icon></span>
 		<input style="color: #fff" id="items-search" class="uk-search-input" type="search" placeholder="{Search}">
 	</form>
-	<select id="items-version" class="uk-select search-width-30">
-    </select>
 </div>
 <div>
 	<a class="uk-button uk-button-default" id="item-download">
