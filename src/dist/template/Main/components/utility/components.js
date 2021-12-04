@@ -115,11 +115,13 @@ class UtilityComponent
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			const testpath = path.join(__dirname, '../../../../img/assets/block', `${id.name}.png`);
-			if (fs.existsSync(testpath))
-				image.src = testpath;
+			const testPath = path.join(__dirname, '../../../../img/assets/block');
+			if (fs.existsSync(path.join(testPath, `${id.name}.png`)))
+				image.src = path.join(testPath, `${id.name}.png`);
+			else if (fs.existsSync(path.join(testPath, `${id.name}.webp`)))
+				image.src = path.join(testPath, `${id.name}.webp`);
 			else
-				image.src = path.join(__dirname, '../../../../img/assets/block', `${id.name}.webp`);
+				image.src = path.join(testPath, '..', 'no_data.png');
 			const element = document.createElement('tr');
 			const elementId = document.createElement('td');
 			elementId.innerText = ++x;
@@ -163,11 +165,13 @@ class UtilityComponent
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			const testpath = path.join(__dirname, '../../../../img/assets/item', `${id.name}.png`);
-			if (fs.existsSync(testpath))
-				image.src = testpath;
+			const testPath = path.join(__dirname, '../../../../img/assets/item');
+			if (fs.existsSync(path.join(testPath, `${id.name}.png`)))
+				image.src = path.join(testPath, `${id.name}.png`);
+			else if (fs.existsSync(path.join(testPath, `${id.name}.webp`)))
+				image.src = path.join(testPath, `${id.name}.webp`);
 			else
-				image.src = path.join(__dirname, '../../../../img/assets/item', `${id.name}.webp`);
+				image.src = path.join(testPath, '..', 'no_data.png');
 			const element = document.createElement('tr');
 			const elementId = document.createElement('td');
 			elementId.innerText = ++x;
@@ -219,6 +223,16 @@ class UtilityComponent
 				const TD_TAG = document.createElement('td');
 				const TD_DIV = document.createElement('div');
 				TD_DIV.classList.add('uk-flex', 'uk-flex-wrap');
+
+				const _search = (_path, name) =>
+				{
+					if (fs.existsSync(path.join(_path, `${name}.png`)))
+						return path.join(_path, `${name}.png`);
+					if (fs.existsSync(path.join(_path, `${name}.webp`)))
+						return path.join(_path, `${name}.webp`);
+					return undefined;
+				};
+
 				for (const row in jsonData[col])
 					if (Object.prototype.hasOwnProperty.call(jsonData[col], row))
 					{
@@ -227,25 +241,19 @@ class UtilityComponent
 						const image = document.createElement('img');
 						let testpath = String;
 						let isItem = false;
-						if (fs.existsSync(path.join(__dirname, '../../../../img/assets/block', `${NAME}.png`)))
+						testpath = _search(path.join(__dirname, '../../../../img/assets/block'), NAME);
+						if (testpath === undefined)
+							testpath = _search(path.join(__dirname, '../../../../img/assets/entity'), NAME);
+						if (testpath === undefined)
 						{
-							testpath = path.join(__dirname, '../../../../img/assets/block', `${NAME}.png`);
-						}
-						else if (fs.existsSync(path.join(__dirname, '../../../../img/assets/block', `${NAME}.webp`)))
-						{
-							testpath = path.join(__dirname, '../../../../img/assets/block', `${NAME}.webp`);
-						}
-						else if (fs.existsSync(path.join(__dirname, '../../../../img/assets/item', `${NAME}.png`)))
-						{
-							testpath = path.join(__dirname, '../../../../img/assets/item', `${NAME}.png`);
+							testpath = _search(path.join(__dirname, '../../../../img/assets/item'), NAME);
 							isItem = true;
 						}
-						else
+						if (testpath === undefined)
 						{
-							testpath = path.join(__dirname, '../../../../img/assets/item', `${NAME}.webp`);
+							testpath = path.join(__dirname, '../../../../img/assets/no_data.png');
 							isItem = true;
 						}
-
 						if (isTag.test(NAME))
 						{
 							const link = document.createElement('a');
@@ -294,10 +302,13 @@ class UtilityComponent
 	{
 		UpdateLang();
 		this.utility();
-		this.blocks();
-		this.items();
-		this.tags();
-		Template.updateLang(document.getElementById('content'), LANG);
+		setImmediate(() =>
+		{
+			this.blocks();
+			this.items();
+			this.tags();
+			Template.updateLang(document.getElementById('content'), LANG);
+		});
 	}
 }
 
