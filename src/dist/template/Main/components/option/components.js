@@ -72,9 +72,9 @@ class OptionComponent
 		for (const object of MinecraftVersion.Versions)
 		{
 			const element = document.createElement('option');
-			element.value = object.Release;
-			element.innerText = object.Release;
-			if (object.Release === global.MinecraftSelectedVersion)
+			element.value = object;
+			element.innerText = object;
+			if (object === global.MinecraftSelectedVersion)
 				element.selected = true;
 			document.getElementById('option-Version').appendChild(element);
 		}
