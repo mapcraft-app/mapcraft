@@ -73,7 +73,7 @@ release:
     - echo "${CI_ID} ${TAG_VERSION}"
     - rm -f TAG_VERSION.txt CI_JOB_ID_LINUX.txt CI_JOB_ID_MAC.txt CI_JOB_ID_WINDOWS.txt
     - |
-      release-cli create --name "v$TAG_VERSION" --tag-name $TAG_VERSION --ref $CI_COMMIT_SHA \
+      release-cli create --name "$TAG_VERSION" --tag-name $TAG_VERSION --ref $CI_COMMIT_SHA \
       --assets-link "{\"name\":\"Windows setup\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_WINDOWS}"`/artifacts/raw/out/mapcraft_win.exe\"}" \
       --assets-link "{\"name\":\"Windows setup blockmap\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_WINDOWS}"`/artifacts/raw/out/mapcraft_win.exe.blockmap\"}" \
       --assets-link "{\"name\":\"Windows archive\",\"url\":\"https://gitlab.com/cbertran/mapcraft/-/jobs/`echo "${CI_ID_WINDOWS}"`/artifacts/raw/out/mapcraft_win.zip\"}" \
