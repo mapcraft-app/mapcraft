@@ -31,7 +31,7 @@ class Cutscene
 	//#region Cutscene main
 	static AddCutscene(ID)
 	{
-		MCfs.AddLine(MainPath, 'execute positioned -371.7 66 417.9 rotated -160.3 10.3 if entity @s[tag=Cutscene,tag=Cutscene_5] run function mapcraft-data:cutscene/5/cutscene');
+		MCfs.AddLine(MainPath, `execute positioned 0 0 0 rotated 0 0 if entity @s[tag=Cutscene,tag=Cutscene_${ID.toString()}] run function mapcraft-data:cutscene/${ID.toString()}/cutscene`);
 		fs.mkdir(path.join(CutsceneDir, ID.toString()), (err) =>
 		{
 			if (err)

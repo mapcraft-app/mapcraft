@@ -12,9 +12,13 @@ class Update
 		const localMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 		const pack = {
 			AppData: JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'manifest'), { encoding: 'utf-8', flag: 'r' })),
-			Datapack: fs.readFileSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' }),
-			ResourcePack: fs.readFileSync(path.join(localMapcraft.Data.ResourcePack, '..', 'mapcraft', 'version'), { encoding: 'utf-8', flag: 'r' }),
+			Datapack: null,
+			ResourcePack: null,
 		};
+		if (fs.existsSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' }))
+			pack.DataPack = fs.readFileSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' });
+		if (fs.existsSync(path.join(localMapcraft.Data.ResourcePack, '..', 'mapcraft', 'version'), { encoding: 'utf-8', flag: 'r' }))
+			pack.ResourcePack = fs.readFileSync(path.join(localMapcraft.Data.ResourcePack, '..', 'mapcraft', 'version'), { encoding: 'utf-8', flag: 'r' });
 		this.APIVersion = {
 			datapack: String(pack.Datapack),
 			resourcepack: String(pack.ResourcePack),

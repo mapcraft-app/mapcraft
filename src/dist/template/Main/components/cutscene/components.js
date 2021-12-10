@@ -1,5 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 const IPC = require('mapcraft-api').MCipc;
 const MCP = require('mapcraft-api').MCplugin;
 const Temp = require('mapcraft-api').MCtemplate;
@@ -74,12 +75,32 @@ function EditFile()
 	for (const input of document.querySelectorAll('button[id="edit-start"]'))
 		input.addEventListener('click', () =>
 		{
-			IPC.send('Editor:open', path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'start.mcfunction'));
+			const name = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'start.mcfunction');
+			try
+			{
+				fs.writeFileSync(name, 'say Hello !', { encoding: 'utf-8', flag: 'wx' });
+			}
+			catch (err)
+			{
+				if (err.code !== 'EEXIST')
+					IPC.send('Dialog:error', err.code, err.message);
+			}
+			IPC.send('Editor:open', name);
 		});
 	for (const input of document.querySelectorAll('button[id="edit-end"]'))
 		input.addEventListener('click', () =>
 		{
-			IPC.send('Editor:open', path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'end.mcfunction'));
+			const name = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'end.mcfunction');
+			try
+			{
+				fs.writeFileSync(name, 'say World !', { encoding: 'utf-8', flag: 'wx' });
+			}
+			catch (err)
+			{
+				if (err.code !== 'EEXIST')
+					IPC.send('Dialog:error', err.code, err.message);
+			}
+			IPC.send('Editor:open', name);
 		});
 }
 
@@ -403,6 +424,15 @@ class Cutscene
 			return;
 		}
 		MCworkInProgress.open();
+		try
+		{
+			fs.writeFileSync(path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'start.mcfunction'), '', { encoding: 'utf-8', flag: 'wx' });
+			fs.writeFileSync(path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene', CutsceneID.toString(), 'end.mcfunction'), '', { encoding: 'utf-8', flag: 'wx' });
+		}
+		catch (err)
+		{
+			console.warn(err.message);
+		}
 		CutsceneMod.GenerateCutscene(CutsceneID);
 		MCworkInProgress.close();
 	}

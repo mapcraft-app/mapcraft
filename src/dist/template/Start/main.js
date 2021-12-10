@@ -10,6 +10,8 @@ async function MakeInstallationOfBase()
 {
 	const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 	const Update = new Up();
+	if (!fs.existsSync(path.join(LocalMapcraft.Mapcraft, '..')))
+		fs.mkdirSync(path.join(LocalMapcraft.Mapcraft, '..'));
 	//#region Install necessary tools
 	if (!fs.existsSync(LocalMapcraft.Data.ResourcePack) || !fs.existsSync(LocalMapcraft.Data.DataPack))
 	{
@@ -103,17 +105,16 @@ window.addEventListener('DOMContentLoaded', () =>
 				},
 			};
 			localStorage.setItem('Mapcraft', JSON.stringify(_Mapcraft));
-			if (!fs.existsSync(_Mapcraft.DBPath))
-				try
-				{
-					const newDb = new MCdatabase(_Mapcraft.DBPath);
-					if (!newDb)
-						throw new Error('Database creation failed');
-				}
-				catch (err)
-				{
-					throw new Error(err);
-				}
+			try
+			{
+				const newDb = new MCdatabase(_Mapcraft.DBPath);
+				if (!newDb)
+					throw new Error('Database creation failed');
+			}
+			catch (err)
+			{
+				throw new Error(err);
+			}
 			MakeInstallationOfBase();
 		}
 	});

@@ -24,7 +24,10 @@ localStorage.setItem('Advancement_Select', '');
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraft-data', 'advancements');
 if (!fs.existsSync(RecipesDirectory))
+{
 	fs.mkdirSync(RecipesDirectory, { recursive: true });
+	fs.mkdirSync(path.join(RecipesDirectory, 'data'), { recursive: true });
+}
 
 const TRIGGERFORM = MCutilities.GetDataGameElement('triggers', Mapcraft.GetConfig().Minecraft.SelectedVersion);
 const GetTriggerForm = (id) =>

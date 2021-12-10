@@ -1,6 +1,6 @@
 {
     "version": {
-        "software": "0.7.5-alpha",
+        "software": "0.7.6-alpha",
         "update": "0.3.0"
     },
     "default_lang": "en_US"
