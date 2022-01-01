@@ -3281,10 +3281,10 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
   integrity sha1-2TPOuSBdgr3PSIb2dCvcK03qFG0=
 
-mapcraft-api@^1.6.6:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-1.6.6.tgz#b0d1b76a637bc7af802de845b8f2c9ed8cd2bac3"
-  integrity sha512-6JaJ8ev09J7IFiLNRKCAhCzx1GkcRUjocdj96QdyeFDmE/ksrzk5fB3SYI8cwebQakFZ6BDySMN6Nhr8Wpfm0g==
+mapcraft-api@^1.6.7:
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-1.6.7.tgz#134b5ab5d6a3f8f9125e4c6035353c2bbae6468d"
+  integrity sha512-OAmDvvP6ebiE26YK2Qr149hiPdbzczA5+sSzX20m/f4rn3/Oq6HwFarYAAc2pXDtOhr1kUXuH6S1rP3ga6wf3w==
   dependencies:
     adm-zip "^0.5.9"
     better-sqlite3 "^7.4.5"
@@ -3516,7 +3516,7 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
 
-node-abi@^3.0.0, node-abi@^3.3.0, node-abi@^3.5.0:
+node-abi@^3.0.0, node-abi@^3.3.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-3.5.0.tgz#26e8b7b251c3260a5ac5ba5aef3b4345a0229248"
   integrity sha512-LtHvNIBgOy5mO8mPEUtkCW/YCRWYEKshIvqhe1GHHyXEHEB5mgICyYnAcl4qan3uFeRROErKGzatFHPf6kDxWw==

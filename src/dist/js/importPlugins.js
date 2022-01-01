@@ -21,7 +21,7 @@ class ImportPlugin
 				{
 					let newUUID;
 					if (typeof this.Components[i].uuid === 'undefined')
-						newUUID = crypto.randomUUID();
+						newUUID = `${this.Components[i].name}_${crypto.randomUUID()}`;
 					else
 						newUUID = this.Components[i].uuid;
 					try
@@ -30,7 +30,7 @@ class ImportPlugin
 					}
 					catch (err)
 					{
-						console.error(err);
+						throw new Error(err.message);
 					}
 					this.Components[i].directory = path.join(this.BaseLink, newUUID);
 					this.ifNewPlugin = true;

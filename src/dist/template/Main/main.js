@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
 
-global.__base = process.env.__base;
-global.requireModule = (id) => require(`${__base}${id}`); //eslint-disable-line
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
 const importPlugins = require('../../js/importPlugins');
 

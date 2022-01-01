@@ -8,15 +8,11 @@ const fs = require('fs');
 const axios = require('axios');
 const Database = require('better-sqlite3');
 
-process.env.__base = path.join(app.getAppPath(), 'node_modules/');
-global.__base = process.env.__base;
-global.requireModule = (id) => require(`${__base}${id}`); //eslint-disable-line
-
 const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
 require('./dist/js/importPlugins');
 
 //#region Variables
-MCutilities.GetAppDataPath();
+MCutilities.GenerateENV();
 let StartWindow = null;
 let MainWindow = null;
 let SelectUserChild = null;
@@ -47,7 +43,6 @@ let UpdateExecutableIsPresent = false;
 async function UpdateSystem()
 {
 	const plateform = OS.platform();
-	//const cwd = process.cwd();
 	const json = await axios({
 		method: 'get',
 		url: 'https://api.mapcraft.app/update',
@@ -92,12 +87,16 @@ async function UpdateSystem()
 				console.error(`main/${err2}`);
 		});
 	});
-	setTimeout(() =>
-	{
-		UpdateExecutableIsPresent = true;
-	}, 10 * 1000);
 }
-UpdateSystem();
+UpdateSystem().catch((err) =>
+{
+	UpdateExecutableIsPresent = true;
+	dialog.showMessageBoxSync({
+		type: 'error',
+		title: 'Error',
+		message: err.message,
+	});
+});
 //#endregion
 
 function CreateWindow(preload)
@@ -342,7 +341,7 @@ ipcMain.on('Shell:send-command', (event, command) =>
 //#region Start
 ipcMain.on('Start:is-selected-world', () =>
 {
-	const interval = setInterval(wait, 2000); // eslint-disable-line
+	const interval = setInterval(wait, 1000); // eslint-disable-line
 	function wait()
 	{
 		if (UpdateExecutableIsPresent === true)
@@ -352,7 +351,7 @@ ipcMain.on('Start:is-selected-world', () =>
 		}
 		else
 		{
-			console.log('Update executable not finish to download, retry in 2s');
+			console.log('Update executable not finish to download, retry in 1s');
 		}
 	}
 });
