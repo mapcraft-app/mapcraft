@@ -21,18 +21,18 @@ class ImportPlugin
 				{
 					let newUUID;
 					if (typeof this.Components[i].uuid === 'undefined')
-						newUUID = `${this.Components[i].name}_${crypto.randomUUID()}`;
+						newUUID = crypto.randomUUID();
 					else
 						newUUID = this.Components[i].uuid;
 					try
 					{
-						fs.renameSync(path.join(this.BaseLink, this.Components[i].name), path.join(this.BaseLink, newUUID));
+						fs.renameSync(path.join(this.BaseLink, this.Components[i].name), path.join(this.BaseLink, `${this.Components[i].name}_${newUUID}`));
 					}
 					catch (err)
 					{
 						throw new Error(err.message);
 					}
-					this.Components[i].directory = path.join(this.BaseLink, newUUID);
+					this.Components[i].directory = path.join(this.BaseLink, `${this.Components[i].name}_${newUUID}`);
 					this.ifNewPlugin = true;
 				}
 		if (!global.ImportPluginSave)
@@ -40,6 +40,8 @@ class ImportPlugin
 			global.ImportPluginSave = [];
 			for (const i in this.Components)
 				if (Object.prototype.hasOwnProperty.call(this.Components, i))
+				{
+					console.error(path.join(this.Components[i].directory, this.Components[i].component));
 					global.ImportPluginSave.push({
 						name: this.Components[i].name,
 						uuid: this.Components[i].uuid,
@@ -50,6 +52,7 @@ class ImportPlugin
 						lang: this.Components[i].lang,
 						instance: require(path.join(this.Components[i].directory, this.Components[i].component)) // eslint-disable-line
 					});
+				}
 		}
 		this.plugins = global.ImportPluginSave;
 		if (this.ifNewPlugin)
