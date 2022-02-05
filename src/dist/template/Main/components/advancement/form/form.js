@@ -2,18 +2,18 @@ const path = require('path');
 const crypto = require('crypto');
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 
-let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
+let LANG = MCutilities.getLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 function UpdateLang()
 {
-	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
+	LANG = MCutilities.getLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 }
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
 const FORM_TEMPLATE = new MCtemplate(__dirname);
 
 const DefaultMinecraftVersion = Mapcraft.config.Minecraft.LastestVersion;
 const PreGenerateList = {
-	enchantements: MCutilities.GetDataGameElement('enchantements'),
-	triggers: MCutilities.GetDataGameElement('triggers'),
+	enchantements: MCutilities.getDataGameElement('enchantements'),
+	triggers: MCutilities.getDataGameElement('triggers'),
 };
 const hexaID = () => crypto
 	.randomBytes(Math.ceil(24 / 2))
@@ -31,7 +31,7 @@ class Form
 	{
 		UpdateLang();
 		const formID = hexaID();
-		const ListOfTriggers = (minecraftVersion !== DefaultMinecraftVersion) ? MCutilities.GetDataGameElement('triggers', minecraftVersion) : PreGenerateList.triggers;
+		const ListOfTriggers = (minecraftVersion !== DefaultMinecraftVersion) ? MCutilities.getDataGameElement('triggers', minecraftVersion) : PreGenerateList.triggers;
 		for (const trigger of ListOfTriggers)
 			if (trigger.id === triggerName)
 			{
@@ -319,7 +319,7 @@ class Form
 	 */
 	static baseEnchantementList(DOMelement, baseString, minecraftVersion)
 	{
-		const ListOfEnchantements = (minecraftVersion !== DefaultMinecraftVersion) ? MCutilities.GetDataGameElement('enchantements', minecraftVersion) : PreGenerateList.enchantements;
+		const ListOfEnchantements = (minecraftVersion !== DefaultMinecraftVersion) ? MCutilities.getDataGameElement('enchantements', minecraftVersion) : PreGenerateList.enchantements;
 		DOMelement.querySelector(`#form-item-modal-add-${baseString}`).addEventListener('click', (event) =>
 		{
 			event.preventDefault();

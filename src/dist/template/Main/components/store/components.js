@@ -1,6 +1,6 @@
 const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
 
-const LANG = MCutilities.GetLang(__dirname, Mapcraft.config.Env.Lang);
+const LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 const TEMPLATE = new MCtemplate(__dirname);
 
 class Component

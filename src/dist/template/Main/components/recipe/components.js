@@ -1,26 +1,23 @@
 /*eslint-disable prefer-regex-literals*/
 const path = require('path');
 const fs = require('fs');
-const { MCutilities } = require('mapcraft-api');
-const IPC = require('mapcraft-api').MCipc;
-const MCP = require('mapcraft-api').MCplugin;
-const Temp = require('mapcraft-api').MCtemplate;
+const { MCipc, MCplugin, MCtemplate, MCutilities } = require('mapcraft-api');
 const Models = require('./model');
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
+const Plugins = new MCplugin();
+const Template = new MCtemplate(__dirname);
 let IsLoadRecipe = false;
 const outputRegExp = new RegExp('(?:formOutput$)', 'gm');
 const checkedShapeless = new RegExp('(?:shapeless$)', 'gm');
 const checkedExactPosition = new RegExp('(?:exactPosition$)', 'gm');
 const Data = {
-	Blocks: MCutilities.GetDataGameElement('blocks'),
-	Items: MCutilities.GetDataGameElement('items'),
+	Blocks: MCutilities.getDataGameElement('blocks'),
+	Items: MCutilities.getDataGameElement('items'),
 };
-let LANG = MCplugin.Lang('Recipe').Data;
+let LANG = Plugins.lang('Recipe').Data;
 function UpdateLang()
 {
-	LANG = MCplugin.Lang('Recipe').Data;
+	LANG = Plugins.lang('Recipe').Data;
 }
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraft-data', 'recipes');
@@ -31,7 +28,7 @@ function testCase(IDofElement, error)
 {
 	if (!document.getElementById(IDofElement).children[0].id)
 	{
-		MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), error);
+		MCutilities.createAlert('warning', document.getElementById('recipe-error'), error);
 		throw new Error(error);
 	}
 }
@@ -52,49 +49,49 @@ class FillForm
 				case 'minecraft:crafting_shapeless':
 					if (Object.prototype.hasOwnProperty.call(_json, 'isPlayer') && _json.isPlayer)
 					{
-						IPC.send('Recipes:signal-open-switcher', 0);
+						MCipc.send('Recipes:signal-open-switcher', 0);
 						this.craftTable(event.target.innerText, 'area_crafting_player', 'crafting_player_form', _json);
 					}
 					else
 					{
-						IPC.send('Recipes:signal-open-switcher', 1);
+						MCipc.send('Recipes:signal-open-switcher', 1);
 						this.craftTable(event.target.innerText, 'area_crafting_table', 'crafting_table_form', _json);
 					}
 					break;
 				case 'minecraft:crafting_shaped':
 					if (Object.prototype.hasOwnProperty.call(_json, 'isPlayer') && _json.isPlayer)
 					{
-						IPC.send('Recipes:signal-open-switcher', 0);
+						MCipc.send('Recipes:signal-open-switcher', 0);
 						this.craftTable(event.target.innerText, 'area_crafting_player', 'crafting_player_form', _json);
 					}
 					else
 					{
-						IPC.send('Recipes:signal-open-switcher', 1);
+						MCipc.send('Recipes:signal-open-switcher', 1);
 						this.craftTable(event.target.innerText, 'area_crafting_table', 'crafting_table_form', _json);
 					}
 					break;
 				case 'minecraft:smelting':
-					IPC.send('Recipes:signal-open-switcher', 2);
+					MCipc.send('Recipes:signal-open-switcher', 2);
 					this.furnace(event.target.innerText, 'area_furnace', 'area_furnace-form', _json);
 					break;
 				case 'minecraft:blasting':
-					IPC.send('Recipes:signal-open-switcher', 3);
+					MCipc.send('Recipes:signal-open-switcher', 3);
 					this.furnace(event.target.innerText, 'area_blast_furnace', 'area_blast_furnace-form', _json);
 					break;
 				case 'minecraft:campfire_cooking':
-					IPC.send('Recipes:signal-open-switcher', 4);
+					MCipc.send('Recipes:signal-open-switcher', 4);
 					this.furnace(event.target.innerText, 'area_campfire', 'area_campfire-form', _json);
 					break;
 				case 'minecraft:smoking':
-					IPC.send('Recipes:signal-open-switcher', 5);
+					MCipc.send('Recipes:signal-open-switcher', 5);
 					this.furnace(event.target.innerText, 'area_smoker', 'area_smoker-form', _json);
 					break;
 				case 'minecraft:stonecutting':
-					IPC.send('Recipes:signal-open-switcher', 6);
+					MCipc.send('Recipes:signal-open-switcher', 6);
 					this.stonecutter(event.target.innerText, 'area_stonecutter', 'area_stonecutter-form', _json);
 					break;
 				case 'minecraft:smithing':
-					IPC.send('Recipes:signal-open-switcher', 7);
+					MCipc.send('Recipes:signal-open-switcher', 7);
 					this.smithingTable(event.target.innerText, 'area_smithing_table', 'area_smithing_table-form', _json);
 					break;
 				default:
@@ -414,17 +411,17 @@ class FileManagement
 {
 	static check(data, nameFile)
 	{
-		if (!MCutilities.CheckIfStringIsLegalCharacter(nameFile))
+		if (!MCutilities.checkIsLegalString(nameFile))
 		{
 			throw new Error(`${LANG.Options.Output} ${LANG.ContainIllegalCharacter}`);
 		}
-		else if (!MCutilities.CheckIfStringIsLegalCharacter(data.group))
+		else if (!MCutilities.checkIsLegalString(data.group))
 		{
 			throw new Error(`${LANG.Options.Group} ${LANG.ContainIllegalCharacter}`);
 		}
 		else if (fs.existsSync(path.join(RecipesDirectory, `${nameFile}.json`)))
 		{
-			IPC.send('Recipes:signal-is-exist');
+			MCipc.send('Recipes:signal-is-exist');
 			document.getElementById('ModalIsExist-Yes').addEventListener('click', () =>
 			{
 				this.createFile(data, nameFile);
@@ -442,7 +439,7 @@ class FileManagement
 		{
 			if (err)
 				throw new Error(err);
-			MCutilities.CreateAlert('success', document.getElementById('recipe-error'), LANG.FileCreationSuccess);
+			MCutilities.createAlert('success', document.getElementById('recipe-error'), LANG.FileCreationSuccess);
 			RecipeComponent.recipeList();
 		});
 	}
@@ -562,7 +559,7 @@ class CreateRecipe
 				{
 					ItemList.push(patternTemp[row][col]);
 					ItemKey.push(alpha);
-					alpha = MCutilities.GetNextCharacterInAlphabet(alpha);
+					alpha = MCutilities.nextLetter(alpha);
 				}
 				col++;
 				if (col > colMAX)
@@ -764,7 +761,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('crafting_player_delete').addEventListener('click', (event) =>
@@ -790,7 +787,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('crafting_table_delete').addEventListener('click', (event) =>
@@ -816,7 +813,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('area_furnace-delete').addEventListener('click', (event) =>
@@ -842,7 +839,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('area_blast_furnace-delete').addEventListener('click', (event) =>
@@ -868,7 +865,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('area_campfire-delete').addEventListener('click', (event) =>
@@ -894,7 +891,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('area_smoker-delete').addEventListener('click', (event) =>
@@ -920,7 +917,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('area_stonecutter-delete').addEventListener('click', (event) =>
@@ -946,7 +943,7 @@ class CreateRecipe
 			}
 			catch (__error)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('recipe-error'), __error);
+				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 			}
 		});
 		document.getElementById('area_smithing_table-delete').addEventListener('click', (event) =>

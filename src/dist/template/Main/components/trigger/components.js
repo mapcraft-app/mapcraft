@@ -1,20 +1,17 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const { MCWorkInProgress } = require('mapcraft-api');
-const IPC = require('mapcraft-api').MCipc;
-const MCP = require('mapcraft-api').MCplugin;
-const Temp = require('mapcraft-api').MCtemplate;
+const { MCipc, MCplugin, MCtemplate, MCWorkInProgress } = require('mapcraft-api');
 const Trigger = require('../../../../js/built_in/Trigger');
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
+const Plugins = new MCplugin();
+const Template = new MCtemplate(__dirname);
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 
-let LANG = MCplugin.Lang('Trigger');
+let LANG = Plugins.lang('Trigger');
 function UpdateLang()
 {
-	LANG = MCplugin.Lang('Trigger');
+	LANG = Plugins.lang('Trigger');
 }
 
 class TriggerComponent
@@ -61,17 +58,17 @@ class TriggerComponent
 	}
 }
 
-//#region IPC signal
-IPC.receive('Shell:execute-command', (command) =>
+//#region MCipc signal
+MCipc.receive('Shell:execute-command', (command) =>
 {
 	if (command.Command !== 'trigger')
 		return;
-	IPC.send('Trigger:signal-open-modal', command);
+	MCipc.send('Trigger:signal-open-modal', command);
 });
 //#endregion
 
 //#region Miscellaneous functions
-function CreateAlert(type, DOMelement, str)
+function createAlert(type, DOMelement, str)
 {
 	const alert = document.createElement('div');
 	alert.classList.add(`uk-alert-${type}`);
@@ -97,7 +94,7 @@ function DetectSubmitForm()
 		const ret = sqlName.get(form[0].value);
 		if (ret !== undefined && ret.Name)
 		{
-			CreateAlert('warning', document.getElementById('form-trigger-alert'), LANG.Data.Error.NameExist);
+			createAlert('warning', document.getElementById('form-trigger-alert'), LANG.Data.Error.NameExist);
 		}
 		else
 		{
@@ -177,7 +174,7 @@ function EditExecuteFile()
 		{
 			const ID = input.parentNode.parentNode.firstElementChild.firstElementChild.value;
 			const ExecutePath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/trigger', ID.toString(), 'execute.mcfunction');
-			IPC.send('Editor:open', ExecutePath);
+			MCipc.send('Editor:open', ExecutePath);
 		});
 }
 //#endregion

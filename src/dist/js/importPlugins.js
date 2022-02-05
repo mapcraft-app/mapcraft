@@ -63,7 +63,7 @@ class ImportPlugin
 	 * @returns Instance function of component, or undefined if error
 	 */
 	//Instance(Name)
-	Instance(UUID)
+	instance(UUID)
 	{
 		for (const i in this.plugins)
 			if (this.plugins[i].uuid === UUID)
@@ -76,7 +76,7 @@ class ImportPlugin
 	 * @param {String} UUID UUID of component
 	 * @returns Full component, or undefined if error
 	 */
-	Component(UUID)
+	component(UUID)
 	{
 		for (const i in this.plugins)
 			if (this.plugins[i].uuid === UUID)
@@ -89,7 +89,7 @@ class ImportPlugin
 	 * @param {String} UUID Name of component
 	 * @param {Boolean} forceValue Set to true/false if you want to force activate/desactivate plugin
 	 */
-	Toogle(UUID, forceValue = undefined)
+	toogle(UUID, forceValue = undefined)
 	{
 		for (const i in global.ImportPluginSave)
 			if (global.ImportPluginSave[i].uuid === UUID)
@@ -109,7 +109,7 @@ class ImportPlugin
 	 * @returns {JSON} Lang data
 	 */
 	//Lang(Name)
-	Lang(UUID)
+	lang(UUID)
 	{
 		let data = null;
 		for (const i in this.plugins)
@@ -138,7 +138,7 @@ class ImportPlugin
 	 * Get full list of components
 	 * @returns List of components
 	 */
-	ListComponents()
+	listComponents()
 	{
 		return (this.plugins);
 	}

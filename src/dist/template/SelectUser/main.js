@@ -6,7 +6,7 @@ const Component = require('./components');
 const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 
-function CreateAlert(type, DOMelement, str)
+function createAlert(type, DOMelement, str)
 {
 	const alert = document.createElement('div');
 	alert.classList.add(`uk-alert-${type}`);
@@ -72,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () =>
 				MCipc.send('User:close-window', _Mapcraft.DBPath, ret);
 				return;
 			}
-		CreateAlert('danger', document.getElementById('alert-main'), LANG.Modal.Error.NoUser);
+		createAlert('danger', document.getElementById('alert-main'), LANG.Modal.Error.NoUser);
 	});
 
 	//Create user
@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', () =>
 			const sqlUser = db.prepare('SELECT Username FROM User WHERE Username = ?');
 			if (sqlUser.get(name) !== undefined && sqlUser.get(name).Username)
 			{
-				CreateAlert('danger', document.getElementById('alert'), LANG.Modal.Error.IsExist);
+				createAlert('danger', document.getElementById('alert'), LANG.Modal.Error.IsExist);
 			}
 			else
 			{
@@ -108,7 +108,7 @@ window.addEventListener('DOMContentLoaded', () =>
 			(res) =>
 			{
 				if (res.statusCode !== 200)
-					CreateAlert('warning', document.getElementById('alert'), LANG.Modal.Error.UserNotExist);
+					createAlert('warning', document.getElementById('alert'), LANG.Modal.Error.UserNotExist);
 				else
 					res.on('data', (data) =>
 					{

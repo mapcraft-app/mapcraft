@@ -10,7 +10,7 @@ const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const MainPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene/start.mcfunction');
 const CutsceneDir = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene');
 
-function CreateAlert(type, DOMelement, str)
+function createAlert(type, DOMelement, str)
 {
 	const alert = document.createElement('div');
 	alert.classList.add(`uk-alert-${type}`);
@@ -123,7 +123,7 @@ class Cutscene
 		DB.close();
 		if (POINTS.length <= 1)
 		{
-			CreateAlert('warning', document.getElementById('cutscene-error'), LANG.Data.Generation.Error);
+			createAlert('warning', document.getElementById('cutscene-error'), LANG.Data.Generation.Error);
 			return;
 		}
 		const TAG = `Cutscene_${ID.toString()}`;

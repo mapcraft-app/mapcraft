@@ -126,7 +126,7 @@ class GetForm
 		for (const effect of effectList)
 		{
 			const ret = {};
-			insert(ret, 'effect', MCsearch.GetValue(effect.querySelector('#form-effects-block-search')));
+			insert(ret, 'effect', MCsearch.getValue(effect.querySelector('#form-effects-block-search')));
 			insert(ret, 'duration', effect.querySelector('#form-effects-block-duration').value, Number);
 			insert(ret, 'amplifier', effect.querySelector('#form-effects-block-amplifier').value, Number);
 			if (ret.effect && (ret.duration || ret.amplifier))
@@ -145,7 +145,7 @@ class GetForm
 	static entity(modal)
 	{
 		const json = {};
-		insert(json, 'type', MCsearch.GetValue(modal.querySelector('#form-entity-modal-entity')));
+		insert(json, 'type', MCsearch.getValue(modal.querySelector('#form-entity-modal-entity')));
 		insert(json, 'nbt', modal.querySelector('#form-entity-modal-nbt').value);
 		//flags
 		json.flags = {};
@@ -168,7 +168,7 @@ class GetForm
 		for (const effect of effectsList)
 		{
 			const jsoneffect = {};
-			const name = MCsearch.GetValue(effect.querySelector('#form-effects-block-search'));
+			const name = MCsearch.getValue(effect.querySelector('#form-effects-block-search'));
 			const amplifier = effect.querySelector('#form-effects-block-duration').value;
 			const duration = effect.querySelector('#form-effects-block-amplifier').value;
 			if (name)
@@ -225,13 +225,13 @@ class GetForm
 	static items(modal)
 	{
 		const json = {};
-		insert(json, 'item', MCsearch.GetValue(modal.querySelector('#form-item-modal-item')));
+		insert(json, 'item', MCsearch.getValue(modal.querySelector('#form-item-modal-item')));
 		insert(json, 'nbt', modal.querySelector('#form-item-modal-nbt').value);
 		insert(json, 'data', modal.querySelector('#form-item-modal-data').value, Number);
 		insert(json, 'tag', modal.querySelector('#form-item-modal-tag').value);
 		insert(json, 'count', getMinMax(modal.querySelector('#form-item-modal-count-min').value, modal.querySelector('#form-item-modal-count-max').value));
 		insert(json, 'durability', getMinMax(modal.querySelector('#form-item-modal-durability-min').value, modal.querySelector('#form-item-modal-durability-max').value));
-		insert(json, 'potion', MCsearch.GetValue(modal.querySelector('#form-item-modal-potion')));
+		insert(json, 'potion', MCsearch.getValue(modal.querySelector('#form-item-modal-potion')));
 		//enchantement form-item-modal-stored-enchantements-list
 		const enchantementsList = modal.querySelectorAll('#form-item-modal-enchantements-list > div');
 		if (enchantementsList.length > 0)
@@ -239,7 +239,7 @@ class GetForm
 			json.enchantements = [];
 			for (const enchantement of enchantementsList)
 			{
-				const value = `minecraft:${MCsearch.GetValue(enchantement.querySelector('#form-item-modal-enchantements-list-search'))}`;
+				const value = `minecraft:${MCsearch.getValue(enchantement.querySelector('#form-item-modal-enchantements-list-search'))}`;
 				if (value)
 				{
 					const retJson = {};
@@ -256,7 +256,7 @@ class GetForm
 			json.stored_enchantments = [];
 			for (const enchantement of storedEnchantementsList)
 			{
-				const value = `minecraft:${MCsearch.GetValue(enchantement.querySelector('#form-item-modal-stored-enchantements-list-search'))}`;
+				const value = `minecraft:${MCsearch.getValue(enchantement.querySelector('#form-item-modal-stored-enchantements-list-search'))}`;
 				if (value)
 				{
 					const retJson = {};
@@ -286,17 +286,17 @@ class GetForm
 	static location(modal)
 	{
 		const json = {};
-		const biome = MCsearch.GetValue(modal.querySelector('#form-location-modal-biome'));
+		const biome = MCsearch.getValue(modal.querySelector('#form-location-modal-biome'));
 		if (biome)
 			insert(json, 'biome', `minecraft:${biome}`);
 		const dimensionSelected = modal.querySelector('#form-location-modal-dimension').value;
 		if (dimensionSelected !== 'default')
 			insert(json, 'dimension', dimensionSelected);
-		insert(json, 'feature', MCsearch.GetValue(modal.querySelector('#form-location-modal-feature')));
+		insert(json, 'feature', MCsearch.getValue(modal.querySelector('#form-location-modal-feature')));
 		insert(json, 'smokey', modal.querySelector('#form-location-modal-check-smokey').checked);
 		//Block
 		const tabBlock = {
-			block: MCsearch.GetValue(modal.querySelector('#form-location-modal-block-block')),
+			block: MCsearch.getValue(modal.querySelector('#form-location-modal-block-block')),
 			tag: modal.querySelector('#form-location-modal-block-tag').value,
 			nbt: modal.querySelector('#form-location-modal-block-nbt').value,
 		};

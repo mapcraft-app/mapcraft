@@ -10,10 +10,10 @@ const GetForm = require('./form/get');
 const SetForm = require('./form/set');
 
 const randomString = () => crypto.randomBytes(8).toString('hex');
-let LANG = MCutilities.GetLang(__dirname, Mapcraft.config.Env.Lang);
+let LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 function UpdateLang()
 {
-	LANG = MCutilities.GetLang(__dirname, Mapcraft.config.Env.Lang);
+	LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 }
 const TEMPLATE = new MCtemplate(__dirname);
 let ADVANCEMENT = {};
@@ -29,7 +29,7 @@ if (!fs.existsSync(RecipesDirectory))
 	fs.mkdirSync(path.join(RecipesDirectory, 'data'), { recursive: true });
 }
 
-const TRIGGERFORM = MCutilities.GetDataGameElement('triggers', Mapcraft.config.Minecraft.SelectedVersion);
+const TRIGGERFORM = MCutilities.getDataGameElement('triggers', Mapcraft.config.Minecraft.SelectedVersion);
 const GetTriggerForm = (id) =>
 {
 	for (const trigger of TRIGGERFORM)
@@ -203,7 +203,7 @@ class SetJson
 		this.input(ListItem.querySelector('#edit-display-description-obfuscated'), advancement.description.obfuscated);
 		if (advancement.icon.item)
 		{
-			MCsearch.SetValue(ListItem.querySelector('#edit-display-icon'), advancement.icon.item.slice(10));
+			MCsearch.setValue(ListItem.querySelector('#edit-display-icon'), advancement.icon.item.slice(10));
 			ListItem.querySelector('#edit-display-icon input').dispatchEvent(new Event('input'));
 		}
 		this.input(ListItem.querySelector('#edit-display-frame'), advancement.frame);
@@ -216,7 +216,7 @@ class SetJson
 	static setCriteria(ListItem, advancement)
 	{
 		let GenerateID = 0;
-		const DataTrigger = MCutilities.GetDataGameElement('triggers');
+		const DataTrigger = MCutilities.getDataGameElement('triggers');
 		const newDOM = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
 		const newDOMbody = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
 		newDOM.documentElement.appendChild(newDOMbody);
@@ -226,7 +226,7 @@ class SetJson
 				setTimeout(() =>
 				{
 					const ID = Component.newTrigger(GenerateID, x, newList, false); //eslint-disable-line no-use-before-define
-					MCsearch.SetValue(newList.querySelector(`div[id="${ID}"] div.search-dropdown-input`), advancement[x].trigger.slice(10));
+					MCsearch.setValue(newList.querySelector(`div[id="${ID}"] div.search-dropdown-input`), advancement[x].trigger.slice(10));
 					newList.querySelector(`div[id="${ID}"] div.search-dropdown-input input`).dispatchEvent(new Event('input'));
 					const CriteriaForm = newList.querySelector(`#edit-criteria-form-${GenerateID++}`);
 					const FORM = Form.printTrigger(advancement[x].trigger.slice(10));
@@ -246,7 +246,7 @@ class SetJson
 								if (/^__SEARCH/.test(form.predefined))
 								{
 									const SearchInput = CriteriaForm.querySelector(`label[lang="${form.lang}"]`);
-									MCsearch.SetValue(SearchInput.nextSibling, advancement[x].conditions[form.key].slice(10));
+									MCsearch.setValue(SearchInput.nextSibling, advancement[x].conditions[form.key].slice(10));
 								}
 								else if (/^__FORM/.test(form.predefined))
 								{
@@ -454,7 +454,7 @@ class Json
 		switch (input.type.toLowerCase())
 		{
 			case 'text':
-				if (!MCutilities.CheckIfStringIsLegalCharacter(String(input.value)))
+				if (!MCutilities.checkIsLegalString(String(input.value)))
 				{
 					this.isError = true;
 					this.errors.push({ message: LANG.Data.Error.ContainIllegalCharacter, element: input });
@@ -507,7 +507,7 @@ class Json
 			const ID = element.id.substr(lengthString);
 			if (element.classList.contains('search-dropdown-input'))
 			{
-				const value = MCsearch.GetValue(element);
+				const value = MCsearch.getValue(element);
 				if (value)
 					this.json.display.icon.item = `minecraft:${value}`;
 			}
@@ -551,7 +551,7 @@ class Json
 			};
 			const CriteriaName = trigger.querySelector(`input[id="edit-criteria-name-${trigger.id}"]`).value;
 			const TriggerForm = trigger.querySelectorAll('div.padding-criteria-form > div > div.uk-margin');
-			const ID = MCsearch.GetValue(trigger.querySelector('div.search-dropdown-parent'));
+			const ID = MCsearch.getValue(trigger.querySelector('div.search-dropdown-parent'));
 			if (!ID)
 				continue; //eslint-disable-line no-continue
 			criteriaJson.trigger = `minecraft:${ID}`;
@@ -566,7 +566,7 @@ class Json
 					const { key } = element;
 					if (/^__SEARCH/.test(element.predefined))
 					{
-						const searchJson = GetForm.search(element.predefined, MCsearch.GetValue(TriggerForm[x].querySelector('div.search-dropdown')));
+						const searchJson = GetForm.search(element.predefined, MCsearch.getValue(TriggerForm[x].querySelector('div.search-dropdown')));
 						if (Object.values(searchJson)[0])
 							if (key === '__ROOT')
 								criteriaJson.conditions = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
@@ -823,7 +823,7 @@ class Component
 			fs.writeFile(path.join(Dir, `${json.id}.json`), JSON.stringify(json, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
 			{
 				if (err)
-					MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
+					MCutilities.createAlert('danger', document.getElementById('advancement-error'), err);
 
 				localStorage.setItem('Advancement_Select', json.id);
 				ADVANCEMENT = JSON.parse(JSON.stringify(json)); //deepcopy of json, structuredClone() not work
@@ -874,7 +874,7 @@ class Component
 			fs.readFile(BASE.getAttribute('advancement-file'), { encoding: 'utf-8', flag: 'r' }, (err, data) =>
 			{
 				if (err)
-					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err);
+					MCutilities.createAlert('warning', document.getElementById('advancement-error'), err);
 				ADVANCEMENT = JSON.parse(data);
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
@@ -896,17 +896,17 @@ class Component
 			}
 			catch (err)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err.message);
+				MCutilities.createAlert('warning', document.getElementById('advancement-error'), err.message);
 				Generate.createdFile.forEach((_file) =>
 				{
 					fs.rm(_file, (err2) =>
 					{
 						if (err2)
-							MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err2.message);
+							MCutilities.createAlert('warning', document.getElementById('advancement-error'), err2.message);
 					});
 				});
 			}
-			MCutilities.CreateAlert('success', document.getElementById('advancement-error'), LANG.Data.Graph.SuccessGeneration);
+			MCutilities.createAlert('success', document.getElementById('advancement-error'), LANG.Data.Graph.SuccessGeneration);
 			MCworkInProgress.close();
 		});
 
@@ -934,7 +934,7 @@ class Component
 			fs.rm(ICONS.getAttribute('advancement-file'), (err) =>
 			{
 				if (err)
-					MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), err.message);
+					MCutilities.createAlert('warning', document.getElementById('advancement-error'), err.message);
 				TEMPLATE.cleanNode(ICONS, true);
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
@@ -955,7 +955,7 @@ class Component
 	{
 		if (!Object.keys(ADVANCEMENT).length)
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('advancement-error'), LANG.Data.Error.NoAdvancement);
+			MCutilities.createAlert('warning', document.getElementById('advancement-error'), LANG.Data.Error.NoAdvancement);
 			return;
 		}
 		if (CurrentID)
@@ -974,7 +974,7 @@ class Component
 		fs.readdir(Dir, { encoding: 'utf-8' }, (err, files) =>
 		{
 			if (err)
-				MCutilities.CreateAlert('danger', document.getElementById('advancement-error'), err);
+				MCutilities.createAlert('danger', document.getElementById('advancement-error'), err);
 			for (const file of files)
 			{
 				const json = JSON.parse(fs.readFileSync(path.join(Dir, file), { encoding: 'utf-8', flag: 'r' }));
@@ -1302,7 +1302,7 @@ class Component
 			event.stopImmediatePropagation();
 			if (!document.querySelectorAll('div[id="edit-criteria-list"] > div').length)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('edit-requirements-error'), LANG.Data.Error.NoCriteria);
+				MCutilities.createAlert('warning', document.getElementById('edit-requirements-error'), LANG.Data.Error.NoCriteria);
 				return;
 			}
 			const MODEL = document.createElement('div');

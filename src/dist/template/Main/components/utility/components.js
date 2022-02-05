@@ -2,19 +2,17 @@
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-const MCP = require('mapcraft-api').MCplugin;
-const Temp = require('mapcraft-api').MCtemplate;
-const { MCutilities } = require('mapcraft-api');
+const { MCplugin, MCutilities, MCtemplate } = require('mapcraft-api');
 
 //global.MinecraftSelectedVersion
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
-let LANG = MCplugin.Lang('Utility').Data;
+const Plugins = new MCplugin();
+const Template = new MCtemplate(__dirname);
+let LANG = Plugins.lang('Utility').Data;
 const randomString = () => crypto.randomBytes(12).toString('hex');
 const UpdateLang = () =>
 {
-	LANG = MCplugin.Lang('Utility').Data;
+	LANG = Plugins.lang('Utility').Data;
 };
 
 //#region Search system
@@ -94,10 +92,10 @@ class UtilityComponent
 		const tempPath = JSON.parse(localStorage.getItem('Mapcraft')).TempPath;
 		const newID = randomString();
 		const _path = path.join(tempPath, `${newID}.json`);
-		fs.writeFile(_path, JSON.stringify(MCutilities.GetDataGameElement(type, global.MinecraftSelectedVersion), null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
+		fs.writeFile(_path, JSON.stringify(MCutilities.getDataGameElement(type, global.MinecraftSelectedVersion), null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
 		{
 			if (err)
-				MCutilities.CreateAlert('warning', document.getElementById('utility-error'), err.message);
+				MCutilities.createAlert('warning', document.getElementById('utility-error'), err.message);
 			const link = document.createElement('a');
 			link.download = `${newID}.json`;
 			link.href = _path;
@@ -110,7 +108,7 @@ class UtilityComponent
 	{
 		let x = 0;
 		const list = document.getElementById('blocks-list');
-		const jsonData = MCutilities.GetDataGameElement('blocks', version);
+		const jsonData = MCutilities.getDataGameElement('blocks', version);
 		Template.cleanNode(list);
 		for (const id of jsonData)
 		{
@@ -160,7 +158,7 @@ class UtilityComponent
 	{
 		let x = 0;
 		const list = document.getElementById('items-list');
-		const jsonData = MCutilities.GetDataGameElement('items', version);
+		const jsonData = MCutilities.getDataGameElement('items', version);
 		Template.cleanNode(list);
 		for (const id of jsonData)
 		{
@@ -208,7 +206,7 @@ class UtilityComponent
 	static _generateTagItem(version)
 	{
 		const list = document.getElementById('tags-list');
-		const jsonData = MCutilities.GetDataGameElement('tags', version);
+		const jsonData = MCutilities.getDataGameElement('tags', version);
 		const isTag = new RegExp('^#.+');
 		Template.cleanNode(list);
 		for (const col in jsonData)

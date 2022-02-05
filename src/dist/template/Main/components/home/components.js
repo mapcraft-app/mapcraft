@@ -1,8 +1,7 @@
-const IPC = require('mapcraft-api').MCipc;
-const Temp = require('mapcraft-api').MCtemplate;
+const { MCipc, MCtemplate } = require('mapcraft-api');
 const NavMenu = require('../../../../js/createNavMenu');
 
-const Template = new Temp(__dirname);
+const Template = new MCtemplate(__dirname);
 
 function DetectClickOnElement()
 {
@@ -10,7 +9,7 @@ function DetectClickOnElement()
 	{
 		element.addEventListener('click', () =>
 		{
-			IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
+			MCipc.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 		});
 	});
 }

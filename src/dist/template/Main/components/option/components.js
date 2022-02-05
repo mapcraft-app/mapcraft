@@ -24,10 +24,10 @@ const pluginsList = {
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const MinecraftVersion = MC.config.Minecraft;
-let LANG = MCplugin.Lang('Option');
+let LANG = MCplugin.lang('Option');
 function UpdateLang()
 {
-	LANG = MCplugin.Lang('Option');
+	LANG = MCplugin.lang('Option');
 }
 
 //#region General tab
@@ -124,8 +124,8 @@ class OptionComponent
 		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
 		UpdateLang();
 		//Header
-		Template.updateLang(document.getElementById('nav-header'), MCplugin.Lang('Main'));
-		Template.updateLang(document.getElementById('offcanvas-content'), MCplugin.Lang('Main'));
+		Template.updateLang(document.getElementById('nav-header'), MCplugin.lang('Main'));
+		Template.updateLang(document.getElementById('offcanvas-content'), MCplugin.lang('Main'));
 		//Side Nav
 		const SideNav = () =>
 		{
@@ -144,12 +144,12 @@ class OptionComponent
 			});
 		}; SideNav();
 		//Editor
-		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.Lang('Main'));
+		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.lang('Main'));
 		this.UpdateLangComponent('option.tp');
 		this.general();
 		PluginComponent.updateLang(); // eslint-disable-line
 		UserComponent.UpdateLangComponent('user.tp'); // eslint-disable-line
-		MCutilities.CreateAlert('success', document.getElementById('option-error'), LANG.Data.General.Success);
+		MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.General.Success);
 	}
 
 	static RedrawUserTab()
@@ -212,7 +212,7 @@ class PluginComponent
 					div.getElementsByClassName('uk-switch-span')[0].classList.add('uk-switch-span-disabled');
 					div.getElementsByTagName('input')[0].disabled = true;
 				}
-				if (MCplugin.Active(object.name) === true)
+				if (MCplugin.active(object.name) === true)
 					div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
 				div.getElementsByTagName('button')[0].disabled = true;
 				newDOMbody.appendChild(div.getElementsByTagName('tr')[0]);
@@ -265,11 +265,11 @@ class PluginComponent
 					fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
 					{
 						if (err)
-							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
 						if (isBuiltin)
-							MCplugin.Toogle(value);
+							MCplugin.toogle(value);
 						else
-							importPlugins.Toogle(value);
+							importPlugins.toogle(value);
 						this.updateNav();
 					});
 					return;
@@ -285,8 +285,8 @@ class PluginComponent
 					fs.writeFile(path.join(MC.config.Env.PluginsComponents, 'components.json'), JSON.stringify(pluginsList.addons, null, 4), { encoding: 'utf-8' }, (err) =>
 					{
 						if (err)
-							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
-						importPlugins.Toogle(value, false);
+							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
+						importPlugins.toogle(value, false);
 						this.updateNav();
 					});
 					return;
@@ -329,13 +329,13 @@ class PluginComponent
 					{
 						if (err)
 						{
-							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
+							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
 						}
 						else
 						{
 							removeJson('uuid', TR.getAttribute('uuid'));
 							Template.cleanNode(TR, true);
-							MCutilities.CreateAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
+							MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
 						}
 					});
 				});
@@ -358,7 +358,7 @@ function DirIsExist(link, Error)
 {
 	if (!fs.existsSync(link))
 	{
-		MCutilities.CreateAlert('warning', document.getElementById('option-error'), `${link.toString()}: ${Error}`);
+		MCutilities.createAlert('warning', document.getElementById('option-error'), `${link.toString()}: ${Error}`);
 		return (false);
 	}
 	return (true);
@@ -369,7 +369,7 @@ function IsMinecraftDir(link)
 	if (!fs.existsSync(path.join(link, '/', 'versions')))
 	{
 		UpdateLang();
-		MCutilities.CreateAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftDirectory);
+		MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftDirectory);
 		return (false);
 	}
 	return (true);
@@ -386,7 +386,7 @@ function IsSaveDir(link)
 			if (!fs.existsSync(path.join(testIfDir, '/icon.png')))
 			{
 				UpdateLang();
-				MCutilities.CreateAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftSaveDirectory);
+				MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftSaveDirectory);
 				return (false);
 			}
 			else
@@ -401,7 +401,7 @@ function IsCorrectString(string)
 	if (!string)
 	{
 		UpdateLang();
-		MCutilities.CreateAlert('warning', document.getElementById('option-error'), `${string.toString()}: ${LANG.Data.General.Error.IncorrectString}`);
+		MCutilities.createAlert('warning', document.getElementById('option-error'), `${string.toString()}: ${LANG.Data.General.Error.IncorrectString}`);
 		return (false);
 	}
 	return (true);
@@ -574,7 +574,7 @@ function DeleteOneUser()
 			const ret = sqlUser.get(username);
 			if (ret.IsConnected)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('option-error'), LANG.Data.User.Error.UserIsConnected);
+				MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.User.Error.UserIsConnected);
 				MCworkInProgress.close();
 				return;
 			}
@@ -623,7 +623,7 @@ function CreateUser()
 			const sqlUser = db.prepare('SELECT Username FROM User WHERE Username = ?');
 			if (sqlUser.get(name) !== undefined && sqlUser.get(name).Username)
 			{
-				MCutilities.CreateAlert('danger', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.IsExist);
+				MCutilities.createAlert('danger', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.IsExist);
 			}
 			else
 			{
@@ -645,7 +645,7 @@ function CreateUser()
 			{
 				if (res.statusCode !== 200)
 				{
-					MCutilities.CreateAlert('warning', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.UserNotExist);
+					MCutilities.createAlert('warning', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.UserNotExist);
 					MCworkInProgress.close();
 					return;
 				}

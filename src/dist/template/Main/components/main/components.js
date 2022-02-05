@@ -1,12 +1,9 @@
 const { shell } = require('electron');
-const IPC = require('mapcraft-api').MCipc;
-const MC = require('mapcraft-api').Mapcraft;
-const MCP = require('mapcraft-api').MCplugin;
-const Temp = require('mapcraft-api').MCtemplate;
+const { Mapcraft, MCplugin, MCtemplate, MCipc } = require('mapcraft-api');
 const NavMenu = require('../../../../js/createNavMenu');
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
+const Plugins = new MCplugin();
+const Template = new MCtemplate(__dirname);
 
 function UpdateSelectedLi(currentElement)
 {
@@ -24,7 +21,7 @@ function DetectClickOnElement()
 		element.addEventListener('click', () =>
 		{
 			UpdateSelectedLi(element);
-			IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
+			MCipc.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 		});
 	});
 }
@@ -53,8 +50,8 @@ class MainComponent
 	{
 		const User = JSON.parse(localStorage.getItem('Mapcraft_User'));
 		Template.render(document.getElementById('nav-header'), 'header.tp', { Username: User.Username, Link: `https://crafatar.com/avatars/${User.UUID}?size=80` });
-		Template.updateLang(document.getElementById('nav-header'), MCplugin.lang('Main'));
-		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
+		Template.updateLang(document.getElementById('nav-header'), Plugins.lang('Main'));
+		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${Mapcraft.config.Env.Lang}`;
 		OpenExternLink();
 	}
 
@@ -71,7 +68,7 @@ class MainComponent
 
 	static Editor()
 	{
-		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.lang('Main'));
+		Template.updateLang(document.getElementById('ModalEditFile'), Plugins.lang('Main'));
 	}
 
 	/*Interface for component */
@@ -80,7 +77,7 @@ class MainComponent
 		this._main();
 		this.nav();
 		this.list();
-		Template.updateLang(document.getElementsByTagName('*'), MCplugin.lang('Main'));
+		Template.updateLang(document.getElementsByTagName('*'), Plugins.lang('Main'));
 	}
 
 	static redrawElement()

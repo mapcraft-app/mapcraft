@@ -3,11 +3,11 @@ const path = require('path');
 const { Mapcraft, MCsearch, MCtemplate, MCutilities } = require('mapcraft-api');
 const FORM = require('./form');
 
-const ListOfEnchantements = MCutilities.GetDataGameElement('enchantements');
-let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
+const ListOfEnchantements = MCutilities.getDataGameElement('enchantements');
+let LANG = MCutilities.getLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 function UpdateLang()
 {
-	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
+	LANG = MCutilities.getLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 }
 
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
@@ -31,7 +31,7 @@ const setValue = (form, json, key, isMCsearch = false, keepNamespace = false) =>
 		if (/^minecraft:/.test(value) && !keepNamespace)
 			value = value.slice(10);
 		if (isMCsearch)
-			MCsearch.SetValue(form, String(value));
+			MCsearch.setValue(form, String(value));
 		else
 			switch (form.type)
 			{
@@ -169,7 +169,7 @@ class Set
 				newEffect.classList.add('edit-block', 'edit-block-criteria', 'uk-margin');
 				newEffect.querySelector('#form-effects-block-close').addEventListener('click', () => newEffect.remove());
 				MCsearch.effects(newEffect.querySelector('#form-effects-block-search'));
-				MCsearch.SetValue(newEffect.querySelector('#form-effects-block-search'), key.slice(10));
+				MCsearch.setValue(newEffect.querySelector('#form-effects-block-search'), key.slice(10));
 				if (Object.prototype.hasOwnProperty.call(json[key], 'amplifier'))
 					setValue(newEffect.querySelector('#form-effects-block-amplifier'), json[key].amplifier, 'min');
 				if (Object.prototype.hasOwnProperty.call(json[key], 'duration'))
@@ -201,7 +201,7 @@ class Set
 					newEffect.classList.add('edit-block', 'edit-block-criteria', 'uk-margin');
 					newEffect.querySelector('#form-effects-block-close').addEventListener('click', () => newEffect.remove());
 					MCsearch.effects(newEffect.querySelector('#form-effects-block-search'));
-					MCsearch.SetValue(newEffect.querySelector('#form-effects-block-search'), x.slice(10));
+					MCsearch.setValue(newEffect.querySelector('#form-effects-block-search'), x.slice(10));
 					if (Object.prototype.hasOwnProperty.call(json.effects[x], 'duration'))
 						setValue(newEffect.querySelector('#form-effects-block-duration'), json.effects[x].duration, 'min');
 					if (Object.prototype.hasOwnProperty.call(json.effects[x], 'amplifier'))
@@ -256,7 +256,7 @@ class Set
 						break;
 					}
 			});
-			MCsearch.SetValue(BLOCK.querySelector(`#search-dropdown-${SearchID}`), enchantement.enchantement.slice(10));
+			MCsearch.setValue(BLOCK.querySelector(`#search-dropdown-${SearchID}`), enchantement.enchantement.slice(10));
 			BLOCK.querySelector(`#search-dropdown-${SearchID}`).dispatchEvent(new Event('input'));
 			MinMax.min.value = enchantement.levels.min;
 			MinMax.max.value = enchantement.levels.max;

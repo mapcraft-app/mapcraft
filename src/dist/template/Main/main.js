@@ -54,7 +54,7 @@ function UpdateInterface(plugin, name)
 		navTitle.childNodes[0].remove();
 	navTitle.appendChild(document.createTextNode(name));
 	const Component = Plugins.component(plugin);
-	const PluginsComponent = importPlugins.Component(plugin);
+	const PluginsComponent = importPlugins.component(plugin);
 	if (!Component && !PluginsComponent)
 	{
 		console.error('No plugin exist with is name');
@@ -99,7 +99,7 @@ MCipc.receive('Shell:new-command', (command) =>
 		return;
 	const plugin = capitalize(command.Command);
 	const Component = Plugins.component(plugin);
-	const PluginsComponent = importPlugins.Component(command.UUID);
+	const PluginsComponent = importPlugins.component(command.UUID);
 	if (Component && Plugins.active(plugin) === true)
 	{
 		const LANG = Plugins.lang(plugin);
@@ -109,7 +109,7 @@ MCipc.receive('Shell:new-command', (command) =>
 	}
 	else if (PluginsComponent && PluginsComponent.active)
 	{
-		const LANG = importPlugins.Lang(command.UUID);
+		const LANG = importPlugins.lang(command.UUID);
 		if (PluginsComponent.isNotification)
 		{
 			//eslint-disable-next-line

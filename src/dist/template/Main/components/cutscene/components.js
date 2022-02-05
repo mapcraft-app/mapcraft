@@ -1,19 +1,17 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
-const IPC = require('mapcraft-api').MCipc;
-const MCP = require('mapcraft-api').MCplugin;
-const Temp = require('mapcraft-api').MCtemplate;
-const { MCworkInProgress, MCutilities } = require('mapcraft-api');
+const { MCipc, MCplugin, MCtemplate, MCutilities, MCworkInProgress } = require('mapcraft-api');
+
 const CutsceneMod = require('../../../../js/built_in/Cutscene');
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
+const MCP = new MCplugin();
+const Template = new MCtemplate(__dirname);
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-let LANG = MCplugin.Lang('Cutscene');
+let LANG = MCP.lang('Cutscene');
 function UpdateLang()
 {
-	LANG = MCplugin.Lang('Cutscene');
+	LANG = MCP.lang('Cutscene');
 }
 let CutsceneID = -1;
 let LastPoint = -1;
@@ -83,9 +81,9 @@ function EditFile()
 			catch (err)
 			{
 				if (err.code !== 'EEXIST')
-					IPC.send('Dialog:error', err.code, err.message);
+					MCipc.send('Dialog:error', err.code, err.message);
 			}
-			IPC.send('Editor:open', name);
+			MCipc.send('Editor:open', name);
 		});
 	for (const input of document.querySelectorAll('button[id="edit-end"]'))
 		input.addEventListener('click', () =>
@@ -98,9 +96,9 @@ function EditFile()
 			catch (err)
 			{
 				if (err.code !== 'EEXIST')
-					IPC.send('Dialog:error', err.code, err.message);
+					MCipc.send('Dialog:error', err.code, err.message);
 			}
-			IPC.send('Editor:open', name);
+			MCipc.send('Editor:open', name);
 		});
 }
 
@@ -216,7 +214,7 @@ class Cutscene
 				str += (Case === 'Transition') ? (LANG.Data.TypeError.String) : (LANG.Data.TypeError.Number);
 				str += ` ${LANG.Data.TypeError.Received} `;
 				str += (typeof newValue === 'string') ? (LANG.Data.TypeError.String) : (LANG.Data.TypeError.Number);
-				MCutilities.CreateAlert('warning', document.getElementById('cutscene-error'), str);
+				MCutilities.createAlert('warning', document.getElementById('cutscene-error'), str);
 				return;
 			}
 			const db = Database(Mapcraft.DBPath, { verbose: null });
@@ -268,7 +266,7 @@ class Cutscene
 		event.stopImmediatePropagation();
 		if (!event.target['CreateNewCutscene-form-Name'].value)
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('ModalError'), LANG.Data.CreateModal.Error);
+			MCutilities.createAlert('warning', document.getElementById('ModalError'), LANG.Data.CreateModal.Error);
 			return;
 		}
 		MCworkInProgress.open();
@@ -309,7 +307,7 @@ class Cutscene
 		};
 		if (CutsceneID === -1)
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('cutscene-error'), LANG.Data.AddPointError);
+			MCutilities.createAlert('warning', document.getElementById('cutscene-error'), LANG.Data.AddPointError);
 			return;
 		}
 		if (!command)
@@ -420,7 +418,7 @@ class Cutscene
 	{
 		if (CutsceneID === -1)
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('cutscene-error'), LANG.Data.GenerateError);
+			MCutilities.createAlert('warning', document.getElementById('cutscene-error'), LANG.Data.GenerateError);
 			return;
 		}
 		MCworkInProgress.open();
@@ -439,14 +437,14 @@ class Cutscene
 }
 
 //#region IPC signal
-IPC.receive('Shell:execute-command', (command) =>
+MCipc.receive('Shell:execute-command', (command) =>
 {
 	if (command.Command !== 'cutscene')
 		return;
 	switch (command.Type)
 	{
 		case 'create':
-			IPC.send('Cutscene:signal-create-cutscene');
+			MCipc.send('Cutscene:signal-create-cutscene');
 			break;
 		case 'add-point':
 			Cutscene._AddPointToCutscene(command);

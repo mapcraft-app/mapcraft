@@ -1,14 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const JsonABC = require('jsonabc');
-const { MCutilities, MCworkInProgress } = require('mapcraft-api');
-const IPC = require('mapcraft-api').MCipc;
-const MCP = require('mapcraft-api').MCplugin;
-const Temp = require('mapcraft-api').MCtemplate;
+const { MCplugin, MCutilities, MCtemplate, MCipc, MCworkInProgress } = require('mapcraft-api');
 const Music = require('../../../../js/built_in/Music');
 
-const MCplugin = new MCP();
-const Template = new Temp(__dirname);
+const Plugins = new MCplugin();
+const Template = new MCtemplate(__dirname);
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const BaseSoundsJson = {
@@ -30,7 +27,7 @@ if (!fs.existsSync(SoundsJsonLink))
 if (!fs.existsSync(SoundsLink))
 {
 	fs.mkdirSync(SoundsLink, { recursive: true });
-	MCutilities.Download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) =>
+	MCutilities.download('https://download.mapcraft.app/srcs/res/blank.ogg', path.join(SoundsLink, 'blank.ogg'), (err) =>
 	{
 		if (err)
 			console.error(err);
@@ -45,7 +42,7 @@ class MusicComponent
 	{
 		Template.render(document.getElementById('content'), 'music.tp', null);
 
-		Template.updateLang(document.getElementById('content'), MCplugin.Lang('Music').Data);
+		Template.updateLang(document.getElementById('content'), Plugins.lang('Music').Data);
 		this.createForm();
 		DeleteMusic(); // eslint-disable-line
 	}
@@ -53,7 +50,7 @@ class MusicComponent
 	static createForm()
 	{
 		Template.render(document.getElementById('ModalAddMusic'), 'music_form_create.tp', null);
-		Template.updateLang(document.getElementById('ModalAddMusic'), MCplugin.Lang('Music').Data);
+		Template.updateLang(document.getElementById('ModalAddMusic'), Plugins.lang('Music').Data);
 		MusicForm(); // eslint-disable-line
 	}
 
@@ -82,7 +79,7 @@ class MusicComponent
 			let newData;
 			if (err)
 			{
-				MCutilities.CreateAlert('danger', document.getElementById('music-error'), `sounds.json : ${err}`);
+				MCutilities.createAlert('danger', document.getElementById('music-error'), `sounds.json : ${err}`);
 				return;
 			}
 			try
@@ -92,7 +89,7 @@ class MusicComponent
 			}
 			catch (err2)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('music-error'), `sounds.json : ${err2}`);
+				MCutilities.createAlert('warning', document.getElementById('music-error'), `sounds.json : ${err2}`);
 				return;
 			}
 
@@ -188,9 +185,9 @@ function MusicForm()
 			value = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 		else
 			value = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds', value);
-		IPC.send('Dialog:open-directory', 'add-music-form-Directory', value);
+		MCipc.send('Dialog:open-directory', 'add-music-form-Directory', value);
 	});
-	IPC.receive('Dialog:selected-directory', (data, element) =>
+	MCipc.receive('Dialog:selected-directory', (data, element) =>
 	{
 		let BaseLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 		BaseLink = BaseLink.replace(/(\/)/g, '//');
@@ -224,35 +221,35 @@ function MusicForm()
 		}
 		catch (err)
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), `sounds.json : ${err}`);
+			MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), `sounds.json : ${err}`);
 			return;
 		}
 		//#region Check error
-		const { Error } = MCplugin.Lang('Music').Data.Modal;
+		const { Error } = Plugins.lang('Music').Data.Modal;
 		let isError = false;
 		if (!file || file.type !== 'audio/ogg' || path.extname(file.name) !== '.ogg')
 		{
 			if (!file)
-				MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoMusic);
+				MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoMusic);
 			else if (file.type !== 'audio/ogg')
-				MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoOGG);
+				MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoOGG);
 			else if (path.extname(file.name) !== '.ogg')
-				MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.IncorrectOGG);
+				MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.IncorrectOGG);
 			isError = true;
 		}
 		if (!Name)
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoName);
+			MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.NoName);
 			isError = true;
 		}
 		else if (!Name.match(/^[a-z0-9/._-]+$/g))
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.ForbiddenName);
+			MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.ForbiddenName);
 			isError = true;
 		}
 		if (!fs.existsSync(Directory))
 			fs.mkdirSync(Directory, { recursive: true });
-			//MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
+			//MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
 			//isError = true;
 		let BaseLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 		BaseLink = BaseLink.replace(/(\/)/g, '//');
@@ -260,12 +257,12 @@ function MusicForm()
 		const regex = new RegExp(`(${BaseLink})`, 'g');
 		if (!regex.test(Directory))
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
+			MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
 			isError = true;
 		}
 		if (Object.prototype.isPrototypeOf.call(sounds, Name))
 		{
-			MCutilities.CreateAlert('warning', document.getElementById('ModalAddMusicError'), MCplugin.Lang('Music').Data.Modal.IncorrectPath);
+			MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Plugins.lang('Music').Data.Modal.IncorrectPath);
 			isError = true;
 		}
 		if (isError)
@@ -285,13 +282,13 @@ function MusicForm()
 		fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(sounds, null, 4), 'utf-8', (err) =>
 		{
 			if (err)
-				MCutilities.CreateAlert('danger', document.getElementById('ModalAddMusicError'), err);
+				MCutilities.createAlert('danger', document.getElementById('ModalAddMusicError'), err);
 		});
 		fs.copyFile(file.path, path.join(Directory, `${Name}.ogg`), (err) =>
 		{
 			if (err)
 			{
-				MCutilities.CreateAlert('danger', document.getElementById('ModalAddMusicError'), err);
+				MCutilities.createAlert('danger', document.getElementById('ModalAddMusicError'), err);
 				return;
 			}
 			//MusicModalPreview
@@ -368,7 +365,7 @@ function SubmitForm()
 
 		function ScreenError(type, err)
 		{
-			MCutilities.CreateAlert(type, document.getElementById('music-error'), err);
+			MCutilities.createAlert(type, document.getElementById('music-error'), err);
 			MCworkInProgress.close();
 		}
 
@@ -406,7 +403,7 @@ function SubmitForm()
 		//#endregion
 
 		//#region Check value
-		const { Error } = MCplugin.Lang('Music').Data.Modal;
+		const { Error } = Plugins.lang('Music').Data.Modal;
 		if (!Vars.FileName.Old || !Vars.FileName.Old.match(/^[a-z0-9_]+$/i))
 		{
 			const str = (!Vars.FileName.Old) ? (Error.FileName.NotExist) : (Error.FileName.ForbiddenCharacters);
@@ -507,7 +504,7 @@ function SubmitForm()
 
 		AudioPlayer.setAttribute('name', Vars.FileName.New);
 		MusicComponent.musicList(true);
-		MCutilities.CreateAlert('success', document.getElementById('music-error'), MCplugin.Lang('Music').Data.Success);
+		MCutilities.createAlert('success', document.getElementById('music-error'), Plugins.lang('Music').Data.Success);
 		MCworkInProgress.close();
 	//#endregion
 	});
@@ -519,7 +516,7 @@ function DeleteMusic()
 	{
 		if (err)
 		{
-			MCutilities.CreateAlert('danger', document.getElementById('modal-delete-error'), err);
+			MCutilities.createAlert('danger', document.getElementById('modal-delete-error'), err);
 			return (true);
 		}
 		return (false);
@@ -540,7 +537,7 @@ function DeleteMusic()
 			}
 			catch (err1)
 			{
-				MCutilities.CreateAlert('warning', document.getElementById('modal-delete-error'), `sounds.json : ${err1}`);
+				MCutilities.createAlert('warning', document.getElementById('modal-delete-error'), `sounds.json : ${err1}`);
 				return;
 			}
 			const ID = newData[Name].id;
@@ -549,7 +546,7 @@ function DeleteMusic()
 			{
 				if (Error(err2))
 					return;
-				if (MCutilities.IsEmptyDir(path.dirname(Link)))
+				if (MCutilities.isEmptyDir(path.dirname(Link)))
 					fs.rmdirSync(path.dirname(Link), { recursive: true, force: true });
 			});
 			fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds.json'), JSON.stringify(newData, null, 4), 'utf-8', (err3) =>
@@ -573,7 +570,7 @@ class GenerateForm
 	{
 		const GenerateCommand = (ID) ? (`/scoreboard players set @s MC_Music ${ID.toString()}`) : (null);
 		this.FromStructure = JSON.parse(fs.readFileSync(path.join(__dirname, 'form_structure.json'), 'utf-8'));
-		this.HTML = Template.parseRaw(Template.getRaw('music_form_id.tp'), { ID: 'ID_File', Copy: MCplugin.Lang('Music').Data.ClickCopy, Command: GenerateCommand });
+		this.HTML = Template.parseRaw(Template.getRaw('music_form_id.tp'), { ID: 'ID_File', Copy: Plugins.lang('Music').Data.ClickCopy, Command: GenerateCommand });
 		this.HTML += Template.parseRaw(Template.getRaw('music_form_input.tp'), { ID: 'Sound_Name', Name: 'Sound Name', Placeholder: '' });
 		this.HTML += '<hr class="uk-divider-icon">';
 	}
@@ -592,7 +589,7 @@ class GenerateForm
 				this.Redirect(key, this.FromStructure.sounds[key], null);
 		this.HTML += '<div class="uk-flex uk-flex-right"><button type="submit" class="uk-button uk-button-primary" lang="Submit"></button></div>';
 		Template.renderRaw(document.getElementById('music-form'), this.HTML, 'music_form.tp', null);
-		Template.updateLang(document.getElementById('music-form'), MCplugin.Lang('Music').Data);
+		Template.updateLang(document.getElementById('music-form'), Plugins.lang('Music').Data);
 		document.querySelectorAll('input[type="range"]').forEach((element) =>
 		{
 			document.getElementById(`${element.id}-badge`).innerText = element.value;
