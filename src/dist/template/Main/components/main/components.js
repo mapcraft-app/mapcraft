@@ -53,8 +53,8 @@ class MainComponent
 	{
 		const User = JSON.parse(localStorage.getItem('Mapcraft_User'));
 		Template.render(document.getElementById('nav-header'), 'header.tp', { Username: User.Username, Link: `https://crafatar.com/avatars/${User.UUID}?size=80` });
-		Template.updateLang(document.getElementById('nav-header'), MCplugin.Lang('Main'));
-		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.GetConfig().Env.Lang}`;
+		Template.updateLang(document.getElementById('nav-header'), MCplugin.lang('Main'));
+		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
 		OpenExternLink();
 	}
 
@@ -71,7 +71,7 @@ class MainComponent
 
 	static Editor()
 	{
-		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.Lang('Main'));
+		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.lang('Main'));
 	}
 
 	/*Interface for component */
@@ -80,7 +80,7 @@ class MainComponent
 		this._main();
 		this.nav();
 		this.list();
-		Template.updateLang(document.getElementsByTagName('*'), MCplugin.Lang('Main'));
+		Template.updateLang(document.getElementsByTagName('*'), MCplugin.lang('Main'));
 	}
 
 	static redrawElement()

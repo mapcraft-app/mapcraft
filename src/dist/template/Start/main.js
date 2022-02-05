@@ -4,7 +4,7 @@ const { Mapcraft, MCutilities, MCdatabase, MCipc } = require('mapcraft-api');
 const Up = require('../../../update');
 const Component = require('./components');
 
-const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+const LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 
 async function MakeInstallationOfBase()
 {
@@ -64,13 +64,20 @@ window.addEventListener('DOMContentLoaded', () =>
 				document.getElementById('ResourcePath').value = 'Mapcraft-resource';
 			if (!document.getElementById('DataPath').value)
 				document.getElementById('DataPath').value = 'Mapcraft-data';
-			Mapcraft.UpdateConfig(document.getElementById('TempPath').value, document.getElementById('GamePath').value, document.getElementById('SavePath').value, document.getElementById('option-Lang').value, document.getElementById('ResourcePath').value, document.getElementById('DataPath').value);
+			Mapcraft.updateConfig(
+				document.getElementById('GamePath').value,
+				document.getElementById('SavePath').value,
+				document.getElementById('TempPath').value,
+				document.getElementById('option-Lang').value,
+				document.getElementById('ResourcePath').value,
+				document.getElementById('DataPath').value,
+			);
 			Component.drawSaveConfig(document.getElementById('start-selection'));
 		}
 	});
 	document.getElementById('option-button-reset').addEventListener('click', () =>
 	{
-		Mapcraft.ResetConfigFile();
+		Mapcraft.resetConfigFile();
 		Component.drawResetConfig(document.getElementById('start-selection'), document.getElementById('start-option'));
 	});
 
@@ -95,13 +102,13 @@ window.addEventListener('DOMContentLoaded', () =>
 			const _Mapcraft = {
 				ID: _ID,
 				Name: _Name,
-				SavePath: path.join(Mapcraft.GetConfig().Env.SavePath, _Name),
-				TempPath: Mapcraft.GetConfig().Env.TempPath,
-				Mapcraft: path.join(Mapcraft.GetConfig().Env.SavePath, _Name, 'datapacks', 'mapcraft'),
-				DBPath: path.join(Mapcraft.GetConfig().Env.SavePath, _Name, 'data.db'),
+				SavePath: path.join(Mapcraft.config.Env.SavePath, _Name),
+				TempPath: Mapcraft.config.Env.TempPath,
+				Mapcraft: path.join(Mapcraft.config.Env.SavePath, _Name, 'datapacks', 'mapcraft'),
+				DBPath: path.join(Mapcraft.config.Env.SavePath, _Name, 'data.db'),
 				Data: {
-					DataPack: path.join(Mapcraft.GetConfig().Env.SavePath, _Name, 'datapacks', Mapcraft.GetConfig().Data.DataPack),
-					ResourcePack: path.join(Mapcraft.GetConfig().Env.SavePath, '../resourcepacks', `${_Name}-${Mapcraft.GetConfig().Data.ResourcePack}`),
+					DataPack: path.join(Mapcraft.config.Env.SavePath, _Name, 'datapacks', Mapcraft.config.Data.DataPack),
+					ResourcePack: path.join(Mapcraft.config.Env.SavePath, '../resourcepacks', `${_Name}-${Mapcraft.config.Data.ResourcePack}`),
 				},
 			};
 			localStorage.setItem('Mapcraft', JSON.stringify(_Mapcraft));

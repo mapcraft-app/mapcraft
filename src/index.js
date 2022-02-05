@@ -12,7 +12,7 @@ const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
 require('./dist/js/importPlugins');
 
 //#region Variables
-MCutilities.GenerateENV();
+MCutilities.generateENV();
 let StartWindow = null;
 let MainWindow = null;
 let SelectUserChild = null;
@@ -40,7 +40,7 @@ const MainManifest = JSON.parse(fs.readFileSync(path.join(process.env.AppDataPat
 //#region Main system
 //#region Update updateSystem
 let UpdateExecutableIsPresent = false;
-async function UpdateSystem()
+async function updateSystem()
 {
 	const plateform = OS.platform();
 	const json = await axios({
@@ -72,7 +72,7 @@ async function UpdateSystem()
 	}
 	if (fs.existsSync(access))
 		fs.rmSync(access, { force: true });
-	MCutilities.Download(_url, access, (err) =>
+	MCutilities.download(_url, access, (err) =>
 	{
 		if (err)
 		{
@@ -88,7 +88,7 @@ async function UpdateSystem()
 		});
 	});
 }
-UpdateSystem().catch((err) =>
+updateSystem().catch((err) =>
 {
 	UpdateExecutableIsPresent = true;
 	dialog.showMessageBoxSync({
@@ -99,14 +99,14 @@ UpdateSystem().catch((err) =>
 });
 //#endregion
 
-function CreateWindow(preload)
+function createWindow(preload)
 {
-	const window = MCwindow.CreateWindow(1280, 720, preload);
-	MCwindow.OpenWindow(window, path.join(__dirname, 'index.html'));
+	const window = MCwindow.createWindow(1280, 720, preload);
+	MCwindow.penWindow(window, path.join(__dirname, 'index.html'));
 	return (window);
 }
 
-function QuitServices()
+function quitServices()
 {
 	if (!MainWindow)
 		return;
@@ -120,7 +120,7 @@ app.on('ready', () =>
 {
 	if (!PassFirstStep)
 	{
-		StartWindow = CreateWindow(path.join(__dirname, '/dist/template/Start/main.js'));
+		StartWindow = createWindow(path.join(__dirname, '/dist/template/Start/main.js'));
 		StartWindow.once('ready-to-show', () =>
 		{
 			StartWindow.show();
@@ -128,19 +128,19 @@ app.on('ready', () =>
 	}
 	else
 	{
-		OpenMainWindow(); // eslint-disable-line
+		openMainWindow(); // eslint-disable-line
 	}
 });
 
 if (require('electron-squirrel-startup')) // eslint-disable-line
 {
-	QuitServices();
+	quitServices();
 	app.quit();
 }
 
 app.on('window-all-closed', () =>
 {
-	QuitServices();
+	quitServices();
 	if (process.platform !== 'darwin')
 		app.quit();
 });
@@ -149,9 +149,9 @@ app.on('activate', () =>
 {
 	if (BrowserWindow.getAllWindows().length === 0)
 		if (!PassFirstStep)
-			StartWindow = CreateWindow(StartWindow, path.join(__dirname, '/dist/template/Start/main.js'));
+			StartWindow = createWindow(StartWindow, path.join(__dirname, '/dist/template/Start/main.js'));
 		else
-			OpenMainWindow(); // eslint-disable-line
+			openMainWindow(); // eslint-disable-line
 });
 //#endregion
 
@@ -176,7 +176,7 @@ const WindowUser = () =>
 	});
 	SelectUserChild.setMenuBarVisibility(false);
 	SelectUserChild.setAlwaysOnTop(true);
-	MCwindow.OpenWindow(SelectUserChild, path.join(__dirname, 'index.html'));
+	MCwindow.openWindow(SelectUserChild, path.join(__dirname, 'index.html'));
 };
 
 function CreateSelectUserWindow()
@@ -195,7 +195,7 @@ function CreateSelectUserWindow()
 	});
 }
 
-function OpenMainWindow()
+function openMainWindow()
 {
 	if (MainWindow)
 	{
@@ -204,7 +204,7 @@ function OpenMainWindow()
 	}
 	else
 	{
-		MainWindow = CreateWindow(path.join(__dirname, '/dist/template/Main/main.js'));
+		MainWindow = createWindow(path.join(__dirname, '/dist/template/Main/main.js'));
 	}
 	MainWindow.once('ready-to-show', () =>
 	{
@@ -229,7 +229,7 @@ process.on('uncaughtException', (err) =>
 		message: err.toString(),
 	};
 	dialog.showMessageBoxSync(messageBoxOptions);
-	//app.exit(1);
+	app.exit(1);
 });
 //#endregion
 
@@ -281,12 +281,12 @@ ipcMain.on('Editor:open', (event, link) =>
 });
 ipcMain.on('Editor:save-file', (event, data) =>
 {
-	MCeditor.SaveFile(data);
+	MCeditor.saveFile(data);
 	event.reply('Editor:close-modal');
 });
 ipcMain.on('Editor:close', (event) =>
 {
-	MCeditor.CloseFile();
+	MCeditor.closeFile();
 	event.reply('Editor:close-modal');
 });
 //#endregion
@@ -345,7 +345,7 @@ ipcMain.on('Start:is-selected-world', () =>
 		if (UpdateExecutableIsPresent === true)
 		{
 			clearInterval(interval);
-			OpenMainWindow();
+			openMainWindow();
 		}
 		else
 		{
@@ -385,7 +385,7 @@ ipcMain.on('User:change-username', () =>
 {
 	IsSelectedUser = true;
 	PassFirstStep = true;
-	OpenMainWindow();
+	openMainWindow();
 });
 ipcMain.on('User:close-window', (event, DBPath, JSON) =>
 {
@@ -417,7 +417,7 @@ ipcMain.on('Update:create-modal', () =>
 		height: 480,
 		center: true,
 		show: false,
-		resizable: true, //here
+		resizable: true,
 		titleBarStyle: 'hidden',
 		parent: MainWindow,
 		modal: true,
@@ -432,7 +432,7 @@ ipcMain.on('Update:create-modal', () =>
 	});
 	UpdateWindow.setMenuBarVisibility(false);
 	UpdateWindow.setAlwaysOnTop(true);
-	MCwindow.OpenWindow(UpdateWindow, path.join(__dirname, './index.html'));
+	MCwindow.openWindow(UpdateWindow, path.join(__dirname, './index.html'));
 });
 ipcMain.on('Update:open-window', () =>
 {

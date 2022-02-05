@@ -10,10 +10,10 @@ const GetForm = require('./form/get');
 const SetForm = require('./form/set');
 
 const randomString = () => crypto.randomBytes(8).toString('hex');
-let LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.GetLang(__dirname, Mapcraft.config.Env.Lang);
 function UpdateLang()
 {
-	LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+	LANG = MCutilities.GetLang(__dirname, Mapcraft.config.Env.Lang);
 }
 const TEMPLATE = new MCtemplate(__dirname);
 let ADVANCEMENT = {};
@@ -29,7 +29,7 @@ if (!fs.existsSync(RecipesDirectory))
 	fs.mkdirSync(path.join(RecipesDirectory, 'data'), { recursive: true });
 }
 
-const TRIGGERFORM = MCutilities.GetDataGameElement('triggers', Mapcraft.GetConfig().Minecraft.SelectedVersion);
+const TRIGGERFORM = MCutilities.GetDataGameElement('triggers', Mapcraft.config.Minecraft.SelectedVersion);
 const GetTriggerForm = (id) =>
 {
 	for (const trigger of TRIGGERFORM)
@@ -804,7 +804,7 @@ class Component
 		TEMPLATE.updateLang(document.getElementById('content'), LANG.Data);
 		this.drawList();
 
-		MCsearch.blocksItems(document.getElementById('edit-display-icon'), Mapcraft.GetConfig().Minecraft.SelectedVersion);
+		MCsearch.blocksItems(document.getElementById('edit-display-icon'), Mapcraft.config.Minecraft.SelectedVersion);
 		this.addParentChild();
 		this.addTrigger();
 		this.addRequirement();

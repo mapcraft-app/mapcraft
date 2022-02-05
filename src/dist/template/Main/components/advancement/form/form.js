@@ -2,15 +2,15 @@ const path = require('path');
 const crypto = require('crypto');
 const { Mapcraft, MCutilities, MCtemplate, MCsearch } = require('mapcraft-api');
 
-let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 function UpdateLang()
 {
-	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 }
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));
 const FORM_TEMPLATE = new MCtemplate(__dirname);
 
-const DefaultMinecraftVersion = Mapcraft.GetConfig().Minecraft.LastestVersion;
+const DefaultMinecraftVersion = Mapcraft.config.Minecraft.LastestVersion;
 const PreGenerateList = {
 	enchantements: MCutilities.GetDataGameElement('enchantements'),
 	triggers: MCutilities.GetDataGameElement('triggers'),

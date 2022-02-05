@@ -25,7 +25,7 @@ class Music
 				throw new Error(err);
 		});
 		if (!IsEdit || IsEdit === undefined)
-			MCfs.AddLine(MainPath, `execute if score @s MC_Music matches ${ID.toString()} run function mapcraft-data:music/${ID.toString()}\n`);
+			MCfs.addLine(MainPath, `execute if score @s MC_Music matches ${ID.toString()} run function mapcraft-data:music/${ID.toString()}\n`);
 	}
 
 	static RemoveMusic(ID)
@@ -35,7 +35,7 @@ class Music
 		{
 			if (err)
 				throw new Error(err);
-			MCfs.DeleteLine(MainPath, `matches ${ID.toString()}`);
+			MCfs.deleteLine(MainPath, `matches ${ID.toString()}`);
 		});
 	}
 }

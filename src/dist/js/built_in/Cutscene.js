@@ -2,11 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const Database = require('better-sqlite3');
 const BezierEasing = require('bezier-easing');
-const { MCfs } = require('mapcraft-api');
-const MCP = require('mapcraft-api').MCplugin;
+const { MCfs, MCplugin } = require('mapcraft-api');
 
-const MCplugin = new MCP();
-const LANG = MCplugin.Lang('Cutscene');
+const LANG = new MCplugin().lang('Cutscene');
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const MainPath = path.join(Mapcraft.Data.DataPack, 'data/mapcraft-data/functions/cutscene/start.mcfunction');
@@ -31,7 +29,7 @@ class Cutscene
 	//#region Cutscene main
 	static AddCutscene(ID)
 	{
-		MCfs.AddLine(MainPath, `execute positioned 0 0 0 rotated 0 0 if entity @s[tag=Cutscene,tag=Cutscene_${ID.toString()}] run function mapcraft-data:cutscene/${ID.toString()}/cutscene`);
+		MCfs.addLine(MainPath, `execute positioned 0 0 0 rotated 0 0 if entity @s[tag=Cutscene,tag=Cutscene_${ID.toString()}] run function mapcraft-data:cutscene/${ID.toString()}/cutscene`);
 		fs.mkdir(path.join(CutsceneDir, ID.toString()), (err) =>
 		{
 			if (err)
@@ -41,7 +39,7 @@ class Cutscene
 
 	static DeleteCutscene(ID)
 	{
-		MCfs.DeleteLine(MainPath, `tag=Cutscene_${ID.toString()}`);
+		MCfs.deleteLine(MainPath, `tag=Cutscene_${ID.toString()}`);
 		fs.rm(path.join(CutsceneDir, ID.toString()), { recursive: true }, (err) =>
 		{
 			if (err)
@@ -183,7 +181,7 @@ class Cutscene
 				}
 			return (_data);
 		};
-		MCfs.ModifyLine(MainPath, `tag=${TAG}`, COMMAND.Launch.join(''), true);
+		MCfs.modifyLine(MainPath, `tag=${TAG}`, COMMAND.Launch.join(''), true);
 		data.file += Join(COMMAND.Core);
 		data.file += `${COMMAND.LaunchCamera.join('')}\n`;
 		for (let id = 0; id < POINTS.length; id++)

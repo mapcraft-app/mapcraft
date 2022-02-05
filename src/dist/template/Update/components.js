@@ -1,14 +1,14 @@
 const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
 
 const Template = new MCtemplate(__dirname);
-let LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 
 class Component
 {
 	/*Component*/
 	static getLang()
 	{
-		LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+		LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 		return LANG;
 	}
 
@@ -19,7 +19,7 @@ class Component
 
 	static draw()
 	{
-		LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+		LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 		this.main();
 		Template.updateLang(document.body, LANG);
 	}

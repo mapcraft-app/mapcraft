@@ -53,7 +53,7 @@ function UpdateInterface(plugin, name)
 	if (navTitle.childNodes[0])
 		navTitle.childNodes[0].remove();
 	navTitle.appendChild(document.createTextNode(name));
-	const Component = Plugins.Component(plugin);
+	const Component = Plugins.component(plugin);
 	const PluginsComponent = importPlugins.Component(plugin);
 	if (!Component && !PluginsComponent)
 	{
@@ -98,11 +98,11 @@ MCipc.receive('Shell:new-command', (command) =>
 	if (command.Player !== JSON.parse(localStorage.getItem('Mapcraft_User')).Username)
 		return;
 	const plugin = capitalize(command.Command);
-	const Component = Plugins.Component(plugin);
+	const Component = Plugins.component(plugin);
 	const PluginsComponent = importPlugins.Component(command.UUID);
-	if (Component && Plugins.Active(plugin) === true)
+	if (Component && Plugins.active(plugin) === true)
 	{
-		const LANG = Plugins.Lang(plugin);
+		const LANG = Plugins.lang(plugin);
 		if (Component.IsNotification)
 			PrintNotification(LANG.Title, LANG.Notification, path.join(__dirname, '../../img/icon/icon.png'));
 		UpdateInterface(plugin, LANG.Title);
@@ -158,16 +158,16 @@ function changeUsername()
 window.addEventListener('DOMContentLoaded', () =>
 {
 	blurWindow();
-	Plugins.Instance('Main').main();
-	MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.Default().Title);
+	Plugins.instance('Main').main();
+	MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.default().Title);
 	MCipc.receive('User:remove-blur', () =>
 	{
 		blurWindow();
 		MCipc.send('Update:create-modal');
-		Plugins.Instance('Main').header();
+		Plugins.instance('Main').header();
 		/*If option plugin is open, reload user table for correct info */
 		if (localStorage.getItem('Mapcraft_Plugin') && localStorage.getItem('Mapcraft_Plugin') === 'Option')
-			Plugins.Instance('Option').RedrawUserTab();
+			Plugins.instance('Option').RedrawUserTab();
 		document.getElementById('nav-header-change-username').addEventListener('click', () =>
 		{
 			changeUsername();
@@ -175,7 +175,7 @@ window.addEventListener('DOMContentLoaded', () =>
 	});
 	MCipc.receive('Log:send-change', (fullFile) =>
 	{
-		MClog.PrintToTextArea(fullFile);
+		MClog.printToTextArea(fullFile);
 	});
 });
 //#endregion

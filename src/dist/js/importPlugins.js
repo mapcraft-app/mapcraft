@@ -12,8 +12,8 @@ class ImportPlugin
 	constructor()
 	{
 		this.ifNewPlugin = false;
-		this.BaseLink = Mapcraft.GetConfig().Env.PluginsComponents;
-		this.jsonBase = fs.readFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' });
+		this.BaseLink = Mapcraft.config.Env.PluginsComponents;
+		this.jsonBase = fs.readFileSync(path.join(Mapcraft.config.Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' });
 		this.Components = JSON.parse(this.jsonBase);
 		for (const i in this.Components)
 			if (Object.prototype.hasOwnProperty.call(this.Components, i))
@@ -53,7 +53,7 @@ class ImportPlugin
 		}
 		this.plugins = global.ImportPluginSave;
 		if (this.ifNewPlugin)
-			fs.writeFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' });
+			fs.writeFileSync(path.join(Mapcraft.config.Env.PluginsComponents, 'components.json'), JSON.stringify(this.plugins, null, 4), { encoding: 'utf-8', flag: 'w' });
 		MCshell.add(global.ImportPluginSave);
 	}
 
@@ -117,13 +117,13 @@ class ImportPlugin
 			{
 				try
 				{
-					if (!fs.existsSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.GetConfig().Env.Lang}.json`)))
+					if (!fs.existsSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.config.Env.Lang}.json`)))
 						if (!fs.existsSync(path.join(this.plugins[i].directory, this.plugins[i].lang, 'en_US.json')))
 							throw new Error('No lang data is found');
 						else
 							data = JSON.parse(fs.readFileSync(path.join(this.plugins[i].directory, this.plugins[i].lang, 'en_US.json')));
 					else
-						data = JSON.parse(fs.readFileSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.GetConfig().Env.Lang}.json`)));
+						data = JSON.parse(fs.readFileSync(path.join(this.plugins[i].directory, this.plugins[i].lang, `${Mapcraft.config.Env.Lang}.json`)));
 				}
 				catch (err)
 				{

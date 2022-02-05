@@ -18,12 +18,12 @@ const MCplugin = new MCP();
 
 const pluginsList = {
 	builtin: JSON.parse(fs.readFileSync(path.join(__dirname, '../../', 'components.json'), { encoding: 'utf-8', flag: 'r' })),
-	builtinActive: JSON.parse(fs.readFileSync(MC.GetConfig().Env.ActiveComponents, { encoding: 'utf-8', flag: 'r' })),
-	addons: JSON.parse(fs.readFileSync(path.join(MC.GetConfig().Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' })),
+	builtinActive: JSON.parse(fs.readFileSync(MC.config.Env.ActiveComponents, { encoding: 'utf-8', flag: 'r' })),
+	addons: JSON.parse(fs.readFileSync(path.join(MC.config.Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' })),
 };
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const MinecraftVersion = MC.GetConfig().Minecraft;
+const MinecraftVersion = MC.config.Minecraft;
 let LANG = MCplugin.Lang('Option');
 function UpdateLang()
 {
@@ -51,13 +51,13 @@ class OptionComponent
 		const ComponentInput = Template.getRaw('general_input.tp');
 		const ComponentResource = Template.getRaw('general_resource.tp');
 		const ComponentData = Template.getRaw('general_data.tp');
-		HTML += Template.parseRaw(ComponentInput, { for: 'TempPath', id: 'option-TempPath', text: 'TagTemp', path: MC.GetConfig().Env.TempPath });
-		HTML += Template.parseRaw(ComponentInput, { for: 'GamePath', id: 'option-GamePath', text: 'TagGame', path: MC.GetConfig().Env.GamePath });
-		HTML += Template.parseRaw(ComponentInput, { for: 'SavePath', id: 'option-SavePath', text: 'TagSave', path: MC.GetConfig().Env.SavePath });
+		HTML += Template.parseRaw(ComponentInput, { for: 'TempPath', id: 'option-TempPath', text: 'TagTemp', path: MC.config.Env.TempPath });
+		HTML += Template.parseRaw(ComponentInput, { for: 'GamePath', id: 'option-GamePath', text: 'TagGame', path: MC.config.Env.GamePath });
+		HTML += Template.parseRaw(ComponentInput, { for: 'SavePath', id: 'option-SavePath', text: 'TagSave', path: MC.config.Env.SavePath });
 
 		let SaveName = JSON.parse(localStorage.getItem('Mapcraft')).Name; SaveName = `${SaveName}-`;
-		HTML += Template.parseRaw(ComponentResource, { Name: SaveName, for: 'ResourcePath', id: 'option-ResourcePath', text: 'TagResource', path: MC.GetConfig().Data.ResourcePack });
-		HTML += Template.parseRaw(ComponentData, { Name: SaveName, for: 'DataPath', id: 'option-DataPath', text: 'TagData', path: MC.GetConfig().Data.DataPack });
+		HTML += Template.parseRaw(ComponentResource, { Name: SaveName, for: 'ResourcePath', id: 'option-ResourcePath', text: 'TagResource', path: MC.config.Data.ResourcePack });
+		HTML += Template.parseRaw(ComponentData, { Name: SaveName, for: 'DataPath', id: 'option-DataPath', text: 'TagData', path: MC.config.Data.DataPack });
 
 		Template.renderRaw(document.getElementById('option-general-path'), HTML, 'general_input.tp', null);
 
@@ -87,7 +87,7 @@ class OptionComponent
 	{
 		const DOM = document.getElementById('option-Lang');
 		for (let i = 0, { length } = DOM; i < length; i++)
-			if (DOM[i].value === MC.GetConfig().Env.Lang)
+			if (DOM[i].value === MC.config.Env.Lang)
 				DOM[i].setAttribute('selected', null);
 			else if (DOM[i].hasAttribute('selected'))
 				DOM[i].removeAttribute('selected');
@@ -98,7 +98,7 @@ class OptionComponent
 		this._main();
 		this.general();
 		if (pluginsList.builtinActive.length <= 0)
-			pluginsList.builtinActive = JSON.parse(fs.readFileSync(MC.GetConfig().Env.ActiveComponents, { encoding: 'utf-8', flag: 'r' }));
+			pluginsList.builtinActive = JSON.parse(fs.readFileSync(MC.config.Env.ActiveComponents, { encoding: 'utf-8', flag: 'r' }));
 		PluginComponent.main(); // eslint-disable-line
 		AboutComponent.about(); // eslint-disable-line
 		UserComponent.main(); // eslint-disable-line
@@ -121,7 +121,7 @@ class OptionComponent
 
 	static RedrawInterface()
 	{
-		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.GetConfig().Env.Lang}`;
+		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
 		UpdateLang();
 		//Header
 		Template.updateLang(document.getElementById('nav-header'), MCplugin.Lang('Main'));
@@ -225,7 +225,7 @@ class PluginComponent
 			const newDOM = document.implementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
 			const newDOMbody = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
 			newDOM.documentElement.appendChild(newDOMbody);
-			const _path = MC.GetConfig().Env.PluginsComponents;
+			const _path = MC.config.Env.PluginsComponents;
 			for (const object of pluginsList.addons)
 			{
 				const testManifest = () =>
@@ -261,7 +261,7 @@ class PluginComponent
 				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
 				{
 					object.active = newValue;
-					const _path = (isBuiltin) ? MC.GetConfig().Env.ActiveComponents : path.join(MC.GetConfig().Env.PluginsComponents, 'components.json');
+					const _path = (isBuiltin) ? MC.config.Env.ActiveComponents : path.join(MC.config.Env.PluginsComponents, 'components.json');
 					fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
 					{
 						if (err)
@@ -282,7 +282,7 @@ class PluginComponent
 				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
 				{
 					pluginsList.addons.splice(pluginsList.addons.indexOf(object), 1);
-					fs.writeFile(path.join(MC.GetConfig().Env.PluginsComponents, 'components.json'), JSON.stringify(pluginsList.addons, null, 4), { encoding: 'utf-8' }, (err) =>
+					fs.writeFile(path.join(MC.config.Env.PluginsComponents, 'components.json'), JSON.stringify(pluginsList.addons, null, 4), { encoding: 'utf-8' }, (err) =>
 					{
 						if (err)
 							MCutilities.CreateAlert('warning', document.getElementById('option-error'), err.message);
@@ -325,7 +325,7 @@ class PluginComponent
 					event.preventDefault();
 					event.stopImmediatePropagation();
 					const TR = event.target.closest('tr');
-					fs.rm(path.join(MC.GetConfig().Env.PluginsComponents, TR.getAttribute('uuid')), { recursive: true, force: true }, (err) =>
+					fs.rm(path.join(MC.config.Env.PluginsComponents, TR.getAttribute('uuid')), { recursive: true, force: true }, (err) =>
 					{
 						if (err)
 						{
@@ -348,9 +348,9 @@ class PluginComponent
 function ChangeNameRessourcePack()
 {
 	const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-	const Name = `${_Mapcraft.Name}-${MC.GetConfig().Data.ResourcePack}`;
-	fs.renameSync(_Mapcraft.Data.ResourcePack, path.join(MC.GetConfig().Env.SavePath, '../resourcepacks', Name));
-	_Mapcraft.Data.ResourcePack = path.join(MC.GetConfig().Env.SavePath, '../resourcepacks', Name);
+	const Name = `${_Mapcraft.Name}-${MC.config.Data.ResourcePack}`;
+	fs.renameSync(_Mapcraft.Data.ResourcePack, path.join(MC.config.Env.SavePath, '../resourcepacks', Name));
+	_Mapcraft.Data.ResourcePack = path.join(MC.config.Env.SavePath, '../resourcepacks', Name);
 	localStorage.setItem('Mapcraft', JSON.stringify(_Mapcraft));
 }
 

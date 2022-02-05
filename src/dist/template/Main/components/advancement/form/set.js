@@ -4,10 +4,10 @@ const { Mapcraft, MCsearch, MCtemplate, MCutilities } = require('mapcraft-api');
 const FORM = require('./form');
 
 const ListOfEnchantements = MCutilities.GetDataGameElement('enchantements');
-let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+let LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 function UpdateLang()
 {
-	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.GetConfig().Env.Lang);
+	LANG = MCutilities.GetLang(path.join(__dirname, '../'), Mapcraft.config.Env.Lang);
 }
 
 const TEMPLATE = new MCtemplate(path.join(__dirname, '../'));

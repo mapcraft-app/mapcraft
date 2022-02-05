@@ -4,7 +4,7 @@ const { Mapcraft, MCutilities, MCipc } = require('mapcraft-api');
 const Component = require('./components');
 
 const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+const LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 
 function CreateAlert(type, DOMelement, str)
 {

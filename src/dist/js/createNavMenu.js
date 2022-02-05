@@ -28,19 +28,19 @@ exports.CreateNavMenu = (DOMelement, TEMPLATE, ISHOME = false) =>
 	let HTML = '';
 	const Component = (!ISHOME) ? navRaw : homeRaw;
 
-	const Plugins = JSON.parse(fs.readFileSync(Mapcraft.GetConfig().Env.Components, 'utf-8'));
-	const UserPlugins = JSON.parse(fs.readFileSync(path.join(Mapcraft.GetConfig().Env.PluginsComponents, 'components.json')), 'utf-8');
+	const Plugins = JSON.parse(fs.readFileSync(Mapcraft.config.Env.Components, 'utf-8'));
+	const UserPlugins = JSON.parse(fs.readFileSync(path.join(Mapcraft.config.Env.PluginsComponents, 'components.json')), 'utf-8');
 
 	//Built-in plugins
 	for (const i in Plugins)
-		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && builtinPlugins.Active(Plugins[i].name) === true)
+		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && builtinPlugins.active(Plugins[i].name) === true)
 		{
-			const _LANG = builtinPlugins.Lang(Plugins[i].name);
+			const _LANG = builtinPlugins.lang(Plugins[i].name);
 			HTML += Template.parseRaw(Component, { id: Plugins[i].name, title: _LANG.Title, icon: _LANG.Icon });
 		}
-		else if (Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && Plugins[i].name !== 'Home' && builtinPlugins.Active(Plugins[i].name) === true)
+		else if (Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && Plugins[i].name !== 'Home' && builtinPlugins.active(Plugins[i].name) === true)
 		{
-			const _LANG = builtinPlugins.Lang(Plugins[i].name);
+			const _LANG = builtinPlugins.lang(Plugins[i].name);
 			HTML += Template.parseRaw(Component, { id: Plugins[i].name, title: _LANG.Title, icon: _LANG.Icon });
 		}
 	//User plugins

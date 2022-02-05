@@ -28,8 +28,8 @@ class Trigger
 			fs.writeFileSync(path.join(TriggerPath, 'execute.mcfunction'), '', { flag: 'w' }, 'utf8');
 			if (IsEdit === false || IsEdit === undefined)
 			{
-				MCfs.AddLine(DetectPath, `function mapcraft-data:trigger/${ID.toString()}/detect\n`);
-				MCfs.AddLine(ExecutePath, `execute if score @s MC_Trigger matches ${ID.toString()} run function mapcraft-data:trigger/${ID.toString()}/execute\n`);
+				MCfs.addLine(DetectPath, `function mapcraft-data:trigger/${ID.toString()}/detect\n`);
+				MCfs.addLine(ExecutePath, `execute if score @s MC_Trigger matches ${ID.toString()} run function mapcraft-data:trigger/${ID.toString()}/execute\n`);
 			}
 		});
 	}
@@ -46,8 +46,8 @@ class Trigger
 			}
 			else
 			{
-				MCfs.DeleteLine(DetectPath, Occurence);
-				MCfs.DeleteLine(ExecutePath, Occurence);
+				MCfs.deleteLine(DetectPath, Occurence);
+				MCfs.deleteLine(ExecutePath, Occurence);
 			}
 		});
 	}

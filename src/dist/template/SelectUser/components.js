@@ -3,7 +3,7 @@ const Database = require('better-sqlite3');
 const { Mapcraft, MCutilities, MCtemplate } = require('mapcraft-api');
 
 const Template = new MCtemplate(__dirname);
-const LANG = MCutilities.GetLang(__dirname, Mapcraft.GetConfig().Env.Lang);
+const LANG = MCutilities.GetLang(__dirname, Mapcraft.config.Env.Lang);
 
 class MainComponent
 {
