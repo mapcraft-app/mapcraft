@@ -40,8 +40,6 @@ class ImportPlugin
 			global.ImportPluginSave = [];
 			for (const i in this.Components)
 				if (Object.prototype.hasOwnProperty.call(this.Components, i))
-				{
-					console.error(path.join(this.Components[i].directory, this.Components[i].component));
 					global.ImportPluginSave.push({
 						name: this.Components[i].name,
 						uuid: this.Components[i].uuid,
@@ -52,7 +50,6 @@ class ImportPlugin
 						lang: this.Components[i].lang,
 						instance: require(path.join(this.Components[i].directory, this.Components[i].component)) // eslint-disable-line
 					});
-				}
 		}
 		this.plugins = global.ImportPluginSave;
 		if (this.ifNewPlugin)

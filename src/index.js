@@ -110,8 +110,6 @@ function QuitServices()
 {
 	if (!MainWindow)
 		return;
-	const MClink = require('./dist/js/MClink'); // eslint-disable-line
-	MClink.cleanComponents();
 	const db = Database(SaveCurrentUser.DBpath, { verbose: console.log });
 	const sql = db.prepare('UPDATE User SET IsConnected = 0 WHERE Username = ?');
 	sql.run(SaveCurrentUser.Username);
