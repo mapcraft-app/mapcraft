@@ -47,7 +47,7 @@ exports.CreateNavMenu = (DOMelement, TEMPLATE, ISHOME = false) =>
 	for (const i in UserPlugins)
 		if (typeof UserPlugins[i].active === 'undefined' || UserPlugins[i].active === true)
 		{
-			const _LANG = importPlugins.Lang(UserPlugins[i].uuid);
+			const _LANG = importPlugins.lang(UserPlugins[i].uuid);
 			HTML += Template.parseRaw(Component, { id: UserPlugins[i].uuid, importPlugins: 'userplugin', title: _LANG.Title, icon: _LANG.Icon });
 		}
 	Template.renderRaw(DOMelement, HTML, TEMPLATE, null);

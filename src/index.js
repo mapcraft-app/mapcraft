@@ -102,7 +102,7 @@ updateSystem().catch((err) =>
 function createWindow(preload)
 {
 	const window = MCwindow.createWindow(1280, 720, preload);
-	MCwindow.penWindow(window, path.join(__dirname, 'index.html'));
+	MCwindow.openWindow(window, path.join(__dirname, 'index.html'));
 	return (window);
 }
 
@@ -277,7 +277,7 @@ ipcMain.on('Dialog:error', (event, title, content) =>
 //#region Editor
 ipcMain.on('Editor:open', (event, link) =>
 {
-	event.reply('Editor:open-modal', MCeditor.OpenFile(link));
+	event.reply('Editor:open-modal', MCeditor.openFile(link));
 });
 ipcMain.on('Editor:save-file', (event, data) =>
 {

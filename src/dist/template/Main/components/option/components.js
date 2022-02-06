@@ -4,17 +4,14 @@ const { shell } = require('electron');
 const Database = require('better-sqlite3');
 const MarkdownIt = require('markdown-it');
 const https = require('https');
-const { MCutilities, MCworkInProgress } = require('mapcraft-api');
+const { MCutilities, MCipc, MCworkInProgress, MCtemplate, MCplugin } = require('mapcraft-api');
 const MC = require('mapcraft-api').Mapcraft;
-const Temp = require('mapcraft-api').MCtemplate;
-const IPC = require('mapcraft-api').MCipc;
-const MCP = require('mapcraft-api').MCplugin;
 const NavMenu = require('../../../../js/createNavMenu');
 const importPlugins = require('../../../../js/importPlugins');
 
 const md = new MarkdownIt();
-const Template = new Temp(__dirname);
-const MCplugin = new MCP();
+const Template = new MCtemplate(__dirname);
+const Plugins = new MCplugin();
 
 const pluginsList = {
 	builtin: JSON.parse(fs.readFileSync(path.join(__dirname, '../../', 'components.json'), { encoding: 'utf-8', flag: 'r' })),
@@ -24,10 +21,10 @@ const pluginsList = {
 
 const Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const MinecraftVersion = MC.config.Minecraft;
-let LANG = MCplugin.lang('Option');
+let LANG = Plugins.lang('Option');
 function UpdateLang()
 {
-	LANG = MCplugin.lang('Option');
+	LANG = Plugins.lang('Option');
 }
 
 //#region General tab
@@ -124,8 +121,8 @@ class OptionComponent
 		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
 		UpdateLang();
 		//Header
-		Template.updateLang(document.getElementById('nav-header'), MCplugin.lang('Main'));
-		Template.updateLang(document.getElementById('offcanvas-content'), MCplugin.lang('Main'));
+		Template.updateLang(document.getElementById('nav-header'), Plugins.lang('Main'));
+		Template.updateLang(document.getElementById('offcanvas-content'), Plugins.lang('Main'));
 		//Side Nav
 		const SideNav = () =>
 		{
@@ -139,12 +136,12 @@ class OptionComponent
 						elem.childNodes[1].classList.remove('nav-hover-element-selected');
 					});
 					element.childNodes[1].classList.add('nav-hover-element-selected');
-					IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
+					MCipc.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 				});
 			});
 		}; SideNav();
 		//Editor
-		Template.updateLang(document.getElementById('ModalEditFile'), MCplugin.lang('Main'));
+		Template.updateLang(document.getElementById('ModalEditFile'), Plugins.lang('Main'));
 		this.UpdateLangComponent('option.tp');
 		this.general();
 		PluginComponent.updateLang(); // eslint-disable-line
@@ -185,7 +182,7 @@ class PluginComponent
 					elem.childNodes[1].classList.remove('nav-hover-element-selected');
 				});
 				element.childNodes[1].classList.add('nav-hover-element-selected');
-				IPC.send('Plugin:is-changed', element.id, element.getAttribute('title'));
+				MCipc.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 			});
 		});
 	}
@@ -212,7 +209,7 @@ class PluginComponent
 					div.getElementsByClassName('uk-switch-span')[0].classList.add('uk-switch-span-disabled');
 					div.getElementsByTagName('input')[0].disabled = true;
 				}
-				if (MCplugin.active(object.name) === true)
+				if (Plugins.active(object.name) === true)
 					div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
 				div.getElementsByTagName('button')[0].disabled = true;
 				newDOMbody.appendChild(div.getElementsByTagName('tr')[0]);
@@ -267,7 +264,7 @@ class PluginComponent
 						if (err)
 							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
 						if (isBuiltin)
-							MCplugin.toogle(value);
+							Plugins.toogle(value);
 						else
 							importPlugins.toogle(value);
 						this.updateNav();
@@ -412,17 +409,17 @@ function DetectClick()
 	//Input
 	document.querySelector('#option-TempPath').addEventListener('click', () =>
 	{
-		IPC.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
+		MCipc.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
 	});
 	document.querySelector('#option-GamePath').addEventListener('click', () =>
 	{
-		IPC.send('Dialog:open-directory', 'GamePath', document.getElementById('GamePath').value);
+		MCipc.send('Dialog:open-directory', 'GamePath', document.getElementById('GamePath').value);
 	});
 	document.querySelector('#option-SavePath').addEventListener('click', () =>
 	{
-		IPC.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
+		MCipc.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
 	});
-	IPC.receive('Dialog:selected-directory', (data, element) =>
+	MCipc.receive('Dialog:selected-directory', (data, element) =>
 	{
 		if (data.canceled === false)
 		{
@@ -434,7 +431,7 @@ function DetectClick()
 	//Lang
 	document.querySelector('#option-button-reset').addEventListener('click', () =>
 	{
-		MC.ResetConfigFile();
+		MC.resetConfigFile();
 		ChangeNameRessourcePack();
 		OptionComponent.RedrawInterface();
 	});
@@ -456,8 +453,15 @@ function DetectClick()
 		if (!IsCorrectString(document.getElementById('DataPath').value))
 			return;
 
-		MC.UpdateConfig(document.getElementById('TempPath').value, document.getElementById('GamePath').value, document.getElementById('SavePath').value, document.getElementById('option-Lang').value, document.getElementById('ResourcePath').value, document.getElementById('DataPath').value);
-		MC.SetSelectedVersion(document.getElementById('option-Version').value);
+		MC.updateConfig(
+			document.getElementById('GamePath').value,
+			document.getElementById('SavePath').value,
+			document.getElementById('TempPath').value,
+			document.getElementById('option-Lang').value,
+			document.getElementById('ResourcePath').value,
+			document.getElementById('DataPath').value,
+		);
+		MC.setSelectedVersion(document.getElementById('option-Version').value);
 		//#region Update mcmeta
 		const mcmeta = {
 			datapack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),

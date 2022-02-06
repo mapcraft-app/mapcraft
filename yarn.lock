@@ -3108,6 +3108,11 @@ keyv@^4.0.0:
   dependencies:
     json-buffer "3.0.1"
 
+kleur@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
+  integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
+
 latest-version@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/latest-version/-/latest-version-5.1.0.tgz#119dfe908fe38d15dfa43ecd13fa12ec8832face"
@@ -3276,13 +3281,16 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
   integrity sha1-2TPOuSBdgr3PSIb2dCvcK03qFG0=
 
-mapcraft-api@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-1.7.1.tgz#c507f89200e5f3c632ee15eb6e9ad64476bf30ea"
-  integrity sha512-s0TVr856K9PTd81sr5jEO2FIyZ+GFsKox2J3AXXDn5WnlG1TFOBm0nygCpRNtoGGC++Oyv9pb78wDgsb+Ea+pg==
+mapcraft-api@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-1.7.3.tgz#6538424dc8a249927eb9bef4151c774e5865a060"
+  integrity sha512-uHcS8IpfAIAv3+Wv14BGvZ9QQkEsQ4r7nDJAJGvNNqDD4SvdsMuIE7ti7rFnFdW3eq7w5QYgDJeT3eOcQKfyig==
   dependencies:
     "7zip-min" "^1.4.1"
     better-sqlite3 "^7.5.0"
+    electron "^16.0.8"
+    prompts "^2.4.2"
+    read-last-lines "^1.8.0"
 
 markdown-it@^12.3.2:
   version "12.3.2"
@@ -4054,6 +4062,14 @@ promise-retry@^2.0.1:
     err-code "^2.0.2"
     retry "^0.12.0"
 
+prompts@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.4.2.tgz#7b57e73b3a48029ad10ebd44f74b01722a4cb069"
+  integrity sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==
+  dependencies:
+    kleur "^3.0.3"
+    sisteransi "^1.0.5"
+
 proto-list@~1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
@@ -4495,6 +4511,11 @@ single-line-log@^1.1.2:
   integrity sha1-wvg/Jzo+GhbtsJlWYdoO1e8DM2Q=
   dependencies:
     string-width "^1.0.1"
+
+sisteransi@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.5.tgz#134d681297756437cc05ca01370d3a7a571075ed"
+  integrity sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==
 
 slice-ansi@^3.0.0:
   version "3.0.0"
