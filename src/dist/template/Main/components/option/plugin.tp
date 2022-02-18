@@ -27,9 +27,9 @@
 	</li>
     <li>
 		<div class="uk-flex uk-flex-right uk-margin-top uk-margin-bottom">
-			<button class="uk-button uk-button-warning">
+			<button id="InstallPluginArchive" class="uk-button uk-button-success">
 				<span uk-icon="icon: database"></span>
-				<span lang="Plugin.UpdatePlugins"></span>
+				<span lang="Plugin.InstallPluginArchive"></span>
 			</button>
 		</div>
 		<table id="table-plugin" class="uk-table uk-table-striped uk-table-middle table-plugin">
@@ -44,9 +44,11 @@
 					<th lang="Plugin.Delete"></th>
 				</tr>
 			</thead>
-			<tbody>
-			</tbody>
+			<tbody></tbody>
 		</table>
+		<div id="loader" class="uk-flex uk-flex-center" hidden>
+			<img width="64px" height="64px" src="./dist/img/loader.gif"/>
+		</div>
 	</li>
 </ul>
 

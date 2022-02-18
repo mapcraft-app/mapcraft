@@ -1,11 +1,13 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
-const { shell } = require('electron');
 const Database = require('better-sqlite3');
-const MarkdownIt = require('markdown-it');
 const https = require('https');
 const { MCutilities, MCipc, MCworkInProgress, MCtemplate, MCplugin } = require('mapcraft-api');
 const MC = require('mapcraft-api').Mapcraft;
+const MarkdownIt = require('markdown-it');
+const { shell } = require('electron');
+const AddPlugins = require('./plugins');
 const NavMenu = require('../../../../js/createNavMenu');
 const importPlugins = require('../../../../js/importPlugins');
 
@@ -77,7 +79,7 @@ class OptionComponent
 		}
 		this.UpdateLangComponent(str);
 		this.setSelectLang();
-		DetectClick(); // eslint-disable-line
+		new DetectClick(); // eslint-disable-line
 	}
 
 	static setSelectLang()
@@ -155,7 +157,327 @@ class OptionComponent
 	}
 }
 
-//#region Plugin system
+class DetectClick
+{
+	constructor()
+	{
+		document.querySelector('#option-TempPath').addEventListener('click', () =>
+		{
+			MCipc.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
+		});
+		document.querySelector('#option-GamePath').addEventListener('click', () =>
+		{
+			MCipc.send('Dialog:open-directory', 'GamePath', document.getElementById('GamePath').value);
+		});
+		document.querySelector('#option-SavePath').addEventListener('click', () =>
+		{
+			MCipc.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
+		});
+		MCipc.receive('Dialog:selected-directory', (data, element) =>
+		{
+			if (data.canceled === false)
+			{
+				const _data = data.filePaths[0];
+				document.getElementById(element).value = _data;
+			}
+		});
+
+		//Lang
+		document.querySelector('#option-button-reset').addEventListener('click', () =>
+		{
+			MC.resetConfigFile();
+			this.#ChangeNameRessourcePack();
+			OptionComponent.RedrawInterface();
+		});
+		document.querySelector('#option-button-save').addEventListener('click', () =>
+		{
+			UpdateLang();
+			if (!this.#DirIsExist(document.getElementById('TempPath').value, LANG.Data.General.Error.DirectoryNotExist))
+				return;
+			if (!this.#DirIsExist(document.getElementById('GamePath').value, LANG.Data.General.Error.DirectoryNotExist))
+				return;
+			if (!this.#IsMinecraftDir(document.getElementById('GamePath').value))
+				return;
+			if (!this.#DirIsExist(document.getElementById('SavePath').value, LANG.Data.General.Error.DirectoryNotExist))
+				return;
+			if (!this.#IsSaveDir(document.getElementById('SavePath').value))
+				return;
+			if (!this.#IsCorrectString(document.getElementById('ResourcePath').value))
+				return;
+			if (!this.#IsCorrectString(document.getElementById('DataPath').value))
+				return;
+
+			MC.updateConfig(
+				document.getElementById('GamePath').value,
+				document.getElementById('SavePath').value,
+				document.getElementById('TempPath').value,
+				document.getElementById('option-Lang').value,
+				document.getElementById('ResourcePath').value,
+				document.getElementById('DataPath').value,
+			);
+			MC.setSelectedVersion(document.getElementById('option-Version').value);
+			//#region Update mcmeta
+			const mcmeta = {
+				datapack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+				resourcePack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+				officialData: JSON.parse(fs.readFileSync(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+				officialResource: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
+			};
+			let num = Number();
+			for (const object of MinecraftVersion.Versions)
+				if (object.Release === global.MinecraftSelectedVersion)
+				{
+					num = Number(object.Number);
+					break;
+				}
+			mcmeta.datapack.pack.pack_format = num;
+			mcmeta.resourcePack.pack.pack_format = num;
+			mcmeta.officialData.pack.pack_format = num;
+			mcmeta.officialResource.pack.pack_format = num;
+			const _writeFile = (_path, data) =>
+			{
+				fs.writeFile(_path, data, { encoding: 'utf-8' }, (err) =>
+				{
+					if (err)
+						console.error(err);
+				});
+			};
+			_writeFile(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), JSON.stringify(mcmeta.datapack, null, 4));
+			_writeFile(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), JSON.stringify(mcmeta.officialData, null, 4));
+			_writeFile(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), JSON.stringify(mcmeta.officialResource, null, 4));
+			fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), JSON.stringify(mcmeta.resourcePack, null, 4), { encoding: 'utf-8' }, (err) =>
+			{
+				if (err)
+					console.error(err);
+				this.#ChangeNameRessourcePack();
+				OptionComponent.RedrawInterface();
+			});
+			//#endregion
+		});
+	}
+
+	#ChangeNameRessourcePack()
+	{
+		const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+		const Name = `${_Mapcraft.Name}-${MC.config.Data.ResourcePack}`;
+		fs.renameSync(_Mapcraft.Data.ResourcePack, path.join(MC.config.Env.SavePath, '../resourcepacks', Name));
+		_Mapcraft.Data.ResourcePack = path.join(MC.config.Env.SavePath, '../resourcepacks', Name);
+		localStorage.setItem('Mapcraft', JSON.stringify(_Mapcraft));
+	}
+
+	#DirIsExist(link, Error)
+	{
+		if (!fs.existsSync(link))
+		{
+			MCutilities.createAlert('warning', document.getElementById('option-error'), `${link.toString()}: ${Error}`);
+			return (false);
+		}
+		return (true);
+	}
+
+	#IsMinecraftDir(link)
+	{
+		if (!fs.existsSync(path.join(link, '/', 'versions')))
+		{
+			UpdateLang();
+			MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftDirectory);
+			return (false);
+		}
+		return (true);
+	}
+
+	#IsSaveDir(link)
+	{
+		const TempSaveList = fs.readdirSync(link);
+		const SavePath = document.getElementById('SavePath').value;
+		for (const Save of TempSaveList)
+		{
+			const testIfDir = path.join(SavePath, '/', Save);
+			if (fs.existsSync(testIfDir) && fs.lstatSync(testIfDir).isDirectory())
+				if (!fs.existsSync(path.join(testIfDir, '/icon.png')))
+				{
+					UpdateLang();
+					MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftSaveDirectory);
+					return (false);
+				}
+		}
+		return (true);
+	}
+
+	#IsCorrectString(string)
+	{
+		if (!string)
+		{
+			UpdateLang();
+			MCutilities.createAlert('warning', document.getElementById('option-error'), `${string.toString()}: ${LANG.Data.General.Error.IncorrectString}`);
+			return (false);
+		}
+		return (true);
+	}
+}
+
+class UserComponent
+{
+	static main()
+	{
+		const str = 'user.tp';
+		Template.render(document.getElementById('option-tab-user'), str, null);
+		this.UpdateLangComponent(str);
+		this.table();
+		this.#CreateUser(); //eslint-disable-line
+	}
+
+	static table()
+	{
+		UpdateLang();
+		let HTML = '';
+		const ComponentTable = Template.getRaw('user-table.tp');
+		const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+		const db = Database(_Mapcraft.DBPath, { verbose: console.log });
+		const sql = db.prepare('SELECT Username, UUID, IsConnected FROM User');
+		for (const user of sql.iterate())
+		{
+			let Connect;
+			let ClassConnect;
+			let Disabled = '';
+			if (user.IsConnected)
+			{
+				Connect = LANG.Data.User.Connected;
+				ClassConnect = 'is-connected';
+				Disabled = 'disabled';
+			}
+			else
+			{
+				Connect = LANG.Data.User.Disconnected;
+				ClassConnect = 'is-not-connected';
+			}
+			HTML += Template.parseRaw(ComponentTable, { link: `https://crafatar.com/avatars/${user.UUID}?size=40`, username: user.Username, Disabled, ClassConnect, Connect });
+		}
+		Template.renderRaw(document.getElementById('generateTab'), HTML, 'user-table.tp', null);
+		db.close();
+		this.#DeleteOneUser(); // eslint-disable-line
+		this.#DeleteMultiUser(); // eslint-disable-line
+	}
+
+	static UpdateLangComponent(Component)
+	{
+		UpdateLang();
+		switch (Component)
+		{
+			case 'user.tp':
+				Template.updateLang(document.getElementById('option-tab-user'), LANG.Data.User);
+				break;
+			default:
+				Template.updateLang(document.getElementById('option-tab-user'), LANG.Data.User);
+				break;
+		}
+	}
+
+	static #DeleteOneUser()
+	{
+		for (const input of document.querySelectorAll('button[name="user-button-delete"]'))
+			input.addEventListener('click', (event) =>
+			{
+				event.preventDefault();
+				event.stopImmediatePropagation();
+				UpdateLang();
+				MCworkInProgress.open();
+				const username = input.parentNode.parentNode.childNodes[7].innerText;
+				const db = Database(Mapcraft.DBPath, { verbose: console.log });
+				/*Check if user is disconnected */
+				const sqlUser = db.prepare('SELECT IsConnected FROM User WHERE Username = ?');
+				const ret = sqlUser.get(username);
+				if (ret.IsConnected)
+				{
+					MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.User.Error.UserIsConnected);
+					MCworkInProgress.close();
+					return;
+				}
+				const sql = db.prepare('DELETE FROM User WHERE Username = ?');
+				sql.run(username);
+				db.close();
+				UserComponent.table();
+				MCworkInProgress.close();
+			});
+	}
+
+	static #DeleteMultiUser()
+	{
+		document.querySelector('#full-delete-tab').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			MCworkInProgress.open();
+			document.querySelector('#checkbox-user').checked = false;
+			const db = Database(Mapcraft.DBPath, { verbose: console.log });
+			let isDelete = false;
+			const sqlName = db.prepare('DELETE FROM User WHERE Username = ?');
+			for (const input of document.querySelectorAll('input[name="select-user"]'))
+				if (input.checked && !input.disabled)
+				{
+					isDelete = true;
+					sqlName.run(input.value);
+				}
+			if (isDelete)
+				UserComponent.table();
+			db.close();
+			MCworkInProgress.close();
+		});
+	}
+
+	static #CreateUser()
+	{
+		document.getElementById('form-createUser').addEventListener('submit', (event) =>
+		{
+			event.preventDefault();
+			MCworkInProgress.open();
+			UpdateLang();
+			const addUserToDB = (name, uuid) =>
+			{
+				const db = Database(Mapcraft.DBPath, { verbose: console.log });
+				const sqlUser = db.prepare('SELECT Username FROM User WHERE Username = ?');
+				if (sqlUser.get(name) !== undefined && sqlUser.get(name).Username)
+				{
+					MCutilities.createAlert('danger', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.IsExist);
+				}
+				else
+				{
+					const sql = db.prepare('INSERT INTO User (Username, UUID) VALUES (?, ?)');
+					sql.run(name, uuid);
+					event.target[1].value = ''; // eslint-disable-line
+					UserComponent.table();
+				}
+				db.close();
+			};
+			//#region Check online if player exist
+			const req = https.request(
+				{
+					hostname: 'api.mojang.com',
+					path: `/users/profiles/minecraft/${event.target[1].value}`,
+					method: 'GET',
+				},
+				(res) =>
+				{
+					if (res.statusCode !== 200)
+					{
+						MCutilities.createAlert('warning', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.UserNotExist);
+						MCworkInProgress.close();
+						return;
+					}
+					res.on('data', (data) =>
+					{
+						const JsonData = JSON.parse(data);
+						addUserToDB(JsonData.name, JsonData.id);
+					});
+				},
+			);
+			req.end();
+			//#endregion
+			MCworkInProgress.close();
+		});
+	}
+}
+
 class PluginComponent
 {
 	static main()
@@ -163,6 +485,30 @@ class PluginComponent
 		Template.render(document.getElementById('option-tab-plugin'), 'plugin.tp', null);
 		this.updateLang();
 		this.generateList();
+
+		document.getElementById('InstallPluginArchive').addEventListener('click', () =>
+		{
+			MCipc.send('Dialog:open-global', 'archive', {
+				defaultPath: os.homedir(),
+				filters: [
+					{ name: 'Mapcraft', extensions: ['mapcraft'] },
+				],
+				properties: ['openFile'],
+			});
+		});
+		MCipc.receive('Dialog:selected-global', (data) =>
+		{
+			if (data.canceled === true)
+				return;
+			AddPlugins(data.filePaths[0]).finally(() =>
+			{
+				document.getElementById('loader').setAttribute('hidden', '');
+			}).catch((err) =>
+			{
+				document.getElementById('loader').setAttribute('hidden', '');
+				throw new Error(err);
+			});
+		});
 	}
 
 	static updateLang()
@@ -227,8 +573,8 @@ class PluginComponent
 			{
 				const testManifest = () =>
 				{
-					const testOne = path.join(object.directory, 'manifest.json');
-					const testTwo = path.join(_path, object.name, 'manifest.json');
+					const testOne = path.join(object.directory, 'package.json');
+					const testTwo = path.join(_path, object.name, 'package.json');
 					if (fs.existsSync(testOne))
 						return testOne;
 					return testTwo;
@@ -238,7 +584,7 @@ class PluginComponent
 				const data = {
 					id: ID++,
 					uuid: object.uuid,
-					icon: (fs.existsSync(path.join(object.directory, manifest.icon))) ? path.join(object.directory, manifest.icon) : path.join(object.directory, '../../src/dist/img/icon/default_logo.png'),
+					icon: (fs.existsSync(path.join(object.directory, manifest.icon))) ? path.join(object.directory, manifest.icon) : './dist/img/icon/default_logo.png',
 					name: manifest.name,
 					version: manifest.version,
 					author: manifest.author,
@@ -340,350 +686,7 @@ class PluginComponent
 		});
 	}
 }
-//#endregion
 
-function ChangeNameRessourcePack()
-{
-	const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-	const Name = `${_Mapcraft.Name}-${MC.config.Data.ResourcePack}`;
-	fs.renameSync(_Mapcraft.Data.ResourcePack, path.join(MC.config.Env.SavePath, '../resourcepacks', Name));
-	_Mapcraft.Data.ResourcePack = path.join(MC.config.Env.SavePath, '../resourcepacks', Name);
-	localStorage.setItem('Mapcraft', JSON.stringify(_Mapcraft));
-}
-
-function DirIsExist(link, Error)
-{
-	if (!fs.existsSync(link))
-	{
-		MCutilities.createAlert('warning', document.getElementById('option-error'), `${link.toString()}: ${Error}`);
-		return (false);
-	}
-	return (true);
-}
-
-function IsMinecraftDir(link)
-{
-	if (!fs.existsSync(path.join(link, '/', 'versions')))
-	{
-		UpdateLang();
-		MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftDirectory);
-		return (false);
-	}
-	return (true);
-}
-
-function IsSaveDir(link)
-{
-	const TempSaveList = fs.readdirSync(link);
-	const SavePath = document.getElementById('SavePath').value;
-	for (const Save of TempSaveList)
-	{
-		const testIfDir = path.join(SavePath, '/', Save);
-		if (fs.existsSync(testIfDir) && fs.lstatSync(testIfDir).isDirectory())
-			if (!fs.existsSync(path.join(testIfDir, '/icon.png')))
-			{
-				UpdateLang();
-				MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.General.Error.NotMinecraftSaveDirectory);
-				return (false);
-			}
-			else
-			{
-				return (true);
-			}
-	}
-}
-
-function IsCorrectString(string)
-{
-	if (!string)
-	{
-		UpdateLang();
-		MCutilities.createAlert('warning', document.getElementById('option-error'), `${string.toString()}: ${LANG.Data.General.Error.IncorrectString}`);
-		return (false);
-	}
-	return (true);
-}
-
-function DetectClick()
-{
-	//Input
-	document.querySelector('#option-TempPath').addEventListener('click', () =>
-	{
-		MCipc.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
-	});
-	document.querySelector('#option-GamePath').addEventListener('click', () =>
-	{
-		MCipc.send('Dialog:open-directory', 'GamePath', document.getElementById('GamePath').value);
-	});
-	document.querySelector('#option-SavePath').addEventListener('click', () =>
-	{
-		MCipc.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
-	});
-	MCipc.receive('Dialog:selected-directory', (data, element) =>
-	{
-		if (data.canceled === false)
-		{
-			const _data = data.filePaths[0];
-			document.getElementById(element).value = _data;
-		}
-	});
-
-	//Lang
-	document.querySelector('#option-button-reset').addEventListener('click', () =>
-	{
-		MC.resetConfigFile();
-		ChangeNameRessourcePack();
-		OptionComponent.RedrawInterface();
-	});
-	document.querySelector('#option-button-save').addEventListener('click', () =>
-	{
-		UpdateLang();
-		if (!DirIsExist(document.getElementById('TempPath').value, LANG.Data.General.Error.DirectoryNotExist))
-			return;
-		if (!DirIsExist(document.getElementById('GamePath').value, LANG.Data.General.Error.DirectoryNotExist))
-			return;
-		if (!IsMinecraftDir(document.getElementById('GamePath').value))
-			return;
-		if (!DirIsExist(document.getElementById('SavePath').value, LANG.Data.General.Error.DirectoryNotExist))
-			return;
-		if (!IsSaveDir(document.getElementById('SavePath').value))
-			return;
-		if (!IsCorrectString(document.getElementById('ResourcePath').value))
-			return;
-		if (!IsCorrectString(document.getElementById('DataPath').value))
-			return;
-
-		MC.updateConfig(
-			document.getElementById('GamePath').value,
-			document.getElementById('SavePath').value,
-			document.getElementById('TempPath').value,
-			document.getElementById('option-Lang').value,
-			document.getElementById('ResourcePath').value,
-			document.getElementById('DataPath').value,
-		);
-		MC.setSelectedVersion(document.getElementById('option-Version').value);
-		//#region Update mcmeta
-		const mcmeta = {
-			datapack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
-			resourcePack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
-			officialData: JSON.parse(fs.readFileSync(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
-			officialResource: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
-		};
-		let num = Number();
-		for (const object of MinecraftVersion.Versions)
-			if (object.Release === global.MinecraftSelectedVersion)
-			{
-				num = Number(object.Number);
-				break;
-			}
-		mcmeta.datapack.pack.pack_format = num;
-		mcmeta.resourcePack.pack.pack_format = num;
-		mcmeta.officialData.pack.pack_format = num;
-		mcmeta.officialResource.pack.pack_format = num;
-		const _writeFile = (_path, data) =>
-		{
-			fs.writeFile(_path, data, { encoding: 'utf-8' }, (err) =>
-			{
-				if (err)
-					console.error(err);
-			});
-		};
-		_writeFile(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), JSON.stringify(mcmeta.datapack, null, 4));
-		_writeFile(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), JSON.stringify(mcmeta.officialData, null, 4));
-		_writeFile(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), JSON.stringify(mcmeta.officialResource, null, 4));
-		fs.writeFile(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), JSON.stringify(mcmeta.resourcePack, null, 4), { encoding: 'utf-8' }, (err) =>
-		{
-			if (err)
-				console.error(err);
-			ChangeNameRessourcePack();
-			OptionComponent.RedrawInterface();
-		});
-		//#endregion
-	});
-}
-//#endregion
-
-//#region User tab
-class UserComponent
-{
-	static main()
-	{
-		const str = 'user.tp';
-		Template.render(document.getElementById('option-tab-user'), str, null);
-		this.UpdateLangComponent(str);
-		this.table();
-		CreateUser(); //eslint-disable-line
-	}
-
-	static table()
-	{
-		UpdateLang();
-		let HTML = '';
-		const ComponentTable = Template.getRaw('user-table.tp');
-		const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
-		const db = Database(_Mapcraft.DBPath, { verbose: console.log });
-		const sql = db.prepare('SELECT Username, UUID, IsConnected FROM User');
-		for (const user of sql.iterate())
-		{
-			let Connect;
-			let ClassConnect;
-			let Disabled = '';
-			if (user.IsConnected)
-			{
-				Connect = LANG.Data.User.Connected;
-				ClassConnect = 'is-connected';
-				Disabled = 'disabled';
-			}
-			else
-			{
-				Connect = LANG.Data.User.Disconnected;
-				ClassConnect = 'is-not-connected';
-			}
-			HTML += Template.parseRaw(ComponentTable, { link: `https://crafatar.com/avatars/${user.UUID}?size=40`, username: user.Username, Disabled, ClassConnect, Connect });
-		}
-		Template.renderRaw(document.getElementById('generateTab'), HTML, 'user-table.tp', null);
-		db.close();
-		DeleteOneUser(); // eslint-disable-line
-		DeleteMultiUser(); // eslint-disable-line
-	}
-
-	static UpdateLangComponent(Component)
-	{
-		UpdateLang();
-		switch (Component)
-		{
-			case 'user.tp':
-				Template.updateLang(document.getElementById('option-tab-user'), LANG.Data.User);
-				break;
-			default:
-				Template.updateLang(document.getElementById('option-tab-user'), LANG.Data.User);
-				break;
-		}
-	}
-}
-
-function DeleteOneUser()
-{
-	for (const input of document.querySelectorAll('button[name="user-button-delete"]'))
-		input.addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			UpdateLang();
-			MCworkInProgress.open();
-			const username = input.parentNode.parentNode.childNodes[7].innerText;
-			const db = Database(Mapcraft.DBPath, { verbose: console.log });
-			/*Check if user is disconnected */
-			const sqlUser = db.prepare('SELECT IsConnected FROM User WHERE Username = ?');
-			const ret = sqlUser.get(username);
-			if (ret.IsConnected)
-			{
-				MCutilities.createAlert('warning', document.getElementById('option-error'), LANG.Data.User.Error.UserIsConnected);
-				MCworkInProgress.close();
-				return;
-			}
-			const sql = db.prepare('DELETE FROM User WHERE Username = ?');
-			sql.run(username);
-			db.close();
-			UserComponent.table();
-			MCworkInProgress.close();
-		});
-}
-
-function DeleteMultiUser()
-{
-	document.querySelector('#full-delete-tab').addEventListener('click', (event) =>
-	{
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		MCworkInProgress.open();
-		document.querySelector('#checkbox-user').checked = false;
-		const db = Database(Mapcraft.DBPath, { verbose: console.log });
-		let isDelete = false;
-		const sqlName = db.prepare('DELETE FROM User WHERE Username = ?');
-		for (const input of document.querySelectorAll('input[name="select-user"]'))
-			if (input.checked && !input.disabled)
-			{
-				isDelete = true;
-				sqlName.run(input.value);
-			}
-		if (isDelete)
-			UserComponent.table();
-		db.close();
-		MCworkInProgress.close();
-	});
-}
-
-function CreateUser()
-{
-	document.getElementById('form-createUser').addEventListener('submit', (event) =>
-	{
-		event.preventDefault();
-		MCworkInProgress.open();
-		UpdateLang();
-		const addUserToDB = (name, uuid) =>
-		{
-			const db = Database(Mapcraft.DBPath, { verbose: console.log });
-			const sqlUser = db.prepare('SELECT Username FROM User WHERE Username = ?');
-			if (sqlUser.get(name) !== undefined && sqlUser.get(name).Username)
-			{
-				MCutilities.createAlert('danger', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.IsExist);
-			}
-			else
-			{
-				const sql = db.prepare('INSERT INTO User (Username, UUID) VALUES (?, ?)');
-				sql.run(name, uuid);
-				event.target[1].value = ''; // eslint-disable-line
-				UserComponent.table();
-			}
-			db.close();
-		};
-		//#region Check online if player exist
-		const req = https.request(
-			{
-				hostname: 'api.mojang.com',
-				path: `/users/profiles/minecraft/${event.target[1].value}`,
-				method: 'GET',
-			},
-			(res) =>
-			{
-				if (res.statusCode !== 200)
-				{
-					MCutilities.createAlert('warning', document.getElementById('alert-createUser-modal'), LANG.Data.User.Error.UserNotExist);
-					MCworkInProgress.close();
-					return;
-				}
-				res.on('data', (data) =>
-				{
-					const JsonData = JSON.parse(data);
-					addUserToDB(JsonData.name, JsonData.id);
-				});
-			},
-		);
-		req.end();
-		//#endregion
-		MCworkInProgress.close();
-	});
-}
-//#endregion
-
-function OpenExternLink()
-{
-	const links = document.querySelectorAll('a[href]');
-	Array.prototype.forEach.call(links, (link) =>
-	{
-		const url = link.getAttribute('href');
-		if (url.indexOf('http') === 0)
-			link.addEventListener('click', (event) =>
-			{
-				event.preventDefault();
-				event.stopImmediatePropagation();
-				shell.openExternal(url);
-			});
-	});
-}
-
-//#region About
 class AboutComponent
 {
 	static RawLicence(ID, host, _path)
@@ -709,6 +712,22 @@ class AboutComponent
 			console.log(e.message);
 		});
 		request.end();
+	}
+
+	static #openExternalLink()
+	{
+		const links = document.querySelectorAll('a[href]');
+		Array.prototype.forEach.call(links, (link) =>
+		{
+			const url = link.getAttribute('href');
+			if (url.indexOf('http') === 0)
+				link.addEventListener('click', (event) =>
+				{
+					event.preventDefault();
+					event.stopImmediatePropagation();
+					shell.openExternal(url);
+				});
+		});
 	}
 
 	static about()
@@ -737,9 +756,8 @@ class AboutComponent
 			if (Object.prototype.hasOwnProperty.call(Framework, i))
 				this.RawLicence(i, Framework[i][3], Framework[i][4]);
 		//#endregion
-		OpenExternLink();
+		this.#openExternalLink();
 	}
 }
-//#endregion
 
 module.exports = OptionComponent;

@@ -33,7 +33,7 @@ try
 }
 catch (err)
 {
-	console.error(`main/${err.message}`);
+	//err
 }
 const MainManifest = JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'manifest'), { encoding: 'utf-8', flag: 'r' }));
 
@@ -235,6 +235,16 @@ process.on('uncaughtException', (err) =>
 
 //#region IPC signal (Alphabetic order)
 //#region Dialog
+ipcMain.on('Dialog:open-global', (event, element, options = {}) =>
+{
+	dialog.showOpenDialog(options).then((data) =>
+	{
+		event.reply('Dialog:selected-global', data, element);
+	}).catch((error) =>
+	{
+		console.error(error);
+	});
+});
 ipcMain.on('Dialog:open-directory', (event, element, _path) =>
 {
 	dialog.showOpenDialog({

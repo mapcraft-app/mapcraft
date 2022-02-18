@@ -41,6 +41,7 @@
 			"Author": "Author",
 			"Description": "Description",
 			"Update": "Update",
+			"InstallPluginArchive": "Install a plugin via an archive",
 			"UpdatePlugins": "Update every plugins",
 			"Activate": "Activate",
 			"Delete": "Delete",
