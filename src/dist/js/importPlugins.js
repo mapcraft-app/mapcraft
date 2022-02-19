@@ -30,7 +30,7 @@ class ImportPlugin
 					}
 					catch (err)
 					{
-						throw new Error(err.message);
+						throw new Error(`importPlugins: ${err.message}`);
 					}
 					this.Components[i].directory = path.join(this.BaseLink, `${this.Components[i].name}_${newUUID}`);
 					this.ifNewPlugin = true;
@@ -62,7 +62,6 @@ class ImportPlugin
 	 * @param {String} UUID UUID of component
 	 * @returns Instance function of component, or undefined if error
 	 */
-	//Instance(Name)
 	instance(UUID)
 	{
 		for (const i in this.plugins)
@@ -85,21 +84,61 @@ class ImportPlugin
 	}
 
 	/**
+	 * Add new component in list
+	 * @param {JSON} componentData Json data of new component
+	 */
+	add(componentData)
+	{
+		for (const i in this.plugins)
+			if (Object.prototype.hasOwnProperty.call(this.plugins, i) && this.plugins[i].uuid === componentData.uuid)
+				throw new Error('Component already exists');
+		global.ImportPluginSave.push({
+			name: componentData.name,
+			uuid: componentData.uuid,
+			directory: componentData.directory,
+			component: componentData.component,
+			active: componentData.active,
+			isNotification: componentData.isNotification,
+			lang: componentData.lang,
+			instance: require(path.join(componentData.directory, componentData.component)) // eslint-disable-line
+		});
+		this.plugins = global.ImportPluginSave;
+		MCshell.add(
+			[
+				{ directory: componentData.directory },
+			],
+		);
+	}
+
+	/**
 	 * Toogle component
-	 * @param {String} UUID Name of component
+	 * @param {String} UUID UUID of component
 	 * @param {Boolean} forceValue Set to true/false if you want to force activate/desactivate plugin
 	 */
 	toogle(UUID, forceValue = undefined)
 	{
-		for (const i in global.ImportPluginSave)
-			if (global.ImportPluginSave[i].uuid === UUID)
+		for (const i in this.plugins)
+			if (this.plugins[i].uuid === UUID)
 			{
 				if (forceValue === undefined)
-					global.ImportPluginSave[i].active = !(global.ImportPluginSave[i].active);
+					this.plugins[i].active = !(this.plugins[i].active);
 				else
-					global.ImportPluginSave[i].active = Boolean(forceValue);
-				this.plugins = global.ImportPluginSave;
+					this.plugins[i].active = Boolean(forceValue);
 				break;
+			}
+	}
+
+	/**
+	 * Remove component from list
+	 * @param {String} UUID UUID of component
+	 */
+	remove(UUID)
+	{
+		for (const i in this.plugins)
+			if (Object.prototype.hasOwnProperty.call(this.plugins, i) && this.plugins[i].uuid === UUID)
+			{
+				this.plugins.splice(i, 1);
+				return;
 			}
 	}
 
@@ -108,7 +147,6 @@ class ImportPlugin
 	 * @param {String} UUID UUID of component
 	 * @returns {JSON} Lang data
 	 */
-	//Lang(Name)
 	lang(UUID)
 	{
 		let data = null;

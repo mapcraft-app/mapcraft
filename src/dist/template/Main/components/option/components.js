@@ -500,13 +500,23 @@ class PluginComponent
 		{
 			if (data.canceled === true)
 				return;
-			AddPlugins(data.filePaths[0]).finally(() =>
+			AddPlugins(data.filePaths[0]).then((TR) =>
 			{
+				pluginsList.addons = JSON.parse(fs.readFileSync(path.join(MC.config.Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' }));
+				this.updateNav();
+				TR.querySelector('button').addEventListener('click', (event) =>
+				{
+					event.preventDefault();
+					event.stopImmediatePropagation();
+					this.#removeJson('uuid', TR.getAttribute('uuid'));
+					Template.cleanNode(TR, true);
+					MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
+				});
 				document.getElementById('loader').setAttribute('hidden', '');
 			}).catch((err) =>
 			{
+				MCutilities.createAlert('danger', document.getElementById('option-error'), err.message);
 				document.getElementById('loader').setAttribute('hidden', '');
-				throw new Error(err);
 			});
 		});
 	}
@@ -531,6 +541,49 @@ class PluginComponent
 				MCipc.send('Plugin:is-changed', element.id, element.getAttribute('title'));
 			});
 		});
+	}
+
+	static #removeJson(key, value)
+	{
+		MCworkInProgress.open();
+		for (const object of pluginsList.addons)
+			if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
+			{
+				pluginsList.addons.splice(pluginsList.addons.indexOf(object), 1);
+				fs.rmSync(object.directory, { recursive: true, force: true });
+				fs.writeFile(path.join(MC.config.Env.PluginsComponents, 'components.json'), JSON.stringify(pluginsList.addons, null, 4), { encoding: 'utf-8' }, (err) =>
+				{
+					if (err)
+						MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
+					importPlugins.remove(object.uuid);
+					pluginsList.addons = JSON.parse(fs.readFileSync(path.join(MC.config.Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' }));
+					this.updateNav();
+				});
+				MCworkInProgress.close();
+				return;
+			}
+		MCworkInProgress.close();
+	}
+
+	static #updateJson(data, key, value, newValue, isBuiltin = true)
+	{
+		for (const object of data)
+			if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
+			{
+				object.active = newValue;
+				const _path = (isBuiltin) ? MC.config.Env.ActiveComponents : path.join(MC.config.Env.PluginsComponents, 'components.json');
+				fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
+				{
+					if (err)
+						MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
+					if (isBuiltin)
+						Plugins.toogle(value);
+					else
+						importPlugins.toogle(value);
+					this.updateNav();
+				});
+				return;
+			}
 	}
 
 	static generateList()
@@ -598,44 +651,6 @@ class PluginComponent
 			LIST_ADDON.innerHTML = newDOMbody.innerHTML;
 		};
 
-		const updateJSON = (data, key, value, newValue, isBuiltin = true) =>
-		{
-			for (const object of data)
-				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
-				{
-					object.active = newValue;
-					const _path = (isBuiltin) ? MC.config.Env.ActiveComponents : path.join(MC.config.Env.PluginsComponents, 'components.json');
-					fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
-					{
-						if (err)
-							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
-						if (isBuiltin)
-							Plugins.toogle(value);
-						else
-							importPlugins.toogle(value);
-						this.updateNav();
-					});
-					return;
-				}
-		};
-
-		const removeJson = (key, value) =>
-		{
-			for (const object of pluginsList.addons)
-				if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
-				{
-					pluginsList.addons.splice(pluginsList.addons.indexOf(object), 1);
-					fs.writeFile(path.join(MC.config.Env.PluginsComponents, 'components.json'), JSON.stringify(pluginsList.addons, null, 4), { encoding: 'utf-8' }, (err) =>
-					{
-						if (err)
-							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
-						importPlugins.toogle(value, false);
-						this.updateNav();
-					});
-					return;
-				}
-		};
-
 		setImmediate(() =>
 		{
 			builtin();
@@ -649,14 +664,14 @@ class PluginComponent
 					const TR = event.target.closest('tr');
 					if (event.target.checked)
 						if (event.target.closest('.table-builtin'))
-							updateJSON(pluginsList.builtinActive, 'name', TR.getAttribute('uuid'), true);
+							this.#updateJson(pluginsList.builtinActive, 'name', TR.getAttribute('uuid'), true);
 						else
-							updateJSON(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), true, false);
+							this.#updateJson(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), true, false);
 					else if (!event.target.checked)
 						if (event.target.closest('.table-builtin'))
-							updateJSON(pluginsList.builtinActive, 'name', TR.getAttribute('uuid'), false);
+							this.#updateJson(pluginsList.builtinActive, 'name', TR.getAttribute('uuid'), false);
 						else
-							updateJSON(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), false, false);
+							this.#updateJson(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), false, false);
 				});
 			//#endregion
 
@@ -676,7 +691,7 @@ class PluginComponent
 						}
 						else
 						{
-							removeJson('uuid', TR.getAttribute('uuid'));
+							this.#removeJson('uuid', TR.getAttribute('uuid'));
 							Template.cleanNode(TR, true);
 							MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
 						}

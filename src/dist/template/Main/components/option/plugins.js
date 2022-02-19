@@ -4,6 +4,7 @@ const os = require('os');
 const path = require('path');
 const SevenZip = require('7zip-min');
 const { Mapcraft, MCtemplate } = require('mapcraft-api');
+const importPlugins = require('../../../../js/importPlugins');
 
 const Template = new MCtemplate(__dirname);
 
@@ -27,9 +28,9 @@ module.exports = async (archivePath) =>
 		throw new Error('ImportPlugin: file is not exist');
 	else if (path.extname(archivePath) !== '.mapcraft')
 		throw new Error('ImportPlugin: file is not .mapcraft archive format');
+	const dir = await fsPromise.mkdtemp(path.join(os.tmpdir(), 'mpc_'), { encoding: 'utf-8' });
 	try
 	{
-		const dir = await fsPromise.mkdtemp(path.join(os.tmpdir(), 'mpc_'), { encoding: 'utf-8' });
 		await unZip(archivePath, dir);
 		const packageJson = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), { encoding: 'utf-8' }));
 		const base = {
@@ -37,22 +38,21 @@ module.exports = async (archivePath) =>
 			components: path.join(Mapcraft.config.Env.PluginsComponents, 'components.json'),
 		};
 		const json = JSON.parse(fs.readFileSync(base.components, { encoding: 'utf-8', flag: 'r' }));
-		json.push(
-			{
-				active: Boolean(true),
-				component: String(packageJson.component),
-				directory: String(base.install),
-				isNotification: Boolean(packageJson.bin.isNotification),
-				lang: String(packageJson.lang),
-				name: String(packageJson.name),
-				uuid: String(packageJson.uuid),
-			},
-		);
-		await fsPromise.writeFile(base.components, JSON.stringify(json, null, 4), { encoding: 'utf-8' });
+		const newComponent = {
+			active: Boolean(true),
+			component: String(packageJson.component),
+			directory: String(base.install),
+			isNotification: Boolean(packageJson.bin.isNotification),
+			lang: String(packageJson.lang),
+			name: String(packageJson.name),
+			uuid: String(packageJson.uuid),
+		};
+		json.push(newComponent);
 		await fsPromise.mkdir(base.install, { recursive: true });
 		await fsPromise.cp(dir, base.install, { force: true, recursive: true });
 		await fsPromise.rm(dir, { force: true, recursive: true });
-
+		importPlugins.add(newComponent);
+		await fsPromise.writeFile(base.components, JSON.stringify(json, null, 4), { encoding: 'utf-8' });
 		const tab = document.querySelector('#table-plugin tbody');
 		const ID = (!tab.childElementCount) ? 0 : tab.childElementCount;
 		const div = document.createElement('div');
@@ -67,10 +67,13 @@ module.exports = async (archivePath) =>
 		};
 		Template.render(div, 'plugin-table.tp', data);
 		div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
-		tab.appendChild(div.getElementsByTagName('tr')[0]);
+		const TR = div.getElementsByTagName('tr')[0];
+		tab.appendChild(TR);
+		return TR;
 	}
 	catch (err)
 	{
+		fsPromise.rm(dir, { force: true, recursive: true }).catch(() => null /*don't make anything*/);
 		throw new Error(`ImportPlugin: ${err.message}`);
 	}
 };
