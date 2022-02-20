@@ -7,7 +7,7 @@ const { MCutilities, MCipc, MCworkInProgress, MCtemplate, MCplugin } = require('
 const MC = require('mapcraft-api').Mapcraft;
 const MarkdownIt = require('markdown-it');
 const { shell } = require('electron');
-const AddPlugins = require('./plugins');
+const { addPluginViaArchive, execShell } = require('./plugins');
 const NavMenu = require('../../../../js/createNavMenu');
 const importPlugins = require('../../../../js/importPlugins');
 
@@ -101,6 +101,19 @@ class OptionComponent
 		PluginComponent.main(); // eslint-disable-line
 		AboutComponent.about(); // eslint-disable-line
 		UserComponent.main(); // eslint-disable-line
+
+		document.getElementById('createPlugin').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			execShell('yarn mapcraft create');
+		});
+		document.getElementById('packagePlugin').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			execShell('yarn mapcraft package');
+		});
 	}
 
 	static UpdateLangComponent(Component)
@@ -500,7 +513,7 @@ class PluginComponent
 		{
 			if (data.canceled === true)
 				return;
-			AddPlugins(data.filePaths[0]).then((TR) =>
+			addPluginViaArchive(data.filePaths[0]).then((TR) =>
 			{
 				pluginsList.addons = JSON.parse(fs.readFileSync(path.join(MC.config.Env.PluginsComponents, 'components.json'), { encoding: 'utf-8', flag: 'r' }));
 				this.updateNav();

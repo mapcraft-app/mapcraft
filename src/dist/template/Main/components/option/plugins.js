@@ -1,7 +1,9 @@
 const fsPromise = require('fs/promises');
+const child = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const process = require('process');
 const SevenZip = require('7zip-min');
 const { Mapcraft, MCtemplate } = require('mapcraft-api');
 const importPlugins = require('../../../../js/importPlugins');
@@ -18,10 +20,9 @@ const unZip = (pathToArchive, whereToUnpack) => new Promise((resolve, reject) =>
 	});
 });
 
-module.exports = async (archivePath) =>
+async function addPluginViaArchive(archivePath)
 {
 	document.getElementById('loader').removeAttribute('hidden');
-
 	if (!archivePath)
 		throw new Error('ImportPlugin: path is undefined');
 	else if (!fs.existsSync(archivePath))
@@ -76,4 +77,36 @@ module.exports = async (archivePath) =>
 		fsPromise.rm(dir, { force: true, recursive: true }).catch(() => null /*don't make anything*/);
 		throw new Error(`ImportPlugin: ${err.message}`);
 	}
-};
+}
+
+function execShell(command)
+{
+	const getCommand = () =>
+	{
+		switch (os.platform())
+		{
+			case 'win32':
+				return (`start ${command}`);
+			case 'darwin':
+				return (`open -a Terminal ${command}`);
+			default:
+				return (`xdg-open /bin/sh ${command}`);
+		}
+	};
+
+	child.exec(
+		getCommand(),
+		{
+			cwd: process.cwd(),
+			encoding: 'utf8',
+			windowsHide: false,
+		},
+		(err) =>
+		{
+			if (err)
+				throw new Error(`ImportPlugin: ${err.message}`);
+		},
+	);
+}
+
+module.exports = { addPluginViaArchive, execShell };

@@ -31,6 +31,17 @@
 				"NotMinecraftDirectory" : "Is probably not minecraft directory, check game path in option",
 				"NotMinecraftSaveDirectory" : "Is probably not minecraft save directory, check save path in option",
 				"IncorrectString": "String not well formated"
+			},
+			"Dev": {
+				"Main": "Development tools",
+				"Create": {
+					"Title": "Create a new plugin",
+					"Explanation": "To start the creation of a new plugin, this command will allow you to get a simple but complete skeleton, so you can only concentrate on your code and not on the boring configuration"
+				},
+				"Package": {
+					"Title": "Packing a plugin",
+					"Explanation": "Pack your plugin as a .mapcraft archive. This format will contain your optimized plugin, and will allow you to share it easily"
+				}
 			}
 		},
 		"Plugin": {

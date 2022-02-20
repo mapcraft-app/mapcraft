@@ -23,6 +23,19 @@
 		<button id="option-button-save" class="uk-button uk-button-primary" type="button" lang="Button.Save"></button>
 	</div>
 </form>
+<hr class="uk-divider-icon"/>
+<h2 class="uk-text-center" lang="Dev.Main"></h2>
+<div class="uk-margin-right uk-margin-left uk-margin-bottom uk-flex">
+	<div class="uk-card uk-card-default uk-card-body uk-text-center">
+		<h4 lang="Dev.Create.Explanation"></h4>
+		<button lang="Dev.Create.Title" id="createPlugin" class="uk-button uk-button-default uk-text-warning"></button>
+	</div>
+	<div class="uk-card uk-card-default uk-card-body uk-text-center">
+		<h4 lang="Dev.Package.Explanation"></h4>
+		<button lang="Dev.Package.Title" id="packagePlugin" class="uk-button uk-button-default uk-text-warning"></button>
+	</div>
+</div>
+
 [/HTML]
 
 [CSS]

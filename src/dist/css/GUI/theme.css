@@ -558,3 +558,12 @@ input:checked + .uk-switch-span:before {
 .search-dropdown-span-show {
 	display: flex;
 }
+
+/* Card */
+.uk-card-default
+{
+	background-color: inherit;
+	border: 1px solid rgb(255 255 255);
+	color: inherit;
+	margin: 0 0.5em;
+}

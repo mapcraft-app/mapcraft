@@ -31,6 +31,17 @@
 				"NotMinecraftDirectory" : "Ce n'est probablement pas le répertoire de Minecraft, vérifiez le chemin dans les options",
 				"NotMinecraftSaveDirectory" : "Ce n'est probablement pas le répertoire de sauvegarde de Minecraft, vérifiez le chemin dans les options",
 				"IncorrectString": "La chaine n'est pas correctement formaté"
+			},
+			"Dev": {
+				"Main": "Outils de développement",
+				"Create": {
+					"Title": "Créer un nouveau plugin",
+					"Explanation": "Pour commencer la création d'un nouveau plugin, cette commande vous permettra d'obtenir un squelette simple mais complet, afin que vous puissiez vous concentrer uniquement sur votre code et non sur une configuration ennuyeuse"
+				},
+				"Package": {
+					"Title": "Empaquetage d'un plugin",
+					"Explanation": "Empaquetez votre plugin sous forme d'archive .mapcraft. Ce format contient votre plugin optimisé et vous permet de le partager facilement"
+				}
 			}
 		},
 		"Plugin": {
