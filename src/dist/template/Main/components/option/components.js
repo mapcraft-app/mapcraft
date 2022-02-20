@@ -101,19 +101,6 @@ class OptionComponent
 		PluginComponent.main(); // eslint-disable-line
 		AboutComponent.about(); // eslint-disable-line
 		UserComponent.main(); // eslint-disable-line
-
-		document.getElementById('createPlugin').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			execShell('yarn mapcraft create');
-		});
-		document.getElementById('packagePlugin').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			execShell('yarn mapcraft package');
-		});
 	}
 
 	static UpdateLangComponent(Component)
@@ -185,6 +172,18 @@ class DetectClick
 		document.querySelector('#option-SavePath').addEventListener('click', () =>
 		{
 			MCipc.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
+		});
+		document.getElementById('createPlugin').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			execShell('yarn mapcraft create');
+		});
+		document.getElementById('packagePlugin').addEventListener('click', (event) =>
+		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			execShell('yarn mapcraft package');
 		});
 		MCipc.receive('Dialog:selected-directory', (data, element) =>
 		{

@@ -21,8 +21,6 @@
   "scripts": {
     "start": "electron-forge start",
     "debug": "electron --trace-warnings .",
-    "package": "electron-forge package",
-    "publish": "electron-forge publish",
     "pack": "electron-builder -mwl --x64 --dir ",
     "dist": "electron-builder -mwl --x64",
     "distMac": "electron-builder -m --x64",
@@ -31,18 +29,11 @@
     "postinstall": "electron-builder install-app-deps",
     "lint": "eslint ."
   },
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "src/dist/img/icon/icon"
-      }
-    }
-  },
   "build": {
     "appId": "com.electron.mapcraft",
     "productName": "Mapcraft",
     "copyright": "Copyright (C) 2020 - 2022, Clément Bertrand",
-    "asar": false,
+    "asar": true,
     "npmRebuild": true,
     "directories": {
       "buildResources": "build",
