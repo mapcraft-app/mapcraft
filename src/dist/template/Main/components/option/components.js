@@ -6,7 +6,7 @@ const https = require('https');
 const { MCutilities, MCipc, MCworkInProgress, MCtemplate, MCplugin } = require('mapcraft-api');
 const MC = require('mapcraft-api').Mapcraft;
 const MarkdownIt = require('markdown-it');
-const { shell } = require('electron');
+const { ipcRenderer, shell } = require('electron');
 const { addPluginViaArchive, execShell } = require('./plugins');
 const NavMenu = require('../../../../js/createNavMenu');
 const importPlugins = require('../../../../js/importPlugins');
@@ -173,17 +173,29 @@ class DetectClick
 		{
 			MCipc.send('Dialog:open-directory', 'SavePath', document.getElementById('SavePath').value);
 		});
-		document.getElementById('createPlugin').addEventListener('click', (event) =>
+		document.getElementById('createPlugin').addEventListener('click', async (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			execShell('yarn mapcraft create');
+			execShell('yarn mapcraft create')
+				.catch((err) => new Error(err.message))
+				.then(() =>
+				{
+					document.getElementById('reload-app').addEventListener('click', (event2) =>
+					{
+						event2.preventDefault();
+						event2.stopImmediatePropagation();
+						ipcRenderer.send('DevTools:restart');
+					});
+					document.getElementById('dev-error').removeAttribute('hidden');
+				});
 		});
-		document.getElementById('packagePlugin').addEventListener('click', (event) =>
+		document.getElementById('packagePlugin').addEventListener('click', async (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			execShell('yarn mapcraft package');
+			execShell('yarn mapcraft package')
+				.catch((err) => new Error(err.message));
 		});
 		MCipc.receive('Dialog:selected-directory', (data, element) =>
 		{
@@ -520,7 +532,7 @@ class PluginComponent
 				{
 					event.preventDefault();
 					event.stopImmediatePropagation();
-					this.#removeJson('uuid', TR.getAttribute('uuid'));
+					this.removeJson('uuid', TR.getAttribute('uuid'));
 					Template.cleanNode(TR, true);
 					MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
 				});
@@ -555,7 +567,7 @@ class PluginComponent
 		});
 	}
 
-	static #removeJson(key, value)
+	static removeJson(key, value)
 	{
 		MCworkInProgress.open();
 		for (const object of pluginsList.addons)
@@ -703,7 +715,7 @@ class PluginComponent
 						}
 						else
 						{
-							this.#removeJson('uuid', TR.getAttribute('uuid'));
+							this.removeJson('uuid', TR.getAttribute('uuid'));
 							Template.cleanNode(TR, true);
 							MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
 						}

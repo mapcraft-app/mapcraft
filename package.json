@@ -12,7 +12,7 @@
     "url": "https://gitlab.com/cbertran/mapcraft.git"
   },
   "productName": "Mapcraft",
-  "version": "0.8.1-alpha",
+  "version": "0.8.5-alpha",
   "keywords": [
     "mapcraft",
     "minecraft"
@@ -115,7 +115,7 @@
     "bezier-easing": "^2.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "jsonabc": "^2.3.1",
-    "mapcraft-api": "^1.7.7",
+    "mapcraft-api": "^1.7.8",
     "markdown-it": "^12.3.2",
     "read-last-lines": "^1.8.0",
     "v8-compile-cache": "^2.3.0"

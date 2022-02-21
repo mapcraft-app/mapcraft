@@ -36,7 +36,8 @@
 				"Main": "Outils de développement",
 				"Create": {
 					"Title": "Créer un nouveau plugin",
-					"Explanation": "Pour commencer la création d'un nouveau plugin, cette commande vous permettra d'obtenir un squelette simple mais complet, afin que vous puissiez vous concentrer uniquement sur votre code et non sur une configuration ennuyeuse"
+					"Explanation": "Pour commencer la création d'un nouveau plugin, cette commande vous permettra d'obtenir un squelette simple mais complet, afin que vous puissiez vous concentrer uniquement sur votre code et non sur une configuration ennuyeuse",
+					"Reload": "Vous devez redémarrer l'application pour utiliser votre nouveau plugin"
 				},
 				"Package": {
 					"Title": "Empaquetage d'un plugin",

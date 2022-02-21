@@ -24,6 +24,12 @@
 	</div>
 </form>
 <hr class="uk-divider-icon"/>
+<div class="uk-background-primary uk-padding-small uk-text-center" id="dev-error" hidden>
+	<h3 lang="Dev.Create.Reload"></h3>
+	<button class="uk-button uk-button-default uk-padding-small" id="reload-app">
+		<span uk-icon="icon: refresh; ratio: 2"></span>
+	</button>
+</div>
 <h2 class="uk-text-center" lang="Dev.Main"></h2>
 <div class="uk-margin-right uk-margin-left uk-margin-bottom uk-flex">
 	<div class="uk-card uk-card-default uk-card-body uk-text-center">

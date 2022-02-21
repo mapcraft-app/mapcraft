@@ -495,3 +495,11 @@ ipcMain.on('Update:make-update', (event, executePath, tempPath, zipPath, unzipPa
 });
 //#endregion
 //#endregion
+
+//#region Dev Tools
+ipcMain.on('DevTools:restart', () =>
+{
+	app.relaunch();
+	app.exit(0);
+});
+//#endregion

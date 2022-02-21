@@ -36,7 +36,8 @@
 				"Main": "Development tools",
 				"Create": {
 					"Title": "Create a new plugin",
-					"Explanation": "To start the creation of a new plugin, this command will allow you to get a simple but complete skeleton, so you can only concentrate on your code and not on the boring configuration"
+					"Explanation": "To start the creation of a new plugin, this command will allow you to get a simple but complete skeleton, so you can only concentrate on your code and not on the boring configuration",
+					"Reload": "You must restart the application to use your new plugin"
 				},
 				"Package": {
 					"Title": "Packing a plugin",

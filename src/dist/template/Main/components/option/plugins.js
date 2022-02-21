@@ -20,6 +20,29 @@ const unZip = (pathToArchive, whereToUnpack) => new Promise((resolve, reject) =>
 	});
 });
 
+function addPluginToTable(packageJson, base = undefined)
+{
+	if (!base)
+		base = path.join(Mapcraft.config.Env.PluginsComponents, `${packageJson.name}_${packageJson.uuid}`); //eslint-disable-line no-param-reassign
+	const tab = document.querySelector('#table-plugin tbody');
+	const ID = (!tab.childElementCount) ? 0 : tab.childElementCount;
+	const div = document.createElement('div');
+	const data = {
+		id: ID,
+		uuid: packageJson.uuid,
+		icon: (fs.existsSync(path.join(base, packageJson.icon))) ? path.join(base, packageJson.icon) : './dist/img/icon/default_logo.png',
+		name: packageJson.name,
+		version: packageJson.version,
+		author: packageJson.author,
+		description: packageJson.description,
+	};
+	Template.render(div, 'plugin-table.tp', data);
+	div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
+	const TR = div.getElementsByTagName('tr')[0];
+	tab.appendChild(TR);
+	return TR;
+}
+
 async function addPluginViaArchive(archivePath)
 {
 	document.getElementById('loader').removeAttribute('hidden');
@@ -54,23 +77,7 @@ async function addPluginViaArchive(archivePath)
 		await fsPromise.rm(dir, { force: true, recursive: true });
 		importPlugins.add(newComponent);
 		await fsPromise.writeFile(base.components, JSON.stringify(json, null, 4), { encoding: 'utf-8' });
-		const tab = document.querySelector('#table-plugin tbody');
-		const ID = (!tab.childElementCount) ? 0 : tab.childElementCount;
-		const div = document.createElement('div');
-		const data = {
-			id: ID,
-			uuid: packageJson.uuid,
-			icon: (fs.existsSync(path.join(base.install, packageJson.icon))) ? path.join(base.install, packageJson.icon) : './dist/img/icon/default_logo.png',
-			name: packageJson.name,
-			version: packageJson.version,
-			author: packageJson.author,
-			description: packageJson.description,
-		};
-		Template.render(div, 'plugin-table.tp', data);
-		div.getElementsByTagName('input')[0].setAttribute('checked', 'checked');
-		const TR = div.getElementsByTagName('tr')[0];
-		tab.appendChild(TR);
-		return TR;
+		return addPluginToTable(packageJson);
 	}
 	catch (err)
 	{
@@ -94,19 +101,23 @@ function execShell(command)
 		}
 	};
 
-	child.exec(
-		getCommand(),
-		{
-			cwd: process.cwd(),
-			encoding: 'utf8',
-			windowsHide: false,
-		},
-		(err) =>
-		{
-			if (err)
-				throw new Error(`ImportPlugin: ${err.message}`);
-		},
-	);
+	return new Promise((resolve, reject) =>
+	{
+		child.exec(
+			getCommand(),
+			{
+				cwd: process.cwd(),
+				encoding: 'utf8',
+				windowsHide: false,
+			},
+			(err) =>
+			{
+				if (err)
+					reject(new Error(`ImportPlugin: ${err.message}`));
+				resolve('ok');
+			},
+		);
+	});
 }
 
 module.exports = { addPluginViaArchive, execShell };
