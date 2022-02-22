@@ -88,36 +88,82 @@ async function addPluginViaArchive(archivePath)
 
 function execShell(command)
 {
-	const getCommand = () =>
+	console.log(path.join(process.env.AppPath, './node_modules/mapcraft-api/cli/cli.js'));
+	return new Promise((resolve, reject) =>
+	{
+		let stdout = '';
+		let stderr = '';
+		child.spawn(
+			'node',
+			[
+				path.join(process.env.AppPath, './node_modules/mapcraft-api/cli/cli.js'),
+				String(command),
+			],
+			{
+				cwd: process.cwd(),
+				detached: true,
+				shell: true,
+				windowsHide: false,
+			},
+		)
+			.stdout.on('data', (data) =>
+			{
+				stdout += data;
+			})
+			.stderr.on('data', (data) =>
+			{
+				stderr += data;
+			})
+			.on('close', (code) =>
+			{
+				if (code)
+				{
+					reject(new Error(`plugins/spawn: ${code}`));
+				}
+				else
+				{
+					console.warn(stdout);
+					console.error(stderr);
+					resolve('ok');
+				}
+			});
+	});
+
+	/*
+	const getScript = () =>
 	{
 		switch (os.platform())
 		{
-			case 'win32':
-				return (`start ${command}`);
 			case 'darwin':
-				return (`open -a Terminal ${command}`);
+				return path.join(__dirname, 'scripts', 'darwin.bat');
+			case 'win32':
+				return path.join(__dirname, 'scripts', 'win32.sh');
 			default:
-				return (`xdg-open /bin/sh ${command}`);
+				return path.join(__dirname, 'scripts', 'unix.sh');
 		}
 	};
-
 	return new Promise((resolve, reject) =>
 	{
-		child.exec(
-			getCommand(),
+		child.execFile(
+			getScript(),
+			[command],
 			{
-				cwd: process.cwd(),
+				cwd: process.env.AppPath,
 				encoding: 'utf8',
 				windowsHide: false,
+				shell: true,
 			},
-			(err) =>
+			(err, stdout, stderr) =>
 			{
 				if (err)
-					reject(new Error(`ImportPlugin: ${err.message}`));
+					reject(err);
+				console.log(stdout);
+				console.error(stderr);
 				resolve('ok');
 			},
 		);
-	});
+	)};
+	*/
 }
 
 module.exports = { addPluginViaArchive, execShell };

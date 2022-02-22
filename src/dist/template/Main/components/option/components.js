@@ -177,7 +177,7 @@ class DetectClick
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			execShell('yarn mapcraft create')
+			execShell('create') //yarn mapcraft create
 				.catch((err) => new Error(err.message))
 				.then(() =>
 				{
@@ -194,7 +194,7 @@ class DetectClick
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			execShell('yarn mapcraft package')
+			execShell('package') //yarn mapcraft package
 				.catch((err) => new Error(err.message));
 		});
 		MCipc.receive('Dialog:selected-directory', (data, element) =>
