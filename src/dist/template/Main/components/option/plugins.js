@@ -4,7 +4,17 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const process = require('process');
-const SevenZip = require('7zip-min');
+
+/**
+ * The asar format causes that 7zip programs no longer have the necessary chmod.
+ * These are thus extracted outside the archive to be able to function again.
+ * If a solution is found later, this code will be removed
+ */
+const zipPath = (path.basename(process.env.AppPath) === 'app.asar')
+	? path.join(process.env.AppPath, '..', 'app.asar.unpacked', 'node_modules', '7zip-min')
+	: path.join(process.env.AppPath, 'node_modules', '7zip-min');
+const SevenZip = require(zipPath); //eslint-disable-line import/no-dynamic-require
+
 const { Mapcraft, MCtemplate } = require('mapcraft-api');
 const importPlugins = require('../../../../js/importPlugins');
 
@@ -64,10 +74,10 @@ async function addPluginViaArchive(archivePath)
 		const json = JSON.parse(fs.readFileSync(base.components, { encoding: 'utf-8', flag: 'r' }));
 		const newComponent = {
 			active: Boolean(true),
-			component: String(packageJson.component),
+			component: String(packageJson.bin.component),
 			directory: String(base.install),
-			isNotification: Boolean(packageJson.bin.isNotification),
-			lang: String(packageJson.lang),
+			isNotification: Boolean(packageJson.isNotification),
+			lang: String(packageJson.bin.lang),
 			name: String(packageJson.name),
 			uuid: String(packageJson.uuid),
 		};
@@ -82,7 +92,7 @@ async function addPluginViaArchive(archivePath)
 	catch (err)
 	{
 		fsPromise.rm(dir, { force: true, recursive: true }).catch(() => null /*don't make anything*/);
-		throw new Error(`ImportPlugin: ${err.message}`);
+		throw new Error(`ImportPlugin: ${err}`);
 	}
 }
 
