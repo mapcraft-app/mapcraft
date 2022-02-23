@@ -88,15 +88,14 @@ async function addPluginViaArchive(archivePath)
 
 function execShell(command)
 {
-	console.log(path.join(process.env.AppPath, './node_modules/mapcraft-api/cli/cli.js'));
 	return new Promise((resolve, reject) =>
 	{
-		let stdout = '';
-		let stderr = '';
 		child.spawn(
 			'node',
 			[
-				path.join(process.env.AppPath, './node_modules/mapcraft-api/cli/cli.js'),
+				(path.basename(process.env.AppPath) === 'app.asar')
+					? path.join(process.env.AppPath, '..', 'app.asar.unpacked', 'node_modules', 'mapcraft-api', 'cli', 'cli.js')
+					: path.join(process.env.AppPath, 'node_modules', 'mapcraft-api', 'cli', 'cli.js'),
 				String(command),
 			],
 			{
@@ -106,64 +105,13 @@ function execShell(command)
 				windowsHide: false,
 			},
 		)
-			.stdout.on('data', (data) =>
-			{
-				stdout += data;
-			})
-			.stderr.on('data', (data) =>
-			{
-				stderr += data;
-			})
 			.on('close', (code) =>
 			{
-				if (code)
-				{
+				if (code !== 0)
 					reject(new Error(`plugins/spawn: ${code}`));
-				}
-				else
-				{
-					console.warn(stdout);
-					console.error(stderr);
-					resolve('ok');
-				}
+				resolve(code);
 			});
 	});
-
-	/*
-	const getScript = () =>
-	{
-		switch (os.platform())
-		{
-			case 'darwin':
-				return path.join(__dirname, 'scripts', 'darwin.bat');
-			case 'win32':
-				return path.join(__dirname, 'scripts', 'win32.sh');
-			default:
-				return path.join(__dirname, 'scripts', 'unix.sh');
-		}
-	};
-	return new Promise((resolve, reject) =>
-	{
-		child.execFile(
-			getScript(),
-			[command],
-			{
-				cwd: process.env.AppPath,
-				encoding: 'utf8',
-				windowsHide: false,
-				shell: true,
-			},
-			(err, stdout, stderr) =>
-			{
-				if (err)
-					reject(err);
-				console.log(stdout);
-				console.error(stderr);
-				resolve('ok');
-			},
-		);
-	)};
-	*/
 }
 
 module.exports = { addPluginViaArchive, execShell };

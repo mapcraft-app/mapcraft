@@ -11,9 +11,9 @@ build-mac:
   script:
     - echo "Building stage for MacOS, ID:${CI_JOB_ID}"
     - echo "${CI_JOB_ID}" > CI_JOB_ID_MAC.txt
-    - yarn
-    - yarn add --dev dmg-license
-    - yarn distMac
+    - npm install --production=false
+    - npm install --save-dev dmg-license
+    - npm run distMac
   artifacts:
     paths:
       - CI_JOB_ID_MAC.txt
@@ -30,8 +30,8 @@ build-windows:
   script:
     - echo "Building stage for Windows, ID:$CI_JOB_ID"
     - echo $CI_JOB_ID > CI_JOB_ID_WINDOWS.txt
-    - yarn
-    - yarn distWindows
+    - npm install --production=false
+    - npm run distWindows
   artifacts:
     paths:
       - CI_JOB_ID_WINDOWS.txt
@@ -50,8 +50,8 @@ build-linux:
     - echo "${CI_JOB_ID}" > CI_JOB_ID_LINUX.txt
     - curl -O https://download.mapcraft.app/srcs/json.bash
     - cat ./src/manifest | bash ./json.bash software | sed 's/ //g' > TAG_VERSION.txt
-    - yarn
-    - yarn distLinux
+    - npm install --production=false
+    - npm run distLinux
   artifacts:
     paths:
       - CI_JOB_ID_LINUX.txt

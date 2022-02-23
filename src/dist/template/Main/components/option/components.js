@@ -177,8 +177,7 @@ class DetectClick
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			execShell('create') //yarn mapcraft create
-				.catch((err) => new Error(err.message))
+			execShell('create')
 				.then(() =>
 				{
 					document.getElementById('reload-app').addEventListener('click', (event2) =>
@@ -188,13 +187,14 @@ class DetectClick
 						ipcRenderer.send('DevTools:restart');
 					});
 					document.getElementById('dev-error').removeAttribute('hidden');
-				});
+				})
+				.catch((err) => new Error(err.message));
 		});
 		document.getElementById('packagePlugin').addEventListener('click', async (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
-			execShell('package') //yarn mapcraft package
+			execShell('package')
 				.catch((err) => new Error(err.message));
 		});
 		MCipc.receive('Dialog:selected-directory', (data, element) =>
