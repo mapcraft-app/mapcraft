@@ -235,11 +235,11 @@ process.on('uncaughtException', (err) =>
 
 //#region IPC signal (Alphabetic order)
 //#region Dialog
-ipcMain.on('Dialog:open-global', (event, element, options = {}) =>
+ipcMain.on('Dialog:open-global', (event, options = {}) =>
 {
 	dialog.showOpenDialog(options).then((data) =>
 	{
-		event.reply('Dialog:selected-global', data, element);
+		event.reply('Dialog:selected-global', data);
 	}).catch((error) =>
 	{
 		console.error(error);

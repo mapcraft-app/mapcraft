@@ -512,7 +512,7 @@ class PluginComponent
 
 		document.getElementById('InstallPluginArchive').addEventListener('click', () =>
 		{
-			MCipc.send('Dialog:open-global', 'archive', {
+			MCipc.send('Dialog:open-global', {
 				defaultPath: os.homedir(),
 				filters: [
 					{ name: 'Mapcraft', extensions: ['mapcraft'] },
