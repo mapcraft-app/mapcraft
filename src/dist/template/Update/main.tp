@@ -82,6 +82,7 @@ dd {
 }
 #validation-button {
 	display: none;
+	padding-bottom: 1em;
 }
 
 .description {

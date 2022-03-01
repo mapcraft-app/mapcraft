@@ -16,7 +16,7 @@ class Update
 			ResourcePack: null,
 		};
 		if (fs.existsSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' }))
-			pack.DataPack = fs.readFileSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' });
+			pack.Datapack = fs.readFileSync(path.join(localMapcraft.Mapcraft, 'version'), { encoding: 'utf-8', flag: 'r' });
 		if (fs.existsSync(path.join(localMapcraft.Data.ResourcePack, '..', 'mapcraft', 'version'), { encoding: 'utf-8', flag: 'r' }))
 			pack.ResourcePack = fs.readFileSync(path.join(localMapcraft.Data.ResourcePack, '..', 'mapcraft', 'version'), { encoding: 'utf-8', flag: 'r' });
 		this.APIVersion = {
@@ -71,6 +71,8 @@ class Update
 		};
 		if (Object.keys(_data.software).length && _data.software.version !== this.APIVersion.software)
 			_data.count++;
+
+		console.log(_data.datapack.version, this.APIVersion.datapack);
 		if (Object.keys(_data.datapack).length && _data.datapack.version !== this.APIVersion.datapack)
 			_data.count++;
 		if (Object.keys(_data.resourcepack).length && _data.resourcepack.version !== this.APIVersion.resourcepack)
