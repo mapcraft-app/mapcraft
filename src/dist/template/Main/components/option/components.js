@@ -707,18 +707,28 @@ class PluginComponent
 					event.preventDefault();
 					event.stopImmediatePropagation();
 					const TR = event.target.closest('tr');
-					fs.rm(path.join(MC.config.Env.PluginsComponents, TR.getAttribute('uuid')), { recursive: true, force: true }, (err) =>
+					Template.cleanNode(TR.children[0]);
+					Template.cleanNode(TR.children[2]);
+					TR.children[1].innerHTML = '<img class="plugin-img" src="./dist/img/loader.gif" />';
+					TR.children[3].innerHTML = `<p>${LANG.Data.Plugin.Delete}</p>`;
+					Template.cleanNode(TR.children[4]);
+					TR.children[5].innerHTML = '<img src="./dist/img/switcher_blocked.png" />';
+					TR.children[6].innerHTML = '<button class="uk-button uk-button-danger plugin-min-button" disabled><span uk-icon="icon: trash;" class="uk-icon"></span></button>';
+					setImmediate(() =>
 					{
-						if (err)
+						fs.rm(path.join(MC.config.Env.PluginsComponents, TR.getAttribute('uuid')), { recursive: true, force: true }, (err) =>
 						{
-							MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
-						}
-						else
-						{
-							this.removeJson('uuid', TR.getAttribute('uuid'));
-							Template.cleanNode(TR, true);
-							MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
-						}
+							if (err)
+							{
+								MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
+							}
+							else
+							{
+								this.removeJson('uuid', TR.getAttribute('uuid'));
+								Template.cleanNode(TR, true);
+								MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.Plugin.DeleteSuccess);
+							}
+						});
 					});
 				});
 			//#endregion
