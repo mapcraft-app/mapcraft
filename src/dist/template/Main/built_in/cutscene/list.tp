@@ -1,0 +1,57 @@
+[HTML]
+<tr point="{Point}">
+	<td>
+		<p point="{Point}" id="Point">{Point}</p>
+	</td>
+	<td>
+		<input point="{Point}" id="X" class="uk-input" type="number" step="0.1" value="{X}">
+	</td>
+	<td>
+		<input point="{Point}" id="Y" class="uk-input" type="number" step="0.1" value="{Y}">
+	</td>
+	<td>
+		<input point="{Point}" id="Z" class="uk-input" type="number" step="0.1" value="{Z}">
+	</td>
+	<td>
+		<input point="{Point}" id="Rx" class="uk-input" type="number" step="0.1" value="{Rx}">
+	</td>
+	<td>
+		<input point="{Point}" id="Ry" class="uk-input" type="number" step="0.1" value="{Ry}">
+	</td>
+
+	<td>
+		<div class="uk-flex-inline uk-flex-middle">
+			<input point="{Point}" id="Duration" class="uk-input" type="number" min="0" value="{Secondes}">
+			<p class="second-text">s</p>
+		</div>
+	</td>
+	
+	<td>
+		<select point="{Point}" id="Transition" class="uk-select transition-text">
+			<option {SelectA}>linear</option>
+			<option {SelectB}>ease</option>
+			<option {SelectC}>ease-in</option>
+			<option {SelectD}>ease-out</option>
+			<option {SelectE}>ease-in-out</option>
+		</select>
+	</td>
+
+	<td>
+		<button point="{Point}" id="delete" name="point-delete" class="uk-button uk-button-danger">
+			<span class="table-icon" uk-icon="trash"></span>
+		</button>
+	</td>
+</tr>
+[/HTML]
+
+[CSS]
+.table-icon > svg {
+	max-width: none;
+}
+.second-text {
+	margin-left: 0.5em;
+}
+.transition-text {
+	width: fit-content;
+}
+[/CSS]

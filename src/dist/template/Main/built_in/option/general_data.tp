@@ -1,0 +1,10 @@
+[HTML]
+<div class="uk-margin">
+	<label for="{for}" class="uk-form-label" lang="{text}"></label>
+	<div style="position: relative">
+		<div class="uk-form-controls">
+			<input id="{for}" value="{path}" class="uk-input"></input>
+		</div>
+	</div>
+</div>
+[/HTML]

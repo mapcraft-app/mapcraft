@@ -1,0 +1,41 @@
+{
+	"Title": "Music",
+	"Icon": "play",
+	"Notification" : "A new music is being created",
+	"Data": {
+		"NoName": "Name is empty",
+		"Success": "Modification is saving",
+		"AddMusic": "Add new music",
+		"ClickCopy": "Click for copy launch command to clipboard",
+		"Submit": "Submit",
+		"Delete": {
+			"ButtonModal" : "Delete this music",
+			"Text": "Are you sure you want to delete this music ?",
+			"Delete": "Delete",
+			"Cancel": "Cancel"
+		},
+		"Modal": {
+			"Upload": "Drag file or click for upload",
+			"Name": "Name of file",
+			"Directory": "Music saving folder",
+			"NotWellFormated": "Autorized character: [a-z], [0-9], /, ., _, -",
+			"IncorrectPath": "Music must be placed in the sounds folder of the resource pack",
+			"Save": "Save",
+			"Error" : {
+				"NoMusic": "There is no music",
+				"NoOGG": "The music is not in OGG format",
+				"IncorrectOGG": "Only .ogg extension is allowed",
+				"NoName": "No file name",
+				"ForbiddenName": "Name contains forbidden character(s)",
+				"UnknownDir": "Directory not exist",
+				"IsExist": "This music already exist",
+				"FileName" : {
+					"NotExist": "Old file name not exist",
+					"ForbiddenCharacters": "Old file name contains forbidden characters"
+				},
+				"FileLink": ".ogg not found",
+				"SoundsJson": "sounds.json: no data"
+			}
+		}
+	}
+}

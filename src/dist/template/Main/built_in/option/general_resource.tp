@@ -1,0 +1,11 @@
+[HTML]
+<div class="uk-margin">
+	<label for="{for}" class="uk-form-label" lang="{text}"></label>
+	<div class="form-group">
+		<div class="uk-form-controls input-group">
+			<span class="input-group-text">{Name}</span>
+			<input class="uk-input input-group" id="{for}" value="{path}"></input>
+		</div>
+	</div>
+</div>
+[/HTML]

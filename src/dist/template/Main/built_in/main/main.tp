@@ -1,0 +1,124 @@
+[HTML]
+<header style="margin-bottom: 2em">
+	<div id="main-nav">
+		<nav class="uk-navbar-container uk-margin" uk-narvbar>
+			<div class="uk-flex uk-flex-between uk-flex-middle">
+				<a class="uk-navbar-toggle nav-light" uk-navbar-toggle-icon href="#offcanvas-slide" uk-toggle></a>
+				<h2 id="nav-title" class="nav-light" style="margin:0"></h2>
+				<a class="uk-navbar-toggle nav-light" uk-icon="icon:file-text;ratio:2" href="#offcanvas-log" uk-toggle></a>
+			</div>
+		</nav>
+	</div>
+	<div id="nav-slide">
+		<div id="offcanvas-slide" uk-offcanvas="overlay:true">
+			<div class="uk-offcanvas-bar main-nav-offcanvas">
+				<article class="uk-comment" id="nav-header"></article>
+				<div class="uk-flex uk-flex-center">
+					<a id="documentation-link" class="uk-button uk-button-text" lang="Documentation"></a>
+				</div>
+				<hr class="uk-divider-icon">
+				<ul id="toogle-nav" class="uk-nav uk-nav-default nav-main-slide">
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>
+<div id="content">
+</div>
+<footer>
+	<div id="offcanvas-log" uk-offcanvas="flip: true; overlay: true">
+		<div id="offcanvas-content" class="uk-offcanvas-bar">
+			<div class="uk-flex uk-flex-column" style="height: -webkit-fill-available;">
+				<h3 class="uk-text-center uk-text-warning" lang="Log"></h3>
+				<h4 class="uk-text-center" style="margin-top:0" lang="LogInfo"></h4>
+				<textarea id="log-textarea" readonly rows=15 style="resize:none;width:100%;height:100%;"></textarea>
+			</div>
+		</div>
+	</div>
+	<div id="modalWorkInProgress" class="work-in-progress">
+		<div class="uk-flex uk-flex-middle uk-flex-center">
+			<img class="img-work-in-progress" src="dist/img/loader.gif"/>
+			<h3 class="text-work-in-progress" lang="WorkInProgress"></h3>
+		</div>
+	</div>
+	<div id="ModalEditFile">
+		<div id="EditFile" class="uk-flex-top uk-modal-container" container="#ModalEditFile" uk-modal="esc-close:false;bg-close:false;stack:true;">
+			<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
+				<div class="uk-modal-header">
+					<h2 id="EditFile-Header" class="uk-modal-title"></h2>
+				</div>
+				<pre id="EditFile-Editor" class="uk-modal-body"></pre>
+				<div class="uk-modal-footer uk-text-right">
+					<button id="EditFile-Cancel" class="uk-button uk-button-default" type="button" lang="Editor.Cancel"></button>
+					<button id="EditFile-Save" class="uk-button uk-button-primary" type="button" lang="Editor.Save"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+[/HTML]
+
+[CSS]
+#EditFile-Info {
+	display: hidden;
+}
+#EditFile-Editor {
+	position: relative;
+	width: -webkit-fill-available;
+	margin: 2em;
+	border-radius: 0.3em;
+}
+.nav-main-slide {
+	word-break: break-word;
+}
+.main-nav-offcanvas {
+	width: max-content;
+}
+[/CSS]
+
+[JS]
+window.api.receive('WorkProgress:open-modal', (command) => {
+	document.getElementById('modalWorkInProgress').style.display = 'flex';
+});
+window.api.receive('WorkProgress:close-modal', (command) => {
+	document.getElementById('modalWorkInProgress').style.display = 'none';
+});
+
+/* Ace editor */
+if (typeof AceEditor == 'undefined')
+{
+	ace.require('ace/ext/language_tools');
+	var AceEditor = ace.edit('EditFile-Editor', {
+		theme: 'ace/theme/chaos',
+		selectionStyle: 'text',
+		enableBasicAutocompletion: true,
+		enableSnippets: true,
+        enableLiveAutocompletion: true,
+        autoScrollEditorIntoView: true,
+		showPrintMargin: false,
+		showLineNumbers: true,
+		minLines: 25,
+		maxLines: 25,
+		fontSize: '0.80em' 
+	});
+}
+
+document.getElementById('EditFile-Cancel').addEventListener('click', (event) => {
+	window.api.send('Editor:close');
+});
+document.getElementById('EditFile-Save').addEventListener('click', (event) => {
+	window.api.send('Editor:save-file', AceEditor.getValue());
+});
+
+window.api.receive('Editor:open-modal', (data) => {
+	AceEditor.session.setValue(data.data);
+	document.getElementById('EditFile-Header').innerText = data.fileName;
+	AceEditor.session.setMode('ace/mode/'+ data.extension);
+	UIkit.modal('#EditFile').show();
+});
+window.api.receive('Editor:close-modal', () => {
+	AceEditor.session.setValue('');
+	UIkit.modal('#EditFile').hide();
+});
+
+[/JS]

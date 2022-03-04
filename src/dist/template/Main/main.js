@@ -48,7 +48,17 @@ function cleanSpecificRender(oldTemplate)
 
 function UpdateInterface(plugin, name)
 {
+	const cleanNode = (node, removeParent = false) =>
+	{
+		if (node && node.hasChildNodes())
+			while (node.firstChild)
+				node.removeChild(node.firstChild);
+		if (removeParent)
+			node.remove();
+	};
+
 	cleanSpecificRender(localStorage.getItem('Mapcraft_Plugin'));
+	cleanNode(document.querySelector('html > body > div[id="content"]'), false);
 	const navTitle = document.getElementById('nav-title');
 	if (navTitle.childNodes[0])
 		navTitle.childNodes[0].remove();

@@ -1,0 +1,7 @@
+[HTML]
+<li id="{id}" title="{title}">
+	<h4 id="nav-{id}" class="nav-hover-element">
+		<span class="uk-margin-small-right" uk-icon="icon: {icon}"></span> {title}
+	</h4>
+</li>
+[/HTML]

@@ -20,6 +20,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
+    "dev": "electron . dev",
     "debug": "electron --trace-warnings .",
     "pack": "electron-builder -mwl --x64 --dir ",
     "dist": "electron-builder -mwl --x64",

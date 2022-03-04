@@ -1,0 +1,268 @@
+{
+	"Title": "Advancement",
+	"Icon": "bookmark",
+	"Notification" : "",
+	"Data" : {
+		"Modal": {
+			"Text": "Are you sure you want to remove complete advancement ?",
+			"Save": "You have selected a different advancement without saving the current one. Would you like to save it ?",
+			"Yes": "Yes",
+			"No": "No"
+		},
+		"Graph": {
+			"NewAdvancement": "New advancement",
+			"Generate": "Generate complete advancement",
+			"SuccessGeneration": "Generation has been successfully completed",
+			"Delete": "Delete complete advancement",
+			"AddParent": "Add parent",
+			"AddChild": "Add child",
+			"Save": "Save current advancement",
+			"Title": "Title of advancement"
+		},
+		"Edit": {
+			"Root": {
+				"_Title": "Root",
+				"Namespace": "Namespace",
+				"BackgroundImage": "Background image"
+			},
+			"Display": {
+				"_Title": "Display",
+				"Title": "Title",
+				"TitleColor": "Title color",
+				"Description": "Description",
+				"DescriptionColor": "Description color",
+				"Icon": "Icon",
+				"Color": {
+					"DarkRed": "Dark red",
+					"Red": "Red",
+					"Gold": "Gold",
+					"Yellow": "Yellow",
+					"DarkGreen": "Dark green",
+					"Green": "Green",
+					"DarkAqua": "Dark aqua",
+					"Aqua": "Aqua",
+					"DarkBlue": "Dark blue",
+					"Blue": "Blue",
+					"DarkPurple": "Dark purple",
+					"Purple": "Purple",
+					"Black": "Black",
+					"DarkGray": "Dark gray",
+					"Gray": "Gray",
+					"White": "White"
+				},
+				"Format": {
+					"Bold": "Bold",
+					"Italic": "Italic",
+					"Underlined": "Underlined",
+					"Strikethrough": "Strikethrough",
+					"Obfuscated": "Obfuscated"
+				},
+				"Frame": {
+					"Title": "Frame",
+					"Normal": "Normal",
+					"Goal": "Goal",
+					"Challenge": "Challenge"
+				},
+				"NBT": "NBT",
+				"Check": {
+					"Toast": "Show Toast",
+					"Chat": "Announce in the chat",
+					"Hidden": "Hidden"
+				}
+			},
+			"Criteria": {
+				"_Title": "Criteria",
+				"Name": "Criteria Name",
+				"ChooseTrigger": "Choose a trigger",
+				"AddTrigger": "Add a trigger",
+				"Item": {
+					"Item": "Item",
+					"Items": "Items",
+					"EditItem": "Edit item",
+					"EditItems": "Edit items",
+					"NBT": "NBT",
+					"Count": "Count",
+					"Data": "Data",
+					"Tag": "Tag",
+					"Durability": "Durability",
+					"Potion": "Potion",
+					"Levels": "Levels",
+					"Minimum": "Minimum",
+					"Maximum": "Maximum",
+					"Enchantments": "Enchantments",
+					"StoredEnchantments": "Stored Enchantments",
+					"Enchantment": "Enchantment"
+				},
+				"Damage": {
+					"Damage": "Damage",
+					"Edit": "Edit damage",
+					"Dealt": "Dealt",
+					"Taken": "Taken",
+					"Blocked": "Is blocked ?",
+					"Type": {
+						"Type": "Type",
+						"DirectEntity": "Direct Entity",
+						"SourceEntity": "Source Entity",
+						"Bypasses": {
+							"Armor": "Bypasses armor",
+							"Invulnerability": "Bypasses invulnerability",
+							"Magic": "Bypasses magic"
+						},
+						"Is": {
+							"Explosion": "Is explosion",
+							"Fire":	"Is fire",
+							"Magic": "Is magic",
+							"Projectile": "Is projectile",
+							"Lightning": "Is lightning"
+						}
+					}
+				},
+				"Distance": {
+					"Distance": "Distance",
+					"EditDistance": "Edit distance",
+					"Absolute": "Absolute",
+					"Horizontal": "Horizontal",
+					"X": "X",
+					"Y": "Y",
+					"Z": "Z"
+				},
+				"Durability": {
+					"Durability": "Durability",
+					"Delta": "Delta",
+					"EditDurability": "Edit durability"
+				},
+				"Effects": {
+					"Effects": "Effects",
+					"EditEffects": "Edit effects",
+					"Amplifier": "Amplifier",
+					"Duration": "Duration"
+				},
+				"Player":
+				{
+					"Player": "Player",
+					"EditPlayer": "Edit player",
+					"Gamemode" : {
+						"Gamemode": "Gamemode",
+						"Adventure": "Adventure",
+						"Creative": "Creative",
+						"Spectator": "Spectator",
+						"Survival": "Survival"
+					},
+					"Stats":
+					{
+						"Stats": "Stats",
+						"Type": "Type",
+						"Stat": "Stat",
+						"Value": "Value"
+					}
+				},
+				"Location": {
+					"Location": "Location",
+					"EditLocation": "Edit location",
+					"Fluid": "Fluid",
+					"ID": "ID",
+					"Dimension": "Dimension",
+					"Feature": "Feature",
+					"Light": "Light",
+					"Position": "Position",
+					"IsSmokey": "Is smokey ?",
+					"Default": "Select dimension",
+					"Overworld": "Overworld",
+					"Nether": "Nether",
+					"End": "End"
+				},
+				"Entity": {
+					"Entity": "Entity",
+					"EditEntity": "Edit entity",
+					"NBT": "NBT",
+					"Equipement": {
+						"Equipement": "Equipement",
+						"Head": "Head",
+						"Mainhand": "Main hand",
+						"Chest": "Chest",
+						"Offhand": "Off hand",
+						"Legs": "Legs",
+						"Feets": "Feets"
+					},
+					"Flags": {
+						"Baby": "Is baby",
+						"Fire": "Is on fire",
+						"Sneak": "Is sneaking",
+						"Sprint": "Is sprinting",
+						"Swim": "Is swimming"
+					}
+				},
+				"Victims": {
+					"Victims": "Victims",
+					"EditVictims": "Edit victims"
+				},
+				"State": {
+					"State": "State",
+					"Edit": "Edit state",
+					"Name": "State name",
+					"Value": "Value",
+					"Help": "For more information, click here"
+				},
+				"Slots": {
+					"Slots": "Slots",
+					"Edit": "Edit slots",
+					"Empty": "Empty",
+					"Full": "Full",
+					"Occupied": "Occupied"
+				},
+				"Lightning": {
+					"Lightning": "Lightning",
+					"Bystander": "Bystander"
+				},
+				"Form": {
+					"Biome": "Biome",
+					"Block": "Block",
+					"Effect": "Effect",
+					"Enchantement": "Enchantement",
+					"Distance": "Distance",
+					"Potion": "Potion",
+					"Tag": "Tag",
+					"Trigger": "Trigger",
+
+					"NumberOfBeesInside": "Number Of Bees Inside",
+					"Child": "Child",
+					"Parent": "Parent",
+					"Partner": "Partner",
+					"From": "From",
+					"To": "To",
+					"Level": "Level",
+					"Villager": "Villager",
+					"Zombie": "Zombie",
+					"KillingBlow": "Killing blow",
+					"Rod": "Rod",
+					"UniqueEntityTypes": "Unique Entity Types",
+					"LootTable": "Loot table",
+					"Recipe": "Recipe",
+					"SignalStrength": "Signal Strength",
+					"Projectile": "Projectile",
+					"Shooter": "Shooter",
+					"Name": "Name"
+				}
+			},
+			"Requirements": {
+				"Title": "Requirements",
+				"Add": "Add requirement"
+			},
+			"Rewards": {
+				"Title": "Rewards",
+				"Recipes": "Recipes",
+				"AddRecipe": "Add recipe",
+				"LootTables": "Loot tables",
+				"AddLoot": "Add loot table",
+				"Experience": "Experience",
+				"Function": "Function"
+			}
+		},
+		"Error": {
+			"ContainIllegalCharacter": "contains illegal characters, here are the allowed ones: ([a-z], [0-9], _, -, /, .)",
+			"NoAdvancement": "No advancement is selected",
+			"NoCriteria": "No criteria was created",
+			"MakeDirectoryError": "The folder cannot be created"
+		}
+	}
+}

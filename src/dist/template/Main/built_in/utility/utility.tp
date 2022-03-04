@@ -1,0 +1,44 @@
+[HTML]
+<div class="uk-container">
+	<div id="utility-error"></div>
+	<ul id="utility-menu" class="uk-child-width-expand" uk-tab>
+		<li class="uk-active">
+			<a href="#" lang="Menu.Blocks.Title">
+				<span class="space-icon-nav" uk-icon="icon: {BlocksIcon}; ratio: 1"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" lang="Menu.Items.Title">
+				<span class="space-icon-nav" uk-icon="icon: {ItemsIcon}; ratio: 1"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" lang="Menu.Tags.Title">
+				<span class="space-icon-nav" uk-icon="icon: {TagsIcon}; ratio: 1"></span>
+			</a>
+		</li>
+	</ul>
+	<ul class="uk-switcher">
+		<li id="utility-tab-blocks"></li>
+		<li id="utility-tab-items"></li>
+		<li id="utility-tab-tags"></li>
+	</ul>
+</div>
+[/HTML]
+
+[CSS]
+.space-icon-nav {
+	margin-right: 1em;
+}
+.uk-width-small {
+    width: 10%;
+}
+#items-list img {
+	width: 45%;
+	image-rendering: -webkit-crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+[/CSS]

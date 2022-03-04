@@ -18,7 +18,7 @@ let MainWindow = null;
 let SelectUserChild = null;
 let UpdateWindow = null;
 let IsSelectedUser = false;
-let PassFirstStep = false;
+let PassFirstStep = !!(process.argv[2] && process.argv[2] === 'dev');
 const SaveCurrentUser = {
 	DBpath: String,
 	Username: String,

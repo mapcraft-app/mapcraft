@@ -1,0 +1,71 @@
+[HTML]
+<div class="uk-margin">
+	<button class="uk-button uk-button-primary uk-width-1-1" type="button" uk-toggle="target: #form-damage-modal-{ID}">
+		<span uk-icon="pencil"></span>
+		<span lang="Edit.Criteria.Damage.Edit"></span>
+	</button>
+</div>
+<div id="form-damage-modal-container-{ID}">
+	<div id="form-damage-modal-{ID}" class="uk-flex-top uk-modal" container="form-damage-modal-container-{ID}" uk-modal="bg-close:true;stack:true;">
+		<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
+			<div class="uk-modal-header">
+				<h2 class="uk-modal-title" lang="Edit.Criteria.Damage.Edit"></h2>
+			</div>
+			<div class="uk-modal-body">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-damage-modal-dealt" lang="Edit.Criteria.Damage.Dealt"></label>
+					<div class="uk-form-controls" id="form-damage-modal-dealt">
+						<div class="min-max-form">
+							<label for="form-damage-modal-dealt-min" lang="Edit.Criteria.Item.Minimum"></label>
+							<input id="form-damage-modal-dealt-min" class="uk-input uk-form-width-small"  type="number" step="1">
+						</div>
+						<div class="min-max-form">
+							<label for="form-damage-modal-dealt-max" lang="Edit.Criteria.Item.Maximum"></label>
+							<input id="form-damage-modal-dealt-max" class="uk-input uk-form-width-small"  type="number" step="1">
+						</div>
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-damage-modal-taken" lang="Edit.Criteria.Damage.Taken"></label>
+					<div class="uk-form-controls" id="form-damage-modal-taken">
+						<div class="min-max-form">
+							<label for="form-damage-modal-taken-min" lang="Edit.Criteria.Item.Minimum"></label>
+							<input id="form-damage-modal-taken-min" class="uk-input uk-form-width-small"  type="number" step="1">
+						</div>
+						<div class="min-max-form">
+							<label for="form-damage-modal-taken-max" lang="Edit.Criteria.Item.Maximum"></label>
+							<input id="form-damage-modal-taken-max" class="uk-input uk-form-width-small"  type="number" step="1">
+						</div>
+					</div>
+				</div>
+				<div class="uk-margin uk-flex uk-flex-left uk-flex-between">
+					<label>
+						<input class="uk-checkbox" id="form-damage-modal-blocked" type="checkbox">
+						<span lang="Edit.Criteria.Damage.Blocked"></span>
+					</label>
+				</div>
+				<ul uk-accordion="multiple: true" class="modal-accordion-zone">
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Damage.Type.Type"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content" id="form-damage-modal-type"></div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href="#">
+							<h3 class="uk-heading-line">
+								<span lang="Edit.Criteria.Entity.Entity"></span>
+							</h3>
+						</a>
+						<div class="uk-accordion-content" id="form-damage-modal-entity">
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]

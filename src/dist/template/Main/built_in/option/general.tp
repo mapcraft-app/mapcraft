@@ -1,0 +1,51 @@
+[HTML]
+<form id="start-option" class="uk-form-horizontal">
+	<div id="option-general-version">
+		<div class="uk-margin">
+			<label class="uk-form-label" for="option-Version" lang="TagVersion"></label>
+			<div class="uk-form-controls">
+				<select class="uk-select" id="option-Version">
+				</select>
+			</div>
+		</div>
+	</div>
+	<div id="option-general-path"></div>
+	<div id="option-general-lang">
+		<div class="uk-margin">
+			<label class="uk-form-label" for="option-Lang" lang="TagLang"></label>
+			<div class="uk-form-controls">
+				<select class="uk-select" id="option-Lang"></select>
+			</div>
+		</div>
+	</div>
+	<div class="uk-flex uk-flex-right">
+		<button id="option-button-reset" class="uk-button uk-button-default space-button" type="button" lang="Button.Reset"></button>
+		<button id="option-button-save" class="uk-button uk-button-primary" type="button" lang="Button.Save"></button>
+	</div>
+</form>
+<hr class="uk-divider-icon"/>
+<div class="uk-background-primary uk-padding-small uk-text-center" id="dev-error" hidden>
+	<h3 lang="Dev.Create.Reload"></h3>
+	<button class="uk-button uk-button-default uk-padding-small" id="reload-app">
+		<span uk-icon="icon: refresh; ratio: 2"></span>
+	</button>
+</div>
+<h2 class="uk-text-center" lang="Dev.Main"></h2>
+<div class="uk-margin-right uk-margin-left uk-margin-bottom uk-flex">
+	<div class="uk-card uk-card-default uk-card-body uk-text-center">
+		<h4 lang="Dev.Create.Explanation"></h4>
+		<button lang="Dev.Create.Title" id="createPlugin" class="uk-button uk-button-default uk-text-warning"></button>
+	</div>
+	<div class="uk-card uk-card-default uk-card-body uk-text-center">
+		<h4 lang="Dev.Package.Explanation"></h4>
+		<button lang="Dev.Package.Title" id="packagePlugin" class="uk-button uk-button-default uk-text-warning"></button>
+	</div>
+</div>
+
+[/HTML]
+
+[CSS]
+.space-button {
+	margin-right: 1em;
+}
+[/CSS]

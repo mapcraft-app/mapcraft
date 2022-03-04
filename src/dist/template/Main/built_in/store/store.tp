@@ -1,0 +1,17 @@
+[HTML]
+<div class="uk-container">
+	<img class="img-center" src="./dist/img/construction_cone.png" width="250px">
+	<h2 class="text-center">{isComing}</h2>
+</div>
+[/HTML]
+
+[CSS]
+.img-center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+.text-center {
+	text-align: center;
+}
+[/CSS]

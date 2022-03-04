@@ -1,0 +1,9 @@
+[HTML]
+<div class="uk-margin">
+	<label class="uk-form-label" for="{ID}">{Name}</label>
+	<div class="uk-form-controls">
+		<input class="uk-input" id="{ID}" type="text" placeholder="{Placeholder}">
+		<span id="{ID}-Error" style="display: none" lang="Modal.NotWellFormated"></span>
+	</div>
+</div>
+[/HTML]

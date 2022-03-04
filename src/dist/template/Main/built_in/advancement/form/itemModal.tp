@@ -1,0 +1,90 @@
+[HTML]
+<div class="uk-margin">
+	<button class="uk-button uk-button-primary uk-width-1-1" type="button" uk-toggle="target: #form-item-modal-{ID}">
+		<span uk-icon="pencil"></span>
+		<span lang="Edit.Criteria.Item.EditItem"></span>
+	</button>
+</div>
+<div id="form-item-modal-container-{ID}">
+	<div id="form-item-modal-{ID}" class="uk-flex-top uk-modal" container="form-item-modal-container-{ID}" uk-modal="bg-close:true;stack:true;">
+		<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
+			<div class="uk-modal-header">
+				<h2 class="uk-modal-title" lang="Edit.Criteria.Item.EditItem"></h2>
+			</div>
+			<div class="uk-modal-body">
+				<button class="uk-modal-close-default" type="button" uk-close></button>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-item" lang="Edit.Criteria.Item.Item"></label>
+					<div class="uk-form-controls" id="form-item-modal-item"></div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-nbt" lang="Edit.Criteria.Item.NBT"></label>
+					<div class="uk-form-controls">
+						<input class="uk-input" id="form-item-modal-nbt" type="text">
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-data" lang="Edit.Criteria.Item.Data"></label>
+					<div class="uk-form-controls">
+						<input class="uk-input" id="form-item-modal-data" type="number" min="0">
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-tag" lang="Edit.Criteria.Item.Tag"></label>
+					<div class="uk-form-controls">
+						<input class="uk-input" id="form-item-modal-tag" type="text">
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-count" lang="Edit.Criteria.Item.Count"></label>
+					<div class="uk-form-controls" id="form-item-modal-count">
+						<div class="min-max-form">
+							<label for="form-item-modal-count-min" lang="Edit.Criteria.Item.Minimum"></label>
+							<input class="uk-input uk-form-width-small" id="form-item-modal-count-min" type="number" min="0">
+						</div>
+						<div class="min-max-form">
+							<label for="form-item-modal-count-max" lang="Edit.Criteria.Item.Maximum"></label>
+							<input class="uk-input uk-form-width-small" id="form-item-modal-count-max" type="number" min="0">
+						</div>
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-durability" lang="Edit.Criteria.Item.Durability"></label>
+					<div class="uk-form-controls" id="form-item-modal-durability">
+						<div class="min-max-form">
+							<label for="form-item-modal-durability-min" lang="Edit.Criteria.Item.Minimum"></label>
+							<input class="uk-input uk-form-width-small" id="form-item-modal-durability-min" type="number" min="0">
+						</div>
+						<div class="min-max-form">
+							<label for="form-item-modal-durability-max" lang="Edit.Criteria.Item.Maximum"></label>
+							<input class="uk-input uk-form-width-small" id="form-item-modal-durability-max" type="number" min="0">
+						</div>
+					</div>
+				</div>
+				<div class="uk-margin">
+					<label class="uk-form-label" for="form-item-modal-potion" lang="Edit.Criteria.Item.Potion"></label>
+					<div class="uk-form-controls" id="form-item-modal-potion"></div>
+				</div>
+				<div id="form-item-modal-enchantements" class="uk-margin">
+					<h3 class="uk-heading-line">
+						<span lang="Edit.Criteria.Item.Enchantments"></span>
+					</h3>
+					<div id="form-item-modal-enchantements-list"></div>
+					<button id="form-item-modal-add-enchantements" class="uk-button uk-button-primary uk-width-1-1">
+						<span uk-icon="icon: plus"></span>
+					</button>
+				</div>
+				<div id="form-item-modal-stored-enchantements" class="uk-margin">
+					<h3 class="uk-heading-line">
+						<span lang="Edit.Criteria.Item.StoredEnchantments"></span>
+					</h3>
+					<div id="form-item-modal-stored-enchantements-list"></div>
+					<button id="form-item-modal-add-stored-enchantements" class="uk-button uk-button-primary uk-width-1-1">
+						<span uk-icon="icon: plus"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+[/HTML]

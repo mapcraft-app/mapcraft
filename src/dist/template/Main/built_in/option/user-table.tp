@@ -1,0 +1,39 @@
+[HTML]
+<tr>
+	<td class="uk-form-controls">
+		<input class="uk-checkbox" type="checkbox" value="{username}" name="select-user" {Disabled}>
+	</td>
+	<td>
+		<img class="user-icon" src="{link}"/>
+	</td>
+	<td>
+		<div class="badge-connected {ClassConnect}" uk-tooltip="title: {Connect}; pos: right"></div>
+	</td>
+	<td>{username}</td>
+	<td>
+		<button name="user-button-delete" class="uk-button uk-button-danger">
+			<span class="table-icon" uk-icon="trash"></span>
+		</button>
+	</td>
+</tr>
+[/HTML]
+
+[CSS]
+.table-icon > svg {
+	max-width: none;
+}
+.user-icon {
+	max-width: none;
+}
+.badge-connected {
+	width: 1.5em;
+    height: 1.5em;
+    border-radius: 1.5em;
+}
+.is-connected {
+	background-color: green;
+}
+.is-not-connected {
+	background-color: red;
+}
+[/CSS]

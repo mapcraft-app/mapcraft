@@ -1,0 +1,49 @@
+{
+	"Title": "Cinématique",
+	"Icon": "camera",
+	"Notification" : "Une nouvelle cinématique est en cours de création",
+	"Data": {
+		"CreateModal": {
+			"Error": "Le nom est vide",
+			"Name": "Nom de la cinématique",
+			"Cancel": "Annuler",
+			"Add": "Ajouter"
+		},
+		"DeleteModal": {
+			"ButtonModal" : "Supprimer la cinématique",
+			"Text": "Êtes-vous sûr de vouloir supprimer la cinématique ",
+			"Delete": "Oui",
+			"Cancel": "Non"
+		},
+		"CreateCutscene": "Créer une nouvelle cinématique",
+		"CutsceneList": "Liste des cinématiques",
+		"Tooltip": "Ajouter ce tag à une entité pour lancer la cinématique",
+		"AddPoint": "Ajouter un nouveau point",
+		"AddPointError": "Il est impossible d'ajouter un point si aucune cinématique n'est sélectioné",
+		"GenerateError": "Aucune cinématique n'a été sélectioné",
+		"StartPoint": "Départ",
+		"Files": {
+			"Start": "Modifier la fonction de départ",
+			"End": "Modifier la fonction de fin"
+		},
+		"TypeError": {
+			"Incorrect": "Le type de données reçu est incorrecte, attendu",
+			"Received": "reçu",
+			"String": "chaîne de caractères",
+			"Number": "nombre"
+		},
+		"Generation": {
+			"Error": "Pour créer une cinématique, vous devez avoir au moins un point de départ et un point d'arrivée"
+		},
+		"Thead": {
+			"Point": "Point",
+			"X": "X",
+			"Y": "Y",
+			"Z": "Z",
+			"Rx": "Rx",
+			"Ry": "Ry",
+			"Duration": "Durée",
+			"Transition": "Transition"
+		}
+	}
+}

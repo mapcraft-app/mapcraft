@@ -1,0 +1,11 @@
+[HTML]
+<div class="uk-margin">
+	<label class="uk-form-label" for="{ID}">{Name}</label>
+	<div class="form-group">
+		<div class="uk-form-controls input-group">
+			<span class="input-group-text" id="{ID}-span"></span>
+			<input class="uk-input input-group" id="{ID}">
+		</div>
+	</div>
+</div>
+[/HTML]

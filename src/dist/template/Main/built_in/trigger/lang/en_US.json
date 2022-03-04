@@ -1,0 +1,27 @@
+{
+	"Title": "Trigger",
+	"Icon": "move",
+	"Notification" : "A new trigger is being created",
+	"Data" : {
+		"Create": "Create",
+		"Modify": "Modify",
+		"Delete": "Delete",
+		"CreateTrigger": "Create new trigger",
+		"ModifyTrigger": "Modify trigger",
+		"SelectEveryTrigger": "Select every trigger",
+		"Tab": {
+			"NoTrigger": "No trigger",
+			"ID": "ID",
+			"Name": "Name",
+			"X1": "X1",
+			"X2": "X2",
+			"Y1": "Y1",
+			"Y2": "Y2",
+			"Z1": "Z1",
+			"Z2": "Z2"
+		},
+		"Error": {
+			"NameExist": "This name already exists"
+		}
+	}
+}
