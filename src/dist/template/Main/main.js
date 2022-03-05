@@ -48,40 +48,48 @@ function cleanSpecificRender(oldTemplate)
 
 function UpdateInterface(plugin, name)
 {
-	const cleanNode = (node, removeParent = false) =>
+	/**
+	 * This setImmediate is present for a simple reason, it allows when a
+	 * plugin is very heavy to save very often some seconds of rendering
+	 * on the DOM.
+	 * It also allows when a plugin is badly optimized to avoid seeing it
+	 * too much.
+	 * So it should not be removed under any circumstances, unless a
+	 * better solution is found in the meantime.
+	 */
+	setImmediate(() =>
 	{
-		if (node && node.hasChildNodes())
-			while (node.firstChild)
-				node.removeChild(node.firstChild);
-		if (removeParent)
-			node.remove();
-	};
-
-	cleanSpecificRender(localStorage.getItem('Mapcraft_Plugin'));
-	cleanNode(document.querySelector('html > body > div[id="content"]'), false);
-	const navTitle = document.getElementById('nav-title');
-	if (navTitle.childNodes[0])
-		navTitle.childNodes[0].remove();
-	navTitle.appendChild(document.createTextNode(name));
-	const Component = Plugins.component(plugin);
-	const PluginsComponent = importPlugins.component(plugin);
-	if (!Component && !PluginsComponent)
-	{
-		console.error('No plugin exist with is name');
-		return;
-	}
-	if (Component)
-		Component.instance.main();
-	else
-		PluginsComponent.instance.main();
-	localStorage.setItem('Mapcraft_Plugin', plugin);
-	UpdateSelectedLi();
+		const cleanNode = (node, removeParent = false) =>
+		{
+			if (node && node.hasChildNodes())
+				while (node.firstChild)
+					node.removeChild(node.firstChild);
+			if (removeParent)
+				node.remove();
+		};
+		cleanSpecificRender(localStorage.getItem('Mapcraft_Plugin'));
+		cleanNode(document.querySelector('html > body > div[id="content"]'), false);
+		const navTitle = document.getElementById('nav-title');
+		if (navTitle.childNodes[0])
+			navTitle.childNodes[0].remove();
+		navTitle.appendChild(document.createTextNode(name));
+		const Component = Plugins.component(plugin);
+		const PluginsComponent = importPlugins.component(plugin);
+		if (!Component && !PluginsComponent)
+		{
+			console.warn(`No plugin named ${plugin} exist with is name`);
+			return;
+		}
+		if (Component)
+			Component.instance.main();
+		else
+			PluginsComponent.instance.main();
+		localStorage.setItem('Mapcraft_Plugin', plugin);
+		UpdateSelectedLi();
+	});
 }
 
-MCipc.receive('Plugin:update-interface', (plugin, name) =>
-{
-	setTimeout(UpdateInterface(plugin, name), 0);
-});
+MCipc.receive('Plugin:update-interface', (plugin, name) => UpdateInterface(plugin, name));
 //#endregion
 
 //#region Shell system
@@ -175,17 +183,13 @@ window.addEventListener('DOMContentLoaded', () =>
 		blurWindow();
 		MCipc.send('Update:create-modal');
 		Plugins.instance('Main').header();
-		/*If option plugin is open, reload user table for correct info */
+		/**
+		 * If option plugin is open, reload user table for correct info
+		 */
 		if (localStorage.getItem('Mapcraft_Plugin') && localStorage.getItem('Mapcraft_Plugin') === 'Option')
 			Plugins.instance('Option').RedrawUserTab();
-		document.getElementById('nav-header-change-username').addEventListener('click', () =>
-		{
-			changeUsername();
-		});
+		document.getElementById('nav-header-change-username').addEventListener('click', () => changeUsername());
 	});
-	MCipc.receive('Log:send-change', (fullFile) =>
-	{
-		MClog.printToTextArea(fullFile);
-	});
+	MCipc.receive('Log:send-change', (fullFile) => MClog.printToTextArea(fullFile));
 });
 //#endregion

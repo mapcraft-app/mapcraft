@@ -103,28 +103,35 @@ class UtilityComponent
 		});
 	}
 
+	static async setImage(img, filePath, name)
+	{
+		img.setAttribute('src', path.join(filePath, '..', '..', 'loader.gif'));
+		fs.access(path.join(filePath, `${name}.webp`), (webp) =>
+		{
+			if (webp)
+				img.setAttribute('src', path.join(filePath, '..', 'no_data.png'));
+			else
+				img.setAttribute('src', path.join(filePath, `${name}.webp`));
+		});
+	}
+
 	//#region Blocks
 	static _generateListBlock(version)
 	{
 		let x = 0;
 		const list = document.getElementById('blocks-list');
-		const jsonData = MCutilities.getDataGameElement('blocks', version);
 		Template.cleanNode(list);
+		const jsonData = MCutilities.getDataGameElement('blocks', version);
+		const filePath = path.join(__dirname, '../../../../img/assets/block');
 		for (const id of jsonData)
 		{
-			const image = document.createElement('img');
-			const testPath = path.join(__dirname, '../../../../img/assets/block');
-			if (fs.existsSync(path.join(testPath, `${id.name}.png`)))
-				image.src = path.join(testPath, `${id.name}.png`);
-			else if (fs.existsSync(path.join(testPath, `${id.name}.webp`)))
-				image.src = path.join(testPath, `${id.name}.webp`);
-			else
-				image.src = path.join(testPath, '..', 'no_data.png');
 			const element = document.createElement('tr');
 			const elementId = document.createElement('td');
 			elementId.innerText = ++x;
 			const elementImage = document.createElement('td');
-			elementImage.appendChild(image);
+			const img = document.createElement('img');
+			this.setImage(img, filePath, id.name);
+			elementImage.appendChild(img);
 			const elementName = document.createElement('td');
 			elementName.innerText = id.name;
 			element.appendChild(elementId);
@@ -158,18 +165,13 @@ class UtilityComponent
 	{
 		let x = 0;
 		const list = document.getElementById('items-list');
-		const jsonData = MCutilities.getDataGameElement('items', version);
 		Template.cleanNode(list);
+		const jsonData = MCutilities.getDataGameElement('items', version);
+		const testPath = path.join(__dirname, '../../../../img/assets/item');
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			const testPath = path.join(__dirname, '../../../../img/assets/item');
-			if (fs.existsSync(path.join(testPath, `${id.name}.png`)))
-				image.src = path.join(testPath, `${id.name}.png`);
-			else if (fs.existsSync(path.join(testPath, `${id.name}.webp`)))
-				image.src = path.join(testPath, `${id.name}.webp`);
-			else
-				image.src = path.join(testPath, '..', 'no_data.png');
+			this.setImage(image, testPath, id.name);
 			const element = document.createElement('tr');
 			const elementId = document.createElement('td');
 			elementId.innerText = ++x;
@@ -202,6 +204,37 @@ class UtilityComponent
 	}
 	//#endregion
 
+	static async setTags(img, filePath, name)
+	{
+		img.setAttribute('src', path.join(filePath, '..', 'loader.gif'));
+		img.classList.add('img-list');
+		img.setAttribute('uk-tooltip', `title:${name}; pos:right`);
+		fs.access(path.join(filePath, 'block', `${name}.webp`), (errBlock) =>
+		{
+			if (errBlock)
+				fs.access(path.join(filePath, 'entity', `${name}.webp`), (errEntity) =>
+				{
+					if (errEntity)
+						fs.access(path.join(filePath, 'item', `${name}.webp`), (errItem) =>
+						{
+							if (errItem)
+							{
+								img.setAttribute('src', path.join(filePath, 'no_data.png'));
+							}
+							else
+							{
+								img.setAttribute('src', path.join(filePath, 'item', `${name}.webp`));
+								img.classList.add('cubic-img');
+							}
+						});
+					else
+						img.setAttribute('src', path.join(filePath, 'entity', `${name}.webp`));
+				});
+			else
+				img.setAttribute('src', path.join(filePath, 'block', `${name}.webp`));
+		});
+	}
+
 	//#region Tags
 	static _generateTagItem(version)
 	{
@@ -222,36 +255,11 @@ class UtilityComponent
 				const TD_DIV = document.createElement('div');
 				TD_DIV.classList.add('uk-flex', 'uk-flex-wrap');
 
-				const _search = (_path, name) =>
-				{
-					if (fs.existsSync(path.join(_path, `${name}.png`)))
-						return path.join(_path, `${name}.png`);
-					if (fs.existsSync(path.join(_path, `${name}.webp`)))
-						return path.join(_path, `${name}.webp`);
-					return undefined;
-				};
-
 				for (const row in jsonData[col])
 					if (Object.prototype.hasOwnProperty.call(jsonData[col], row))
 					{
 						const NAME = jsonData[col][row];
 						const element = document.createElement('div');
-						const image = document.createElement('img');
-						let testpath = String;
-						let isItem = false;
-						testpath = _search(path.join(__dirname, '../../../../img/assets/block'), NAME);
-						if (testpath === undefined)
-							testpath = _search(path.join(__dirname, '../../../../img/assets/entity'), NAME);
-						if (testpath === undefined)
-						{
-							testpath = _search(path.join(__dirname, '../../../../img/assets/item'), NAME);
-							isItem = true;
-						}
-						if (testpath === undefined)
-						{
-							testpath = path.join(__dirname, '../../../../img/assets/no_data.png');
-							isItem = true;
-						}
 						if (isTag.test(NAME))
 						{
 							const link = document.createElement('a');
@@ -261,12 +269,9 @@ class UtilityComponent
 						}
 						else
 						{
-							image.classList.add('img-list');
-							if (isItem)
-								image.classList.add('cubic-img');
-							image.src = testpath;
-							image.setAttribute('uk-tooltip', `title:${NAME}; pos:right`);
-							element.appendChild(image);
+							const img = document.createElement('img');
+							this.setTags(img, path.join(__dirname, '../../../../img/assets'), NAME);
+							element.appendChild(img);
 						}
 						element.classList.add('tag-list');
 						TD_DIV.appendChild(element);
@@ -300,13 +305,10 @@ class UtilityComponent
 	{
 		UpdateLang();
 		this.utility();
-		setImmediate(() =>
-		{
-			this.blocks();
-			this.items();
-			this.tags();
-			Template.updateLang(document.getElementById('content'), LANG);
-		});
+		this.blocks();
+		this.items();
+		this.tags();
+		Template.updateLang(document.getElementById('content'), LANG);
 	}
 }
 
