@@ -16,11 +16,11 @@ const UpdateLang = () =>
 };
 
 //#region Search system
-function searchInList(input, list, error)
+async function searchInList(input, list, error)
 {
 	const newError = error;
-	const tr = list.getElementsByTagName('tr');
-	const isNumber = (!Number.isNaN(input.value)); //eslint-disable-line no-unused-vars
+	const newList = list.cloneNode(true);
+	const tr = newList.getElementsByTagName('tr');
 	let isExist = false;
 	const regex = new RegExp(input.value);
 	if (!input.value)
@@ -46,12 +46,16 @@ function searchInList(input, list, error)
 		else
 			newError.style.display = 'none';
 	}
+	Template.cleanNode(list);
+	//eslint-disable-next-line no-param-reassign
+	list.innerHTML = newList.innerHTML;
 }
 
-function _searchInTagList(input, list, error)
+async function _searchInTagList(input, list, error)
 {
 	const newError = error;
-	const TR = list.getElementsByTagName('tr');
+	const newList = list.cloneNode(true);
+	const TR = newList.getElementsByTagName('tr');
 	let isExist = false;
 	const regex = new RegExp(input.value);
 	if (!input.value)
@@ -77,6 +81,9 @@ function _searchInTagList(input, list, error)
 		else
 			newError.style.display = 'none';
 	}
+	Template.cleanNode(list);
+	//eslint-disable-next-line no-param-reassign
+	list.innerHTML = newList.innerHTML;
 }
 //#endregion
 
@@ -204,6 +211,7 @@ class UtilityComponent
 	}
 	//#endregion
 
+	//#region Tags
 	static async setTags(img, filePath, name)
 	{
 		img.setAttribute('src', path.join(filePath, '..', 'loader.gif'));
@@ -235,7 +243,6 @@ class UtilityComponent
 		});
 	}
 
-	//#region Tags
 	static _generateTagItem(version)
 	{
 		const list = document.getElementById('tags-list');

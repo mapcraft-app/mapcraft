@@ -24,15 +24,6 @@ const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraf
 if (!fs.existsSync(RecipesDirectory))
 	fs.mkdirSync(RecipesDirectory, { recursive: true });
 
-function testCase(IDofElement, error)
-{
-	if (!document.getElementById(IDofElement).children[0].id)
-	{
-		MCutilities.createAlert('warning', document.getElementById('recipe-error'), error);
-		throw new Error(error);
-	}
-}
-
 class FillForm
 {
 	static main(event)
@@ -224,28 +215,21 @@ class FillForm
 	static getSrcImage(item)
 	{
 		const image = document.createElement('img'); image.id = item;
-		const testBlockPath = path.join(__dirname, '../../../../img/assets/block', item);
-		const testItemPath = path.join(__dirname, '../../../../img/assets/item', item);
-		if (fs.existsSync(`${testBlockPath}.png`))
+		const testBlockPath = path.join(__dirname, '../../../../img/assets/block', `${item}.webp`);
+		const testItemPath = path.join(__dirname, '../../../../img/assets/item', `${item}.webp`);
+		fs.access(testBlockPath, (err) =>
 		{
-			image.src = `${testBlockPath}.png`;
-			image.classList.add('debug_block');
-		}
-		else if (fs.existsSync(`${testBlockPath}.webp`))
-		{
-			image.src = `${testBlockPath}.webp`;
-			image.classList.add('debug_block');
-		}
-		else if (fs.existsSync(`${testItemPath}.png`))
-		{
-			image.src = `${testItemPath}.png`;
-			image.classList.add('craft_fire_and_cross');
-		}
-		else
-		{
-			image.src = `${testItemPath}.webp`;
-			image.classList.add('craft_fire_and_cross');
-		}
+			if (err)
+			{
+				image.src = testItemPath;
+				image.classList.add('craft_fire_and_cross');
+			}
+			else
+			{
+				image.src = testBlockPath;
+				image.classList.add('debug_block');
+			}
+		});
 		return (image);
 	}
 }
@@ -463,6 +447,53 @@ class FileManagement
 
 class CreateRecipe
 {
+	static setEvent()
+	{
+		this.player();
+		this.craftTable();
+		this.furnace();
+		this.blastFurnace();
+		this.campfire();
+		this.smoker();
+		this.stonecutter();
+		this.smithingTable();
+	}
+
+	//#region Private member
+	static #testCase(IDofElement, error)
+	{
+		if (!document.getElementById(IDofElement).children[0].id)
+		{
+			MCutilities.createAlert('warning', document.getElementById('recipe-error'), error);
+			throw new Error(error);
+		}
+	}
+
+	static #recipeEvent(event)
+	{
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		if (sessionStorage.getItem('recipe-selected'))
+			FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
+	}
+
+	static #generateRecipe(event, func, funcArg1, funcArg2, funcArg3)
+	{
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		let __ret;
+		try
+		{
+			__ret = func(funcArg1, funcArg2, funcArg3);
+			FileManagement.check(__ret.data, __ret.output);
+		}
+		catch (__error)
+		{
+			MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
+		}
+	}
+	//#endregion Private member
+
 	static generateCraftingTableTwoThree(nameOfId, optionFormId, is3x3 = false)
 	{
 		const model = Models.crafting_player;
@@ -475,7 +506,7 @@ class CreateRecipe
 				++caseX;
 		if (caseX === caseCount)
 			throw new Error('No item on recipe cases');
-		testCase(`${nameOfId}-result`, 'No item on result case');
+		this.#testCase(`${nameOfId}-result`, 'No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).querySelectorAll('img')[0].id;
 		let TEMP_RECIPE_COUNT = document.getElementById(`${nameOfId}-count`).value;
 		if (TEMP_RECIPE_COUNT <= 0)
@@ -665,9 +696,9 @@ class CreateRecipe
 	static generateFurnace(nameOfId, optionFormId, type)
 	{
 		const model = Models.furnace;
-		testCase(`${nameOfId}-cases`, 'No item on recipe case');
+		this.#testCase(`${nameOfId}-cases`, 'No item on recipe case');
 		const RECIPE_CASE = document.getElementById(`${nameOfId}-cases`).querySelectorAll('img')[0].id;
-		testCase(`${nameOfId}-result`, 'No item on result case');
+		this.#testCase(`${nameOfId}-result`, 'No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).querySelectorAll('img')[0].id;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		let TEMP_TIME = FORM_INPUT[1].value;
@@ -690,9 +721,9 @@ class CreateRecipe
 	static generateStoneCutter(nameOfId, optionFormId, type)
 	{
 		const model = Models.stonecutter;
-		testCase(`${nameOfId}-cases`, 'No item on recipe case');
+		this.#testCase(`${nameOfId}-cases`, 'No item on recipe case');
 		const RECIPE_CASE = document.getElementById(`${nameOfId}-cases`).children[0].id;
-		testCase(`${nameOfId}-result`, 'No item on result case');
+		this.#testCase(`${nameOfId}-result`, 'No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).children[0].id;
 		let TEMP_RECIPE_COUNT = document.getElementById(`${nameOfId}-count`).value;
 		if (TEMP_RECIPE_COUNT <= 0)
@@ -716,11 +747,11 @@ class CreateRecipe
 	static generateSmithingTable(nameOfId, optionFormId, type)
 	{
 		const model = Models.smithing_table;
-		testCase(`${nameOfId}-cases-add-one`, 'No item on base recipe case');
+		this.#testCase(`${nameOfId}-cases-add-one`, 'No item on base recipe case');
 		const RECIPE_CASE_BASE = document.getElementById(`${nameOfId}-cases-add-one`).children[0].id;
-		testCase(`${nameOfId}-cases-add-two`, 'No item on addition recipe case');
+		this.#testCase(`${nameOfId}-cases-add-two`, 'No item on addition recipe case');
 		const RECIPE_CASE_ADD = document.getElementById(`${nameOfId}-cases-add-two`).children[0].id;
-		testCase(`${nameOfId}-result`, 'No item on addition recipe case');
+		this.#testCase(`${nameOfId}-result`, 'No item on addition recipe case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).children[0].id;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		const FORM = { Group: FORM_INPUT[0].value, Output: FORM_INPUT[1].value };
@@ -735,224 +766,100 @@ class CreateRecipe
 		return ({ data: model, output: FORM.Output });
 	}
 
-	static setEvent()
-	{
-		this.player();
-		this.craftTable();
-		this.furnace();
-		this.blastFurnace();
-		this.campfire();
-		this.smoker();
-		this.stonecutter();
-		this.smithingTable();
-	}
-
 	static player()
 	{
-		document.getElementById('crafting_player_validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateCraftingTableTwoThree('area_crafting_player', 'crafting_player_form', false);
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('crafting_player_delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('crafting_player_validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateCraftingTableTwoThree,
+			'area_crafting_player',
+			'crafting_player_form',
+			false,
+		));
+		document.getElementById('crafting_player_delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static craftTable()
 	{
-		document.getElementById('crafting_table_validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateCraftingTableTwoThree('area_crafting_table', 'crafting_table_form', true);
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('crafting_table_delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('crafting_table_validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateCraftingTableTwoThree,
+			'area_crafting_table',
+			'crafting_table_form',
+			true,
+		));
+		document.getElementById('crafting_table_delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static furnace()
 	{
-		document.getElementById('area_furnace-validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateFurnace('area_furnace', 'area_furnace-form', 'smelting');
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('area_furnace-delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('area_furnace-validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateFurnace,
+			'area_furnace',
+			'area_furnace-form',
+			'smelting',
+		));
+		document.getElementById('area_furnace-delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static blastFurnace()
 	{
-		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateFurnace('area_blast_furnace', 'area_blast_furnace-form', 'blasting');
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('area_blast_furnace-delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateFurnace,
+			'area_blast_furnace',
+			'area_blast_furnace-form',
+			'blasting',
+		));
+		document.getElementById('area_blast_furnace-delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static campfire()
 	{
-		document.getElementById('area_campfire-validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateFurnace('area_campfire', 'area_campfire-form', 'campfire_cooking');
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('area_campfire-delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('area_campfire-validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateFurnace,
+			'area_campfire',
+			'area_campfire-form',
+			'campfire_cooking',
+		));
+		document.getElementById('area_campfire-delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static smoker()
 	{
-		document.getElementById('area_smoker-validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateFurnace('area_smoker', 'area_smoker-form', 'smoking');
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('area_smoker-delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('area_smoker-validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateFurnace,
+			'area_smoker',
+			'area_smoker-form',
+			'smoking',
+		));
+		document.getElementById('area_smoker-delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static stonecutter()
 	{
-		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateStoneCutter('area_stonecutter', 'area_stonecutter-form', 'stonecutting');
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('area_stonecutter-delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateStoneCutter,
+			'area_stonecutter',
+			'area_stonecutter-form',
+			'stonecutting',
+		));
+		document.getElementById('area_stonecutter-delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 
 	static smithingTable()
 	{
-		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let __ret;
-			try
-			{
-				__ret = this.generateSmithingTable('area_smithing_table', 'area_smithing_table-form', 'smithing');
-				FileManagement.check(__ret.data, __ret.output);
-			}
-			catch (__error)
-			{
-				MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
-			}
-		});
-		document.getElementById('area_smithing_table-delete').addEventListener('click', (event) =>
-		{
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			if (sessionStorage.getItem('recipe-selected'))
-				FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
-		});
+		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) => this.#generateRecipe(
+			event,
+			this.generateSmithingTable,
+			'area_smithing_table',
+			'area_smithing_table-form',
+			'smithing',
+		));
+		document.getElementById('area_smithing_table-delete').addEventListener('click', (event) => this.#recipeEvent(event));
 	}
 }
 
@@ -974,45 +881,55 @@ class GenerateList
 		});
 	}
 
-	_generateListBlock()
+	async #setImg(img, filePath, name)
+	{
+		img.setAttribute('id', name);
+		img.setAttribute('uk-tooltip', `title:${name}; pos:right`);
+		fs.access(path.join(filePath, `${name}.webp`), (err) =>
+		{
+			if (err)
+				img.setAttribute('src', path.join(filePath, '..', 'no_data.png'));
+			else
+				img.setAttribute('src', path.join(filePath, `${name}.webp`));
+		});
+	}
+
+	async _generateListBlock()
 	{
 		const list = document.getElementById('blocks-list');
-		const jsonData = Data.Blocks;
 		Template.cleanNode(list);
-		const trash = document.createElement('img'); trash.src = path.join(__dirname, '../../../../img/assets/trash.png'); trash.id = 'trash';
+		const jsonData = Data.Blocks;
+
+		const trash = document.createElement('img');
+		trash.src = path.join(__dirname, '../../../../img/assets/trash.png');
+		trash.id = 'trash';
 		trash.setAttribute('uk-tooltip', `title:${LANG.Options.DeleteCase}; pos: right`);
 		list.appendChild(trash);
+
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			const testpath = path.join(__dirname, '../../../../img/assets/block', `${id.name}.png`);
-			if (fs.existsSync(testpath))
-				image.src = testpath;
-			else
-				image.src = path.join(__dirname, '../../../../img/assets/block', `${id.name}.webp`);
-			image.id = id.name;
-			image.setAttribute('uk-tooltip', `title:${id.name}; pos:right`);
+			this.#setImg(image, path.join(__dirname, '../../../../img/assets/block'), id.name);
 			list.appendChild(image);
 		}
 	}
 
-	_generateListItem()
+	async _generateListItem()
 	{
 		const list = document.getElementById('items-list');
-		const jsonData = Data.Items;
 		Template.cleanNode(list);
-		const trash = document.createElement('img'); trash.src = path.join(__dirname, '../../../../img/assets/trash.png'); trash.id = 'trash';
+		const jsonData = Data.Items;
+
+		const trash = document.createElement('img');
+		trash.src = path.join(__dirname, '../../../../img/assets/trash.png');
+		trash.id = 'trash';
 		trash.setAttribute('uk-tooltip', `title:${LANG.Options.DeleteCase}; pos: right`);
+		list.appendChild(trash);
+
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			const testpath = path.join(__dirname, '../../../../img/assets/item', `${id.name}.png`);
-			if (fs.existsSync(testpath))
-				image.src = testpath;
-			else
-				image.src = path.join(__dirname, '../../../../img/assets/item', `${id.name}.webp`);
-			image.id = id.name;
-			image.setAttribute('uk-tooltip', `title:${id.name}; pos:right`);
+			this.#setImg(image, path.join(__dirname, '../../../../img/assets/item'), id.name);
 			list.appendChild(image);
 		}
 	}

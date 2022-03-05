@@ -41,4 +41,12 @@
     image-rendering: pixelated;
     -ms-interpolation-mode: nearest-neighbor;
 }
+.search-form
+{
+	position: sticky;
+    top: 0;
+    background-color: #181a1b;
+    padding: 1em 0 1em 0;
+    border-bottom: 1px solid;
+}
 [/CSS]

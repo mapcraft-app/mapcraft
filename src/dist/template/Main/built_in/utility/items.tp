@@ -1,11 +1,9 @@
 [HTML]
-<div class="uk-margin uk-flex uk-flex-between">
+<div class="uk-margin uk-flex uk-flex-around search-form">
 	<form id="disabled-form" class="uk-search uk-search-default search-width-40">
 		<span class="uk-search-icon-flip" uk-search-icon></span>
 		<input style="color: #fff" id="items-search" class="uk-search-input" type="search" placeholder="{Search}">
 	</form>
-</div>
-<div>
 	<a class="uk-button uk-button-default" id="item-download">
 		<span uk-icon="download"></span>{Download}
 	</a>

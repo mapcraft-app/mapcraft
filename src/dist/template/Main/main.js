@@ -67,6 +67,7 @@ function UpdateInterface(plugin, name)
 			if (removeParent)
 				node.remove();
 		};
+		document.querySelector('.plugin-loader').classList.add('plugin-loader-visible');
 		cleanSpecificRender(localStorage.getItem('Mapcraft_Plugin'));
 		cleanNode(document.querySelector('html > body > div[id="content"]'), false);
 		const navTitle = document.getElementById('nav-title');
@@ -86,6 +87,7 @@ function UpdateInterface(plugin, name)
 			PluginsComponent.instance.main();
 		localStorage.setItem('Mapcraft_Plugin', plugin);
 		UpdateSelectedLi();
+		document.querySelector('.plugin-loader').classList.remove('plugin-loader-visible');
 	});
 }
 
@@ -191,5 +193,10 @@ window.addEventListener('DOMContentLoaded', () =>
 		document.getElementById('nav-header-change-username').addEventListener('click', () => changeUsername());
 	});
 	MCipc.receive('Log:send-change', (fullFile) => MClog.printToTextArea(fullFile));
+});
+
+document.getElementById('content').addEventListener('readyState', (e) =>
+{
+	console.log('readyState', e);
 });
 //#endregion

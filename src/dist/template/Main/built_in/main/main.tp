@@ -25,6 +25,9 @@
 </header>
 <div id="content">
 </div>
+<div class="plugin-loader">
+	<img src="dist/img/loader.gif" />
+</div>
 <footer>
 	<div id="offcanvas-log" uk-offcanvas="flip: true; overlay: true">
 		<div id="offcanvas-content" class="uk-offcanvas-bar">
