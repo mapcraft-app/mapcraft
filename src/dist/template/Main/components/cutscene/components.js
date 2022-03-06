@@ -2,8 +2,7 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 const { MCipc, MCplugin, MCtemplate, MCutilities, MCworkInProgress } = require('mapcraft-api');
-
-const CutsceneMod = require('../../../../js/built_in/Cutscene');
+const CutsceneMod = require(path.join(globalThis.src.js, 'built_in', 'Cutscene'));
 
 const MCP = new MCplugin();
 const Template = new MCtemplate(__dirname);

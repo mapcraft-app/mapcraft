@@ -1,5 +1,6 @@
+const path = require('path');
 const { MCipc, MCtemplate } = require('mapcraft-api');
-const NavMenu = require('../../../../js/createNavMenu');
+const NavMenu = require(path.join(globalThis.src.js, 'createNavMenu'));
 
 const Template = new MCtemplate(__dirname);
 

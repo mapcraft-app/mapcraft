@@ -1,0 +1,28 @@
+[HTML]
+<div id="{ID}-lang-desc">
+	<div>
+        <label class="uk-form-label" for="{ID}-lang-desc-name">Text</label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="{ID}-lang-desc-name" type="text"/>
+        </div>
+    </div>
+	<div>
+        <label class="uk-form-label" for="{ID}-lang-desc-region">Region</label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="{ID}-lang-desc-name" type="text"/>
+        </div>
+    </div>
+	<input class="uk-input" name="desc"/>
+	<input class="uk-input" name="desc"/>
+	<div>
+		<label class="uk-form-label" for="{ID}-exactPosition" lang="Options.ExactPosition"></label>
+		<div class="uk-form-controls">
+			<label class="uk-switch">
+				<input id="{ID}-exactPosition" type="checkbox">
+				<div class="uk-switch-span"></div>
+			</label>
+		</div>
+	</div>
+</div>
+
+[/HTML]

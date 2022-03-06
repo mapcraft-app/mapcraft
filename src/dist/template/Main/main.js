@@ -1,11 +1,20 @@
+const path = require('path');
+
+globalThis.src = {
+	/**
+	 * Set `globalThis.src` var in global for more convienent import
+	 */
+	css: path.join(__dirname, '..', '..', 'css'),
+	font: path.join(__dirname, '..', '..', 'font'),
+	img: path.join(__dirname, '..', '..', 'img'),
+	js: path.join(__dirname, '..', '..', 'js'),
+};
 const { contextBridge } = require('electron');
 const fs = require('fs');
-const path = require('path');
 const Database = require('better-sqlite3');
-
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
-const importPlugins = require('../../js/importPlugins');
 
+const importPlugins = require(path.join(globalThis.src.js, 'importPlugins'));
 const Plugins = new MCplugin();
 
 //#region Set ContextBridge
@@ -193,10 +202,5 @@ window.addEventListener('DOMContentLoaded', () =>
 		document.getElementById('nav-header-change-username').addEventListener('click', () => changeUsername());
 	});
 	MCipc.receive('Log:send-change', (fullFile) => MClog.printToTextArea(fullFile));
-});
-
-document.getElementById('content').addEventListener('readyState', (e) =>
-{
-	console.log('readyState', e);
 });
 //#endregion

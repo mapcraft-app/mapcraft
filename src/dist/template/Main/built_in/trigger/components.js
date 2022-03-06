@@ -1,7 +1,7 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 const { MCipc, MCplugin, MCtemplate, MCWorkInProgress } = require('mapcraft-api');
-const Trigger = require('../../../../js/built_in/Trigger');
+const Trigger = require(path.join(globalThis.src.js, 'built_in', 'Trigger'));
 
 const Plugins = new MCplugin();
 const Template = new MCtemplate(__dirname);

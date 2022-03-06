@@ -16,7 +16,7 @@ const zipPath = (path.basename(process.env.AppPath) === 'app.asar')
 const SevenZip = require(zipPath); //eslint-disable-line import/no-dynamic-require
 
 const { Mapcraft, MCtemplate } = require('mapcraft-api');
-const importPlugins = require('../../../../js/importPlugins');
+const importPlugins = require(path.join(globalThis.src.js, 'importPlugins'));
 
 const Template = new MCtemplate(__dirname);
 

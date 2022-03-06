@@ -8,8 +8,8 @@ const MC = require('mapcraft-api').Mapcraft;
 const MarkdownIt = require('markdown-it');
 const { ipcRenderer, shell } = require('electron');
 const { addPluginViaArchive, execShell } = require('./plugins');
-const NavMenu = require('../../../../js/createNavMenu');
-const importPlugins = require('../../../../js/importPlugins');
+const NavMenu = require(path.join(globalThis.src.js, 'createNavMenu'));
+const importPlugins = require(path.join(globalThis.src.js, 'importPlugins'));
 
 const md = new MarkdownIt();
 const Template = new MCtemplate(__dirname);

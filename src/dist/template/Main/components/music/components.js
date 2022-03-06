@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const JsonABC = require('jsonabc');
 const { MCplugin, MCutilities, MCtemplate, MCipc, MCworkInProgress } = require('mapcraft-api');
-const Music = require('../../../../js/built_in/Music');
+const Music = require(path.join(globalThis.src.js, 'built_in', 'Music'));
 
 const Plugins = new MCplugin();
 const Template = new MCtemplate(__dirname);

@@ -1,0 +1,35 @@
+[HTML]
+<h3 class="version uk-text-center">
+	<span lang="Menu.PackMcmeta.GameVersion"></span>
+	<span id="print-version"></span>
+</h3>
+<form class="uk-form-stacked">
+	<div>
+		<label class="uk-form-label" for="pack_format" lang="Menu.PackMcmeta.Format"></label>
+		<div class="uk-form-controls">
+			<input class="uk-input" id="pack_format" type="number" min="0" value="9" />
+		</div>
+	</div>
+	<div>
+		<label class="uk-form-label" for="description" lang="Menu.PackMcmeta.Description"></label>
+		<div class="uk-form-controls">
+			<textarea class="uk-textarea description" id="description" type="text" placeholder="..."></textarea>
+		</div>
+	</div>
+	<div>
+		<label class="uk-form-label" for="lang-list" lang="Menu.PackMcmeta.Language"></label>
+		<div id="lang-list"></div>
+	</div>
+</form>
+[/HTML]
+
+[CSS]
+.version {
+	background-color: #1e87f0;
+}
+.description {
+	width: 100%;
+    min-height: 3em;
+	resize: vertical;
+}
+[/CSS]

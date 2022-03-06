@@ -28,7 +28,8 @@ module.exports = {
 		"no-tabs": ["off", {allowIndentationTabs: true}],
 		"max-classes-per-file": ["warn", 5],
 		"spaced-comment": ["error", "never", { "markers": ["#region "] }],
-		"import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+		"import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+		"import/no-dynamic-require": ["off"],
 	},
 	"ignorePatterns": [".eslintrc.js", "node_modules/**/*", "build/**/*", "src/dist/js/MCipc.js", "src/dist/js/AceEditor", "src/dist/js/GUI"],
 };

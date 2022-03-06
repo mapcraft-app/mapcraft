@@ -1,6 +1,7 @@
 const { shell } = require('electron');
+const path = require('path');
 const { Mapcraft, MCplugin, MCtemplate, MCipc } = require('mapcraft-api');
-const NavMenu = require('../../../../js/createNavMenu');
+const NavMenu = require(path.join(globalThis.src.js, 'createNavMenu'));
 
 const Plugins = new MCplugin();
 const Template = new MCtemplate(__dirname);
