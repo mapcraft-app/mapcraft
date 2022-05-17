@@ -41,7 +41,7 @@ body:
       label: What is happening?
     validations:
       required: true
-  - type: textarea
+  - type: dropdown
     id: system-info
     attributes:
       label: OS
