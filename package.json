@@ -12,7 +12,7 @@
     "url": "https://gitlab.com/cbertran/mapcraft.git"
   },
   "productName": "Mapcraft",
-  "version": "0.8.6-alpha",
+  "version": "0.8.7-alpha",
   "keywords": [
     "mapcraft",
     "minecraft"
@@ -28,6 +28,7 @@
     "distWindows": "electron-builder -w --x64",
     "distLinux": "electron-builder -l --x64",
     "postinstall": "electron-builder install-app-deps",
+    "version": "node update-version",
     "lint": "eslint ."
   },
   "build": {

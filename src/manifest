@@ -1,7 +1,7 @@
 {
-    "version": {
-        "software": "0.8.6-alpha",
-        "update": "0.3.0"
-    },
-    "default_lang": "en_US"
+  "version": {
+    "software": "0.8.7-alpha",
+    "update": "0.3.0"
+  },
+  "default_lang": "en_US"
 }
