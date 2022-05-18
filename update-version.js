@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const child = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
@@ -8,16 +9,16 @@ const readline = require('readline').createInterface({
 	output: process.stdout,
 });
 
-const package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), { encoding: 'utf-8' }));
+const _package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), { encoding: 'utf-8' }));
 const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'src', 'manifest'), { encoding: 'utf-8' }));
 
 const __data = {
-	major:		Number(0),
-	minor:		Number(0),
-	patch:		Number(0),
+	major:	Number(0),
+	minor:	Number(0),
+	patch:	Number(0),
 	version:	String(''),
-	force:		Boolean(false),
-	bypass:		Boolean(false),
+	force:	Boolean(false),
+	bypass:	Boolean(false),
 };
 const commands = [
 	{
@@ -34,17 +35,23 @@ const commands = [
 			console.log('--patch   -p 	: Set patch number, beetween `0` to `99` included');
 			console.log('--version -v 	: Set version, `alpha` or `beta`. If you want to delete version, set `delete`');
 			process.exit(0);
-		}
+		},
 	},
 	{
 		commands: ['-b', '--bypass'],
 		nArgs: 0,
-		func: () => __data.bypass =  Boolean(true)
+		func: () =>
+		{
+			__data.bypass = Boolean(true);
+		},
 	},
 	{
 		commands: ['-f', '--force'],
 		nArgs: 0,
-		func: () => __data.force =  Boolean(true)
+		func: () =>
+		{
+			__data.force = Boolean(true);
+		},
 	},
 	{
 		commands: ['-ma', '--major'],
@@ -55,7 +62,7 @@ const commands = [
 			if (!regex.test(args[0]))
 				throw new Error(`version \x1b[96m${args[0]}\x1b[0m is incorrect, please use (0-99)`);
 			__data.major = Number(args[0]);
-		}
+		},
 	},
 	{
 		commands: ['-mi', '--minor'],
@@ -65,8 +72,8 @@ const commands = [
 			const regex = /^([0-9]{1,2})$/;
 			if (!regex.test(args[0]))
 				throw new Error(`version \x1b[96m${args[0]}\x1b[0m is incorrect, please use (0-99)`);
-			__data.minor =  Number(args[0]);
-		}
+			__data.minor = Number(args[0]);
+		},
 	},
 	{
 		commands: ['-p', '--patch'],
@@ -76,8 +83,8 @@ const commands = [
 			const regex = /^([0-9]{1,2})$/;
 			if (!regex.test(args[0]))
 				throw new Error(`version \x1b[96m${args[0]}\x1b[0m is incorrect, please use (0-99)`);
-			__data.patch =  Number(args[0]);
-		}
+			__data.patch = Number(args[0]);
+		},
 	},
 	{
 		commands: ['-v', '--version'],
@@ -87,9 +94,9 @@ const commands = [
 			const regex = /^(alpha|beta|delete)$/;
 			if (!regex.test(args[0]))
 				throw new Error(`version \x1b[96m${args[0]}\x1b[0m is incorrect, please use 'alpha' or 'beta'. If you want to delete version, set 'delete'`);
-			__data.version =  String(args[0]);
-		}
-	}
+			__data.version = String(args[0]);
+		},
+	},
 ];
 
 const printError = (message = '') => console.error(`\x1b[31m\x1b[4mError\x1b[0m\x1b[31m:\x1b[0m ${message}`);
@@ -103,8 +110,8 @@ const calcVersion = (version) =>
 		while (cur > 99)
 		{
 			if (isHundred && cur === 100)
-				return { cur: 99, rest }
-			cur = cur - 100;
+				return { cur: 99, rest };
+			cur -= 100;
 			++rest;
 		}
 		return { cur, rest };
@@ -114,7 +121,7 @@ const calcVersion = (version) =>
 		unit: Number(0),
 		ten: Number(0),
 		hundred: Number(0),
-		version: String('')
+		version: String(''),
 	};
 	const oldVersion = /^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})(?:-(alpha|beta))?$/.exec(version);
 	const unit = calc(Number(oldVersion[3]), __data.patch);
@@ -137,18 +144,18 @@ const endQuestion = (oldValue, newValue) =>
 {
 	const val = () =>
 	{
-		package.version = newValue;
+		_package.version = newValue;
 		manifest.version.software = newValue;
 		try
 		{
-			fs.writeFileSync(path.join(__dirname, 'package.json'), JSON.stringify(package, null, 2), { encoding: 'utf-8', flag: 'w' });
+			fs.writeFileSync(path.join(__dirname, 'package.json'), JSON.stringify(_package, null, 2), { encoding: 'utf-8', flag: 'w' });
 			fs.writeFileSync(path.join(__dirname, 'src', 'manifest'), JSON.stringify(manifest, null, 2), { encoding: 'utf-8', flag: 'w' });
 		}
 		catch (err)
 		{
 			throw new Error(err.message);
 		}
-		console.log('Version changed');
+		console.log('Version modification have been made');
 	};
 
 	if (__data.bypass)
@@ -169,9 +176,28 @@ const endQuestion = (oldValue, newValue) =>
 			printError('abort modification');
 			process.exit(1);
 		}
-		
 		val();
-		readline.close();
+		readline.question('Would you like to create a new release automatically and publish it immediately on GitHub ? (\x1b[92myes\x1b[0m | \x1b[91mno\x1b[0m) ', (e2) =>
+		{
+			if (e2 !== 'yes' && e2 !== 'no')
+			{
+				printError('response is not yes or no, abort');
+				process.exit(1);
+			}
+			if (e2 === 'no')
+			{
+				printError('abort modification');
+				process.exit(1);
+			}
+			const _child = child.spawn(`git add * && git commit -m "automatic commit - ${newValue}" && git tag ${newValue} && git push && git push --tags`, { shell: true });
+			_child.stdout.on('data', (data) => console.log(data.toString()));
+			_child.stderr.on('data', (data) => console.error(data.toString()));
+			_child.on('close', () =>
+			{
+				console.log(`The release has been put online. Go to ${_package.repository.url} to check that the ci/cd is working well`);
+				readline.close();
+			});
+		});
 	});
 };
 
@@ -181,7 +207,7 @@ const getCommand = (options) =>
 		if (el.commands.indexOf(options) !== -1)
 			return el;
 	return undefined;
-}
+};
 
 const main = () =>
 {
@@ -201,7 +227,7 @@ const main = () =>
 
 	for (let x = 2; process.argv[x]; x++)
 	{
-		let args = [];
+		const args = [];
 		const command = getCommand(process.argv[x]);
 		try
 		{
@@ -211,7 +237,7 @@ const main = () =>
 			{
 				const limit = x + command.nArgs;
 				if (limit >= process.argv.length)
-					throw new Error(`option ${process.argv[x]} need ${command.nArgs} argument${(command.nArgs > 1) ? 's': ''}`);
+					throw new Error(`option ${process.argv[x]} need ${command.nArgs} argument${(command.nArgs > 1) ? 's' : ''}`);
 				for (++x; x <= limit; x++)
 					args.push(process.argv[x]);
 				--x;
@@ -226,9 +252,9 @@ const main = () =>
 	}
 
 	if (!__data.force)
-		newVersion = calcVersion(package.version);
+		newVersion = calcVersion(_package.version);
 	else
 		newVersion = `${__data.major}.${__data.minor}.${__data.patch}${(__data.version.length) ? `-${__data.version}` : ''}`;
 
-	endQuestion(package.version, newVersion);
+	endQuestion(_package.version, newVersion);
 }; main();
