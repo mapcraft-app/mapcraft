@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const child = require('child_process');
+const { randomBytes } = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
@@ -13,12 +14,12 @@ const _package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')
 const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'src', 'manifest'), { encoding: 'utf-8' }));
 
 const __data = {
-	major:	Number(0),
-	minor:	Number(0),
-	patch:	Number(0),
-	version:	String(''),
-	force:	Boolean(false),
-	bypass:	Boolean(false),
+	major: Number(0),
+	minor: Number(0),
+	patch: Number(0),
+	version: String(''),
+	force: Boolean(false),
+	bypass: Boolean(false),
 };
 const commands = [
 	{
@@ -189,7 +190,7 @@ const endQuestion = (oldValue, newValue) =>
 				printError('abort modification');
 				process.exit(1);
 			}
-			const _child = child.spawn(`git add * && git commit -m "automatic commit - ${newValue}" && git tag ${newValue} && git push && git push --tags`, { shell: true });
+			const _child = child.spawn(`git add * && git commit -m "automatic commit [${newValue}] - ${randomBytes(12).toString('hex').slice(0, 12)}" && git tag ${newValue} && git push && git push --tags`, { shell: true });
 			_child.stdout.on('data', (data) => console.log(data.toString()));
 			_child.stderr.on('data', (data) => console.error(data.toString()));
 			_child.on('close', () =>

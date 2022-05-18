@@ -25,7 +25,7 @@ jobs:
 
       - name: apt-update
         if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt-get update && sudo apt update -y
+        run: sudo apt-get update && sudo apt-get upgrade -y
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
