@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () =>
 {
 	Component.draw();
 
-	//Submit form
+	// Submit form
 	document.getElementById('Choose-User').addEventListener('click', () =>
 	{
 		const checkbox = document.getElementsByName('select_user');
@@ -75,7 +75,7 @@ window.addEventListener('DOMContentLoaded', () =>
 		createAlert('danger', document.getElementById('alert-main'), LANG.Modal.Error.NoUser);
 	});
 
-	//Create user
+	// Create user
 	document.getElementById('form-createUser').addEventListener('submit', (event) =>
 	{
 		event.preventDefault();
@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', () =>
 			db.close();
 		};
 
-		//#region Check online if player exist
+		//#region  Check online if player exist
 		const req = https.request(
 			{
 				hostname: 'api.mojang.com',
@@ -118,6 +118,6 @@ window.addEventListener('DOMContentLoaded', () =>
 			},
 		);
 		req.end();
-		//#endregion
+		// #endregion
 	});
 });

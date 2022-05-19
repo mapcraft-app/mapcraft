@@ -1,10 +1,10 @@
-/*eslint-disable prefer-regex-literals*/
+/* eslint-disable prefer-regex-literals*/
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const { MCplugin, MCutilities, MCtemplate } = require('mapcraft-api');
 
-//global.MinecraftSelectedVersion
+// global.MinecraftSelectedVersion
 
 const Plugins = new MCplugin();
 const Template = new MCtemplate(__dirname);
@@ -15,7 +15,7 @@ const UpdateLang = () =>
 	LANG = Plugins.lang('Utility').Data;
 };
 
-//#region Search system
+//#region  Search system
 async function searchInList(input, list, error)
 {
 	const newError = error;
@@ -47,7 +47,7 @@ async function searchInList(input, list, error)
 			newError.style.display = 'none';
 	}
 	Template.cleanNode(list);
-	//eslint-disable-next-line no-param-reassign
+	// eslint-disable-next-line no-param-reassign
 	list.innerHTML = newList.innerHTML;
 }
 
@@ -82,10 +82,10 @@ async function _searchInTagList(input, list, error)
 			newError.style.display = 'none';
 	}
 	Template.cleanNode(list);
-	//eslint-disable-next-line no-param-reassign
+	// eslint-disable-next-line no-param-reassign
 	list.innerHTML = newList.innerHTML;
 }
-//#endregion
+// #endregion
 
 class UtilityComponent
 {
@@ -122,7 +122,7 @@ class UtilityComponent
 		});
 	}
 
-	//#region Blocks
+	//#region  Blocks
 	static _generateListBlock(version)
 	{
 		let x = 0;
@@ -165,9 +165,9 @@ class UtilityComponent
 		});
 		document.getElementById('block-download').addEventListener('click', () => this.downloadFile('blocks'));
 	}
-	//#endregion
+	// #endregion
 
-	//#region Items
+	//#region  Items
 	static _generateListItem(version)
 	{
 		let x = 0;
@@ -209,9 +209,9 @@ class UtilityComponent
 		});
 		document.getElementById('item-download').addEventListener('click', () => this.downloadFile('items'));
 	}
-	//#endregion
+	// #endregion
 
-	//#region Tags
+	//#region  Tags
 	static async setTags(img, filePath, name)
 	{
 		img.setAttribute('src', path.join(filePath, '..', 'loader.gif'));
@@ -306,7 +306,7 @@ class UtilityComponent
 		});
 		document.getElementById('tags-download').addEventListener('click', () => this.downloadFile('tags'));
 	}
-	//#endregion
+	// #endregion
 
 	static main()
 	{

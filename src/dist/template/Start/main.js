@@ -12,14 +12,14 @@ async function MakeInstallationOfBase()
 	const Update = new Up();
 	if (!fs.existsSync(path.join(LocalMapcraft.Mapcraft, '..')))
 		fs.mkdirSync(path.join(LocalMapcraft.Mapcraft, '..'));
-	//#region Install necessary tools
+	//#region  Install necessary tools
 	if (!fs.existsSync(LocalMapcraft.Data.ResourcePack) || !fs.existsSync(LocalMapcraft.Data.DataPack))
 	{
 		document.getElementById('textWaitModal').innerText = LANG.WaitModal.CustomResource;
 		await Update.addNecessaryTools();
 	}
-	//#endregion
-	//#region Install base resource if not present
+	// #endregion
+	//#region  Install base resource if not present
 	if (!fs.existsSync(LocalMapcraft.Mapcraft) || !fs.existsSync(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft')))
 	{
 		document.getElementById('textWaitModal').innerText = LANG.WaitModal.BaseResource;
@@ -35,7 +35,7 @@ async function MakeInstallationOfBase()
 window.addEventListener('DOMContentLoaded', () =>
 {
 	Component.drawFullComponent();
-	/*Options */
+	/* Options */
 	document.querySelector('#option-TempPath').addEventListener('click', () =>
 	{
 		MCipc.send('Dialog:open-directory', 'TempPath', document.getElementById('TempPath').value);
@@ -81,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () =>
 		Component.drawResetConfig(document.getElementById('start-selection'), document.getElementById('start-option'));
 	});
 
-	/*Selection */
+	/* Selection */
 	document.getElementById('start-selection').addEventListener('click', (event) =>
 	{
 		let _ID;

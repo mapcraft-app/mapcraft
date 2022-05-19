@@ -29,7 +29,7 @@ function UpdateLang()
 	LANG = Plugins.lang('Option');
 }
 
-//#region General tab
+//#region  General tab
 class OptionComponent
 {
 	static _main()
@@ -45,7 +45,7 @@ class OptionComponent
 		const str = 'general.tp';
 		Template.render(document.getElementById('option-tab-general'), str, null);
 
-		/*Generate Form */
+		/* Generate Form */
 		let HTML = '';
 		const ComponentInput = Template.getRaw('general_input.tp');
 		const ComponentResource = Template.getRaw('general_resource.tp');
@@ -67,7 +67,7 @@ class OptionComponent
 			if (Object.prototype.hasOwnProperty.call(JsonLangList, i))
 				HTML += Template.parseRaw(ComponentLang, { Code: i, Lang: JsonLangList[i] });
 		Template.renderRaw(document.getElementById('option-Lang'), HTML, 'general_lang.tp', null);
-		//Minecraft Version
+		// Minecraft Version
 		for (const object of MinecraftVersion.Versions)
 		{
 			const element = document.createElement('option');
@@ -122,10 +122,10 @@ class OptionComponent
 	{
 		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
 		UpdateLang();
-		//Header
+		// Header
 		Template.updateLang(document.getElementById('nav-header'), Plugins.lang('Main'));
 		Template.updateLang(document.getElementById('offcanvas-content'), Plugins.lang('Main'));
-		//Side Nav
+		// Side Nav
 		const SideNav = () =>
 		{
 			NavMenu.CreateNavMenu(document.getElementById('toogle-nav'), 'nav.tp');
@@ -142,7 +142,7 @@ class OptionComponent
 				});
 			});
 		}; SideNav();
-		//Editor
+		// Editor
 		Template.updateLang(document.getElementById('ModalEditFile'), Plugins.lang('Main'));
 		this.UpdateLangComponent('option.tp');
 		this.general();
@@ -206,7 +206,7 @@ class DetectClick
 			}
 		});
 
-		//Lang
+		// Lang
 		document.querySelector('#option-button-reset').addEventListener('click', () =>
 		{
 			MC.resetConfigFile();
@@ -240,7 +240,7 @@ class DetectClick
 				document.getElementById('DataPath').value,
 			);
 			MC.setSelectedVersion(document.getElementById('option-Version').value);
-			//#region Update mcmeta
+			//#region  Update mcmeta
 			const mcmeta = {
 				datapack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.DataPack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
 				resourcePack: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
@@ -276,7 +276,7 @@ class DetectClick
 				this.#ChangeNameRessourcePack();
 				OptionComponent.RedrawInterface();
 			});
-			//#endregion
+			// #endregion
 		});
 	}
 
@@ -408,7 +408,7 @@ class UserComponent
 				MCworkInProgress.open();
 				const username = input.parentNode.parentNode.childNodes[7].innerText;
 				const db = Database(Mapcraft.DBPath, { verbose: console.log });
-				/*Check if user is disconnected */
+				/* Check if user is disconnected */
 				const sqlUser = db.prepare('SELECT IsConnected FROM User WHERE Username = ?');
 				const ret = sqlUser.get(username);
 				if (ret.IsConnected)
@@ -473,7 +473,7 @@ class UserComponent
 				}
 				db.close();
 			};
-			//#region Check online if player exist
+			//#region  Check online if player exist
 			const req = https.request(
 				{
 					hostname: 'api.mojang.com',
@@ -496,7 +496,7 @@ class UserComponent
 				},
 			);
 			req.end();
-			//#endregion
+			// #endregion
 			MCworkInProgress.close();
 		});
 	}
@@ -679,7 +679,7 @@ class PluginComponent
 		{
 			builtin();
 			addons();
-			//#region Switcher
+			//#region  Switcher
 			const inputs = document.getElementById('option-tab-plugin').getElementsByTagName('input');
 			for (const input of inputs)
 				input.addEventListener('click', (event) =>
@@ -697,9 +697,9 @@ class PluginComponent
 						else
 							this.#updateJson(pluginsList.addons, 'uuid', TR.getAttribute('uuid'), false, false);
 				});
-			//#endregion
+			// #endregion
 
-			//#region Delete
+			//#region  Delete
 			const buttons = document.getElementById('table-plugin').getElementsByTagName('button');
 			for (const button of buttons)
 				button.addEventListener('click', (event) =>
@@ -731,7 +731,7 @@ class PluginComponent
 						});
 					});
 				});
-			//#endregion
+			// #endregion
 		});
 	}
 }
@@ -782,7 +782,7 @@ class AboutComponent
 	static about()
 	{
 		Template.render(document.getElementById('option-tab-about'), 'about.tp', null);
-		//#region Generate Li
+		//#region  Generate Li
 		let HTMLnav = '';
 		let HTMLtab = '';
 		let Logo = '';
@@ -804,7 +804,7 @@ class AboutComponent
 		for (const i in Framework)
 			if (Object.prototype.hasOwnProperty.call(Framework, i))
 				this.RawLicence(i, Framework[i][3], Framework[i][4]);
-		//#endregion
+		// #endregion
 		this.#openExternalLink();
 	}
 }

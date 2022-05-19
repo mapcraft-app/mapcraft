@@ -37,7 +37,7 @@ class MainComponent
 		db.close();
 	}
 
-	/*Interface for component */
+	/* Interface for component */
 	static draw()
 	{
 		this.main();

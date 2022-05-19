@@ -20,7 +20,7 @@ let ADVANCEMENT = {};
 let CurrentID;
 localStorage.setItem('Advancement_Select', '');
 
-//Add directory to datapack if not exist
+// Add directory to datapack if not exist
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraft-data', 'advancements');
 if (!fs.existsSync(RecipesDirectory))
@@ -225,7 +225,7 @@ class SetJson
 			if (Object.prototype.hasOwnProperty.call(advancement, x))
 				setTimeout(() =>
 				{
-					const ID = Component.newTrigger(GenerateID, x, newList, false); //eslint-disable-line no-use-before-define
+					const ID = Component.newTrigger(GenerateID, x, newList, false); // eslint-disable-line no-use-before-define
 					MCsearch.setValue(newList.querySelector(`div[id="${ID}"] div.search-dropdown-input`), advancement[x].trigger.slice(10));
 					newList.querySelector(`div[id="${ID}"] div.search-dropdown-input input`).dispatchEvent(new Event('input'));
 					const CriteriaForm = newList.querySelector(`#edit-criteria-form-${GenerateID++}`);
@@ -236,7 +236,7 @@ class SetJson
 						CriteriaForm.appendChild(FORM);
 						OpenExternLink();
 						const TRIGGER = DataTrigger.find((element) =>
-						//eslint-disable-next-line arrow-body-style
+						// eslint-disable-next-line arrow-body-style
 						{
 							return element.id === advancement[x].trigger.slice(10);
 						});
@@ -471,7 +471,7 @@ class Json
 		}
 	}
 
-	//#region Generate JSON
+	//#region  Generate JSON
 	root(ListItem)
 	{
 		const namespace = this.input(ListItem.querySelector('#edit-root-namespace'));
@@ -553,7 +553,7 @@ class Json
 			const TriggerForm = trigger.querySelectorAll('div.padding-criteria-form > div > div.uk-margin');
 			const ID = MCsearch.getValue(trigger.querySelector('div.search-dropdown-parent'));
 			if (!ID)
-				continue; //eslint-disable-line no-continue
+				continue; // eslint-disable-line no-continue
 			criteriaJson.trigger = `minecraft:${ID}`;
 			const boilerplate = GetTriggerForm(ID);
 			let x = 0;
@@ -569,9 +569,9 @@ class Json
 						const searchJson = GetForm.search(element.predefined, MCsearch.getValue(TriggerForm[x].querySelector('div.search-dropdown')));
 						if (Object.values(searchJson)[0])
 							if (key === '__ROOT')
-								criteriaJson.conditions = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
+								criteriaJson.conditions = Object.values(searchJson)[0]; // eslint-disable-line prefer-destructuring
 							else
-								criteriaJson.conditions[key] = Object.values(searchJson)[0]; //eslint-disable-line prefer-destructuring
+								criteriaJson.conditions[key] = Object.values(searchJson)[0]; // eslint-disable-line prefer-destructuring
 					}
 					else if (/^__FORM/.test(element.predefined))
 					{
@@ -680,7 +680,7 @@ class Json
 		this.json.rewards.experience = this.input(ListItem.querySelector('#edit-rewards-experience'));
 		this.json.rewards.function = ListItem.querySelector('#edit-rewards-function').value;
 	}
-	//#endregion
+	// #endregion
 }
 
 class GenerateAdvancements
@@ -757,7 +757,7 @@ class EditAdvancement
 			return;
 		const element = this.search('id', id);
 		element.child.childs.push(newChild());
-		Component.saveFile();	//eslint-disable-line no-use-before-define
+		Component.saveFile();	// eslint-disable-line no-use-before-define
 	}
 
 	static addParent(id)
@@ -766,7 +766,7 @@ class EditAdvancement
 			return;
 		const element = this.search('id', id);
 		element.parent.childs.push(newChild());
-		Component.saveFile();	//eslint-disable-line no-use-before-define
+		Component.saveFile();	// eslint-disable-line no-use-before-define
 	}
 
 	static remove(id)
@@ -783,14 +783,14 @@ class EditAdvancement
 					_remove(children, data.childs.indexOf(children), data);
 		};
 		_remove(ADVANCEMENT.data);
-		Component.saveFile();	//eslint-disable-line no-use-before-define
+		Component.saveFile();	// eslint-disable-line no-use-before-define
 	}
 
 	static edit(key, value, data)
 	{
 		const element = this.search(key, value);
 		element.child.json = JSON.parse(JSON.stringify(data));
-		Component.saveFile();	//eslint-disable-line no-use-before-define
+		Component.saveFile();	// eslint-disable-line no-use-before-define
 	}
 }
 
@@ -811,7 +811,7 @@ class Component
 		this.addRecipe();
 		this.addLootTable();
 
-		//Add new advancements
+		// Add new advancements
 		document.getElementById('create-new-advancement').addEventListener('click', (event) =>
 		{
 			event.preventDefault();
@@ -826,25 +826,25 @@ class Component
 					MCutilities.createAlert('danger', document.getElementById('advancement-error'), err);
 
 				localStorage.setItem('Advancement_Select', json.id);
-				ADVANCEMENT = JSON.parse(JSON.stringify(json)); //deepcopy of json, structuredClone() not work
-				//#region Rewrite list and select new advancement
+				ADVANCEMENT = JSON.parse(JSON.stringify(json)); // deepcopy of json, structuredClone() not work
+				//#region  Rewrite list and select new advancement
 				TEMPLATE.cleanNode(document.getElementById('advancement-list'));
 				this.drawList(true);
 				const ICONS = document.querySelectorAll('#advancement-list span[uk-icon="chevron-right"]');
 				for (const icon of ICONS)
 					icon.style.display = 'none';
-				//#endregion
-				//#region Graph
+				// #endregion
+				//#region  Graph
 				TEMPLATE.cleanNode(document.querySelector('div.graph'));
 				SetJson.cleanForm();
 				this.drawGraph(ADVANCEMENT.data);
-				//#endregion
+				// #endregion
 				document.getElementById('input-zone-name-advancement').value = ADVANCEMENT.name;
 				document.getElementById('input-zone').style.removeProperty('display');
 			});
 		});
 
-		//Update name and icon of advancement if input change
+		// Update name and icon of advancement if input change
 		document.getElementById('input-zone-name-advancement').addEventListener('input', (event) =>
 		{
 			ADVANCEMENT.name = (Object.keys(ADVANCEMENT).length) ? event.target.value : 'undefined';
@@ -861,7 +861,7 @@ class Component
 				document.querySelector('div.line-node-selected img').src = getSrcImage(event.target.value).src;
 		});
 
-		//Select advancement in list and display
+		// Select advancement in list and display
 		document.getElementById('advancement-list').addEventListener('click', (event) =>
 		{
 			CurrentID = undefined;
@@ -884,7 +884,7 @@ class Component
 			});
 		});
 
-		//Generate complete advancement
+		// Generate complete advancement
 		document.getElementById('input-zone-generate-advancement').addEventListener('click', () =>
 		{
 			MCworkInProgress.open();
@@ -910,7 +910,7 @@ class Component
 			MCworkInProgress.close();
 		});
 
-		//Modify name of advancement
+		// Modify name of advancement
 		document.getElementById('edit-display-title-text').addEventListener('input', (event) =>
 		{
 			if (!document.getElementById('zone').style.display)
@@ -919,14 +919,14 @@ class Component
 				ADVANCEMENT.name = event.target.value;
 			}
 		});
-		//Save selected advancement
+		// Save selected advancement
 		document.getElementById('save-advancement').addEventListener('click', (event) =>
 		{
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			this.generateAdvancement();
 		});
-		//Delete selected advancement
+		// Delete selected advancement
 		document.getElementById('modal-confirm-yes').addEventListener('click', () =>
 		{
 			CurrentID = undefined;
@@ -1014,7 +1014,7 @@ class Component
 		});
 		document.getElementById('add-child').addEventListener('click', (event) =>
 		{
-			//child
+			// child
 			event.preventDefault();
 			event.stopImmediatePropagation();
 
@@ -1042,25 +1042,25 @@ class Component
 					this.saveFile();
 				}
 				CurrentID = BLOCK.querySelector('div.block').getAttribute('node');
-				//#region Display child button if selected node is not main
+				//#region  Display child button if selected node is not main
 				if (ADVANCEMENT.data.id === CurrentID)
 					document.getElementById('add-child').style.setProperty('display', 'none');
 				else
 					document.getElementById('add-child').style.removeProperty('display');
-				//#endregion
+				// #endregion
 
-				//#region Set selected line
+				//#region  Set selected line
 				const GRAPH = document.querySelectorAll('div.graph div.line-node');
 				for (const line of GRAPH)
 					line.classList.remove('line-node-selected');
 				BLOCK.classList.add('line-node-selected');
-				//#endregion
+				// #endregion
 
-				//#region Fill form with data of current selected block
+				//#region  Fill form with data of current selected block
 				SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
 				if (document.getElementById('zone').style.display)
 					document.getElementById('zone').style.removeProperty('display');
-				//#endregion
+				// #endregion
 			});
 		};
 

@@ -62,7 +62,7 @@ class MusicComponent
 			{
 				if (!ret)
 					return (true);
-				//eslint-disable-next-line no-eval
+				// eslint-disable-next-line no-eval
 				let Value = eval(`json.${key}`);
 				if (typeof (Value) === 'boolean')
 					if (Value)
@@ -224,7 +224,7 @@ function MusicForm()
 			MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), `sounds.json : ${err}`);
 			return;
 		}
-		//#region Check error
+		//#region  Check error
 		const { Error } = Plugins.lang('Music').Data.Modal;
 		let isError = false;
 		if (!file || file.type !== 'audio/ogg' || path.extname(file.name) !== '.ogg')
@@ -249,8 +249,8 @@ function MusicForm()
 		}
 		if (!fs.existsSync(Directory))
 			fs.mkdirSync(Directory, { recursive: true });
-			//MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
-			//isError = true;
+			// MCutilities.createAlert('warning', document.getElementById('ModalAddMusicError'), Error.UnknownDir);
+			// isError = true;
 		let BaseLink = path.join(Mapcraft.Data.ResourcePack, 'assets/mapcraft/sounds');
 		BaseLink = BaseLink.replace(/(\/)/g, '//');
 		BaseLink = BaseLink.replace(/(\\)/g, '\\\\');
@@ -267,9 +267,9 @@ function MusicForm()
 		}
 		if (isError)
 			return;
-		//#endregion
+		// #endregion
 
-		//#region Add Music
+		//#region  Add Music
 		++MusicID;
 		const NewName = Namespace + ((!JSONDirectory) ? (Name) : (`${JSONDirectory}/${Name}`));
 		sounds[Name] = {
@@ -291,13 +291,13 @@ function MusicForm()
 				MCutilities.createAlert('danger', document.getElementById('ModalAddMusicError'), err);
 				return;
 			}
-			//MusicModalPreview
+			// MusicModalPreview
 			const MusicDuration = Math.round(document.getElementById('MusicModalPreview').duration) * 20;
 			Music.CreateMusic(parseInt(MusicID, 10), Name, 'none', MusicDuration, false);
 			MusicComponent.musicList();
 			MusicComponent.createForm();
 		});
-		//#endregion
+		// #endregion
 	});
 }
 
@@ -319,7 +319,7 @@ function PrintSoundElement()
 			document.getElementById('name-span').innerText = document.getElementById('name').value.match(/(.*):/)[0]; // eslint-disable-line
 			document.getElementById('name').value = document.getElementById('name').value.replace(/(.*):/, '');
 			document.getElementById('music-delete-modal').style.display = 'block';
-			//#region Update Name of file in live
+			//#region  Update Name of file in live
 			document.getElementById('Sound_Name').addEventListener('input', (event) =>
 			{
 				if (!event.target.value.match(/^[a-z0-9/._-]+$/g))
@@ -348,7 +348,7 @@ function PrintSoundElement()
 					document.getElementById('Sound_Name').value = Oldname[Oldname.length - 1];
 				}
 			});
-		//#endregion
+		// #endregion
 		});
 }
 
@@ -358,7 +358,7 @@ function SubmitForm()
 	{
 		event.preventDefault();
 		event.stopImmediatePropagation();
-		//#region Init
+		//#region  Init
 		MCworkInProgress.open();
 
 		const MusicDuration = Math.round(document.getElementById('music_player').duration) * 20;
@@ -400,9 +400,9 @@ function SubmitForm()
 		};
 		if (Vars.FileName.Old !== Vars.FileName.New)
 			Vars.FileName.NameIsChanging = true;
-		//#endregion
+		// #endregion
 
-		//#region Check value
+		//#region  Check value
 		const { Error } = Plugins.lang('Music').Data.Modal;
 		if (!Vars.FileName.Old || !Vars.FileName.Old.match(/^[a-z0-9_]+$/i))
 		{
@@ -430,16 +430,16 @@ function SubmitForm()
 			ScreenError('warning', Error.SoundsJson);
 			return;
 		}
-		//#endregion
+		// #endregion
 
-		//#region Remove song
+		//#region  Remove song
 		const AudioPlayer = document.getElementById('music_player');
 		AudioPlayer.pause();
 		AudioPlayer.currentTime = 0;
 		AudioPlayer.setAttribute('src', '');
-		//#endregion
+		// #endregion
 
-		//#region Create new json
+		//#region  Create new json
 		Vars.JSON.New.id = Vars.id;
 		if (event.target.category.value !== 'none')
 			Vars.JSON.New.category = event.target.category.value;
@@ -464,12 +464,12 @@ function SubmitForm()
 			Vars.JSON.New.sounds[0].volume = parseFloat(event.target.volume.value);
 		if (event.target.weight.value && parseFloat(event.target.weight.value) !== 1)
 			Vars.JSON.New.sounds[0].weight = parseFloat(event.target.weight.value);
-		//#endregion
-		//#region Modify
+		// #endregion
+		//#region  Modify
 		if (Vars.FileName.NameIsChanging)
 		{
 			delete Vars.JSON.Old[Vars.FileName.Old];
-			//#region Wait lock for make modification
+			//#region  Wait lock for make modification
 			const RepeatInterval = setInterval(RenameFile(), 100); // eslint-disable-line
 			const RenameFile = () =>
 			{
@@ -492,7 +492,7 @@ function SubmitForm()
 						});
 				});
 			};
-			//#endregion
+			// #endregion
 		}
 		Vars.JSON.Old[Vars.FileName.New] = Vars.JSON.New;
 		Vars.JSON.Old = JsonABC.sortObj(Vars.JSON.Old);
@@ -506,7 +506,7 @@ function SubmitForm()
 		MusicComponent.musicList(true);
 		MCutilities.createAlert('success', document.getElementById('music-error'), Plugins.lang('Music').Data.Success);
 		MCworkInProgress.close();
-	//#endregion
+	// #endregion
 	});
 }
 

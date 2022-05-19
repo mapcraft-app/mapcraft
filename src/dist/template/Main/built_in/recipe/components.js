@@ -1,4 +1,4 @@
-/*eslint-disable prefer-regex-literals*/
+/* eslint-disable prefer-regex-literals*/
 const path = require('path');
 const fs = require('fs');
 const { MCipc, MCplugin, MCtemplate, MCutilities } = require('mapcraft-api');
@@ -459,7 +459,7 @@ class CreateRecipe
 		this.smithingTable();
 	}
 
-	//#region Private member
+	//#region  Private member
 	static #testCase(IDofElement, error)
 	{
 		if (!document.getElementById(IDofElement).children[0].id)
@@ -492,7 +492,7 @@ class CreateRecipe
 			MCutilities.createAlert('warning', document.getElementById('recipe-error'), __error);
 		}
 	}
-	//#endregion Private member
+	// #endregion Private member
 
 	static generateCraftingTableTwoThree(nameOfId, optionFormId, is3x3 = false)
 	{
@@ -564,7 +564,7 @@ class CreateRecipe
 				];
 			}
 			const ITEMS = RECIPE_CASES.querySelectorAll('div');
-			//#region Fill patternTemp
+			//#region  Fill patternTemp
 			let row = 0; let col = 0;
 			for (const item of ITEMS)
 			{
@@ -581,8 +581,8 @@ class CreateRecipe
 				if (row > rowMAX)
 					break;
 			}
-			//#endregion
-			//#region Transform block to key
+			// #endregion
+			//#region  Transform block to key
 			row = 0; col = 0;
 			while (row <= rowMAX)
 			{
@@ -599,8 +599,8 @@ class CreateRecipe
 					col = 0;
 				}
 			}
-			//#endregion
-			//#region Key(s)
+			// #endregion
+			//#region  Key(s)
 			let z = 0;
 			const Length = ItemList.length;
 			while (z < Length)
@@ -610,8 +610,8 @@ class CreateRecipe
 				z++;
 			}
 			model.key = jsonKey;
-			//#endregion
-			//#region Pattern
+			// #endregion
+			//#region  Pattern
 			row = 0; col = 0;
 			while (row <= rowMAX)
 			{
@@ -627,12 +627,12 @@ class CreateRecipe
 					col = 0;
 				}
 			}
-			//#endregion
-			//#region Reduce pattern & generate final pattern
+			// #endregion
+			//#region  Reduce pattern & generate final pattern
 			if (!FORM.ExactPosition)
 			{
 				let test;
-				//#region Remove empty row
+				//#region  Remove empty row
 				row = 0; col = 0;
 				while (row <= rowMAX)
 				{
@@ -654,8 +654,8 @@ class CreateRecipe
 					}
 					row++;
 				}
-				//#endregion
-				//#region Remove empty column
+				// #endregion
+				//#region  Remove empty column
 				row = 0; col = 0;
 				while (col <= colMAX)
 				{
@@ -679,12 +679,12 @@ class CreateRecipe
 					}
 					col++;
 				}
-				//#endregion
+				// #endregion
 			}
 			for (const _row of patternTemp)
 				jsonPattern.push(_row.join(''));
 			model.pattern = jsonPattern;
-			//#endregion
+			// #endregion
 		}
 		model.result.item = `minecraft:${RECIPE_RESULT}`;
 		model.result.count = parseInt(RECIPE_COUNT, 10);

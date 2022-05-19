@@ -5,7 +5,7 @@ let LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 
 class Component
 {
-	/*Component*/
+	/* Component*/
 	static getLang()
 	{
 		LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);

@@ -1,4 +1,4 @@
-/*eslint-disable no-unused-vars*/
+/* eslint-disable no-unused-vars*/
 const crypto = require('crypto');
 
 const hexaID = () => crypto
@@ -74,10 +74,10 @@ class MCeditor
 	 */
 	_formatting(htmlTag)
 	{
-		//Actually this function is deprecated, but for time reason is used. In futur a better version is using
+		// Actually this function is deprecated, but for time reason is used. In futur a better version is using
 		document.execCommand(htmlTag, false, this._getSelectedText());
 
-		/*const RegexTag = new RegExp(`(<${htmlTag}>.*</${htmlTag}>)`);
+		/* const RegexTag = new RegExp(`(<${htmlTag}>.*</${htmlTag}>)`);
 		const RegexText = new RegExp(`^(?<before>.*)<${htmlTag}>(?<in>.*)</${htmlTag}>(?<after>.*)$`);
 		const Text = this.TEXTAREA.innerHTML;
 		const GetSelectedText = this._getSelectedText().getRangeAt(0).cloneContents();
@@ -112,7 +112,7 @@ class MCeditor
 			DOMelement = DOMelement.parentNode;
 		}
 		return undefined;
-		//return this.TEXTAREA.value.substring(this.TEXTAREA.selectionStart, this.TEXTAREA.selectionEnd);
+		// return this.TEXTAREA.value.substring(this.TEXTAREA.selectionStart, this.TEXTAREA.selectionEnd);
 	}
 }
 

@@ -27,7 +27,7 @@ class HomeComponent
 		DetectClickOnElement();
 	}
 
-	/*Interface for component */
+	/* Interface for component */
 	static main()
 	{
 		this.content();

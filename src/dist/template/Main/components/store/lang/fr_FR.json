@@ -1,8 +1,0 @@
-{
-	"Title": "Magasin",
-	"Icon": "cart",
-	"Notification": "",
-	"Data": {
-		"isComing": "Le magasin arrive prochainement !" 
-	}
-}

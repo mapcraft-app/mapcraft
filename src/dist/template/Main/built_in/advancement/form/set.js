@@ -1,4 +1,4 @@
-/*eslint-disable no-param-reassign*/
+/* eslint-disable no-param-reassign*/
 const path = require('path');
 const { Mapcraft, MCsearch, MCtemplate, MCutilities } = require('mapcraft-api');
 const FORM = require('./form');

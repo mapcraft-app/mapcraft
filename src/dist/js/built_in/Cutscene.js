@@ -26,7 +26,7 @@ function createAlert(type, DOMelement, str)
 
 class Cutscene
 {
-	//#region Cutscene main
+	//#region  Cutscene main
 	static AddCutscene(ID)
 	{
 		MCfs.addLine(MainPath, `execute positioned 0 0 0 rotated 0 0 if entity @s[tag=Cutscene,tag=Cutscene_${ID.toString()}] run function mapcraft-data:cutscene/${ID.toString()}/cutscene`);
@@ -46,9 +46,9 @@ class Cutscene
 				throw new Error(err);
 		});
 	}
-	//#endregion
+	// #endregion
 
-	//#region Cutscene generator
+	//#region  Cutscene generator
 	static BezierCurve(DISTANCE, TIME, TRANSITION)
 	{
 		const GetCurve = (transition) =>
@@ -112,7 +112,7 @@ class Cutscene
 
 	static GenerateCutscene(ID)
 	{
-		//#region Data generate
+		//#region  Data generate
 		if (!fs.existsSync(path.join(CutsceneDir, ID.toString())))
 			fs.mkdirSync(path.join(CutsceneDir, ID.toString()));
 		const DB = Database(Mapcraft.DBPath, { verbose: console.log });
@@ -163,7 +163,7 @@ class Cutscene
 			Camera: ['execute if score @s MC_Cutscene matches ', ' run tp @e[tag=Camera,sort=nearest]'],
 			TeleportPlayer: ['execute if score @s[tag=', TAG, ',tag=!Debug] MC_Cutscene matches ..', TIME.Max.toString(), ' if entity @e[tag=', TAG, ',tag=Cutscene,tag=Camera,sort=nearest,limit=1,distance=1..] run spectate @e[tag=', TAG, ',tag=Cutscene,tag=Camera,sort=nearest,limit=1] @s'],
 		};
-		//#region Start Generation
+		//#region  Start Generation
 		const data = {
 			file: '',
 			camera: '',
@@ -229,9 +229,9 @@ class Cutscene
 					if (err && err.code !== 'EEXIST')
 						throw new Error(err);
 				});
-		//#endregion
+		// #endregion
 	}
-	//#endregion
+	// #endregion
 }
 
 module.exports = Cutscene;

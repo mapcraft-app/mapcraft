@@ -186,12 +186,12 @@ class Form
 	{
 		const MODAL = document.createElement('div');
 		FORM_TEMPLATE.render(MODAL, 'damageModal.tp', { ID: hexaID() });
-		//Main entity
+		// Main entity
 		const mainEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
 		mainEntity.removeAttribute('class');
 		mainEntity.querySelector('button.uk-modal-close-default').remove();
 		MODAL.querySelector('#form-damage-modal-entity').appendChild(mainEntity);
-		//Type
+		// Type
 		const typeEntity = this.type(minecraftVersion).querySelector('div.uk-modal-body');
 		typeEntity.removeAttribute('class');
 		typeEntity.querySelector('button.uk-modal-close-default').remove();
@@ -285,7 +285,7 @@ class Form
 						node.style.display = 'block';
 			}
 		});
-		//Effects
+		// Effects
 		const EffectList = MODAL.querySelector('#form-entity-modal-effect-list');
 		MODAL.querySelector('#form-entity-modal-effect-add').addEventListener('click', (event) =>
 		{
@@ -299,12 +299,12 @@ class Form
 			TEMPLATE.updateLang(newEffect, LANG.Data);
 			EffectList.appendChild(newEffect);
 		});
-		//Distance
+		// Distance
 		const distanceForm = this.distance().querySelector('div.uk-modal-body');
 		distanceForm.removeAttribute('class');
 		distanceForm.querySelector('button.uk-modal-close-default').remove();
 		MODAL.querySelector('#form-entity-modal-distance').appendChild(distanceForm);
-		//Location
+		// Location
 		const locationForm = this.location().querySelector('div.uk-modal-body');
 		locationForm.removeAttribute('class');
 		locationForm.querySelector('button.uk-modal-close-default').remove();
@@ -467,12 +467,12 @@ class Form
 	{
 		const MODAL = document.createElement('div');
 		FORM_TEMPLATE.render(MODAL, 'typeModal.tp', { ID: hexaID() });
-		//Type source entity
+		// Type source entity
 		const typeSourceEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
 		typeSourceEntity.removeAttribute('class');
 		typeSourceEntity.querySelector('button.uk-modal-close-default').remove();
 		MODAL.querySelector('#form-type-modal-type-source-entity').appendChild(typeSourceEntity);
-		//Type direct entity
+		// Type direct entity
 		const typeDirectEntity = this.entity(minecraftVersion).querySelector('div.uk-modal-body');
 		typeDirectEntity.removeAttribute('class');
 		typeDirectEntity.querySelector('button.uk-modal-close-default').remove();

@@ -27,7 +27,7 @@ module.exports = {
 		"indent": ["error", "tab", {"SwitchCase": 1}],
 		"no-tabs": ["off", {allowIndentationTabs: true}],
 		"max-classes-per-file": ["warn", 5],
-		"spaced-comment": ["error", "never", { "markers": ["#region "] }],
+		"spaced-comment": ["error", "always", { "markers": ["#region "] }],
 		"import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
 	},
 	"ignorePatterns": [".eslintrc.js", "node_modules/**/*", "build/**/*", "src/dist/js/MCipc.js", "src/dist/js/AceEditor", "src/dist/js/GUI"],

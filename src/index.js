@@ -11,7 +11,20 @@ const Database = require('better-sqlite3');
 const { MCeditor, MCshell, MCwindow, MCutilities } = require('mapcraft-api');
 require('./dist/js/importPlugins');
 
-//#region Variables
+// In dev mode, activate hot reloading
+if (process.argv[2] && process.argv[2] === 'dev')
+	try
+	{
+		process.env.DEV = true;
+		// eslint-disable-next-line global-require
+		require('electron-reloader')(module);
+	}
+	catch (err)
+	{
+		throw new Error(err);
+	}
+
+//#region  Variables
 MCutilities.generateENV();
 let StartWindow = null;
 let MainWindow = null;
@@ -24,21 +37,21 @@ const SaveCurrentUser = {
 	Username: String,
 	UUID: String,
 };
-//#endregion
+// #endregion
 
-//Copy manifest if not exist
+// Copy manifest if not exist
 try
 {
 	fs.copyFileSync(path.join(__dirname, 'manifest'), path.join(process.env.AppDataPath, 'manifest'), fs.constants.COPYFILE_EXCL);
 }
 catch (err)
 {
-	//err
+	// err
 }
 const MainManifest = JSON.parse(fs.readFileSync(path.join(process.env.AppDataPath, 'manifest'), { encoding: 'utf-8', flag: 'r' }));
 
-//#region Main system
-//#region Update updateSystem
+//#region  Main system
+//#region  Update updateSystem
 let UpdateExecutableIsPresent = false;
 async function updateSystem()
 {
@@ -97,7 +110,7 @@ updateSystem().catch((err) =>
 		message: err.message,
 	});
 });
-//#endregion
+// #endregion
 
 function createWindow(preload)
 {
@@ -153,9 +166,9 @@ app.on('activate', () =>
 		else
 			openMainWindow(); // eslint-disable-line
 });
-//#endregion
+// #endregion
 
-//#region Main Window system
+//#region  Main Window system
 const WindowUser = () =>
 {
 	SelectUserChild = new BrowserWindow({
@@ -218,23 +231,26 @@ function openMainWindow()
 	if (!PassFirstStep)
 		StartWindow.close();
 }
-//#endregion
+// #endregion
 
-//#region Error handling
-process.on('uncaughtException', (err) =>
+//#region  Error handling
+process.on('uncaughtException', (err, origin) =>
 {
+	const message = (process.env.DEV)
+		? `${err.toString()}\nOrigin: ${origin}`
+		: `${err.toString()}`;
 	const messageBoxOptions = {
 		type: 'error',
 		title: 'Error in Main process',
-		message: err.toString(),
+		message,
 	};
 	dialog.showMessageBoxSync(messageBoxOptions);
 	app.exit(1);
 });
-//#endregion
+// #endregion
 
-//#region IPC signal (Alphabetic order)
-//#region Dialog
+//#region  IPC signal (Alphabetic order)
+//#region  Dialog
 ipcMain.on('Dialog:open-global', (event, options = {}) =>
 {
 	dialog.showOpenDialog(options).then((data) =>
@@ -282,9 +298,9 @@ ipcMain.on('Dialog:error', (event, title, content) =>
 {
 	dialog.showErrorBox(title, content);
 });
-//#endregion
+// #endregion
 
-//#region Editor
+//#region  Editor
 ipcMain.on('Editor:open', (event, link) =>
 {
 	event.reply('Editor:open-modal', MCeditor.openFile(link));
@@ -299,9 +315,9 @@ ipcMain.on('Editor:close', (event) =>
 	MCeditor.closeFile();
 	event.reply('Editor:close-modal');
 });
-//#endregion
+// #endregion
 
-//#region Log
+//#region  Log
 ipcMain.on('Log:is-change', (event, fullFile, newData) =>
 {
 	let array;
@@ -323,30 +339,30 @@ ipcMain.on('Log:is-change', (event, fullFile, newData) =>
 	}
 	event.reply('Log:send-change', fullFile, array);
 });
-//#endregion
+// #endregion
 
-//#region Notification
+//#region  Notification
 ipcMain.on('Notification:click-notification', () =>
 {
 	MainWindow.focus();
 });
-//#endregion
+// #endregion
 
-//#region Plugin
+//#region  Plugin
 ipcMain.on('Plugin:is-changed', (event, plugin, name) =>
 {
 	event.reply('Plugin:update-interface', plugin, name);
 });
-//#endregion
+// #endregion
 
-//#region Shell
+//#region  Shell
 ipcMain.on('Shell:send-command', (event, command) =>
 {
 	event.reply('Shell:execute-command', command);
 });
-//#endregion
+// #endregion
 
-//#region Start
+//#region  Start
 ipcMain.on('Start:is-selected-world', () =>
 {
 	const interval = setInterval(wait, 1000); // eslint-disable-line
@@ -363,23 +379,23 @@ ipcMain.on('Start:is-selected-world', () =>
 		}
 	}
 });
-//#endregion
+// #endregion
 
-//#region Trigger
+//#region  Trigger
 ipcMain.on('Trigger:signal-open-modal', (event, command) =>
 {
 	event.reply('Trigger:open-modal', command);
 });
-//#endregion
+// #endregion
 
-//#region Cutscene
+//#region  Cutscene
 ipcMain.on('Cutscene:signal-create-cutscene', (event, command) =>
 {
 	event.reply('Cutscene:create-cutscene', command);
 });
-//#endregion
+// #endregion
 
-//#region Recipes
+//#region  Recipes
 ipcMain.on('Recipes:signal-is-exist', (event) =>
 {
 	event.reply('Recipes:is-exist');
@@ -388,9 +404,9 @@ ipcMain.on('Recipes:signal-open-switcher', (event, id) =>
 {
 	event.reply('Recipes:open-switcher', id);
 });
-//#endregion
+// #endregion
 
-//#region User
+//#region  User
 ipcMain.on('User:change-username', () =>
 {
 	IsSelectedUser = true;
@@ -403,12 +419,13 @@ ipcMain.on('User:close-window', (event, DBPath, JSON) =>
 	SaveCurrentUser.Username = JSON.Username;
 	SaveCurrentUser.UUID = JSON.UUID;
 	SaveCurrentUser.DBpath = DBPath;
-	SelectUserChild.close();
+	if ((process.env.DEV && SelectUserChild) || !process.env.DEV)
+		SelectUserChild.close();
 	MainWindow.webContents.send('User:remove-blur');
 });
-//#endregion
+// #endregion
 
-//#region Work in progress
+//#region  Work in progress
 ipcMain.on('WorkProgress:signal-open-modal', (event) =>
 {
 	event.reply('WorkProgress:open-modal');
@@ -417,9 +434,9 @@ ipcMain.on('WorkProgress:signal-close-modal', (event) =>
 {
 	event.reply('WorkProgress:close-modal');
 });
-//#endregion
+// #endregion
 
-//#region Update system
+//#region  Update system
 ipcMain.on('Update:create-modal', () =>
 {
 	UpdateWindow = new BrowserWindow({
@@ -493,13 +510,13 @@ ipcMain.on('Update:make-update', (event, executePath, tempPath, zipPath, unzipPa
 		app.exit();
 	}
 });
-//#endregion
-//#endregion
+// #endregion
+// #endregion
 
-//#region Dev Tools
+//#region  Dev Tools
 ipcMain.on('DevTools:restart', () =>
 {
 	app.relaunch();
 	app.exit(0);
 });
-//#endregion
+// #endregion

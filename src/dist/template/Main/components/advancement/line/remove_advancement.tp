@@ -1,7 +1,0 @@
-[HTML]
-<div class="line-block delete-button" node="{node}">
-	<button class="uk-button uk-button-danger add-child">
-		<span uk-icon="trash" class="uk-icon"></span>
-	</button>
-</div>
-[/HTML]

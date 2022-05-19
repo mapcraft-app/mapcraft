@@ -368,7 +368,7 @@ class Cutscene
 					DisableDurationLastElement();
 				});
 				const db = Database(Mapcraft.DBPath, { verbose: console.log });
-				//#region Update duration && Delete current point
+				//#region  Update duration && Delete current point
 				let TotalDuration = db.prepare('SELECT Duration FROM Cutscene WHERE ID = ?').get(CutsceneID).Duration;
 				const PointDuration = db.prepare('SELECT Duration FROM CutscenePoint WHERE CutsceneID = ? AND Point = ?').get(CutsceneID, NumberPoint).Duration;
 				TotalDuration -= PointDuration;
@@ -378,8 +378,8 @@ class Cutscene
 				document.querySelector('span[generate-time]').innerText = TIME;
 				const Points = db.prepare('SELECT Point FROM CutscenePoint WHERE CutsceneID = ? AND Point > ? ORDER BY Point').all(CutsceneID, NumberPoint);
 				db.prepare('DELETE FROM CutscenePoint WHERE CutsceneID = ? AND Point = ?').run(CutsceneID, NumberPoint);
-				//#endregion
-				//#region Update point number
+				// #endregion
+				//#region  Update point number
 				if (!Points.length)
 					LastPoint = NumberPoint - 1;
 				for (const Point of Points)
@@ -409,7 +409,7 @@ class Cutscene
 				}
 				db.close();
 				MCworkInProgress.close();
-				//#endregion
+				// #endregion
 			});
 		});
 	}
@@ -436,7 +436,7 @@ class Cutscene
 	}
 }
 
-//#region IPC signal
+//#region  IPC signal
 MCipc.receive('Shell:execute-command', (command) =>
 {
 	if (command.Command !== 'cutscene')
@@ -456,6 +456,6 @@ MCipc.receive('Shell:execute-command', (command) =>
 			break;
 	}
 });
-//#endregion
+// #endregion
 
 module.exports = Cutscene;

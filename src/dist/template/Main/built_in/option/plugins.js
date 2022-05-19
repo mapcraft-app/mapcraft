@@ -13,7 +13,7 @@ const process = require('process');
 const zipPath = (path.basename(process.env.AppPath) === 'app.asar')
 	? path.join(process.env.AppPath, '..', 'app.asar.unpacked', 'node_modules', '7zip-min')
 	: path.join(process.env.AppPath, 'node_modules', '7zip-min');
-const SevenZip = require(zipPath); //eslint-disable-line import/no-dynamic-require
+const SevenZip = require(zipPath); // eslint-disable-line import/no-dynamic-require
 
 const { Mapcraft, MCtemplate } = require('mapcraft-api');
 const importPlugins = require('../../../../js/importPlugins');
@@ -33,7 +33,7 @@ const unZip = (pathToArchive, whereToUnpack) => new Promise((resolve, reject) =>
 function addPluginToTable(packageJson, base = undefined)
 {
 	if (!base)
-		base = path.join(Mapcraft.config.Env.PluginsComponents, `${packageJson.name}_${packageJson.uuid}`); //eslint-disable-line no-param-reassign
+		base = path.join(Mapcraft.config.Env.PluginsComponents, `${packageJson.name}_${packageJson.uuid}`); // eslint-disable-line no-param-reassign
 	const tab = document.querySelector('#table-plugin tbody');
 	const ID = (!tab.childElementCount) ? 0 : tab.childElementCount;
 	const div = document.createElement('div');
@@ -91,7 +91,7 @@ async function addPluginViaArchive(archivePath)
 	}
 	catch (err)
 	{
-		fsPromise.rm(dir, { force: true, recursive: true }).catch(() => null /*don't make anything*/);
+		fsPromise.rm(dir, { force: true, recursive: true }).catch(() => null /* don't make anything*/);
 		throw new Error(`ImportPlugin: ${err}`);
 	}
 }

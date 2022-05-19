@@ -6,9 +6,16 @@ const Database = require('better-sqlite3');
 const { MCipc, MClog, MCplugin } = require('mapcraft-api');
 const importPlugins = require('../../js/importPlugins');
 
+const lastExtDev = (process.env.DEV && localStorage.getItem('Mapcraft_Plugin'))
+	? localStorage.getItem('Mapcraft_Plugin')
+	: undefined;
+
 const Plugins = new MCplugin();
 
-//#region Set ContextBridge
+// if (lastExtDev)
+//	localStorage.setItem('Mapcraft_Plugin', lastExtDev);
+
+//#region  Set ContextBridge
 contextBridge.exposeInMainWorld('api', {
 	send: (channel, ...args) =>
 	{
@@ -19,13 +26,13 @@ contextBridge.exposeInMainWorld('api', {
 		MCipc.receive(channel, func);
 	},
 });
-//#endregion
+// #endregion
 
-//#region Log file
+//#region  Log file
 MClog.watchLog();
-//#endregion
+// #endregion
 
-//#region Interface
+//#region  Interface
 function UpdateSelectedLi()
 {
 	document.querySelectorAll('#toogle-nav li').forEach((element) =>
@@ -92,9 +99,9 @@ function UpdateInterface(plugin, name)
 }
 
 MCipc.receive('Plugin:update-interface', (plugin, name) => UpdateInterface(plugin, name));
-//#endregion
+// #endregion
 
-//#region Shell system
+//#region  Shell system
 const capitalize = (s) =>
 {
 	if (typeof s !== 'string')
@@ -132,7 +139,7 @@ MCipc.receive('Shell:new-command', (command) =>
 		const LANG = importPlugins.lang(command.UUID);
 		if (PluginsComponent.isNotification)
 		{
-			//eslint-disable-next-line
+			// eslint-disable-next-line
 			const manifest = require(path.join(PluginsComponent.directory, 'manifest.json'));
 			const icon = path.join(PluginsComponent.directory, manifest.icon);
 			fs.stat(icon, (err) =>
@@ -152,9 +159,9 @@ MCipc.receive('Shell:new-command', (command) =>
 	}
 	MCipc.send('Shell:send-command', command);
 });
-//#endregion
+// #endregion
 
-//#region Username system
+//#region  Username system
 function blurWindow()
 {
 	document.documentElement.classList.toggle('html-blur');
@@ -172,18 +179,29 @@ function changeUsername()
 	sql.run(Username);
 	MCipc.send('User:change-username');
 }
-//#endregion
+// #endregion
 
-//#region Main
+//#region  Main
 window.addEventListener('DOMContentLoaded', () =>
 {
 	blurWindow();
 	Plugins.instance('Main').main();
-	MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.default().Title);
+
+	if (process.env.DEV && lastExtDev)
+	{
+		localStorage.setItem('Mapcraft_Plugin', lastExtDev);
+		MCipc.send('Plugin:is-changed', lastExtDev, Plugins.lang(lastExtDev).Title);
+	}
+	else
+	{
+		MCipc.send('Plugin:is-changed', localStorage.getItem('Mapcraft_Plugin'), Plugins.default().Title);
+	}
+
 	MCipc.receive('User:remove-blur', () =>
 	{
 		blurWindow();
-		MCipc.send('Update:create-modal');
+		if (!process.env.DEV)
+			MCipc.send('Update:create-modal');
 		Plugins.instance('Main').header();
 		/**
 		 * If option plugin is open, reload user table for correct info
@@ -193,10 +211,11 @@ window.addEventListener('DOMContentLoaded', () =>
 		document.getElementById('nav-header-change-username').addEventListener('click', () => changeUsername());
 	});
 	MCipc.receive('Log:send-change', (fullFile) => MClog.printToTextArea(fullFile));
-});
 
-document.getElementById('content').addEventListener('readyState', (e) =>
-{
-	console.log('readyState', e);
+	if (process.env.DEV && localStorage.getItem('Mapcraft_User'))
+	{
+		const _Mapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
+		MCipc.send('User:close-window', _Mapcraft.DBPath, localStorage.getItem('Mapcraft_User'));
+	}
 });
-//#endregion
+// #endregion

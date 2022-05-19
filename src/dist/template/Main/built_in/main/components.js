@@ -71,7 +71,7 @@ class MainComponent
 		Template.updateLang(document.getElementById('ModalEditFile'), Plugins.lang('Main'));
 	}
 
-	/*Interface for component */
+	/* Interface for component */
 	static main()
 	{
 		this._main();

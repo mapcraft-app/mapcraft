@@ -44,7 +44,7 @@ class Update
 
 	async checkUpdate()
 	{
-		//#region software
+		//#region  software
 		const res1 = await axios({
 			method: 'get',
 			url: 'https://api.mapcraft.app/software',

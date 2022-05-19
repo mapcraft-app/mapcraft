@@ -83,7 +83,7 @@ class Component
 				DOM[i].removeAttribute('selected');
 	}
 
-	/*Interface for component */
+	/* Interface for component */
 	static drawFullComponent()
 	{
 		LANG = MCutilities.getLang(__dirname, MC.config.Env.Lang);

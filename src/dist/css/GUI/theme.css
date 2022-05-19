@@ -167,7 +167,9 @@ pre {
 	padding: 0.4em;
 }
 .nav-hover-element-selected {
-	font-size: xx-large;
+	text-decoration: underline;
+    text-underline-position: under;
+	text-decoration-thickness: 1px;
 }
 .nav-hover-element:hover {
 	background-color: #333333;

@@ -58,16 +58,16 @@ class TriggerComponent
 	}
 }
 
-//#region MCipc signal
+//#region  MCipc signal
 MCipc.receive('Shell:execute-command', (command) =>
 {
 	if (command.Command !== 'trigger')
 		return;
 	MCipc.send('Trigger:signal-open-modal', command);
 });
-//#endregion
+// #endregion
 
-//#region Miscellaneous functions
+//#region  Miscellaneous functions
 function createAlert(type, DOMelement, str)
 {
 	const alert = document.createElement('div');
@@ -177,6 +177,6 @@ function EditExecuteFile()
 			MCipc.send('Editor:open', ExecutePath);
 		});
 }
-//#endregion
+// #endregion
 
 module.exports = TriggerComponent;
