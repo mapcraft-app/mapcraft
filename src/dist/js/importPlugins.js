@@ -115,7 +115,7 @@ class ImportPlugin
 	 * @param {String} UUID UUID of component
 	 * @param {Boolean} forceValue Set to true/false if you want to force activate/desactivate plugin
 	 */
-	toogle(UUID, forceValue = undefined)
+	toggle(UUID, forceValue = undefined)
 	{
 		for (const i in this.plugins)
 			if (this.plugins[i].uuid === UUID)

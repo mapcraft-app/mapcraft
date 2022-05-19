@@ -118,7 +118,7 @@ class OptionComponent
 		}
 	}
 
-	static RedrawInterface()
+	static RedrawInterface(alert = true)
 	{
 		document.getElementById('documentation-link').href = `https://documentation.mapcraft.app/?${MC.config.Env.Lang}`;
 		UpdateLang();
@@ -148,7 +148,8 @@ class OptionComponent
 		this.general();
 		PluginComponent.updateLang(); // eslint-disable-line
 		UserComponent.UpdateLangComponent('user.tp'); // eslint-disable-line
-		MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.General.Success);
+		if (alert)
+			MCutilities.createAlert('success', document.getElementById('option-error'), LANG.Data.General.Success);
 	}
 
 	static RedrawUserTab()
@@ -594,17 +595,18 @@ class PluginComponent
 		for (const object of data)
 			if (Object.prototype.hasOwnProperty.call(object, key) && object[key] === value)
 			{
-				object.active = newValue;
 				const _path = (isBuiltin) ? MC.config.Env.ActiveComponents : path.join(MC.config.Env.PluginsComponents, 'components.json');
+				console.log(_path, object.active);
+				object.active = newValue;
 				fs.writeFile(_path, JSON.stringify(data, null, 4), { encoding: 'utf-8' }, (err) =>
 				{
 					if (err)
 						MCutilities.createAlert('warning', document.getElementById('option-error'), err.message);
 					if (isBuiltin)
-						Plugins.toogle(value);
+						Plugins.toggle(value);
 					else
-						importPlugins.toogle(value);
-					this.updateNav();
+						importPlugins.toggle(value);
+					OptionComponent.RedrawInterface(false);
 				});
 				return;
 			}
