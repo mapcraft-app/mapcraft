@@ -17,7 +17,7 @@
 ##### <span>&#x26a0;</span> If you wish, it is possible to have access to the Mapcraft editing tools just by installing the [datapack](https://github.com/mapcraft-app/datapack) and [resourcepack](https://github.com/mapcraft-app/resource-pack) manually, but the other components will not be usable
 
 ## Developer(s)
-- Clément Bertrand [(@cbertran)](https://github.com/c-bertran)
+- Clément Bertrand [(@c-bertran)](https://github.com/c-bertran)
 
 ## License
     Mapcraft Copyright (C) 2020 - ...  Clément Bertrand
