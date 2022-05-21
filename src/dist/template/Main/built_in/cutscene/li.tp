@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <li id="{ID}" name="{Name}" class="uk-flex uk-flex-between">
 	<div class="inline-content">
 		<h3 class="uk-margin-remove" uk-tooltip="title: {CutsceneHashtag}">
@@ -13,10 +13,10 @@
 		</h3>
 	</div>
 </li>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .inline-content {
 	display: contents;
 }
-[/CSS]
+</style>

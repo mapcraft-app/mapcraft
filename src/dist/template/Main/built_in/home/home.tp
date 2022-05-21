@@ -1,6 +1,6 @@
-[HTML]
+<html>
 <div class="uk-container">
 	<ul id="main-selection-list" class="uk-child-width-1-3 uk-child-width-1-4@m uk-text-center uk-flex uk-flex-center uk-grid-match" uk-grid>
 	</ul>
 </div>
-[/HTML]
+</html>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="edit-block state-block uk-margin">
 	<button class="uk-button uk-button-link state-block-close">
 		<span uk-icon="close"></span>
@@ -41,9 +41,9 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .state-block {
 	position: relative;
 }
@@ -56,4 +56,4 @@
 .state-form {
 	margin-top: 1.2em;
 }
-[/CSS]
+</style>

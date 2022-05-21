@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-container">
 	<div class="uk-flex uk-flex-right uk-flex-middle uk-flex-between">
 		<div class="check-margin">
@@ -130,15 +130,15 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .check-margin {
 	margin-left: 12px !important;
 }
-[/CSS]
+</style>
 
-[JS]
+<script>
 window.api.receive('Trigger:open-modal', (command) => {
 	document.getElementById('trigger-form-x1').value = command.Coordinates.P1[0];
 	document.getElementById('trigger-form-y1').value = command.Coordinates.P1[1];
@@ -210,4 +210,4 @@ document.querySelector('input[name="form-checkbox"]').addEventListener('click', 
 	if (document.querySelector('#checkbox-trigger').checked)
 		document.querySelector('#checkbox-trigger').checked = false;
 });
-[/JS]
+</script>

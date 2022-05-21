@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div id="form" class="uk-container uk-margin-top uk-flex uk-flex-column uk-flex-between body-height">
 	<dl class="uk-description-list uk-description-list-divider">
 		<dt lang="Software"></dt>
@@ -37,9 +37,9 @@
 	<img class="img-work-in-progress" src="dist/img/loader.gif"/>
 	<h4 class="uk-text-center" lang="UpdateProgress"></h4>
 </div>
-[/HTML]
+</html>
 
-[JS]
+<script>
 const list = document.getElementsByTagName('dd');
 for (const element of list)
 {
@@ -50,9 +50,9 @@ for (const element of list)
 		const el = document.querySelector(`[target="${element.getAttribute('id')}"]`).classList.toggle('hidden');
 	});
 }
-[/JS]
+</script>
 
-[CSS]
+<style>
 html {
 	height: 100%;
 }
@@ -93,4 +93,4 @@ dd {
 .hidden {
 	display: none !important;
 }
-[/CSS]
+</style>

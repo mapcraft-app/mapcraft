@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <header class="uk-comment-header">
 	<div class="uk-grid-medium uk-flex-middle" uk-grid>
 		<div class="uk-width-auto">
@@ -12,4 +12,4 @@
 		</div>
 	</div>
 </header>
-[/HTML]
+</html>

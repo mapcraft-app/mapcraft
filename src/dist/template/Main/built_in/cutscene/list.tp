@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <tr point="{Point}">
 	<td>
 		<p point="{Point}" id="Point">{Point}</p>
@@ -42,9 +42,9 @@
 		</button>
 	</td>
 </tr>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .table-icon > svg {
 	max-width: none;
 }
@@ -54,4 +54,4 @@
 .transition-text {
 	width: fit-content;
 }
-[/CSS]
+</style>

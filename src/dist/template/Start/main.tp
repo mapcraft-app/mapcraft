@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="header">
 	<h1 class="uk-text-center" lang="ChooseWorld"></h1>
 </div>
@@ -35,10 +35,10 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .img-work-in-progress {
 	width: 64px;
 }
-[/CSS]
+</style>

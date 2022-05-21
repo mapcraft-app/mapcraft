@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-container">
 	<div id="cutscene-error"></div>
 	<div uk-grid>
@@ -101,9 +101,9 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 @media (max-width: 1009px) {
 	#edit-button {
 		padding-top: 0.5em;
@@ -161,12 +161,12 @@
 .delete-modal-text > h3 {
 	margin-left: 0.3em;
 }
-[/CSS]
+</style>
 
 <script>
-[JS]
+<script>
 window.api.receive('Cutscene:create-cutscene', (command) => {
 	UIkit.modal('#CreateNewCutscene-Modal').show();
 });
-[/JS]
+</script>
 </script>

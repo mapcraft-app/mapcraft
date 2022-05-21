@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <tr id="{id}" uuid="{uuid}">
 	<td>
 		<img class="plugin-img" src="{icon}">
@@ -21,13 +21,13 @@
 		</button>
 	</td>
 </tr>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .plugin-img {
 	max-height: 64px;
 }
 .plugin-min-button > span {
 	min-width: 20px;
 }
-[/CSS]
+</style>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div id="AddMusic" class="uk-flex-top uk-modal-container" container="#ModalAddMusic" uk-modal="stack:true;">
 	<div class="uk-modal-dialog uk-margin-auto-vertical" uk-overflow-auto>
 		<button class="uk-modal-close-default" type="button" uk-close></button>
@@ -44,15 +44,15 @@
 		</form>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 #add-music-form {
 	margin-top: 2em;
 }
-[/CSS]
+</style>
 
-[JS]
+<script>
 	UIkit.util.on('#AddMusic', 'hide', () => {
 		document.getElementById('MusicModalPreview').pause();
 	});
@@ -83,4 +83,4 @@
 		else
 			document.getElementById('add-music-form-Name-Error').style.display = 'none';
 	});
-[/JS]
+</script>

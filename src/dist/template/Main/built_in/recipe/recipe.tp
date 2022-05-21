@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-contaier">
 	<div id="recipe-error"></div>
 	<div class="uk-flex">
@@ -113,9 +113,9 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .error-modal {
 	text-align: center;
 	display: none;
@@ -258,9 +258,9 @@
     width: 4.55em;
     margin-left: 0.15em;
 }
-[/CSS]
+</style>
 <script>
-[JS]
+<script>
 document.querySelectorAll('div[class="case"]').forEach((element) => {
 	element.addEventListener('click', (event) => {
 		element.setAttribute('case_selected', '');
@@ -309,5 +309,5 @@ window.api.receive('Recipes:is-exist', () => {
 window.api.receive('Recipes:open-switcher', (id) => {
 	UIkit.tab(document.getElementById('recipe-tab')).show(id);
 });
-[/JS]
+</script>
 </script>

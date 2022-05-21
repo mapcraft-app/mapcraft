@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-margin">
 	<label class="uk-form-label uk-label-range" for="{ID}">{Name}</label>
 	<div class="uk-form-controls uk-flex">
@@ -6,9 +6,9 @@
 		<span id="{ID}-badge" class="uk-badge uk-badge-range"></span>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .uk-badge-range {
 	padding: 10px;
 	margin-left: 10px !important;
@@ -18,4 +18,4 @@
 .uk-label-range {
 	margin-top: unset;
 }
-[/CSS]
+</style>

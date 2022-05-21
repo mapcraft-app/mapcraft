@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div id="advancement-error"></div>
 <div class="uk-flex graph-zone">
 	<div class="uk-width-1-4 list">
@@ -69,10 +69,10 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
 <style>
-[CSS]
+<style>
 .body-selection {
 	display: flex;
     flex-direction: column;
@@ -313,4 +313,4 @@
     top: 1.5em;
 }
 </style>
-[/CSS]
+</style>

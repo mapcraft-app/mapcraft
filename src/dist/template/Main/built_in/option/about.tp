@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div uk-grid>
 	<div class="uk-width-auto@m">
 		<ul id="component-tab-rigth-about" class="uk-tab-left" uk-tab="connect: #component-tab-left-about; animation: uk-animation-fade">
@@ -8,4 +8,4 @@
 		<ul id="component-tab-left-about" class="uk-switcher"></ul>
 	</div>
 </div>
-[/HTML]
+</html>

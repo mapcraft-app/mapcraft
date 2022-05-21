@@ -1,4 +1,4 @@
-![logo](https://gitlab.com/cbertran/mapcraft/-/raw/main/src/dist/img/icon/icon_small.png "Logo")
+![logo](https://github.com/mapcraft-app/mapcraft/blob/main/src/dist/img/icon/icon_small.png "Logo")
 
 ---
 
@@ -10,14 +10,14 @@
 ### [Go to the official website](https://mapcraft.app/)
 
 ## Setup
-1. Download the latest stable version [here](https://gitlab.com/cbertran/mapcraft/-/releases)
+1. Download the latest stable version [here](https://github.com/mapcraft-app/mapcraft/releases)
 2. Install it in the folder of your choice
 3. Now you just have to launch the executable.
 
-##### <span>&#x26a0;</span> If you wish, it is possible to have access to the Mapcraft editing tools just by installing the [datapack](https://gitlab.com/cbertran/mapcraft-datapack/) and [resourcepack](https://gitlab.com/cbertran/mapcraft-resourcepack/) manually, but the other components will not be usable
+##### <span>&#x26a0;</span> If you wish, it is possible to have access to the Mapcraft editing tools just by installing the [datapack](https://github.com/mapcraft-app/datapack) and [resourcepack](https://github.com/mapcraft-app/resource-pack) manually, but the other components will not be usable
 
 ## Developer(s)
-- Clément Bertrand [(@cbertran)](https://gitlab.com/cbertran)
+- Clément Bertrand [(@cbertran)](https://github.com/c-bertran)
 
 ## License
     Mapcraft Copyright (C) 2020 - ...  Clément Bertrand

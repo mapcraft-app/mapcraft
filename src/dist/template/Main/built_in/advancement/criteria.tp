@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <button id="edit-criteria-close-{ID}" class="uk-button uk-button-link criteria-close-button">
 	<span uk-icon="close"></span>
 </button>
@@ -13,4 +13,4 @@
 	<div class="uk-form-controls search-dropdown-parent" id="edit-criteria-trigger-{ID}"></div>
 </div>
 <div id="edit-criteria-form-{ID}" class="padding-criteria-form"></div>
-[/HTML]
+</html>

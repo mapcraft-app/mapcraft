@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <button id="edit-requirement-close" class="uk-button uk-button-link criteria-close-button">
 	<span uk-icon="close"></span>
 </button>
@@ -6,4 +6,4 @@
 	<div class="uk-flex uk-flex-around uk-flex-middle uk-flex-wrap" id="edit-requirement-checkbox">
 	</div>
 </div>
-[/HTML]
+</html>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <li class="uk-open">
 	<a class="uk-accordion-title" href="#">
 		<h4 class="uk-heading-line uk-text-left"><span lang="Edit.Root._Title"></span></h4>
@@ -225,9 +225,9 @@
 		</div>
 	</div>
 </li>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .padding-accordion {
 	padding: 0 2em;
 }
@@ -250,4 +250,4 @@
 #edit-criteria-list {
 	margin-top: 1em;
 }
-[/CSS]
+</style>

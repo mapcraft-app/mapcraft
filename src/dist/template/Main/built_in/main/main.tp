@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <header style="margin-bottom: 2em">
 	<div id="main-nav">
 		<nav class="uk-navbar-container uk-margin" uk-narvbar>
@@ -59,9 +59,9 @@
 		</div>
 	</div>
 </footer>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 #EditFile-Info {
 	display: hidden;
 }
@@ -77,9 +77,9 @@
 .main-nav-offcanvas {
 	width: max-content;
 }
-[/CSS]
+</style>
 
-[JS]
+<script>
 window.api.receive('WorkProgress:open-modal', (command) => {
 	document.getElementById('modalWorkInProgress').style.display = 'flex';
 });
@@ -124,4 +124,4 @@ window.api.receive('Editor:close-modal', () => {
 	UIkit.modal('#EditFile').hide();
 });
 
-[/JS]
+</script>

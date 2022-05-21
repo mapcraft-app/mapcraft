@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <tr>
 	<td class="uk-margin-left">
 		<input value="{ID}" name="form-checkbox" class="uk-checkbox" type="checkbox">
@@ -27,10 +27,10 @@
 		</button>
 	</td>
 </tr>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .table-icon > svg {
 	max-width: none;
 }
-[/CSS]
+</style>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="item-block">
 	<button class="uk-button uk-button-link item-block-close">
 		<span uk-icon="close"></span>
@@ -6,9 +6,9 @@
 	<div class="insert-form-close"></div>
 </div>
 
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .item-block {
 	position: relative;
 }
@@ -18,4 +18,4 @@
 	right: .5em;
 	top: .5em;
 }
-[/CSS]
+</style>

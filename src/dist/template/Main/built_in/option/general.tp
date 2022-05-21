@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <form id="start-option" class="uk-form-horizontal">
 	<div id="option-general-version">
 		<div class="uk-margin">
@@ -42,10 +42,10 @@
 	</div>
 </div>
 
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .space-button {
 	margin-right: 1em;
 }
-[/CSS]
+</style>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <button id="form-item-modal-{type}-list-close" class="uk-button uk-button-link criteria-close-button">
 	<span uk-icon="close"></span>
 </button>
@@ -19,4 +19,4 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>

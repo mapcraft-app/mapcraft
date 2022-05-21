@@ -1,12 +1,12 @@
-[HTML]
+<html>
 <div id="MusicID" class="uk-flex-inline" uk-tooltip="title: {Copy}; pos: top">
 	<span id="GenerateCommand">{Command}</span>
 	<span uk-icon="icon: hashtag; ratio: 2"></span>
 	<h2 class="uk-margin-left clean_line" id="{ID}"></h2>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .clean_line {
 	margin-top: 0;
 }
@@ -16,4 +16,4 @@
 #GenerateCommand {
 	display: none;
 }
-[/CSS]
+</style>

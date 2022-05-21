@@ -1,8 +1,8 @@
-[HTML]
+<html>
 <div>
 	<div class="start-card uk-card uk-card-primary uk-card-body uk-card-hover" id="{id}">
 		<img src="{ImgPath}"/>
 		<h2>{title}</h2>
 	</div>
 </div>
-[/HTML]
+</html>

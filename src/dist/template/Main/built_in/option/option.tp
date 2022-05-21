@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-container">
 	<div id="option-error"></div>
 	<ul id="option-menu" class="uk-child-width-expand" uk-tab>
@@ -30,10 +30,10 @@
 		<li id="option-tab-about"></li>
 	</ul>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .space-icon-nav {
 	margin-right: 1em;
 }
-[/CSS]
+</style>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-container">
 	<div id="music-error"></div>
 	<div uk-grid>
@@ -36,9 +36,9 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .sound-list {
 	padding: 5px;
 	height: 100%;
@@ -62,10 +62,10 @@
 .audio-player {
 	width: 100%;
 }
-[/CSS]
+</style>
 
-[JS]
+<script>
 document.getElementById('music-delete-ok').addEventListener('click', () => {
 	UIkit.modal('#modal-delete-music').hide();
 });
-[/JS]
+</script>

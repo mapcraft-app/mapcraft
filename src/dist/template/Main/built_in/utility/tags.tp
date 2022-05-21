@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-margin uk-flex uk-flex-between search-form">
 	<form id="disabled-form" class="uk-search uk-search-default search-width-40">
 		<span class="uk-search-icon-flip" uk-search-icon></span>
@@ -21,9 +21,9 @@
 	<tbody id="tags-list">
 	</tbody>
 </table>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .search-width-40 {
 	width: 40%;
 }
@@ -54,4 +54,4 @@
 	text-align: center;
 	display: none;
 }
-[/CSS]
+</style>

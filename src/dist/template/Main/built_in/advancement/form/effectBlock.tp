@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <button id="form-effects-block-close" class="uk-button uk-button-link criteria-close-button">
 	<span uk-icon="close"></span>
 </button>
@@ -18,4 +18,4 @@
 		<input class="uk-input" id="form-effects-block-amplifier" type="number" min="0" max="255">
 	</div>
 </div>
-[/HTML]
+</html>

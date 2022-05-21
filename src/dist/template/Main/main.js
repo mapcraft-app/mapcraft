@@ -12,9 +12,6 @@ const lastExtDev = (process.env.DEV && localStorage.getItem('Mapcraft_Plugin'))
 
 const Plugins = new MCplugin();
 
-// if (lastExtDev)
-//	localStorage.setItem('Mapcraft_Plugin', lastExtDev);
-
 //#region  Set ContextBridge
 contextBridge.exposeInMainWorld('api', {
 	send: (channel, ...args) =>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <li>
 	<div class="uk-flex">
 		<div class="uk-flex uk-flex-column">
@@ -12,10 +12,10 @@
 		</div>
 	</div>
 </li>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .icon-about {
 	width: 160px;
 }
-[/CSS]
+</style>

@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <tr>
 	<td>
 		<img src="{link}"/>
@@ -8,4 +8,4 @@
 		<input class="uk-radio" type="radio" value="{username}" name="select_user">
 	</td>
 </tr>
-[/HTML]
+</html>

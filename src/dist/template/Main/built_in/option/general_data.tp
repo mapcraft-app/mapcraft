@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-margin">
 	<label for="{for}" class="uk-form-label" lang="{text}"></label>
 	<div style="position: relative">
@@ -7,4 +7,4 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>

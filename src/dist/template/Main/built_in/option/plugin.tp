@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <ul class="uk-flex-center" uk-tab>
     <li>
 		<a href="#" lang="Plugin.BuiltIn"></a>
@@ -53,4 +53,4 @@
 </ul>
 
 
-[/HTML]
+</html>

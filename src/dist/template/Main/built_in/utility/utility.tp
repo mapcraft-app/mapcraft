@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-container">
 	<div id="utility-error"></div>
 	<ul id="utility-menu" class="uk-child-width-expand" uk-tab>
@@ -24,9 +24,9 @@
 		<li id="utility-tab-tags"></li>
 	</ul>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .space-icon-nav {
 	margin-right: 1em;
 }
@@ -49,4 +49,4 @@
     padding: 1em 0 1em 0;
     border-bottom: 1px solid;
 }
-[/CSS]
+</style>

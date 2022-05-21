@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-flex uk-flex-column uk-flex-between max-height container">
 	<div>
 		<h2 class="uk-text-center header" lang="User-Selection"></h2>
@@ -45,9 +45,9 @@
 		</form>
     </div>
 </div>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 html, body {
 	height: 100%;
 }
@@ -68,4 +68,4 @@ html, body {
 #remember {
 	margin-left: 1em;
 }
-[/CSS]
+</style>

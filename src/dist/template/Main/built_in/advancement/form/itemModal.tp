@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-margin">
 	<button class="uk-button uk-button-primary uk-width-1-1" type="button" uk-toggle="target: #form-item-modal-{ID}">
 		<span uk-icon="pencil"></span>
@@ -87,4 +87,4 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>

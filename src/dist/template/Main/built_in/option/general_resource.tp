@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <div class="uk-margin">
 	<label for="{for}" class="uk-form-label" lang="{text}"></label>
 	<div class="form-group">
@@ -8,4 +8,4 @@
 		</div>
 	</div>
 </div>
-[/HTML]
+</html>

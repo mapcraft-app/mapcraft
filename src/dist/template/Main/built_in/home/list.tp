@@ -1,14 +1,14 @@
-[HTML]
+<html>
 <li id="{id}" title="{title}">
 	<div class="uk-card uk-card-primary uk-card-body main-card home-wrap">
 		<span uk-icon="icon: {icon}; ratio: 2"></span>
 		<h3>{title}</h3>
 	</div>
 </li>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .home-wrap {
 	overflow-wrap: break-word;
 }
-[/CSS]
+</style>

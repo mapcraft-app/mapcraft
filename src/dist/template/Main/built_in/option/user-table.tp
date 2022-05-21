@@ -1,4 +1,4 @@
-[HTML]
+<html>
 <tr>
 	<td class="uk-form-controls">
 		<input class="uk-checkbox" type="checkbox" value="{username}" name="select-user" {Disabled}>
@@ -16,9 +16,9 @@
 		</button>
 	</td>
 </tr>
-[/HTML]
+</html>
 
-[CSS]
+<style>
 .table-icon > svg {
 	max-width: none;
 }
@@ -36,4 +36,4 @@
 .is-not-connected {
 	background-color: red;
 }
-[/CSS]
+</style>
