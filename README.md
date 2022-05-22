@@ -1,11 +1,18 @@
-![logo](https://github.com/mapcraft-app/mapcraft/blob/main/src/dist/img/icon/icon_small.png "Logo")
+<h1 align="center">
+    <img height="250" src="src/dist/img/icon/icon_small.png" alt="Mapcraft logo"><br/>
+    Mapcraft is a software to increase the native possibilities of Minecraft Java edition without any mod installation
+</h1>
 
----
-
-[![Website](https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fmapcraft.app)](https://mapcraft.app)
-
-
-## Mapcraft is a software to increase the native possibilities of Minecraft Java edition without any mod installation
+<div style="display: inline-flex">
+    <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" />
+    <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white" />
+    <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" />
+</div>
+<div style="display: inline-flex">
+    <img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/mapcraft-app/mapcraft?style=for-the-badge">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/mapcraft-app/mapcraft/Build?style=for-the-badge">
+    <a href="https://github.com/mapcraft-app/mapcraft/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mapcraft-app/mapcraft?style=for-the-badge"></a>
+</div>
 
 ### [Go to the official website](https://mapcraft.app/)
 
