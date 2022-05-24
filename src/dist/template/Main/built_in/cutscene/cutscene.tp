@@ -164,9 +164,7 @@
 </style>
 
 <script>
-<script>
 window.api.receive('Cutscene:create-cutscene', (command) => {
 	UIkit.modal('#CreateNewCutscene-Modal').show();
 });
-</script>
 </script>

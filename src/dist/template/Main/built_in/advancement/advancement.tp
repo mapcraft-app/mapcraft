@@ -72,7 +72,6 @@
 </html>
 
 <style>
-<style>
 .body-selection {
 	display: flex;
     flex-direction: column;
@@ -312,5 +311,4 @@
 	position: relative;
     top: 1.5em;
 }
-</style>
 </style>

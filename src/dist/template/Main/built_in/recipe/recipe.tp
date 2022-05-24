@@ -259,7 +259,7 @@
     margin-left: 0.15em;
 }
 </style>
-<script>
+
 <script>
 document.querySelectorAll('div[class="case"]').forEach((element) => {
 	element.addEventListener('click', (event) => {
@@ -309,5 +309,4 @@ window.api.receive('Recipes:is-exist', () => {
 window.api.receive('Recipes:open-switcher', (id) => {
 	UIkit.tab(document.getElementById('recipe-tab')).show(id);
 });
-</script>
 </script>
