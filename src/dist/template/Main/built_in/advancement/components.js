@@ -23,11 +23,11 @@ localStorage.setItem('Advancement_Select', '');
 // Add directory to datapack if not exist
 const LocalMapcraft = JSON.parse(localStorage.getItem('Mapcraft'));
 const RecipesDirectory = path.join(LocalMapcraft.Data.DataPack, 'data', 'mapcraft-data', 'advancements');
+const DataDirectory = path.join(RecipesDirectory, 'data');
 if (!fs.existsSync(RecipesDirectory))
-{
 	fs.mkdirSync(RecipesDirectory, { recursive: true });
-	fs.mkdirSync(path.join(RecipesDirectory, 'data'), { recursive: true });
-}
+if (!fs.existsSync(DataDirectory))
+	fs.mkdirSync(DataDirectory, { recursive: true });
 
 const TRIGGERFORM = MCutilities.getDataGameElement('triggers', Mapcraft.config.Minecraft.SelectedVersion);
 const GetTriggerForm = (id) =>
@@ -38,8 +38,8 @@ const GetTriggerForm = (id) =>
 	return undefined;
 };
 
-const newChild = () => ({
-	id: randomString(),
+const newChild = (ranID = randomString()) => ({
+	id: ranID,
 	json: {
 		display: {
 			icon: { item: 'minecraft:stone' },
@@ -50,12 +50,12 @@ const newChild = () => ({
 	childs: [],
 });
 
-const BaseModel = () => ({
-	id: `advancement_${randomString()}`,
+const BaseModel = (ranID = randomString()) => ({
+	id: `advancement_${ranID}`,
 	name: 'New advancement',
 	namespace: 'mapcraft-data',
 	background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
-	data: newChild(),
+	data: newChild(ranID),
 });
 
 function OpenExternLink()
@@ -207,7 +207,7 @@ class SetJson
 			ListItem.querySelector('#edit-display-icon input').dispatchEvent(new Event('input'));
 		}
 		this.input(ListItem.querySelector('#edit-display-frame'), advancement.frame);
-		this.input(ListItem.querySelector('#edit-display-nbt'), advancement.nbt);
+		this.input(ListItem.querySelector('#edit-display-nbt'), advancement.icon.nbt);
 		this.input(ListItem.querySelector('#edit-display-check-toast'), advancement.show_toast);
 		this.input(ListItem.querySelector('#edit-display-check-chat'), advancement.announce_to_chat);
 		this.input(ListItem.querySelector('#edit-display-check-hidden'), advancement.hidden);
@@ -520,7 +520,7 @@ class Json
 				switch (ID)
 				{
 					case 'nbt':
-						this.json.display.nbt = element.value.trim();
+						this.json.display.icon.nbt = element.value.trim();
 						break;
 					case 'frame':
 						this.json.display.frame = element.value.trim();
@@ -702,6 +702,10 @@ class GenerateAdvancements
 				const FILE = path.join(this.pathOfDirectory, `${ADVANCEMENT.data.id}.json`);
 				this.createdFile.push(FILE);
 				const data = ADVANCEMENT.data.json;
+				if (data.display.icon.nbt.length)
+					data.display.icon.nbt = `{${data.display.icon.nbt}}`;
+				else
+					data.display.icon.nbt = '{}';
 				data.display.background = ADVANCEMENT.background;
 				fs.writeFile(FILE, JSON.stringify(data, null, 4), { encoding: 'utf-8', mode: 0o666, flag: 'w' }, (err) =>
 				{
@@ -721,6 +725,10 @@ class GenerateAdvancements
 			const FILE = path.join(this.pathOfDirectory, `${child.id}.json`);
 			this.createdFile.push(FILE);
 			const data = child.json;
+			if (data.display.icon.nbt.length)
+				data.display.icon.nbt = `{${data.display.icon.nbt}}`;
+			else
+				data.display.icon.nbt = '{}';
 			data.parent = `${this.NAMESPACE}:${parent}`;
 			fs.writeFile(FILE, JSON.stringify(data, null, 4), { encoding: 'utf-8', mode: 0o666, flag: 'w' }, (err) =>
 			{
@@ -1012,6 +1020,7 @@ class Component
 			this.drawGraph(ADVANCEMENT.data, true);
 			SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
 		});
+
 		document.getElementById('add-child').addEventListener('click', (event) =>
 		{
 			// child
@@ -1035,6 +1044,9 @@ class Component
 			{
 				event.preventDefault();
 				event.stopImmediatePropagation();
+
+				console.log(event.target);
+
 				if (CurrentID)
 				{
 					const newJson = new Json();
@@ -1057,6 +1069,7 @@ class Component
 				// #endregion
 
 				//#region  Fill form with data of current selected block
+				console.log(EditAdvancement.search('id', CurrentID).child.json);
 				SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
 				if (document.getElementById('zone').style.display)
 					document.getElementById('zone').style.removeProperty('display');
