@@ -726,9 +726,14 @@ class GenerateAdvancements
 			this.createdFile.push(FILE);
 			const data = child.json;
 			if (data.display.icon.nbt.length)
-				data.display.icon.nbt = `{${data.display.icon.nbt}}`;
+			{
+				const _temp = /^{(.+)}$/.exec(data.display.icon.nbt);
+				data.display.icon.nbt = (!_temp) ? data.display.icon.nbt : `{${_temp[1]}}`;
+			}
 			else
+			{
 				data.display.icon.nbt = '{}';
+			}
 			data.parent = `${this.NAMESPACE}:${parent}`;
 			fs.writeFile(FILE, JSON.stringify(data, null, 4), { encoding: 'utf-8', mode: 0o666, flag: 'w' }, (err) =>
 			{
