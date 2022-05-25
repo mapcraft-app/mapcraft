@@ -2,6 +2,16 @@
 	"Title": "Resource pack manager",
 	"Icon": "image",
 	"Data": {
-		"isComing": "This is the resource pack manager" 
+		"Root": {
+			"Icon": "nut",
+			"Title": "Root",
+			"Pack": {
+				"description": "Description"
+			},
+			"Image": {
+				"Resource_pack": "Resource pack image",
+				"Explanation": "The image must be of square format (124x124, ...), and have for extension .png"
+			}
+		}
 	}
 }

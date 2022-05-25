@@ -1,0 +1,16 @@
+<html>
+	<div class="uk-flex uk-flex-between">
+		<form id="pack-mcmeta" class="uk-form-horizontal uk-margin-large">
+			<div class="uk-margin">
+				<label class="uk-form-label" for="description" lang="Pack.description"></label>
+				<div class="uk-form-controls">
+					<input class="uk-input" id="description" type="text" />
+					{Pack.description}
+				</div>
+			</div>
+		</form>
+	</div>
+</html>
+
+<style>
+</style>

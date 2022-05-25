@@ -1049,9 +1049,6 @@ class Component
 			{
 				event.preventDefault();
 				event.stopImmediatePropagation();
-
-				console.log(event.target);
-
 				if (CurrentID)
 				{
 					const newJson = new Json();
@@ -1074,7 +1071,6 @@ class Component
 				// #endregion
 
 				//#region  Fill form with data of current selected block
-				console.log(EditAdvancement.search('id', CurrentID).child.json);
 				SetJson.set(EditAdvancement.search('id', CurrentID).child.json);
 				if (document.getElementById('zone').style.display)
 					document.getElementById('zone').style.removeProperty('display');

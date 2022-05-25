@@ -1,0 +1,8 @@
+<html>
+	<li id="{id}">
+		<div class="uk-card uk-card-primary uk-card-body main-card home-wrap">
+			<span uk-icon="icon: {icon}; ratio: 2"></span>
+			<h3>{title}</h3>
+		</div>
+	</li>
+</html>
