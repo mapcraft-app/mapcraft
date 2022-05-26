@@ -1,8 +1,8 @@
 <html>
 	<div class="uk-flex main">
-		<div class="content">
+		<div id="res-content" class="content">
 		</div>
-		<div class="sidebar">
+		<div id="res-sidebar" class="sidebar">
 			<ul class="uk-child-width-1-1 uk-child-width-1-2@m uk-text-center uk-flex uk-flex-top uk-flex-center uk-grid-match" uk-grid>
 			</ul>
 		</div>

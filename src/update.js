@@ -2,7 +2,7 @@ const path = require('path');
 const OS = require('os');
 const fs = require('fs');
 const axios = require('axios');
-const AdmZip = require('adm-zip');
+const _7zip = require('7zip-min');
 const { MCipc, MCutilities } = require('mapcraft-api');
 
 class Update
@@ -98,9 +98,12 @@ class Update
 					console.error(err);
 					return;
 				}
-				const Resource = new AdmZip(resourcepackPath);
-				Resource.extractAllTo(LocalMapcraft.Data.ResourcePack, true);
-				ret.data = true;
+				_7zip.unpack(resourcepackPath, LocalMapcraft.Data.ResourcePack, (_err) =>
+				{
+					if (_err)
+						throw new Error(_err);
+					ret.data = true;
+				});
 			});
 		else
 			ret.data = true;
@@ -112,9 +115,12 @@ class Update
 					console.error(err);
 					return;
 				}
-				const Resource = new AdmZip(datapackPath);
-				Resource.extractAllTo(LocalMapcraft.Data.DataPack, true);
-				ret.res = true;
+				_7zip.unpack(datapackPath, LocalMapcraft.Data.DataPack, (_err) =>
+				{
+					if (_err)
+						throw new Error(_err);
+					ret.res = true;
+				});
 			});
 		else
 			ret.res = true;
@@ -149,9 +155,12 @@ class Update
 					console.error(err);
 					return;
 				}
-				const Resource = new AdmZip(datapackPath);
-				Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
-				ret.data = true;
+				_7zip.unpack(datapackPath, LocalMapcraft.Mapcraft, (_err) =>
+				{
+					if (_err)
+						throw new Error(_err);
+					ret.data = true;
+				});
 			});
 		}
 		else
@@ -168,9 +177,12 @@ class Update
 					console.error(err);
 					return;
 				}
-				const Resource = new AdmZip(resourcepackPath);
-				Resource.extractAllTo(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), true);
-				ret.res = true;
+				_7zip.unpack(resourcepackPath, path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), (_err) =>
+				{
+					if (_err)
+						throw new Error(_err);
+					ret.res = true;
+				});
 			});
 		}
 		else
@@ -207,9 +219,12 @@ class Update
 				{
 					if (err)
 						reject(err.message);
-					const Resource = new AdmZip(_path);
-					Resource.extractAllTo(LocalMapcraft.Mapcraft, true);
-					resolve('200');
+					_7zip.unpack(_path, LocalMapcraft.Mapcraft, (_err) =>
+					{
+						if (_err)
+							throw new Error(_err);
+						resolve('200');
+					});
 				});
 			});
 		});
@@ -229,9 +244,12 @@ class Update
 				{
 					if (err)
 						reject(err.message);
-					const Resource = new AdmZip(_path);
-					Resource.extractAllTo(path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), true);
-					resolve('200');
+					_7zip.unpack(_path, path.join(LocalMapcraft.SavePath, '../../resourcepacks/mapcraft'), (_err) =>
+					{
+						if (_err)
+							throw new Error(_err);
+						resolve('200');
+					});
 				});
 			});
 		});

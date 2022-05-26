@@ -30,7 +30,6 @@ exports.CreateNavMenu = (DOMelement, TEMPLATE, ISHOME = false) =>
 
 	const Plugins = JSON.parse(fs.readFileSync(Mapcraft.config.Env.Components, 'utf-8'));
 	const UserPlugins = JSON.parse(fs.readFileSync(path.join(Mapcraft.config.Env.PluginsComponents, 'components.json')), 'utf-8');
-
 	// Built-in plugins
 	for (const i in Plugins)
 		if (!ISHOME && Plugins[i].name !== '__DEFAULT' && Plugins[i].name !== 'Main' && builtinPlugins.active(Plugins[i].name) === true)

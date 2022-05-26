@@ -9,6 +9,7 @@
 				"description": "Description"
 			},
 			"Image": {
+				"Upload": "Drag file or click for upload",
 				"Resource_pack": "Resource pack image",
 				"Explanation": "The image must be of square format (124x124, ...), and have for extension .png"
 			}

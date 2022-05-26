@@ -1,16 +1,37 @@
 <html>
-	<div class="uk-flex uk-flex-between">
-		<form id="pack-mcmeta" class="uk-form-horizontal uk-margin-large">
+	<h2 class="uk-heading-divider">{Title}</h2>
+	<div class="uk-flex uk-flex-between uk-flex-middle">
+		<form id="pack-mcmeta" class="uk-form-stacked">
 			<div class="uk-margin">
-				<label class="uk-form-label" for="description" lang="Pack.description"></label>
+				<label class="uk-form-label" for="root-description">{Pack.description}</label>
 				<div class="uk-form-controls">
-					<input class="uk-input" id="description" type="text" />
-					{Pack.description}
+					<input class="uk-input" id="root-description" type="text" />
 				</div>
 			</div>
 		</form>
+		<div class="pack">
+			<img id="root-packPreview" />
+			<div class="upload-drop-zone">
+				<div class="upload-drop-text">
+					<span uk-icon="icon: cloud-upload; ratio: 3", style="margin-right: 1em;"></span>
+					<h3>{Image.Upload}</h3>
+				</div>
+				<input id="add-music-form-Upload" name="add-music-form-Upload" type="file" accept="image/png">
+			</div>
+		</div>
 	</div>
 </html>
 
 <style>
+#pack-mcmeta {
+	width: 50%;
+	padding-right: 2em;
+}
+.pack {
+	width: 50%;
+	padding-left: 2em;
+}
+.pack-cursor {
+	cursor: pointer;
+}
 </style>

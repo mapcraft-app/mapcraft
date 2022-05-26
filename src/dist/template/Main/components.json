@@ -98,8 +98,8 @@
         "component": "./built_in/resource_pack_manager/components",
         "lang": "./built_in/resource_pack_manager/lang",
         "description": "Manage textures, models, sounds, etc",
-        "desactivable": true,
-        "active": true,
+        "desactivable": false,
+        "active": false,
         "isNotification": false
     }
 ]
