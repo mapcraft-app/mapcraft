@@ -2,8 +2,12 @@ const path = require('path');
 const OS = require('os');
 const fs = require('fs');
 const axios = require('axios');
-const _7zip = require('7zip-min');
 const { MCipc, MCutilities } = require('mapcraft-api');
+
+const zipPath = (path.basename(process.env.AppPath) === 'app.asar')
+	? path.join(process.env.AppPath, '..', 'app.asar.unpacked', 'node_modules', '7zip-min')
+	: path.join(process.env.AppPath, 'node_modules', '7zip-min');
+const _7zip = require(zipPath); // eslint-disable-line import/no-dynamic-require
 
 class Update
 {
