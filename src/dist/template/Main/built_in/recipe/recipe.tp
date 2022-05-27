@@ -284,6 +284,8 @@ function SetImage(id, src, isItem = false)
 	img.id = id;
 	if (isItem)
 		img.classList.add('craft_fire_and_cross');
+	if (!Case)
+		return;
 	if (Case.hasChildNodes())
 	{
 		while (Case.firstChild)

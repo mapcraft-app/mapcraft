@@ -460,16 +460,14 @@ class CreateRecipe
 	}
 
 	//#region  Private member
-	static #testCase(IDofElement, error)
+	static testCase(IDofElement, error)
 	{
-		if (!document.getElementById(IDofElement).children[0].id)
-		{
-			MCutilities.createAlert('warning', document.getElementById('recipe-error'), error);
+		if (document.getElementById(IDofElement).children.length <= 0
+			|| !document.getElementById(IDofElement).children[0].id)
 			throw new Error(error);
-		}
 	}
 
-	static #recipeEvent(event)
+	static recipeEvent(event)
 	{
 		event.preventDefault();
 		event.stopImmediatePropagation();
@@ -477,11 +475,12 @@ class CreateRecipe
 			FileManagement.deleteFile(sessionStorage.getItem('recipe-selected'));
 	}
 
-	static #generateRecipe(event, func, funcArg1, funcArg2, funcArg3)
+	static generateRecipe(event, func, funcArg1, funcArg2, funcArg3)
 	{
 		event.preventDefault();
 		event.stopImmediatePropagation();
 		let __ret;
+
 		try
 		{
 			__ret = func(funcArg1, funcArg2, funcArg3);
@@ -506,7 +505,9 @@ class CreateRecipe
 				++caseX;
 		if (caseX === caseCount)
 			throw new Error('No item on recipe cases');
-		this.#testCase(`${nameOfId}-result`, 'No item on result case');
+		if (document.getElementById(`${nameOfId}-result`).children.length <= 0
+			|| !document.getElementById(`${nameOfId}-result`).children[0].id)
+			throw new Error('No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).querySelectorAll('img')[0].id;
 		let TEMP_RECIPE_COUNT = document.getElementById(`${nameOfId}-count`).value;
 		if (TEMP_RECIPE_COUNT <= 0)
@@ -696,9 +697,15 @@ class CreateRecipe
 	static generateFurnace(nameOfId, optionFormId, type)
 	{
 		const model = Models.furnace;
-		this.#testCase(`${nameOfId}-cases`, 'No item on recipe case');
+
+		const elRecipe = document.getElementById(`${nameOfId}-cases`).children[0];
+		if (elRecipe.children.length <= 0 || !elRecipe.children[0].hasAttribute('id'))
+			throw new Error('No item on recipe case');
+		const elResult = document.getElementById(`${nameOfId}-result`);
+		if (elResult.children.length <= 0 || !elResult.children[0].hasAttribute('id'))
+			throw new Error('No item on result case');
+
 		const RECIPE_CASE = document.getElementById(`${nameOfId}-cases`).querySelectorAll('img')[0].id;
-		this.#testCase(`${nameOfId}-result`, 'No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).querySelectorAll('img')[0].id;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		let TEMP_TIME = FORM_INPUT[1].value;
@@ -721,9 +728,9 @@ class CreateRecipe
 	static generateStoneCutter(nameOfId, optionFormId, type)
 	{
 		const model = Models.stonecutter;
-		this.#testCase(`${nameOfId}-cases`, 'No item on recipe case');
+		CreateRecipe.testCase(`${nameOfId}-cases`, 'No item on recipe case');
 		const RECIPE_CASE = document.getElementById(`${nameOfId}-cases`).children[0].id;
-		this.#testCase(`${nameOfId}-result`, 'No item on result case');
+		CreateRecipe.testCase(`${nameOfId}-result`, 'No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).children[0].id;
 		let TEMP_RECIPE_COUNT = document.getElementById(`${nameOfId}-count`).value;
 		if (TEMP_RECIPE_COUNT <= 0)
@@ -747,11 +754,11 @@ class CreateRecipe
 	static generateSmithingTable(nameOfId, optionFormId, type)
 	{
 		const model = Models.smithing_table;
-		this.#testCase(`${nameOfId}-cases-add-one`, 'No item on base recipe case');
+		CreateRecipe.testCase(`${nameOfId}-cases-add-one`, 'No item on base recipe case');
 		const RECIPE_CASE_BASE = document.getElementById(`${nameOfId}-cases-add-one`).children[0].id;
-		this.#testCase(`${nameOfId}-cases-add-two`, 'No item on addition recipe case');
+		CreateRecipe.testCase(`${nameOfId}-cases-add-two`, 'No item on addition recipe case');
 		const RECIPE_CASE_ADD = document.getElementById(`${nameOfId}-cases-add-two`).children[0].id;
-		this.#testCase(`${nameOfId}-result`, 'No item on addition recipe case');
+		CreateRecipe.testCase(`${nameOfId}-result`, 'No item on result case');
 		const RECIPE_RESULT = document.getElementById(`${nameOfId}-result`).children[0].id;
 		const FORM_INPUT = document.getElementById(optionFormId).elements;
 		const FORM = { Group: FORM_INPUT[0].value, Output: FORM_INPUT[1].value };
@@ -768,98 +775,98 @@ class CreateRecipe
 
 	static player()
 	{
-		document.getElementById('crafting_player_validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('crafting_player_validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateCraftingTableTwoThree,
 			'area_crafting_player',
 			'crafting_player_form',
 			false,
 		));
-		document.getElementById('crafting_player_delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('crafting_player_delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static craftTable()
 	{
-		document.getElementById('crafting_table_validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('crafting_table_validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateCraftingTableTwoThree,
 			'area_crafting_table',
 			'crafting_table_form',
 			true,
 		));
-		document.getElementById('crafting_table_delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('crafting_table_delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static furnace()
 	{
-		document.getElementById('area_furnace-validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('area_furnace-validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateFurnace,
 			'area_furnace',
 			'area_furnace-form',
 			'smelting',
 		));
-		document.getElementById('area_furnace-delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('area_furnace-delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static blastFurnace()
 	{
-		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('area_blast_furnace-validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateFurnace,
 			'area_blast_furnace',
 			'area_blast_furnace-form',
 			'blasting',
 		));
-		document.getElementById('area_blast_furnace-delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('area_blast_furnace-delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static campfire()
 	{
-		document.getElementById('area_campfire-validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('area_campfire-validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateFurnace,
 			'area_campfire',
 			'area_campfire-form',
 			'campfire_cooking',
 		));
-		document.getElementById('area_campfire-delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('area_campfire-delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static smoker()
 	{
-		document.getElementById('area_smoker-validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('area_smoker-validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateFurnace,
 			'area_smoker',
 			'area_smoker-form',
 			'smoking',
 		));
-		document.getElementById('area_smoker-delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('area_smoker-delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static stonecutter()
 	{
-		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('area_stonecutter-validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateStoneCutter,
 			'area_stonecutter',
 			'area_stonecutter-form',
 			'stonecutting',
 		));
-		document.getElementById('area_stonecutter-delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('area_stonecutter-delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 
 	static smithingTable()
 	{
-		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) => this.#generateRecipe(
+		document.getElementById('area_smithing_table-validation').addEventListener('click', (event) => this.generateRecipe(
 			event,
 			this.generateSmithingTable,
 			'area_smithing_table',
 			'area_smithing_table-form',
 			'smithing',
 		));
-		document.getElementById('area_smithing_table-delete').addEventListener('click', (event) => this.#recipeEvent(event));
+		document.getElementById('area_smithing_table-delete').addEventListener('click', (event) => this.recipeEvent(event));
 	}
 }
 
@@ -881,7 +888,7 @@ class GenerateList
 		});
 	}
 
-	async #setImg(img, filePath, name)
+	async setImg(img, filePath, name)
 	{
 		img.setAttribute('id', name);
 		img.setAttribute('uk-tooltip', `title:${name}; pos:right`);
@@ -909,7 +916,7 @@ class GenerateList
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			this.#setImg(image, path.join(__dirname, '../../../../img/assets/block'), id.name);
+			this.setImg(image, path.join(__dirname, '../../../../img/assets/block'), id.name);
 			list.appendChild(image);
 		}
 	}
@@ -929,7 +936,7 @@ class GenerateList
 		for (const id of jsonData)
 		{
 			const image = document.createElement('img');
-			this.#setImg(image, path.join(__dirname, '../../../../img/assets/item'), id.name);
+			this.setImg(image, path.join(__dirname, '../../../../img/assets/item'), id.name);
 			list.appendChild(image);
 		}
 	}
