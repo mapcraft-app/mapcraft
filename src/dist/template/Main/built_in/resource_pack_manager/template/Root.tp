@@ -5,18 +5,21 @@
 			<div class="uk-margin">
 				<label class="uk-form-label" for="root-description">{Pack.description}</label>
 				<div class="uk-form-controls">
-					<input class="uk-input" id="root-description" type="text" />
+					<input class="uk-input uk-form-large" id="root-description" type="text" />
 				</div>
 			</div>
 		</form>
 		<div class="pack">
+			<div class="uk-background-primary uk-light uk-padding uk-panel primary-panel">
+				<p class="uk-h4">Primary</p>
+			</div>
 			<img id="root-packPreview" />
 			<div class="upload-drop-zone">
 				<div class="upload-drop-text">
 					<span uk-icon="icon: cloud-upload; ratio: 3", style="margin-right: 1em;"></span>
 					<h3>{Image.Upload}</h3>
 				</div>
-				<input id="add-music-form-Upload" name="add-music-form-Upload" type="file" accept="image/png">
+				<input id="root-pack" name="root-pack" type="file" accept="image/png">
 			</div>
 		</div>
 	</div>
@@ -29,9 +32,28 @@
 }
 .pack {
 	width: 50%;
-	padding-left: 2em;
+	padding: 1em;
+	background-color: #282a2b;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pack > img {
+	margin: 1em 0;
 }
 .pack-cursor {
 	cursor: pointer;
+}
+.primary-panel {
+	width: 100%;
+    padding: 1em;
+    text-align: center;
+}
+#root-packPreview {
+	max-width: 250px;
+	max-height: 250px;
+}
+.upload-drop-zone {
+	margin: 0;
 }
 </style>
