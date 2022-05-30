@@ -1,6 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const { MCipc, MCplugin, MCtemplate, MCWorkInProgress } = require('mapcraft-api');
+const { MCipc, MCplugin, MCtemplate, MCworkInProgress } = require('mapcraft-api');
 const Trigger = require('../../../../js/built_in/Trigger');
 
 const Plugins = new MCplugin();
@@ -87,7 +87,7 @@ function DetectSubmitForm()
 	document.querySelector('#form-trigger-create').addEventListener('submit', (event) =>
 	{
 		event.preventDefault();
-		MCWorkInProgress.open();
+		MCworkInProgress.open();
 		const form = Array.from(event.target.elements);
 		const db = Database(Mapcraft.DBPath, { verbose: console.log });
 		const sqlName = db.prepare('SELECT Name FROM Trigger WHERE Name = ?');
@@ -111,12 +111,12 @@ function DetectSubmitForm()
 			TriggerComponent.tab();
 		}
 		db.close();
-		MCWorkInProgress.close();
+		MCworkInProgress.close();
 	});
 	document.querySelector('#form-trigger-edit').addEventListener('submit', (event) =>
 	{
 		event.preventDefault();
-		MCWorkInProgress.open();
+		MCworkInProgress.open();
 		const form = Array.from(event.target.elements);
 		const db = Database(Mapcraft.DBPath, { verbose: console.log });
 		const sql = db.prepare('UPDATE Trigger SET Name = ?, X1 = ?, Y1 = ?, Z1 = ?, X2 = ?, Y2 = ?, Z2 = ? WHERE ID = ?');
@@ -124,7 +124,7 @@ function DetectSubmitForm()
 		Trigger.CreateTrigger(form[0].value, form[2].value, form[3].value, form[4].value, form[5].value, form[6].value, form[7].value, true);
 		TriggerComponent.tab();
 		db.close();
-		MCWorkInProgress.close();
+		MCworkInProgress.close();
 	});
 }
 
@@ -134,7 +134,7 @@ function RemoveTrigger()
 	{
 		event.preventDefault();
 		event.stopImmediatePropagation();
-		MCWorkInProgress.open();
+		MCworkInProgress.open();
 		document.querySelector('#full-delete-tab').checked = false;
 		const db = Database(Mapcraft.DBPath, { verbose: console.log });
 		let isDelete = false;
@@ -149,13 +149,13 @@ function RemoveTrigger()
 		if (isDelete)
 			TriggerComponent.tab();
 		db.close();
-		MCWorkInProgress.close();
+		MCworkInProgress.close();
 	});
 
 	for (const input of document.querySelectorAll('button[name="form-button-delete"]'))
 		input.addEventListener('click', () =>
 		{
-			MCWorkInProgress.open();
+			MCworkInProgress.open();
 			const ID = input.parentNode.parentNode.firstElementChild.firstElementChild.value;
 			const db = Database(Mapcraft.DBPath, { verbose: console.log });
 			const sqlName = db.prepare('DELETE FROM Trigger WHERE ID = ?');
@@ -163,7 +163,7 @@ function RemoveTrigger()
 			Trigger.RemoveTrigger(ID);
 			TriggerComponent.tab();
 			db.close();
-			MCWorkInProgress.close();
+			MCworkInProgress.close();
 		});
 }
 

@@ -1,9 +1,12 @@
 <html>
-	<h2 class="uk-heading-divider">{Title}</h2>
+	<div class="uk-heading-divider uk-flex uk-flex-between uk-margin-small-bottom">
+		<h2 class="uk-margin-remove">{Plugin.Title}</h2>
+		<button class="uk-button uk-button-success">{General.Save}</button>
+	</div>
 	<div class="uk-flex uk-flex-between uk-flex-middle">
 		<form id="pack-mcmeta" class="uk-form-stacked">
 			<div class="uk-margin">
-				<label class="uk-form-label" for="root-description">{Pack.description}</label>
+				<label class="uk-form-label" for="root-description">{Plugin.Pack.description}</label>
 				<div class="uk-form-controls">
 					<input class="uk-input uk-form-large" id="root-description" type="text" />
 				</div>
@@ -11,13 +14,13 @@
 		</form>
 		<div class="pack">
 			<div class="uk-background-primary uk-light uk-padding uk-panel primary-panel">
-				<p class="uk-h4">Primary</p>
+				<p class="uk-h4">{Plugin.Image.ResourcePack}</p>
 			</div>
 			<img id="root-packPreview" />
 			<div class="upload-drop-zone">
 				<div class="upload-drop-text">
 					<span uk-icon="icon: cloud-upload; ratio: 3", style="margin-right: 1em;"></span>
-					<h3>{Image.Upload}</h3>
+					<h3>{Plugin.Image.Upload}</h3>
 				</div>
 				<input id="root-pack" name="root-pack" type="file" accept="image/png">
 			</div>

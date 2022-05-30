@@ -3,7 +3,6 @@ const path = require('path');
 
 const LANG = MCutilities.getLang(__dirname, Mapcraft.config.Env.Lang);
 const TEMPLATE = new MCtemplate(path.join(__dirname, 'template'));
-// const MAPCRAFT_LOCAL = JSON.parse(localStorage.getItem('Mapcraft'));
 const PLUGINS = [];
 let CURRENT_PLUGIN;
 let CURRENT_ID;
@@ -20,22 +19,22 @@ class Component
 	{
 		const EL = document.querySelector('#res-sidebar > ul');
 		const LIST = document.createElement('ul');
-		for (const el in LANG.Data)
-			if (Object.prototype.hasOwnProperty.call(LANG.Data, el))
+		for (const el in LANG.Data.Plugins)
+			if (Object.prototype.hasOwnProperty.call(LANG.Data.Plugins, el))
 			{
 				TEMPLATE.render(
 					LIST,
 					'sidebar_li.tp',
 					{
 						id: el,
-						title: LANG.Data[el].Title,
-						icon: LANG.Data[el].Icon,
+						title: LANG.Data.Plugins[el].Title,
+						icon: LANG.Data.Plugins[el].Icon,
 					},
 				);
 				PLUGINS.push({
-					id: LANG.Data[el].Title,
+					id: LANG.Data.Plugins[el].Title,
 					// eslint-disable-next-line
-					Instance: require(path.join(__dirname, 'plugins', LANG.Data[el].Title)),
+					Instance: require(path.join(__dirname, 'plugins', LANG.Data.Plugins[el].Title)),
 				});
 			}
 		TEMPLATE.renderRaw(EL, LIST.innerHTML, 'sidebar_li.tp', null);
@@ -50,7 +49,10 @@ class Component
 			if (CURRENT_ID === target.getAttribute('id'))
 				return;
 			TEMPLATE.cleanNode(document.getElementById('res-content'));
-			TEMPLATE.render(document.getElementById('res-content'), `${target.getAttribute('id')}.tp`, LANG.Data[target.getAttribute('id')]);
+			TEMPLATE.render(document.getElementById('res-content'), `${target.getAttribute('id')}.tp`, {
+				General: LANG.Data.General,
+				Plugin: LANG.Data.Plugins[target.getAttribute('id')],
+			});
 			if (CURRENT_PLUGIN)
 				CURRENT_PLUGIN.destructor();
 			for (const funct of PLUGINS)

@@ -71,9 +71,9 @@ class OptionComponent
 		for (const object of MinecraftVersion.Versions)
 		{
 			const element = document.createElement('option');
-			element.value = object;
-			element.innerText = object;
-			if (object === global.MinecraftSelectedVersion)
+			element.value = object.Edition;
+			element.innerText = object.Edition;
+			if (object.Edition === global.MinecraftSelectedVersion)
 				element.selected = true;
 			document.getElementById('option-Version').appendChild(element);
 		}
@@ -248,17 +248,26 @@ class DetectClick
 				officialData: JSON.parse(fs.readFileSync(path.join(Mapcraft.Mapcraft, 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
 				officialResource: JSON.parse(fs.readFileSync(path.join(Mapcraft.Data.ResourcePack, '..', 'mapcraft', 'pack.mcmeta'), { encoding: 'utf-8', flag: 'r' })),
 			};
-			let num = Number();
-			for (const object of MinecraftVersion.Versions)
-				if (object.Release === global.MinecraftSelectedVersion)
-				{
-					num = Number(object.Number);
-					break;
-				}
-			mcmeta.datapack.pack.pack_format = num;
-			mcmeta.resourcePack.pack.pack_format = num;
-			mcmeta.officialData.pack.pack_format = num;
-			mcmeta.officialResource.pack.pack_format = num;
+			const getVersion = (type) =>
+			{
+				let num;
+
+				for (const object of MinecraftVersion.Versions)
+					if (object.Edition === global.MinecraftSelectedVersion)
+					{
+						num = Number(object[type]);
+						break;
+					}
+				if (!num)
+					for (const object of MinecraftVersion.Versions)
+						if (object.Edition === MinecraftVersion.LastestVersion)
+							num = Number(object[type]);
+				return num;
+			};
+			mcmeta.datapack.pack.pack_format = getVersion('Datapack');
+			mcmeta.resourcePack.pack.pack_format = getVersion('ResourcePack');
+			mcmeta.officialData.pack.pack_format = getVersion('Datapack');
+			mcmeta.officialResource.pack.pack_format = getVersion('ResourcePack');
 			const _writeFile = (_path, data) =>
 			{
 				fs.writeFile(_path, data, { encoding: 'utf-8' }, (err) =>

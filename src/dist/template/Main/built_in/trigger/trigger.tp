@@ -206,8 +206,9 @@ document.querySelector('#checkbox-trigger').addEventListener('click', (event) =>
 	}
 });
 
-document.querySelector('input[name="form-checkbox"]').addEventListener('click', (event) => {
-	if (document.querySelector('#checkbox-trigger').checked)
-		document.querySelector('#checkbox-trigger').checked = false;
-});
+if (document.querySelector('input[name="form-checkbox"]'))
+	document.querySelector('input[name="form-checkbox"]').addEventListener('click', (event) => {
+		if (document.querySelector('#checkbox-trigger').checked)
+			document.querySelector('#checkbox-trigger').checked = false;
+	});
 </script>
