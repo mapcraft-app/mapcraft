@@ -3,19 +3,20 @@
 	"Icon": "image",
 	"Data": {
 		"General": {
-			"Save": "Save"
+			"Save": "Save",
+			"Success": "The modifications have been successfully completed"
 		},
 		"Plugins": {
 			"Root": {
 				"Icon": "nut",
 				"Title": "Root",
 				"Pack": {
-					"description": "Description"
+					"Description": "Description"
 				},
 				"Image": {
 					"Upload": "Drag file or click for upload",
 					"ResourcePack": "Resource pack image",
-					"Explanation": "The image must be of square format (124x124, ...), and have for extension .png"
+					"Explanation": "The image must be of square format (use the guide below to see if your image is square), and have for extension .png"
 				}
 			}
 		}

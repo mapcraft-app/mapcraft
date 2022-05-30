@@ -1,22 +1,26 @@
 <html>
 	<div class="uk-heading-divider uk-flex uk-flex-between uk-margin-small-bottom">
 		<h2 class="uk-margin-remove">{Plugin.Title}</h2>
-		<button class="uk-button uk-button-success">{General.Save}</button>
+		<button class="uk-button uk-button-success" id="root-save">{General.Save}</button>
 	</div>
-	<div class="uk-flex uk-flex-between uk-flex-middle">
+	<div class="uk-flex uk-flex-between">
 		<form id="pack-mcmeta" class="uk-form-stacked">
-			<div class="uk-margin">
-				<label class="uk-form-label" for="root-description">{Plugin.Pack.description}</label>
-				<div class="uk-form-controls">
-					<input class="uk-input uk-form-large" id="root-description" type="text" />
-				</div>
+			<div class="uk-background-primary uk-light uk-padding uk-panel primary-panel">
+				<p class="uk-h4">{Plugin.Pack.Description}</p>
+			</div>
+			<div class="uk-form-controls">
+				<input class="uk-input uk-form-large" id="root-description" type="text" />
 			</div>
 		</form>
 		<div class="pack">
+			<div id="pack-alert"></div>
 			<div class="uk-background-primary uk-light uk-padding uk-panel primary-panel">
 				<p class="uk-h4">{Plugin.Image.ResourcePack}</p>
 			</div>
-			<img id="root-packPreview" />
+			<div class="root-image">
+				<div class="root-image-cube"></div>
+				<img id="root-packPreview" />
+			</div>
 			<div class="upload-drop-zone">
 				<div class="upload-drop-text">
 					<span uk-icon="icon: cloud-upload; ratio: 3", style="margin-right: 1em;"></span>
@@ -52,9 +56,30 @@
     padding: 1em;
     text-align: center;
 }
+.root-image {
+	position: relative;
+	width: 100%;
+    min-height: 250px;
+	text-align: center;
+	z-index: 2;
+	padding: 1em 0;
+    margin-bottom: 1em;
+	background-color: rgba(255, 255, 255, 0.25);
+}
+.root-image-cube {
+	position: absolute;
+	z-index: 3;
+	left: 50%;
+    transform: translate(-50%, 0);
+	width: 250px;
+	height: 250px;
+	background-color: rgba(40, 42, 43, 1);
+}
 #root-packPreview {
-	max-width: 250px;
+	position: inherit;
+	z-index: 4;
 	max-height: 250px;
+	border: white 1px solid;
 }
 .upload-drop-zone {
 	margin: 0;

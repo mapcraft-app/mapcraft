@@ -1,4 +1,5 @@
 <html>
+	<div id="resource-alert"></div>
 	<div class="uk-flex main">
 		<div id="res-content" class="content">
 		</div>

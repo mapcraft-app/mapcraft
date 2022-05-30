@@ -1,10 +1,12 @@
 const fs = require('fs');
+const { MCutilities } = require('mapcraft-api');
 const path = require('path');
 
 class Root
 {
-	constructor()
+	constructor(lang)
 	{
+		this.lang = lang;
 		this.resPack = JSON.parse(localStorage.getItem('Mapcraft')).Data.ResourcePack;
 		this.defaultMCmeta = {
 			pack: {
@@ -31,6 +33,13 @@ class Root
 			document.getElementById('root-description').value = this.saveData.mcmeta.pack.description;
 			document.getElementById('root-packPreview').src = this.saveData.img;
 		});
+
+		document.getElementById('root-save').addEventListener('click', (e) =>
+		{
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			this.save();
+		});
 	}
 
 	destructor()
@@ -40,16 +49,33 @@ class Root
 
 	save()
 	{
-		this.saveData.mcmeta.description = document.getElementById('root-description').value;
-		fs.writeFile(path.join(this.resPack, 'pack.mcmeta'), JSON.stringify(this.saveData, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
+		const img = document.createElement('img');
+		img.src = this.saveData.img;
+		img.addEventListener('load', () =>
 		{
-			if (err)
-				throw new Error(err);
-		});
-		fs.copyFile(document.getElementById('root-packPreview').src, path.join(this.resPack, 'pack.png'), (err) =>
-		{
-			if (err)
-				throw new Error(err);
+			const { height, width } = img;
+			if (height !== width)
+			{
+				MCutilities.createAlert('warning', document.getElementById('resource-alert'), this.lang.Plugin.Image.Explanation);
+			}
+			else
+			{
+				this.saveData.mcmeta.pack.description = document.getElementById('root-description').value;
+				fs.writeFile(path.join(this.resPack, 'pack.mcmeta'), JSON.stringify(this.saveData.mcmeta, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
+				{
+					if (err)
+						throw new Error(err);
+					if (path.join(this.resPack, 'pack.png') !== this.saveData.img)
+						fs.copyFile(this.saveData.img, path.join(this.resPack, 'pack.png'), (_err) =>
+						{
+							if (_err)
+								throw new Error(_err);
+							MCutilities.createAlert('success', document.getElementById('resource-alert'), this.lang.General.Success);
+						});
+					else
+						MCutilities.createAlert('success', document.getElementById('resource-alert'), this.lang.General.Success);
+				});
+			}
 		});
 	}
 
@@ -58,18 +84,26 @@ class Root
 		document.getElementById('root-pack').addEventListener('change', (e) =>
 		{
 			e.preventDefault();
+
+			if (e.target.files.length === 0)
+				return;
+			if (e.target.files[0].type !== 'image/png')
+			{
+				MCutilities.createAlert('warning', document.getElementById('pack-alert'), this.lang.Plugin.Image.Explanation);
+				return;
+			}
+			this.saveData.img = e.target.files[0].path;
 			const src = URL.createObjectURL(e.target.files[0]);
 			const preview = document.getElementById('root-packPreview');
 			preview.src = src;
+
 			const img = document.createElement('img');
 			img.src = src;
 			img.addEventListener('load', () =>
 			{
 				const { height, width } = img;
 				if (height !== width)
-					console.error('image is not cube');
-				else
-					console.log('image is a cube');
+					MCutilities.createAlert('warning', document.getElementById('pack-alert'), this.lang.Plugin.Image.Explanation);
 			});
 		});
 	}
