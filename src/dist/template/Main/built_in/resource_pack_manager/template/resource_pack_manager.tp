@@ -4,7 +4,7 @@
 		<div id="res-content" class="content">
 		</div>
 		<div id="res-sidebar" class="sidebar">
-			<ul class="uk-child-width-1-1 uk-child-width-1-2@m uk-text-center uk-flex uk-flex-top uk-flex-center uk-grid-match" uk-grid>
+			<ul class="uk-child-width-1-1 uk-child-width-1-2@m uk-text-center uk-flex uk-flex-center uk-grid-match" uk-grid>
 			</ul>
 		</div>
 	</div>
@@ -15,10 +15,11 @@
 	padding: 0;
 	height: calc(100vh - 112px - 2em);
 }
+
 .content {
 	width: 70%;
-	padding: .5em;
-	overflow-y: auto;
+	padding: 0 .5em;
+	overflow-x: auto;
 }
 
 .sidebar {

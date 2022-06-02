@@ -1,0 +1,159 @@
+<html>
+	<div class="uk-heading-divider uk-flex uk-flex-between uk-margin-small-bottom">
+		<h2 class="uk-margin-remove">{Plugin.Title}</h2>
+		<button class="uk-button uk-button-success" id="root-save">{General.Save}</button>
+	</div>
+	<div class="uk-flex uk-flex-between fm-height">
+		<div class="file-manager">
+		</div>
+	</div>
+</html>
+
+<style>
+	.content-fm
+	{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.uk-breadcrumb > * > * {
+		font-size: .875rem;
+		color: white;
+	}
+	.uk-breadcrumb > :last-child>a:not([href]), .uk-breadcrumb > :last-child > span {
+		color: #89c4ff;
+	}
+
+	.file-manager
+	{
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+	.file-manager > .menu
+	{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		align-items: center;
+		padding: .4em;
+		background-color: #3c3c3c;
+	}
+	.file-manager > .menu ul {
+		margin: 0;
+	}
+	.file-manager > .menu .size > * {
+		cursor: pointer;
+		margin: 0 .2em;
+	}
+	.table
+	{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		background-color: #282a2b;
+		height: 69.1vh;
+		overflow-y: auto;
+		align-content: flex-start;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	.table > .case
+	{
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		flex-wrap: wrap;
+		padding: .5em;
+		margin: 0 .5em;
+		cursor: pointer;
+		width: 96px;
+	}
+	.table > .case.small > img {
+		width: 2em;
+	}
+	.table > .case.small > p {
+		font-size: small;
+	}
+
+	.table > .case.medium > img {
+		width: 4em;
+	}
+	.table > .case.medium > p {
+		font-size: medium;
+	}
+
+	.table > .case.large > img {
+		width: 6em;
+	}
+	.table > .case.large > p {
+		font-size: large;
+	}
+
+	.table > .case > p {
+		text-overflow: ellipsis;
+		max-width: 100%;
+		margin: 0;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.hide
+	{
+		display: none !important;
+	}
+
+	.audio-player {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		height: 30%;
+		z-index: 2;
+		background-color: rgba(0, 0, 0, 0);
+		background-image: linear-gradient(to bottom, rgb(24 26 27), rgba(0, 0, 0, 0))
+	}
+	.audio-player span
+	{
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		cursor: pointer;
+	}
+	.audio-player h3
+	{
+		margin: 1em 0;
+	}
+	.audio-player audio
+	{
+		width: -webkit-fill-available;
+		padding: 2em;
+	}
+
+	.image-preview {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		background-color: rgba(0, 0, 0, 0);
+		background-image: linear-gradient(to bottom, rgb(24 26 27), rgba(0, 0, 0, 0))
+	}
+	.image-preview span
+	{
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		cursor: pointer;
+	}
+	.image-preview audio,
+	.video-preview video
+	{
+		max-height: 75%;
+	}
+</style>

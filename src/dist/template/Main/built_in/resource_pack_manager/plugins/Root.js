@@ -34,6 +34,11 @@ class Root
 			document.getElementById('root-packPreview').src = this.saveData.img;
 		});
 
+		document.getElementById('root-description').addEventListener('input', (e) =>
+		{
+			this.saveData.mcmeta.pack.description = e.target.value;
+		});
+
 		document.getElementById('root-save').addEventListener('click', (e) =>
 		{
 			e.preventDefault();
@@ -55,12 +60,8 @@ class Root
 		{
 			const { height, width } = img;
 			if (height !== width)
-			{
 				MCutilities.createAlert('warning', document.getElementById('resource-alert'), this.lang.Plugin.Image.Explanation);
-			}
 			else
-			{
-				this.saveData.mcmeta.pack.description = document.getElementById('root-description').value;
 				fs.writeFile(path.join(this.resPack, 'pack.mcmeta'), JSON.stringify(this.saveData.mcmeta, null, 4), { encoding: 'utf-8', flag: 'w' }, (err) =>
 				{
 					if (err)
@@ -75,7 +76,6 @@ class Root
 					else
 						MCutilities.createAlert('success', document.getElementById('resource-alert'), this.lang.General.Success);
 				});
-			}
 		});
 	}
 

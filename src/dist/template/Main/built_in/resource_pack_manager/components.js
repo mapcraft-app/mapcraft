@@ -33,15 +33,16 @@ class Component
 					},
 				);
 				PLUGINS.push({
-					id: LANG.Data.Plugins[el].Title,
+					id: el,
 					// eslint-disable-next-line
-					Instance: require(path.join(__dirname, 'plugins', LANG.Data.Plugins[el].Title)),
+					Instance: require(path.join(__dirname, 'plugins', el)),
 				});
 			}
 		TEMPLATE.renderRaw(EL, LIST.innerHTML, 'sidebar_li.tp', null);
 		EL.addEventListener('click', (e) =>
 		{
 			e.preventDefault();
+
 			let { target } = e;
 			if (target.nodeName === 'UL')
 				return;

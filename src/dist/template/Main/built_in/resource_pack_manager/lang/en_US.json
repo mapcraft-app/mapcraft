@@ -18,6 +18,10 @@
 					"ResourcePack": "Resource pack image",
 					"Explanation": "The image must be of square format (use the guide below to see if your image is square), and have for extension .png"
 				}
+			},
+			"FileManager": {
+				"Icon": "folder",
+				"Title": "File Manager"
 			}
 		}
 	}
