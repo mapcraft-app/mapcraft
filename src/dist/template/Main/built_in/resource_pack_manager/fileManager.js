@@ -7,6 +7,7 @@
  */
 
 const fs = require('fs');
+const { MCipc } = require('mapcraft-api');
 const path = require('path');
 
 const TYPE = {
@@ -186,6 +187,7 @@ class FileManager
 		const _table = document.createElement('div');
 		_table.classList.add('table');
 		this.DOMelement.appendChild(_table);
+		this.menu();
 	}
 
 	#search(type, extname)
@@ -270,6 +272,21 @@ class FileManager
 			_p.innerText = filename;
 			_div.appendChild(_img);
 			_div.appendChild(_p);
+			/*
+			_div.addEventListener('contextmenu', (e) =>
+			{
+				e.preventDefault();
+
+				const Parent = document.querySelector('.file-manager').getBoundingClientRect();
+				const Item = e.target.getBoundingClientRect();
+				console.log(Parent.left, Parent.top);
+				console.log(Item.left, Item.top);
+
+				const el = this.DOMelement.querySelector('.contextual-menu');
+				el.style.display = 'flex';
+				el.style.left = `${Item.left - Parent.left + e.offsetX}px`;
+				el.style.top = `${Item.top - Parent.top + e.offsetY}px`;
+			});*/
 			_div.addEventListener('click', (e) =>
 			{
 				e.preventDefault();
@@ -298,8 +315,10 @@ class FileManager
 						this.DOMelement.querySelector('.video-preview > video').setAttribute('src', path.join(this.currentDir, filename));
 						this.DOMelement.querySelector('.video-preview').classList.remove('hide');
 						break;
+					case 'code':
+					case 'text':
 					default:
-						console.log('default');
+						MCipc.send('Editor:open', path.join(this.currentDir, filename));
 				}
 			});
 			DOM.appendChild(_div);
@@ -325,6 +344,24 @@ class FileManager
 			}
 		});
 		this.generateCrumb();
+	}
+
+	menu()
+	{
+		const _context = document.createElement('div');
+		_context.classList.add('contextual-menu');
+		_context.innerHTML = '<h2>One</h2>\n<h2>Two</h2>';
+		this.DOMelement.appendChild(_context);
+		this.DOMelement.querySelector('.table').addEventListener('contextmenu', (e) =>
+		{
+			e.preventDefault();
+			const Parent = this.DOMelement.getBoundingClientRect();
+			const Item = e.target.getBoundingClientRect();
+			const el = this.DOMelement.querySelector('.contextual-menu');
+			el.style.display = 'flex';
+			el.style.left = `${Item.left - Parent.left + e.offsetX}px`;
+			el.style.top = `${Item.top - Parent.top + e.offsetY}px`;
+		});
 	}
 }
 
