@@ -1,17 +1,16 @@
 {
-	"private": true,
-
-	"name": "mapcraft",
-	"description": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
-	"homepage": "https://mapcraft.app",
+  "private": true,
+  "name": "mapcraft",
+  "description": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
+  "homepage": "https://mapcraft.app",
   "license": "GPL-3.0",
-	"version": "0.8.8-alpha",
-	"main": "main.js",
+  "version": "0.8.8-alpha",
+  "main": "main.js",
   "author": {
     "name": "Clément Bertrand",
     "email": "hello@mapcraft.app"
   },
-	"keywords": [
+  "keywords": [
     "mapcraft",
     "minecraft"
   ],
@@ -21,20 +20,24 @@
   },
   "scripts": {
     "dev": "vite",
-		"build": "vite build && vite build -c vite.config.electron.ts",
-		"preview": "yarn build && electron-builder --dir --config build.js",
-		"productionMac": "yarn build && electron-builder -m --config build.js",
-		"productionWin": "yarn build && electron-builder -w --config build.js",
-		"productionLin": "yarn build && electron-builder -l --config build.js"
+    "build": "vite build && vite build -c vite.config.electron.ts",
+    "preview": "yarn build && electron-builder --dir --config build.js",
+    "productionMac": "yarn build && electron-builder -m --config build.js",
+    "productionWin": "yarn build && electron-builder -w --config build.js",
+    "productionLin": "yarn build && electron-builder -l --config build.js"
   },
   "dependencies": {
+    "@quasar/extras": "^1.15.3",
+    "quasar": "^2.8.3",
     "vue": "^3.2.37"
   },
   "devDependencies": {
+    "@quasar/vite-plugin": "^1.2.1",
     "@types/node": "^18.7.18",
     "@vitejs/plugin-vue": "^3.1.0",
     "electron": "^20.1.4",
     "electron-builder": "^23.3.3",
+    "sass": "1.32.12",
     "typescript": "^4.6.4",
     "vite": "^3.1.0",
     "vue-tsc": "^0.40.4"

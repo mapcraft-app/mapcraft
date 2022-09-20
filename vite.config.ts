@@ -1,9 +1,11 @@
-import { defineConfig, build, type ViteDevServer } from 'vite';
-import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import { spawn, type ChildProcess } from 'child_process';
 import { exit } from 'process';
 import { AddressInfo } from 'net';
+
+import { defineConfig, build, type ViteDevServer } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 
 const bundle = async (server: ViteDevServer) => {
 	const address = server.httpServer.address() as AddressInfo;
@@ -52,7 +54,12 @@ export default defineConfig((env) => ({
 		emptyOutDir: true
 	},
 	plugins: [
-		vue(),
+		vue({
+			template: { transformAssetUrls }
+		}),
+		quasar({
+			sassVariables: 'src/quasar-variables.sass'
+		}),
 		{
 			name: 'electron',
 			configureServer(server) {

@@ -6,7 +6,7 @@ const { join } = require('path');
 
 const upper = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`;
 const info = {
-	icon: (isMac = false) => `'src/assets/imgs/app/icon.${(isMac) ? 'icns' : 'ico'}'`,
+	icon: (isMac = false) => `src/assets/imgs/app/icon.${(isMac) ? 'icns' : 'ico'}`,
 	artifactName: '${productName}_${os}.${ext}',
 	arch: [ 'x64' ]
 };
