@@ -11,9 +11,21 @@ import {
 import '@quasar/extras/material-icons/material-icons.css';
 import 'quasar/src/css/index.sass';
 import { createApp } from 'vue';
+import { createI18n } from 'vue-i18n';
+import { createPinia } from 'pinia';
 
 import App from './vue/App.vue';
+import router from './router';
+import messages from './i18n';
 
+const i18n = createI18n({
+	fallbackLocale: 'en-US',
+	globalInjection: true,
+	legacy: false,
+	locale: 'en-US',
+	messages
+});
+const pinia = createPinia();
 const app = createApp(App);
 
 app.use(Quasar, {
@@ -34,4 +46,7 @@ app.use(Quasar, {
 		}
 	}
 });
+app.use(i18n);
+app.use(pinia);
+app.use(router);
 app.mount('#main-app');

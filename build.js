@@ -1,7 +1,7 @@
 /**
  * File is in CommonJs because electron-builder don't support ES6
  */
-const { readFileSync, cp } = require('fs');
+const { readFileSync } = require('fs');
 const { join } = require('path');
 
 const upper = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`;

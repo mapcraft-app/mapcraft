@@ -12,6 +12,18 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
+
+		"baseUrl": ".",
+		"paths": {
+			"src/*": ["src/*"],
+			"app/*": ["*"],
+			"vue/*": ["src/vue/*"],
+			"store/*": ["src/store/*"],
+			"components/*": ["src/vue/components/*"],
+			"layouts/*": ["src/vue/layouts/*"],
+			"pages/*": ["src/vue/pages/*"],
+			"assets/*": ["src/assets/*"]
+		}
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

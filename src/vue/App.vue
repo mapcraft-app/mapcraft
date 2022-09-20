@@ -1,13 +1,11 @@
 <template>
-	<h1>Hello from quasar</h1>
-	<q-btn label="toto est content"></q-btn>
-	<!--<router-view />-->
+	<router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useMeta } from 'quasar';
-import { generateMeta } from '../meta';
+import { generateMeta } from 'src/meta';
 
 export default defineComponent({
 	name: 'App',

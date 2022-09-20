@@ -6,6 +6,7 @@ import { AddressInfo } from 'net';
 import { defineConfig, build, type ViteDevServer } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 const bundle = async (server: ViteDevServer) => {
 	const address = server.httpServer.address() as AddressInfo;
@@ -54,6 +55,9 @@ export default defineConfig((env) => ({
 		emptyOutDir: true
 	},
 	plugins: [
+		tsconfigPaths({
+			loose: true
+		}),
 		vue({
 			template: { transformAssetUrls }
 		}),
