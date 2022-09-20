@@ -21,7 +21,7 @@ import localeOptions from 'src/i18n/options';
 
 export default defineComponent({
 	name: 'SelectLang',
-	setup () {
+	setup() {
 		const { locale } = useI18n({ useScope: 'global' });
 
 		watch(locale, (ret) => {
@@ -37,7 +37,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-	.lang-input {
-		width: 180px;
-	}
+.lang-input {
+	width: 180px;
+}
 </style>

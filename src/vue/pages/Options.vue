@@ -7,9 +7,9 @@ import { defineComponent, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
-	setup () {
+	setup() {
 		const $q = useQuasar();
-		
+
 		return {
 			toto: 'tutu'
 		};

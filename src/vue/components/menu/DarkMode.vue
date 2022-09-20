@@ -14,7 +14,7 @@ import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
-	setup () {
+	setup() {
 		const darkMode = ref<boolean>(false);
 		let backToggle: Element | null;
 		const $q = useQuasar();
@@ -38,7 +38,9 @@ export default defineComponent({
 		});
 
 		onMounted(() => {
-			backToggle = document.querySelector('div.dark-toggle > div.q-toggle__inner.relative-position.non-selectable > div');
+			backToggle = document.querySelector(
+				'div.dark-toggle > div.q-toggle__inner.relative-position.non-selectable > div'
+			);
 			backToggle?.classList.add('toggle-back');
 			const ret = $q.localStorage.getItem('darkMode');
 			if (ret) {
@@ -56,18 +58,18 @@ export default defineComponent({
 </script>
 
 <style>
-	.dark-toggle {
-		margin: 0 .5em .5em 0;
-	}
-	.toggle-back {
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: cover;
-	}
-	.toggle-back-day {
-		background-image: url('/src/assets/imgs/dark_switch/day.svg');
-	}
-	.toggle-back-night {
-		background-image: url('/src/assets/imgs/dark_switch/night.svg');
-	}
+.dark-toggle {
+	margin: 0 0.5em 0.5em 0;
+}
+.toggle-back {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+.toggle-back-day {
+	background-image: url('/src/assets/imgs/dark_switch/day.svg');
+}
+.toggle-back-night {
+	background-image: url('/src/assets/imgs/dark_switch/night.svg');
+}
 </style>

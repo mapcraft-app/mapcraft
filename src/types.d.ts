@@ -1,3 +1,3 @@
 interface Window {
-	readSettings: () => Record<string, any>
+	readSettings: () => Record<string, any>;
 }

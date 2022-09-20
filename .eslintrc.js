@@ -9,9 +9,10 @@ module.exports = {
 	extends: [
 		'plugin:@typescript-eslint/recommended',
 		'eslint:recommended',
-		'plugin:vue/vue3-recommended'
+		'plugin:vue/vue3-recommended',
+		'prettier'
 	],
-	plugins: [ '@typescript-eslint', 'vue' ],
+	plugins: ['@typescript-eslint', 'vue'],
 	parserOptions: {
 		ecmaVersion: 'latest',
 		parser: '@typescript-eslint/parser',
@@ -21,26 +22,36 @@ module.exports = {
 	rules: {
 		'vue/no-multiple-template-root': 'off',
 		'vue/multi-word-component-names': 'off',
-		'vue/html-indent': ['warn', 'tab', {
-			'alignAttributesVertically': true,
-		}],
-		'vue/html-self-closing': 'off',
-		'vue/max-attributes-per-line': ['warn', {
-			'singleline': {
-				'max': 5
-			},      
-			'multiline': {
-				'max': 3
+		'vue/html-indent': [
+			'warn',
+			'tab',
+			{
+				alignAttributesVertically: true
 			}
-		}],
+		],
+		'vue/html-self-closing': 'off',
+		'vue/max-attributes-per-line': [
+			'warn',
+			{
+				singleline: {
+					max: 5
+				},
+				multiline: {
+					max: 3
+				}
+			}
+		],
 		'vue/v-slot-style': 'off',
 
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
-		'@typescript-eslint/no-inferrable-types': [ 'error', {
-			ignoreParameters: true
-		}],
+		'@typescript-eslint/no-inferrable-types': [
+			'error',
+			{
+				ignoreParameters: true
+			}
+		],
 
 		'no-console': process.env.NODE_ENV === 'production'
 			? 'warn'
@@ -58,7 +69,7 @@ module.exports = {
 		eqeqeq: ['error', 'always'],
 		curly: ['error', 'multi-or-nest'],
 		'multiline-ternary': ['error', 'always'],
-		'no-tabs': ['error', { allowIndentationTabs: true }],
+		'no-tabs': ['error', { allowIndentationTabs: true }]
 	},
 	ignorePatterns: ['dist'],
 	overrides: [

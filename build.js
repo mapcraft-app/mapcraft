@@ -6,7 +6,9 @@ const { join } = require('path');
 
 const upper = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`;
 const info = {
-	icon: (isMac = false) => `src/assets/imgs/app/icon.${(isMac) ? 'icns' : 'ico'}`,
+	icon: (isMac = false) => `src/assets/imgs/app/icon.${(isMac)
+		? 'icns'
+		: 'ico'}`,
 	artifactName: '${productName}_${os}.${ext}',
 	arch: [ 'x64' ]
 };
@@ -78,30 +80,30 @@ try {
 
 		//#region Mac
 		dmg: {
-      background: 'src/electron/build/background.png',
-      iconSize: 80,
-      window: {
-        width: 540,
-        height: 380
-      },
-      contents: [
-        {
-          x: 140,
-          y: 190
-        },
-        {
-          x: 400,
-          y: 190,
-          type: 'link',
-          path: '/Applications'
-        }
-      ]
-    },
+			background: 'src/electron/build/background.png',
+			iconSize: 80,
+			window: {
+				width: 540,
+				height: 380
+			},
+			contents: [
+				{
+					x: 140,
+					y: 190
+				},
+				{
+					x: 400,
+					y: 190,
+					type: 'link',
+					path: '/Applications'
+				}
+			]
+		},
 		mac: {
 			category: 'public.app-category.productivity',
-      type: 'distribution',
-      icon: info.icon(true),
-      artifactName: info.artifactName,
+			type: 'distribution',
+			icon: info.icon(true),
+			artifactName: info.artifactName,
 			target: [
 				{
 					target: 'dmg',
@@ -122,10 +124,10 @@ try {
 		linux: {
 			category: 'Development',
 			synopsis: 'Mapcraft is a software that increases the possibilities of mapmakers without any complex installation',
-      icon: info.icon(),
-      artifactName: info.artifactName,
-      target: [
-        {
+			icon: info.icon(),
+			artifactName: info.artifactName,
+			target: [
+				{
 					target: 'AppImage',
 					arch: info.arch
 				},
@@ -133,10 +135,10 @@ try {
 					target: '7z',
 					arch: info.arch
 				}
-      ]
-    }
+			]
+		}
 		//#endregion Linux
-	}
+	};
 } catch (err) {
 	console.error(err);
 	module.exports = {

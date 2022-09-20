@@ -15,23 +15,16 @@
 			bordered
 			overlay
 			side="left"
-			:class="(!$q.dark.isActive) ? ('main-layout-bg-drawer') : ('')"
+			:class="!$q.dark.isActive ? 'main-layout-bg-drawer' : ''"
 		>
 			<profile />
-			<q-expansion-item
-				icon="settings"
-				label="Options"
-			>
+			<q-expansion-item icon="settings" label="Options">
 				<div class="row no-wrap">
 					<dark-mode />
 					<lang />
 				</div>
 				<div class="row justify-center">
-					<q-btn
-						color="secondary"
-						to="/options"
-						label="More options"
-					/>
+					<q-btn color="secondary" to="/options" label="More options" />
 				</div>
 			</q-expansion-item>
 			<q-separator class="q-mt-sm" inset />
@@ -54,9 +47,10 @@ export default defineComponent({
 		Lang,
 		Profile
 	},
-	setup () {
+	setup() {
 		const leftDrawerOpen = ref(false);
-		const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
+		const toggleLeftDrawer = () =>
+			(leftDrawerOpen.value = !leftDrawerOpen.value);
 
 		return {
 			leftDrawerOpen,
@@ -67,10 +61,10 @@ export default defineComponent({
 </script>
 
 <style>
-	.main-layout-title-bar {
-		width: 100%;
-	}
-	.main-layout-bg-drawer {
-		background-color: #e8e8e8;
-	}
+.main-layout-title-bar {
+	width: 100%;
+}
+.main-layout-bg-drawer {
+	background-color: #e8e8e8;
+}
 </style>
