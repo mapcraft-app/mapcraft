@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts">
+import { useQuasar } from 'quasar';
 import { defineComponent, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import localeOptions from 'src/i18n/options';
@@ -22,11 +23,10 @@ import localeOptions from 'src/i18n/options';
 export default defineComponent({
 	name: 'SelectLang',
 	setup() {
+		const $q = useQuasar();
 		const { locale } = useI18n({ useScope: 'global' });
 
-		watch(locale, (ret) => {
-			console.log(ret);
-		});
+		watch(locale, (ret) => $q.localStorage.set('lang', ret));
 
 		return {
 			locale,

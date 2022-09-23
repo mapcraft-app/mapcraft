@@ -15,9 +15,12 @@
 
 		"baseUrl": ".",
 		"paths": {
+			"api/*": ["src/api/*"],
 			"src/*": ["src/*"],
 			"app/*": ["*"],
+			"electron/*": ["src/electron/*"],
 			"vue/*": ["src/vue/*"],
+			"i18n/*": ["src/i18n/*"],
 			"store/*": ["src/store/*"],
 			"components/*": ["src/vue/components/*"],
 			"layouts/*": ["src/vue/layouts/*"],

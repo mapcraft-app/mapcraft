@@ -6,7 +6,9 @@ import { AddressInfo } from 'net';
 import { defineConfig, build, type ViteDevServer } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { version, repository } from './package.json';
 
 const bundle = async (server: ViteDevServer) => {
 	const address = server.httpServer.address() as AddressInfo;
@@ -20,7 +22,10 @@ const bundle = async (server: ViteDevServer) => {
 		configFile: 'vite.config.electron.ts',
 		mode: server.config.mode,
 		define: {
-			'import.meta.env.ELECTRON_APP_URL': JSON.stringify(appUrl)
+			'import.meta.env.APP_VERSION': JSON.stringify(version),
+			'import.meta.env.APP_GIT_URL': JSON.stringify(repository.url),
+			'import.meta.env.ELECTRON_APP_URL': JSON.stringify(appUrl),
+			'import.meta.env.ELECTRON_LOAD_URL': JSON.stringify(appUrl + '/load.html')
 		},
 		build: {
 			watch: {}
@@ -32,7 +37,10 @@ const bundle = async (server: ViteDevServer) => {
 	const start = () => {
 		if (child)
 			child.kill();
-		child = spawn(electron, [ electronMain ], { windowsHide: false });
+		child = spawn(electron, [ electronMain ], {
+			stdio: 'inherit',
+			windowsHide: false
+		});
 		child.on('close', exitProcess);
 	};
 	const startElectron = ({ code }: any) => {
@@ -52,9 +60,15 @@ const bundle = async (server: ViteDevServer) => {
 export default defineConfig((env) => ({
 	base: (env.mode === 'production') ? './' : '/',
 	build: {
-		emptyOutDir: true
+		emptyOutDir: true,
+		rollupOptions: {
+			input: [
+				resolve(__dirname, 'load.html')
+			]
+		}
 	},
 	plugins: [
+		nodePolyfills(),
 		tsconfigPaths({
 			loose: true
 		}),

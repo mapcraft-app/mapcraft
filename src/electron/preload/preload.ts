@@ -1,6 +1,7 @@
-import { readFileSync } from 'fs';
-import { contextBridge } from 'electron';
-
-contextBridge.exposeInMainWorld('readSettings', () => {
-	return JSON.parse(readFileSync('./settings.json', 'utf-8'));
-});
+console.log(process.env.APP);
+console.log(process.env.APP_DATA);
+console.log(process.env.GAME);
+console.log(process.env.LOG);
+console.log(process.env.SAVE_GAME);
+console.log(process.env.TEMP);
+console.log(process.env.PRODUCTION);
