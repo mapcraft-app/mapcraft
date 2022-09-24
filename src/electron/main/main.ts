@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 
-import errorDialog from 'electron/api/common/errorDialog';
-import { createWindow, loaderWindows } from 'electron/api/backend/createWindow';
-import generateEnv from 'electron/api/backend/generateEnv';
+import errorDialog from 'src/electron/api/errorDialog';
+import { createWindow, loaderWindows } from 'src/electron/api/createWindow';
+import generateEnv from 'src/electron/api/generateEnv';
 
 let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;

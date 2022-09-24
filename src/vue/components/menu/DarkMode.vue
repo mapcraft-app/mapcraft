@@ -12,9 +12,11 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { globalStore } from 'src/store/global';
 
 export default defineComponent({
 	setup() {
+		const store = globalStore();
 		const darkMode = ref<boolean>(false);
 		let backToggle: Element | null;
 		const $q = useQuasar();
@@ -33,6 +35,7 @@ export default defineComponent({
 			if (val !== null) {
 				$q.dark.set(val);
 				$q.localStorage.set('darkMode', val);
+				store.setDarkMode(val);
 				modifyToggleBackground();
 			}
 		});

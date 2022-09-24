@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import { resolve } from 'path';
-import { WindowError } from 'electron/api/common/error';
+import { WindowError } from 'src/electron/api/error';
 
 export interface optionWindows {
 	center?: boolean,
