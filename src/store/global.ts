@@ -14,6 +14,7 @@ export const globalStore = defineStore('global', () => {
 		game: window.env.directory.game,
 		log: window.env.directory.log,
 		save: window.env.directory.save,
+		resource: window.env.directory.resource,
 		temp: window.env.directory.temp
 	});
 	const pack = reactive({

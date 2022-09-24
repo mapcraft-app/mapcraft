@@ -1,15 +1,15 @@
 <template>
-	<div class="row no-wrap justify-between q-pa-md">
+	<div class="row no-wrap justify-around q-pa-md">
 		<img :src="linkToAvatar" @error="defaultImgError" />
-		<div class="column justify-center">
+		<div class="column justify-center q-pl-sm">
 			<span class="text-h5 text-center text-weight-light q-pb-sm">
 				{{ userPseudo }}
 			</span>
-			<q-btn outline square label="change user" />
+			<q-btn outline square :label="$t('components.menu.profile.change')" />
 		</div>
 	</div>
 	<div class="row justify-center q-pb-sm">
-		<q-btn square flat label="documentation" />
+		<q-btn square flat :label="$t('components.menu.profile.documentation')" />
 	</div>
 </template>
 

@@ -4,7 +4,7 @@
 			<q-toolbar>
 				<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 				<div class="row no-wrap justify-center main-layout-title-bar">
-					{{ $t('hello') }}
+					Mapcraft
 				</div>
 				<q-btn dense flat round icon="menu" />
 			</q-toolbar>
@@ -24,7 +24,7 @@
 					<lang />
 				</div>
 				<div class="row justify-center">
-					<q-btn color="secondary" to="/options" label="More options" />
+					<q-btn color="secondary" to="/options" :label="$t('layouts.main.more_options')" />
 				</div>
 			</q-expansion-item>
 			<q-separator class="q-mt-sm" inset />

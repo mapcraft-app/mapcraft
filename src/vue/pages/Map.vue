@@ -1,18 +1,14 @@
 <template>
-	<h1>OPTIONS</h1>
+	<h1>Map</h1>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent } from 'vue';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
-	setup() {
+	setup () {
 		const $q = useQuasar();
-
-		return {
-			toto: 'tutu'
-		};
 	}
 });
 </script>

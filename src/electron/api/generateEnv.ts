@@ -21,6 +21,7 @@ export default function generateEnv(app: Electron.App): void {
 	process.env.GAME = game();
 	process.env.LOG = app.getPath('logs');
 	process.env.SAVE_GAME = join(game(), 'saves');
+	process.env.RESOURCE_GAME = join(game(), 'resourcepacks');
 	process.env.TEMP = tmpdir();
 
 	process.env.PRODUCTION = String((basename(app.getAppPath()) === 'app.asar'));

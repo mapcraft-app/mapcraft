@@ -7,6 +7,7 @@ interface Window {
 			game: string,
 			log: string,
 			save: string,
+			resource: string,
 			temp: string
 		},
 		pack: {
