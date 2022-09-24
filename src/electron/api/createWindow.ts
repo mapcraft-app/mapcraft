@@ -10,11 +10,13 @@ export interface optionWindows {
 	width?: number,
 }
 
-export function createWindow(args: optionWindows = {}): BrowserWindow | undefined {
+export function createWindow(args: optionWindows = {}): BrowserWindow {
 	const mainWindow = new BrowserWindow({
+		center: args.center ?? true,
 		width: args.width ?? 800,
 		height: args.height ?? 600,
-		center: args.center ?? true,
+		minHeight: 800,
+		minWidth: 600,
 		show: false,
 		webPreferences: {
 			contextIsolation: true,
@@ -37,7 +39,7 @@ export function createWindow(args: optionWindows = {}): BrowserWindow | undefine
 	return mainWindow;
 };
 
-export function loaderWindows(): BrowserWindow | undefined {
+export function loaderWindows(): BrowserWindow {
 	const window = new BrowserWindow({
 		width: 350,
 		height: 350,

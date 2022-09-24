@@ -29,7 +29,7 @@
 			</q-expansion-item>
 			<q-separator class="q-mt-sm" inset />
 		</q-drawer>
-		<q-page-container>
+		<q-page-container class="main-router">
 			<router-view />
 		</q-page-container>
 	</q-layout>
@@ -66,5 +66,8 @@ export default defineComponent({
 }
 .main-layout-bg-drawer {
 	background-color: #e8e8e8;
+}
+.main-router {
+	height: 100%;
 }
 </style>

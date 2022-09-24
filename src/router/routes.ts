@@ -17,6 +17,17 @@ const routes: RouteRecordRaw[] = [
 		]
 	},
 	{
+		path: '/options',
+		component: () => import('layouts/Main.vue'),
+		children: [
+			{
+				path: '',
+				name: 'options',
+				component: () => import('pages/Options.vue')
+			}
+		]
+	},
+	{
 		path: '/:catchAll(.*)*',
 		component: () => import('layouts/Main.vue'),
 		children: [

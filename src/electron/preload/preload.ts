@@ -1,3 +1,5 @@
 import './exposeEnv';
+import ipc from './ipc';
 
-console.log('toto');
+console.log('preload');
+console.log(ipc);

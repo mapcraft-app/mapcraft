@@ -1,11 +1,13 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, dialog } from 'electron';
 
 import errorDialog from 'src/electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'src/electron/api/createWindow';
 import generateEnv from 'src/electron/api/generateEnv';
+import ipc from './ipc';
 
 let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;
+
 app.whenReady().then(() => {
 	loader = loaderWindows();
 	mainWindow = createWindow({
@@ -14,8 +16,9 @@ app.whenReady().then(() => {
 	});
 
 	generateEnv(app); // Generate process.env variables
+	ipc(mainWindow); // Set ipc
 
-	mainWindow?.once('ready-to-show', () => {
+	mainWindow.once('ready-to-show', () => {
 		mainWindow?.show();
 		loader?.hide();
 		loader?.destroy();
@@ -36,6 +39,15 @@ app.on('window-all-closed', () => {
 		app.quit();
 });
 
-process.on('uncaughtException', () => {
-	console.log('hello !');
+process.on('uncaughtException', (err, origin) => {
+	const message = (process.env.DEV)
+		? `${err.toString()}\nOrigin: ${origin}`
+		: `${err.toString()}`;
+	const messageBoxOptions = {
+		type: 'error',
+		title: 'Error in Main process',
+		message,
+	};
+	dialog.showMessageBoxSync(messageBoxOptions);
+	app.exit(1);
 });
