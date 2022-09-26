@@ -1,14 +1,17 @@
 import { app, BrowserWindow, dialog } from 'electron';
+import electronReload from 'electron-reload';
 
-import errorDialog from 'src/electron/api/errorDialog';
-import { createWindow, loaderWindows } from 'src/electron/api/createWindow';
-import generateEnv from 'src/electron/api/generateEnv';
-import ipc from './ipc';
+import errorDialog from 'electron/api/errorDialog';
+import { createWindow, loaderWindows } from 'electron/api/createWindow';
+import generateEnv from 'electron/api/generateEnv';
 
 let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+	if (import.meta.env.DEV)
+		electronReload(__dirname, {});
+
 	loader = loaderWindows();
 	mainWindow = createWindow({
 		width: 1280,
@@ -16,7 +19,7 @@ app.whenReady().then(() => {
 	});
 
 	generateEnv(app); // Generate process.env variables
-	ipc(mainWindow); // Set ipc
+	import('src/electron/ipc/main'); // Set IpcMain listeners
 
 	mainWindow.once('ready-to-show', () => {
 		mainWindow?.show();
@@ -34,7 +37,7 @@ app.whenReady().then(() => {
 	errorDialog(err);
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
 	if (process.platform !== 'darwin')
 		app.quit();
 });

@@ -1,25 +1,22 @@
+/**
+ * Import this file inside renderer process (usually preload)
+ */
 import { ipcRenderer } from 'electron';
 import type Electron from 'electron';
-
-import { ipcDialogDefinition } from 'electron/main/ipcDialog';
-
-import { responseDefinition } from 'electron/api/ipcNaming';
-import { IpcError } from 'electron/api/error';
+import ipcNaming, { ipcDefinition } from './ipcType';
 import errorDialog from 'electron/api/errorDialog';
+import { IpcError } from 'electron/api/error';
 
-const channels = [
-	ipcDialogDefinition
-];
+import dialogDefinitions from './channels/dialog/definitions';
 
-const channelExist = (channel: string, ret = false): boolean => {
-	for (const chan of channels) {
-		for (const desc of chan) {
-			if (!ret && desc === channel)
+const ipcList: ipcDefinition[] = [];
+ipcList.push(dialogDefinitions);
+
+const channelExist = (channelName: string, isReceive = false): boolean => {
+	for (const ipc of ipcList) {
+		for (const channel of ipc.channels) {
+			if (ipcNaming(ipc.channel, channel, isReceive) === channelName)
 				return true;
-			else if (ret) {
-				if (desc === channel.slice(0, (channel.length + 1 - (responseDefinition.sep.length + responseDefinition.response.length))))
-					return true;
-			}
 		}
 	}
 	return false;

@@ -31,6 +31,8 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 	});
 	if (!mainWindow)
 		throw new WindowError('Failed to create app window, close app');
+	process.env.WINDOW_ID = String(mainWindow.id);
+	console.log(mainWindow.id);
 	if (import.meta.env.DEV) {
 		mainWindow.loadURL(import.meta.env.ELECTRON_APP_URL);
 		mainWindow.webContents.openDevTools();

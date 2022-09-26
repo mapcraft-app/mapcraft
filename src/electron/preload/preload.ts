@@ -1,5 +1,7 @@
 import './exposeEnv';
-import ipc from './ipc';
+import ipc from 'electron/ipc/render';
 
-console.log('preload');
 console.log(ipc);
+
+// import ipc from 'electron/ipc/render';
+// console.log(ipc);
