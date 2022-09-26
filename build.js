@@ -12,6 +12,18 @@ const info = {
 	artifactName: '${productName}_${os}.${ext}',
 	arch: [ 'x64' ]
 };
+const build = (type) => {
+	return [
+		{
+			target: type,
+			arch: info.arch,
+		},
+		{
+			target: '7z',
+			arch: info.arch
+		}
+	];
+};
 
 try {
 	const package = JSON.parse(readFileSync(join(__dirname, 'package.json'), { encoding: 'utf-8' }));
@@ -54,9 +66,9 @@ try {
 			allowToChangeInstallationDirectory: true,
 			createStartMenuShortcut: false,
 			displayLanguageSelector: true,
-			installerIcon: 'src/electron/build/installerIcon.ico',
-			uninstallerIcon: 'src/electron/build/uninstallerIcon.ico',
-			installerSidebar: 'src/electron/build/installerSidebar.bmp',
+			installerIcon: 'src/assets/build/installerIcon.ico',
+			uninstallerIcon: 'src/assets/build/uninstallerIcon.ico',
+			installerSidebar: 'src/assets/build/installerSidebar.bmp',
 			uninstallDisplayName: '${productName}',
 			license: 'LICENSE',
 			installerLanguages: [ 'en_US', 'fr_FR' ],
@@ -65,22 +77,13 @@ try {
 		win: {
 			icon: info.icon(),
 			artifactName: info.artifactName,
-			target: [
-				{
-					target: 'nsis',
-					arch: info.arch,
-				},
-				{
-					target: '7z',
-					arch: info.arch
-				}
-			]
+			target: build('nsis')
 		},
 		//#endregion Windows
 
 		//#region Mac
 		dmg: {
-			background: 'src/electron/build/background.png',
+			background: 'src/assets/build/background.png',
 			iconSize: 80,
 			window: {
 				width: 540,
@@ -104,16 +107,7 @@ try {
 			type: 'distribution',
 			icon: info.icon(true),
 			artifactName: info.artifactName,
-			target: [
-				{
-					target: 'dmg',
-					arch: info.arch
-				},
-				{
-					target: '7z',
-					arch: info.arch
-				}
-			]
+			target: build('dmg')
 		},
 		//#endregion Mac
 
@@ -126,16 +120,7 @@ try {
 			synopsis: 'Mapcraft is a software that increases the possibilities of mapmakers without any complex installation',
 			icon: info.icon(),
 			artifactName: info.artifactName,
-			target: [
-				{
-					target: 'AppImage',
-					arch: info.arch
-				},
-				{
-					target: '7z',
-					arch: info.arch
-				}
-			]
+			target: build('AppImage')
 		}
 		//#endregion Linux
 	};
