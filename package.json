@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "mapcraft",
+	"productName": "Mapcraft",
   "description": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
   "homepage": "https://mapcraft.app",
   "license": "GPL-3.0",

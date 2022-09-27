@@ -1,5 +1,4 @@
 import { app, BrowserWindow, dialog } from 'electron';
-import electronReload from 'electron-reload';
 
 import errorDialog from 'electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'electron/api/createWindow';
@@ -10,18 +9,25 @@ let mainWindow: BrowserWindow | undefined = undefined;
 
 app.whenReady().then(async () => {
 	if (import.meta.env.DEV)
-		electronReload(__dirname, {});
+		import('electron-reload').then((obj) => obj.default(__dirname, {}));
 
+	let isLoading = true;
 	loader = loaderWindows();
 	mainWindow = createWindow({
 		width: 1280,
 		height: 720
 	});
 
+	loader.once('close', () => {
+		if (isLoading)
+			app.exit(0);
+	});
+
 	generateEnv(app); // Generate process.env variables
 	import('src/electron/ipc/main'); // Set IpcMain listeners
 
 	mainWindow.once('ready-to-show', () => {
+		isLoading = false;
 		mainWindow?.show();
 		loader?.hide();
 		loader?.destroy();

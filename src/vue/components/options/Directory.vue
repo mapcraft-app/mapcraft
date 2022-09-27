@@ -5,6 +5,7 @@
 			v-model="game"
 			standard
 			:label="$t('components.options.directory.game')"
+			@click="cliick()"
 		></q-input>
 		<q-input
 			v-model="resource"
@@ -38,11 +39,18 @@ export default defineComponent({
 		const save = ref<string>(store.directory.save);
 		const temp = ref<string>(store.directory.temp);
 
+		const cliick = () => {
+			window.ipc.send('dialog::select-file', game.value);
+			console.log('click');
+		};
+
 		return {
 			game,
 			resource,
 			save,
-			temp
+			temp,
+
+			cliick
 		};
 	}
 });

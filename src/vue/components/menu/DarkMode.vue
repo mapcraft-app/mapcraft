@@ -70,9 +70,9 @@ export default defineComponent({
 	background-size: cover;
 }
 .toggle-back-day {
-	background-image: url('/src/assets/imgs/dark_switch/day.svg');
+	background-image: url('/imgs/dark_switch/day.svg');
 }
 .toggle-back-night {
-	background-image: url('/src/assets/imgs/dark_switch/night.svg');
+	background-image: url('/imgs/dark_switch/night.svg');
 }
 </style>

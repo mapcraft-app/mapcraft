@@ -59,11 +59,14 @@ const bundle = async (server: ViteDevServer) => {
 
 export default defineConfig((env) => ({
 	base: (env.mode === 'production') ? './' : '/',
+	publicDir: './src/public',
 	build: {
 		emptyOutDir: true,
+		minify: (env.mode === 'production'),
 		rollupOptions: {
 			input: [
-				resolve(__dirname, 'load.html')
+				resolve(__dirname, 'load.html'),
+				resolve(__dirname, 'index.html')
 			]
 		}
 	},

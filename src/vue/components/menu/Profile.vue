@@ -20,7 +20,7 @@ import defaultImgError from 'vue/lib/defaultImgError';
 export default defineComponent({
 	setup() {
 		return {
-			linkToAvatar: '/src/assets/imgs/icon/none.png',
+			linkToAvatar: '/imgs/icon/none.png',
 			userPseudo: 'Vex345',
 			defaultImgError
 		};
