@@ -17,6 +17,7 @@ app.whenReady().then(async () => {
 		width: 1280,
 		height: 720
 	});
+	loader.focus();
 
 	loader.once('close', () => {
 		if (isLoading)
@@ -29,6 +30,7 @@ app.whenReady().then(async () => {
 	mainWindow.once('ready-to-show', () => {
 		isLoading = false;
 		mainWindow?.show();
+		mainWindow?.focus();
 		loader?.hide();
 		loader?.destroy();
 	});
