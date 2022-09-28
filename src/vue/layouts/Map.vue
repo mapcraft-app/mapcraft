@@ -1,5 +1,5 @@
 <template>
-	<q-layout view="hHh lpR fFf">
+	<q-layout view="hHh lpR fFf" :container="true">
 		<q-page-container>
 			<router-view />
 		</q-page-container>

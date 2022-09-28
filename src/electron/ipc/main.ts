@@ -7,16 +7,30 @@ import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface } from 'src/el
 import dialogDefinitions from './channels/dialog/definitions';
 import dialogFunctions from './channels/dialog/functions';
 
-const importInList = (definition: ipcDefinition, functions: ipcFunctions) => {
-	return {
+import windowDefinitions from './channels/window/definitions';
+import windowFunctions from './channels/window/functions';
+
+const ipcList: ipcListInterface[] = [];
+const importInList = (definition: ipcDefinition, functions: ipcFunctions): void => {
+	ipcList.push({
 		info: definition,
 		fn: functions
-	};
+	});
 };
-const ipcList: ipcListInterface[] = [];
-ipcList.push(importInList(dialogDefinitions, dialogFunctions));
+importInList(dialogDefinitions, dialogFunctions);
+importInList(windowDefinitions, windowFunctions);
 
+const help = [];
 for (const ipc of ipcList) {
-	for (const fn in ipc.fn)
+	const _help = {
+		name: ipc.info.channel,
+		channels: [] as string[]
+	};
+	for (const fn in ipc.fn) {
+		_help.channels.push(ipcNaming(ipc.info.channel, ipc.info.channels[fn], false));
 		ipcMain.on(ipcNaming(ipc.info.channel, ipc.info.channels[fn], false), ipc.fn[fn]);
+	}
+	help.push(_help);
 }
+
+console.log(help);

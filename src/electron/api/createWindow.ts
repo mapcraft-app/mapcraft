@@ -15,9 +15,10 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 		center: args.center ?? true,
 		width: args.width ?? 800,
 		height: args.height ?? 600,
-		minHeight: 800,
-		minWidth: 600,
+		minHeight: 600,
+		minWidth: 800,
 		show: false,
+		frame: false,
 		webPreferences: {
 			contextIsolation: true,
 			devTools: import.meta.env.DEV,

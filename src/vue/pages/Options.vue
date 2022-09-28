@@ -58,6 +58,6 @@ export default defineComponent({
 <style>
 .input-group {
 	border-left: #646464 1px solid;
-  padding-left: 0.5em;
+	padding-left: 0.5em;
 }
 </style>

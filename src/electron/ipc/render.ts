@@ -8,6 +8,7 @@ import errorDialog from 'electron/api/errorDialog';
 import { IpcError } from 'electron/api/error';
 
 import dialogDefinitions from './channels/dialog/definitions';
+import windowDefinitions from './channels/window/definitions';
 
 const ipcList: string[] = [];
 const pushImport = (def: ipcDefinition): void => {
@@ -16,8 +17,8 @@ const pushImport = (def: ipcDefinition): void => {
 		ipcList.push(ipcNaming(def.channel, channel, true));
 	}
 };
-
 pushImport(dialogDefinitions);
+pushImport(windowDefinitions);
 
 const ipc = Object.freeze({
 	send: (channel: string, ...args: any[]): Promise<Electron.IpcRenderer> | void => {
