@@ -7,8 +7,8 @@ console.log(ipc);
 
 const log = new Log();
 contextBridge.exposeInMainWorld('log', Object.freeze({
-	debug: (s: string) => log.debug(s),
-	error: (s: string) => log.error(s),
-	info: (s: string) => log.info(s),
-	warn: (s: string) => log.warn(s),
+	debug: (s: string): void => log.debug(s),
+	error: (s: string): void => log.error(s),
+	info: (s: string): void => log.info(s),
+	warn: (s: string): void => log.warn(s),
 }));
