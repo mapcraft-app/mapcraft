@@ -13,6 +13,7 @@ interface Window {
 			appData: string,
 			game: string,
 			log: string,
+			date: string,
 			save: string,
 			resource: string,
 			temp: string

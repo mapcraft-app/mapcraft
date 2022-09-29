@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('env', {
 		appData: String(process.env.APP_DATA),
 		game: String(process.env.GAME),
 		log: String(process.env.LOG),
+		date: String(process.env.DATE),
 		save: String(process.env.SAVE_GAME),
 		resource: String(process.env.RESOURCE_GAME),
 		temp: String(process.env.TEMP)

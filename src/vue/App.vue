@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useMeta } from 'quasar';
 import { generateMeta } from 'src/meta';
 
@@ -56,6 +56,10 @@ export default defineComponent({
 				window.ipc.send('window::minimize');
 			}
 		};
+
+		onMounted(() => {
+			window.log.error('Application finish to mounted');
+		});
 
 		return {
 			isMaximize,
