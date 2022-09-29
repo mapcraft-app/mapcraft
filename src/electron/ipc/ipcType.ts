@@ -1,16 +1,24 @@
+/* eslint-disable no-unused-vars */
 import type Electron from 'electron';
 
 export interface ipcDefinition {
 	channel: string;
-	channels: string[];
+	channels: {
+		name: string;
+		type: ipcType;
+	}[]
 }
 export interface ipcFunctions {
 	// eslint-disable-next-line no-unused-vars
-	[index: number]: ((event: Electron.IpcMainEvent, ...args: any[]) => void)
+	[index: number]: ((event: Electron.IpcMainEvent | Electron.IpcMainInvokeEvent, ...args: any[]) => void)
 }
 export interface ipcListInterface {
 	info: ipcDefinition;
 	fn: ipcFunctions;
+}
+export enum ipcType {
+	SEND = 0,
+	INVOKE
 }
 
 export const ipcNamingConv = {

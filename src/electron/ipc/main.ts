@@ -2,7 +2,7 @@
  * Import this file inside main process
  */
 import { ipcMain } from 'electron';
-import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface } from 'src/electron/ipc/ipcType';
+import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface, ipcType } from 'src/electron/ipc/ipcType';
 
 import dialogDefinitions from './channels/dialog/definitions';
 import dialogFunctions from './channels/dialog/functions';
@@ -20,17 +20,15 @@ const importInList = (definition: ipcDefinition, functions: ipcFunctions): void 
 importInList(dialogDefinitions, dialogFunctions);
 importInList(windowDefinitions, windowFunctions);
 
-const help = [];
 for (const ipc of ipcList) {
-	const _help = {
-		name: ipc.info.channel,
-		channels: [] as string[]
-	};
-	for (const fn in ipc.fn) {
-		_help.channels.push(ipcNaming(ipc.info.channel, ipc.info.channels[fn], false));
-		ipcMain.on(ipcNaming(ipc.info.channel, ipc.info.channels[fn], false), ipc.fn[fn]);
+	for (const x in ipc.fn) {
+		switch (ipc.info.channels[x].type) {
+		case ipcType.SEND:
+			ipcMain.on(ipcNaming(ipc.info.channel, ipc.info.channels[x].name), ipc.fn[x]);
+			break;
+		case ipcType.INVOKE:
+		default:
+			ipcMain.handle(ipcNaming(ipc.info.channel, ipc.info.channels[x].name), ipc.fn[x]);
+		}
 	}
-	help.push(_help);
 }
-
-console.log(help);

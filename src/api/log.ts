@@ -17,7 +17,6 @@ class Log {
 
 	constructor() {
 		this.fileName = `${process.env.LOG}/${process.env.DATE}.log`;
-		console.log(this.fileName);
 	}
 
 	private write(type: string, data: string): void {

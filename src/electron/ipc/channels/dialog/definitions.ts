@@ -1,6 +1,23 @@
-import { ipcDefinition } from 'electron/ipc/ipcType';
+import { ipcDefinition, ipcType } from 'electron/ipc/ipcType';
 
 export default {
 	channel: 'dialog',
-	channels: [ 'select-file', 'select-files', 'select-directory', 'select-directories' ]
+	channels: [
+		{
+			name: 'select-file',
+			type: ipcType.INVOKE
+		},
+		{
+			name: 'select-files',
+			type: ipcType.INVOKE
+		},
+		{
+			name: 'select-directory',
+			type: ipcType.INVOKE
+		},
+		{
+			name: 'select-directories',
+			type: ipcType.INVOKE
+		},
+	]
 } as ipcDefinition;

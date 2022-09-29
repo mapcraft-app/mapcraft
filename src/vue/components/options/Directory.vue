@@ -5,23 +5,39 @@
 			v-model="game"
 			standard
 			:label="$t('components.options.directory.game')"
-			@click="cliick()"
-		></q-input>
+		>
+			<template v-slot:append>
+				<q-icon name="visibility" @click="changeDir(0)"/>
+			</template>
+		</q-input>
+		
 		<q-input
 			v-model="resource"
 			standard
 			:label="$t('components.options.directory.resource')"
-		></q-input>
+		>
+			<template v-slot:append>
+				<q-icon name="visibility" @click="changeDir(1)"/>
+			</template>
+		</q-input>
 		<q-input
 			v-model="save"
 			standard
 			:label="$t('components.options.directory.save')"
-		></q-input>
+		>
+			<template v-slot:append>
+				<q-icon name="visibility" @click="changeDir(2)"/>
+			</template>
+		</q-input>
 		<q-input
 			v-model="temp"
 			standard
 			:label="$t('components.options.directory.temp')"
-		></q-input>
+		>
+			<template v-slot:append>
+				<q-icon name="visibility" @click="changeDir(3)"/>
+			</template>
+		</q-input>
 	</div>
 </template>
 
@@ -34,14 +50,18 @@ export default defineComponent({
 	setup () {
 		const store = globalStore();
 
+		const selectedType = ref(0);
 		const game = ref<string>(store.directory.game);
 		const resource = ref<string>(store.directory.resource);
 		const save = ref<string>(store.directory.save);
 		const temp = ref<string>(store.directory.temp);
 
-		const cliick = () => {
-			window.ipc.send('dialog::select-file', game.value);
-			console.log('click');
+		const changeDir = (type: number) => {
+			selectedType.value = type;
+			window.ipc.send('dialog::select-directory', game.value);
+			window.ipc.invoke('dialog::select-directory')?.then((data) => {
+				console.log('test', data);
+			});
 		};
 
 		return {
@@ -50,7 +70,7 @@ export default defineComponent({
 			save,
 			temp,
 
-			cliick
+			changeDir
 		};
 	}
 });

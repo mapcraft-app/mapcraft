@@ -1,6 +1,23 @@
-import { ipcDefinition } from 'electron/ipc/ipcType';
+import { ipcDefinition, ipcType } from 'electron/ipc/ipcType';
 
 export default {
 	channel: 'window',
-	channels: [ 'close', 'fullscreen', 'maximize', 'minimize' ]
+	channels: [
+		{
+			name: 'close',
+			type: ipcType.SEND
+		},
+		{
+			name: 'fullscreen',
+			type: ipcType.SEND
+		},
+		{
+			name: 'maximize',
+			type: ipcType.SEND
+		},
+		{
+			name: 'minimize',
+			type: ipcType.SEND
+		}
+	]
 } as ipcDefinition;
