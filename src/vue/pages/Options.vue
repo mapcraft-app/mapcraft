@@ -24,7 +24,15 @@
 						<div class="flex justify-center">
 							<span class="text-h4">General</span>
 						</div>
-						<options-directory/>
+						<div class="column justify-around">
+							<div>
+								<span class="text-h6">Lang</span>
+								<lang :is-large="true" />
+							</div>
+							<div class="q-mt-md">
+								<options-directory/>
+							</div>
+						</div>
 					</q-tab-panel>
 					<q-tab-panel name="info">
 						<h1>Info</h1>
@@ -38,10 +46,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import optionsDirectory from 'components/options/Directory.vue';
+import Lang from '../components/menu/Lang.vue';
 
 export default defineComponent({
 	components: {
-		optionsDirectory
+		optionsDirectory,
+		Lang
 	},
 	setup () {
 		const splitter = ref<number>(15);
@@ -54,10 +64,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style>
-.input-group {
-	border-left: #646464 1px solid;
-	padding-left: 0.5em;
-}
-</style>

@@ -1,9 +1,9 @@
 import { contextBridge } from 'electron';
 import './exposeEnv';
-import ipc from 'electron/ipc/render';
+import 'electron/ipc/render';
 import Log from 'api/log';
 
-console.log(ipc);
+import './mapSelection';
 
 const log = new Log();
 contextBridge.exposeInMainWorld('log', {

@@ -1,3 +1,5 @@
+import { appMapGet } from 'electron/preload/mapSelection';
+
 interface Window {
 	env: {
 		directory: {
@@ -33,5 +35,11 @@ interface Window {
 		error: (s: string) => void,
 		info: (s: string) => void,
 		warn: (s: string) => void,
+	},
+	/**
+	 * Functions for map selection
+	 */
+	appMap: {
+		get: (dir: string) => Promise<appMapGet[]>
 	}
 }

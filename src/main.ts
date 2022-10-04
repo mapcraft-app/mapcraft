@@ -9,6 +9,7 @@ import {
 	QSpinnerCube
 } from 'quasar';
 import '@quasar/extras/material-icons/material-icons.css';
+import '@quasar/extras/material-icons-outlined/material-icons-outlined.css';
 import 'quasar/src/css/index.sass';
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';

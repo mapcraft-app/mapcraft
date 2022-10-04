@@ -1,44 +1,42 @@
 <template>
-	<span class="text-h6 q-pl-sm">Folder path</span>
-	<div class="input-group">
-		<q-input
-			v-model="game"
-			standard
-			:label="$t('components.options.directory.game')"
-		>
-			<template v-slot:append>
-				<q-icon name="visibility" @click="changeDir(0)"/>
-			</template>
-		</q-input>
+	<span class="text-h6">Folder path</span>
+	<q-input
+		v-model="game"
+		standard
+		:label="$t('components.options.directory.game')"
+	>
+		<template v-slot:append>
+			<q-btn flat round color="secondary" icon="folder" @click="changeDir(0)" />
+		</template>
+	</q-input>
 		
-		<q-input
-			v-model="resource"
-			standard
-			:label="$t('components.options.directory.resource')"
-		>
-			<template v-slot:append>
-				<q-icon name="visibility" @click="changeDir(1)"/>
-			</template>
-		</q-input>
-		<q-input
-			v-model="save"
-			standard
-			:label="$t('components.options.directory.save')"
-		>
-			<template v-slot:append>
-				<q-icon name="visibility" @click="changeDir(2)"/>
-			</template>
-		</q-input>
-		<q-input
-			v-model="temp"
-			standard
-			:label="$t('components.options.directory.temp')"
-		>
-			<template v-slot:append>
-				<q-icon name="visibility" @click="changeDir(3)"/>
-			</template>
-		</q-input>
-	</div>
+	<q-input
+		v-model="resource"
+		standard
+		:label="$t('components.options.directory.resource')"
+	>
+		<template v-slot:append>
+			<q-btn flat round color="secondary" icon="folder" @click="changeDir(1)" />
+		</template>
+	</q-input>
+	<q-input
+		v-model="save"
+		standard
+		:label="$t('components.options.directory.save')"
+	>
+		<template v-slot:append>
+			<q-btn flat round color="secondary" icon="folder" @click="changeDir(2)" />
+		</template>
+	</q-input>
+	<q-input
+		v-model="temp"
+		standard
+		:label="$t('components.options.directory.temp')"
+	>
+		<template v-slot:append>
+			<q-btn flat round color="secondary" icon="folder" @click="changeDir(3)" />
+		</template>
+	</q-input>
 </template>
 
 <script lang="ts">
@@ -60,7 +58,26 @@ export default defineComponent({
 			selectedType.value = type;
 			window.ipc.send('dialog::select-directory', game.value);
 			window.ipc.invoke('dialog::select-directory')?.then((data) => {
-				console.log('test', data);
+				if (data.canceled)
+					return;
+				switch (selectedType.value) {
+				case 0:
+					game.value = data.filePaths[0];
+					store.directory.game =  data.filePaths[0];
+					break;
+				case 1:
+					resource.value = data.filePaths[0];
+					store.directory.resource =  data.filePaths[0];
+					break;
+				case 2:
+					save.value = data.filePaths[0];
+					store.directory.save =  data.filePaths[0];
+					break;
+				case 3:
+				default:
+					temp.value = data.filePaths[0];
+					store.directory.temp =  data.filePaths[0];
+				}
 			});
 		};
 

@@ -21,10 +21,13 @@
 			<q-expansion-item icon="settings" label="Options">
 				<div class="row no-wrap">
 					<dark-mode />
-					<lang />
+					<lang :is-large="false" />
 				</div>
 				<div class="row justify-center">
 					<q-btn color="secondary" to="/options" :label="$t('layouts.main.more_options')" />
+				</div>
+				<div class="row justify-center">
+					<q-btn color="secondary" to="/map" :label="$t('layouts.main.more_options')" />
 				</div>
 			</q-expansion-item>
 			<q-separator class="q-mt-sm" inset />

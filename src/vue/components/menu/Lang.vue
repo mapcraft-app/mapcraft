@@ -6,7 +6,7 @@
 		emit-value
 		map-options
 		icon="lang"
-		class="lang-input"
+		:class="(!isLarge) ? 'lang-input' : ''"
 	>
 		<template v-slot:append>
 			<q-icon name="translate" />
@@ -23,6 +23,9 @@ import { globalStore } from 'src/store/global';
 
 export default defineComponent({
 	name: 'SelectLang',
+	props: {
+		isLarge: Boolean
+	},
 	setup() {
 		const store = globalStore();
 		const $q = useQuasar();

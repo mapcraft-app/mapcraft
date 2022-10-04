@@ -1,4 +1,5 @@
 import { writeFile } from 'fs';
+import { join } from 'path';
 
 export class LogError extends Error {
 	constructor(message: string) {
@@ -16,7 +17,7 @@ class Log {
 	}
 
 	constructor() {
-		this.fileName = `${process.env.LOG}/${process.env.DATE}.log`;
+		this.fileName = join(String(process.env.LOG), `${process.env.DATE}.log`);
 	}
 
 	private write(type: string, data: string): void {
@@ -37,6 +38,10 @@ class Log {
 			if (err)
 				throw new LogError(`fs.writeFile failed - ${err.message}`); 
 		});
+	}
+
+	get filePath(): string {
+		return this.fileName;
 	}
 
 	debug(str: string): void {
