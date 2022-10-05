@@ -3,7 +3,14 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
-		component: () => import('layouts/Main.vue')
+		component: () => import('layouts/Main.vue'),
+		children: [
+			{
+				path: '',
+				name: 'main',
+				component: () => import('pages/Main.vue')
+			}
+		]
 	},
 	{
 		path: '/map',
@@ -11,8 +18,19 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				name: 'maps',
+				name: 'map',
 				component: () => import('pages/Map.vue')
+			}
+		]
+	},
+	{
+		path: '/user',
+		component: () => import('layouts/User.vue'),
+		children: [
+			{
+				path: '',
+				name: 'user',
+				component: () => import('pages/User.vue')
 			}
 		]
 	},

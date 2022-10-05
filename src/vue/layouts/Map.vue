@@ -35,7 +35,7 @@ import Directory from 'components/options/Directory.vue';
 import { QDialog } from 'quasar';
 
 export default defineComponent({
-	name: 'MapSelection',
+	name: 'MapLayout',
 	components: {
 		DarkMode,
 		Directory

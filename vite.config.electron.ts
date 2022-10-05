@@ -4,7 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { version, repository } from './package.json';
 
 export default defineConfig({
-	publicDir: false,
 	plugins: [
 		nodePolyfills(),
 		tsconfigPaths({

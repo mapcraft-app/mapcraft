@@ -19,6 +19,9 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 		minWidth: 800,
 		show: false,
 		frame: false,
+		icon: import.meta.env.DEV
+			? resolve(__dirname, '..', 'src', 'public', 'imgs', 'app', 'icon.ico')
+			: resolve(__dirname, 'imgs', 'app', 'icon.ico'),
 		webPreferences: {
 			contextIsolation: true,
 			devTools: import.meta.env.DEV,
@@ -50,6 +53,9 @@ export function loaderWindows(): BrowserWindow {
 		center: true,
 		frame: false,
 		show: false,
+		icon: import.meta.env.DEV
+			? resolve(__dirname, '..', 'src', 'public', 'imgs', 'app', 'icon.ico')
+			: resolve(__dirname, 'imgs', 'app', 'icon.ico'),
 		webPreferences: {
 			contextIsolation: true,
 			defaultEncoding: 'utf-8',

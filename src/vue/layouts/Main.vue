@@ -46,6 +46,7 @@ import MapInfo from 'components/menu/MapInfo.vue';
 import Profile from 'components/menu/Profile.vue';
 
 export default defineComponent({
+	name: 'MainLayout',
 	components: {
 		DarkMode,
 		Lang,
