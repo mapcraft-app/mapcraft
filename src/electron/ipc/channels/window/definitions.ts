@@ -4,6 +4,10 @@ export default {
 	channel: 'window',
 	channels: [
 		{
+			name: 'dev',
+			type: ipcType.SEND
+		},
+		{
 			name: 'close',
 			type: ipcType.SEND
 		},

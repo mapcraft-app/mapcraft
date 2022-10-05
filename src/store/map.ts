@@ -1,9 +1,13 @@
 import { defineStore } from 'pinia';
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import formatString from 'api/formatString';
 
 export const mapStore = defineStore('map', () => {
-	const name = ref('');
+	const info = reactive({
+		icon: '',
+		name: '',
+		path: ''
+	});
 	const pack = reactive({
 		data: window.env.pack.data,
 		dataArgs: {},
@@ -11,16 +15,22 @@ export const mapStore = defineStore('map', () => {
 		resourceArgs: {}
 	});
 
+	function setIcon(str: string) {
+		info.icon = str;
+	}
 	function setName(str: string) {
-		name.value = str;
+		info.name = str;
+	}
+	function setPath(str: string) {
+		info.path = str;
 	}
 
-	function setPackData(str: string, args: Record<string, string> = { name: name.value }) {
+	function setPackData(str: string, args: Record<string, string> = { name: info.name }) {
 		pack.data = str;
 		pack.dataArgs = args;
 	}
 
-	function setPackResource(str: string, args: Record<string, string> = { name: name.value }) {
+	function setPackResource(str: string, args: Record<string, string> = { name: info.name }) {
 		pack.resource = str;
 		pack.resourceArgs = args;
 	}
@@ -34,10 +44,12 @@ export const mapStore = defineStore('map', () => {
 	};
 
 	return {
-		name,
+		info,
 		pack,
 		
+		setIcon,
 		setName,
+		setPath,
 		setPackData,
 		setPackResource,
 		

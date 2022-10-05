@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import defaultImgError from 'vue/lib/defaultImgError';
+import defaultImgError from 'src/vue/lib/defaultImgError';
 
 export default defineComponent({
 	setup() {

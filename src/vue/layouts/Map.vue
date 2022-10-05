@@ -1,5 +1,5 @@
 <template>
-	<q-layout view="hHh lpR fFf" :container="true">
+	<q-layout class="map-container" view="hHh lpR fFf" :container="true">
 		<q-page-container class="layout-map-container">
 			<router-view />
 		</q-page-container>
@@ -49,17 +49,11 @@ export default defineComponent({
 });
 </script>
 
-<style>
-	.q-layout-container > div > div {
-		min-height: 0;
-    max-height: 100%;
-		height: 88%;
-		margin-top: 1em;
-	}
+<style scoped>
 	.layout-map-container {
 		height: inherit;
 	}
 	.layout-map-option-dialog {
-		width: 40%;
+		width: 50%;
 	}
 </style>

@@ -8,6 +8,12 @@ const ipcWindow = <BrowserWindow>BrowserWindow.fromId(Number(process.env.WINDOW_
 
 export default [
 	(event: Electron.IpcMainEvent): void => {
+		if (!ipcWindow.webContents.isDevToolsOpened())
+			ipcWindow.webContents.openDevTools();
+		else
+			ipcWindow.webContents.closeDevTools();
+	},
+	(event: Electron.IpcMainEvent): void => {
 		ipcWindow.close();
 	},
 	(event: Electron.IpcMainEvent): void => {
