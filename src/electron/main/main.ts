@@ -3,6 +3,7 @@ import {
 	BrowserWindow,
 	dialog,
 	globalShortcut,
+	protocol,
 	session
 } from 'electron';
 
@@ -11,10 +12,15 @@ import Log from 'api/log';
 import errorDialog from 'electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'electron/api/createWindow';
 import generateEnv from 'electron/api/generateEnv';
+import { normalize } from 'path';
 
 let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;
 let log: Log;
+
+protocol.registerSchemesAsPrivileged([
+	{ scheme: 'app', privileges: { bypassCSP: true }}
+]);
 
 app.whenReady().then(async () => {
 	if (import.meta.env.DEV)
@@ -25,10 +31,20 @@ app.whenReady().then(async () => {
 			responseHeaders: {
 				...details.responseHeaders,
 				'Content-Security-Policy': [
-					'default-src mediastream: blob: filesystem: \'self\' \'unsafe-eval\' \'unsafe-inline\' https://mapcraft.app https://*.mapcraft.app https://crafatar.com"'
+					'default-src mediastream: blob: filesystem: file:///* app:///* \'self\' \'unsafe-eval\' \'unsafe-inline\' https://mapcraft.app https://*.mapcraft.app https://crafatar.com"'
 				]
 			}
 		});
+	});
+
+	protocol.interceptFileProtocol('app', (req, call) => {
+		const url = decodeURIComponent(req.url.replace('app:///', '').replace('app://', ''));
+		call({ path: normalize(url) });
+	});
+
+	protocol.interceptHttpProtocol('file', (req, call) => {
+		const url = decodeURIComponent(req.url.replace('file:///', 'app:///').replace('file://', 'app://'));
+		call({ path: normalize(url) });
 	});
 
 	generateEnv(app); // Generate process.env variables

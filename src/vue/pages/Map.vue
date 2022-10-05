@@ -1,5 +1,4 @@
 <template>
-	<div id="test"></div>
 	<div class="flex justify-center items-center flex-height">
 		<template v-if="maps === null">
 			<q-card class="card-size skeleton">
@@ -10,7 +9,7 @@
 		</template>
 		<template v-else>
 			<q-card v-for="map in maps" :key="map.path" class="card-size">
-				<q-img :src="map.icon">
+				<q-img :src="$path(map.icon)">
 					<span class="absolute-bottom text-h6">{{ map.name }}</span>
 				</q-img>
 			</q-card>
