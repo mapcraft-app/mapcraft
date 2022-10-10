@@ -59,6 +59,7 @@ const bundle = async (server: ViteDevServer) => {
 
 export default defineConfig((env) => ({
 	base: (env.mode === 'production') ? './' : '/',
+	clearScreen: false,
 	publicDir: './src/public',
 	build: {
 		emptyOutDir: true,

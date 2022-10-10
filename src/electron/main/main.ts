@@ -42,11 +42,6 @@ app.whenReady().then(async () => {
 		call({ path: normalize(url) });
 	});
 
-	protocol.interceptHttpProtocol('file', (req, call) => {
-		const url = decodeURIComponent(req.url.replace('file:///', 'app:///').replace('file://', 'app://'));
-		call({ path: normalize(url) });
-	});
-
 	generateEnv(app); // Generate process.env variables
 	log = new Log(); // Initialize logger
 	console.log(log.filePath);

@@ -1,7 +1,7 @@
 <template>
 	<div class="titlebar">
 		<div class="titlebar-title">
-			<img src="/imgs/app/icon_small.png" />
+			<img src="imgs/app/icon_small.png" />
 			<span>Mapcraft</span>
 		</div>
 		<div class="titlebar-buttons">

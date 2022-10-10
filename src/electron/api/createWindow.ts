@@ -10,8 +10,13 @@ export interface optionWindows {
 	width?: number,
 }
 
+const iconLoad = (): string =>
+	import.meta.env.DEV
+		? resolve(__dirname, '..', 'src', 'public', 'imgs', 'app', 'icon.ico')
+		: resolve(__dirname, 'imgs', 'app', 'icon.ico');
+
 export function createWindow(args: optionWindows = {}): BrowserWindow {
-	const mainWindow = new BrowserWindow({
+	const window = new BrowserWindow({
 		center: args.center ?? true,
 		width: args.width ?? 800,
 		height: args.height ?? 600,
@@ -19,9 +24,7 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 		minWidth: 800,
 		show: false,
 		frame: false,
-		icon: import.meta.env.DEV
-			? resolve(__dirname, '..', 'src', 'public', 'imgs', 'app', 'icon.ico')
-			: resolve(__dirname, 'imgs', 'app', 'icon.ico'),
+		icon: iconLoad(),
 		webPreferences: {
 			contextIsolation: true,
 			devTools: import.meta.env.DEV,
@@ -33,15 +36,16 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 			preload: args.preload ?? resolve(__dirname, 'preload.js')
 		}
 	});
-	if (!mainWindow)
+	if (!window)
 		throw new WindowError('Failed to create app window, close app');
-	process.env.WINDOW_ID = String(mainWindow.id);
+	process.env.WINDOW_ID = String(window.id);
+
 	if (import.meta.env.DEV) {
-		mainWindow.loadURL(import.meta.env.ELECTRON_APP_URL);
-		mainWindow.webContents.openDevTools();
+		window.loadURL(import.meta.env.ELECTRON_APP_URL);
+		window.webContents.openDevTools();
 	} else
-		mainWindow.loadFile(import.meta.env.ELECTRON_APP_URL);
-	return mainWindow;
+		window.loadFile(import.meta.env.ELECTRON_APP_URL);
+	return window;
 };
 
 export function loaderWindows(): BrowserWindow {
@@ -53,9 +57,7 @@ export function loaderWindows(): BrowserWindow {
 		center: true,
 		frame: false,
 		show: false,
-		icon: import.meta.env.DEV
-			? resolve(__dirname, '..', 'src', 'public', 'imgs', 'app', 'icon.ico')
-			: resolve(__dirname, 'imgs', 'app', 'icon.ico'),
+		icon: iconLoad(),
 		webPreferences: {
 			contextIsolation: true,
 			defaultEncoding: 'utf-8',
@@ -67,6 +69,7 @@ export function loaderWindows(): BrowserWindow {
 	});
 	if (!window)
 		throw new WindowError('Failed to create loader window, close app');
+
 	if (import.meta.env.DEV)
 		window.loadURL(import.meta.env.ELECTRON_LOAD_URL);
 	else

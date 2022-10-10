@@ -6,7 +6,7 @@ const { join } = require('path');
 
 const upper = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`;
 const info = {
-	icon: (isMac = false) => `src/assets/imgs/app/icon.${(isMac)
+	icon: (isMac = false) => `src/public/imgs/app/icon.${(isMac)
 		? 'icns'
 		: 'ico'}`,
 	artifactName: '${productName}_${os}.${ext}',
@@ -29,6 +29,7 @@ try {
 	const package = JSON.parse(readFileSync(join(__dirname, 'package.json'), { encoding: 'utf-8' }));
 	if (!package.version || !package.name || !package.author.name)
 		throw new Error('Version key in package.json is undefined');
+
 	module.exports = {
 		// #region WindowsBuild informations
 		appId: `com.electron.${package.name}`,
@@ -38,6 +39,7 @@ try {
 	
 		// #region Directory & files
 		directories: {
+			buildResources: 'src/assets/build',
 			output: 'dist/electron-build'
 		},
 		files: [
@@ -53,7 +55,7 @@ try {
 		// #endregion Directory & files
 	
 		// #region Asar
-		asar: true,
+		asar: false,
 		asarUnpack: [
 			// 'node_modules/{7zip-bin,7zip-min,kleur,mapcraft-api,prompts,sisteransi}/**/*'
 		],

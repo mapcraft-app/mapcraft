@@ -3,7 +3,8 @@ import nodePolyfills from 'rollup-plugin-polyfill-node';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { version, repository } from './package.json';
 
-export default defineConfig({
+export default defineConfig((env) => ({
+	clearScreen: false,
 	plugins: [
 		nodePolyfills(),
 		tsconfigPaths({
@@ -13,7 +14,7 @@ export default defineConfig({
 	build: {
 		cssCodeSplit: false,
 		emptyOutDir: false,
-		minify: false,
+		minify: (env.mode === 'production'),
 		rollupOptions: {
 			input: [
 				'src/electron/main/main.ts',
@@ -24,7 +25,7 @@ export default defineConfig({
 			}
 		},
 		sourcemap: false,
-		ssr: true
+		ssr: true,
 	},
 	define: {
 		'import.meta.env.APP_VERSION': JSON.stringify(version),
@@ -32,4 +33,4 @@ export default defineConfig({
     'import.meta.env.ELECTRON_APP_URL': JSON.stringify('index.html'),
 		'import.meta.env.ELECTRON_LOAD_URL': JSON.stringify('load.html')
   }
-});
+}));
