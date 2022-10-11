@@ -14,11 +14,12 @@
 							<q-btn v-close-popup icon="close" flat round dense />
 						</q-card-section>
 						<q-card-section>
+							<lang :is-large="true" class="q-mb-sm" />
+							<q-space />
 							<div class="flex items-center justify-between">
 								<span class="text-h6">Dark mode</span>
 								<dark-mode/>
 							</div>
-							<q-space/>
 							<directory/>
 						</q-card-section>
 					</q-card>
@@ -32,13 +33,15 @@
 import { defineComponent, ref } from 'vue';
 import DarkMode from 'components/menu/DarkMode.vue';
 import Directory from 'components/options/Directory.vue';
+import Lang from 'components/menu/Lang.vue';
 import { QDialog } from 'quasar';
 
 export default defineComponent({
 	name: 'MapLayout',
 	components: {
 		DarkMode,
-		Directory
+		Directory,
+		Lang
 	},
 	setup () {
 		const option = ref<QDialog | null>(null);
