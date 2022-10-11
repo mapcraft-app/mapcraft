@@ -1,3 +1,7 @@
 export default {
-	more_options: 'Plus d\'options'
+	main: {
+		title: 'Mapcraft',
+		options: 'Options',
+		more_options: 'Plus d\'options'
+	}
 };

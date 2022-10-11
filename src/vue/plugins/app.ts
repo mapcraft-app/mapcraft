@@ -8,6 +8,11 @@ declare module '@vue/runtime-core' {
 		 * function to bypass this
 		 */
     $path: (url: string) => string;
+
+		/**
+		 * Set default image if error occur
+		 */
+		$imgErr: (e: Event) => void
   }
 }
 
@@ -20,5 +25,13 @@ export default {
 		};
 		app.config.globalProperties.$path = path;
 		app.provide('$path', path);
+
+		const imgErr = (e: Event): void => {
+			const target = e.target as HTMLImageElement;
+			if (target)
+				target.src = 'imgs/minecraft/player.png';
+		};
+		app.config.globalProperties.$imgErr = imgErr;
+		app.provide('$imgErr', imgErr);
 	}
 };

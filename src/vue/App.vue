@@ -2,23 +2,23 @@
 	<div class="titlebar">
 		<div class="titlebar-title">
 			<img src="imgs/app/icon_small.png" />
-			<span>Mapcraft</span>
+			<span>{{ $t('app.title') }}</span>
 		</div>
 		<div class="titlebar-buttons">
-			<div v-if="isDev" @click="click('construction')">
+			<div v-if="isDev" :title="$t('app.dev')" @click="click('construction')">
 				<span class="material-icons" aria-hidden="true">construction</span>
 			</div>
-			<div @click="click('fullscreen')">
+			<div :title="$t('app.fullscreen')" @click="click('fullscreen')">
 				<span class="material-icons" aria-hidden="true">{{ (!isFullscreen) ? 'fullscreen' : 'fullscreen_exit' }}</span>
 			</div>
 			<i></i>
-			<div @click="click('minimize')">
+			<div :title="$t('app.minimize')" @click="click('minimize')">
 				<span class="material-icons" aria-hidden="true">remove</span>
 			</div>
-			<div @click="click('maximize')">
+			<div :title="$t('app.maximize')" @click="click('maximize')">
 				<span class="material-icons min-max" aria-hidden="true">{{ (!isMaximize) ? 'filter_none' : 'check_box_outline_blank' }}</span>
 			</div>
-			<div class="close-button" @click="click('close')">
+			<div class="close-button" :title="$t('app.close')" @click="click('close')">
 				<span class="material-icons" aria-hidden="true">close</span>
 			</div>
 		</div>

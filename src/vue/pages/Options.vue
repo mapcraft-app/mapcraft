@@ -7,8 +7,8 @@
 					vertical
 					class="text-teal"
 				>
-					<q-tab name="general" icon="settings" label="General" />
-					<q-tab name="info" icon="info" label="Information" />
+					<q-tab name="general" icon="settings" :label="$t('pages.options.general')" />
+					<q-tab name="info" icon="info" :label="$t('pages.options.info')" />
 				</q-tabs>
 			</template>
 			<template v-slot:after>
@@ -22,11 +22,11 @@
 				>
 					<q-tab-panel name="general">
 						<div class="flex justify-center">
-							<span class="text-h4">General</span>
+							<span class="text-h4">{{ $t('pages.options.general') }}</span>
 						</div>
 						<div class="column justify-around">
 							<div>
-								<span class="text-h6">Lang</span>
+								<span class="text-h6">{{ $t('pages.options.lang') }}</span>
 								<lang :is-large="true" />
 							</div>
 							<div class="q-mt-md">
@@ -35,7 +35,7 @@
 						</div>
 					</q-tab-panel>
 					<q-tab-panel name="info">
-						<h1>Info</h1>
+						<h1>{{ $t('pages.options.info') }}</h1>
 					</q-tab-panel>
 				</q-tab-panels>
 			</template>

@@ -1,6 +1,12 @@
 export default {
+	darkMode: {
+		title: 'Dark mode'
+	},
+	mapInfo: {
+		label: 'Change map'
+	},
 	profile: {
-		change: 'change user',
-		documentation: 'documentation'
+		disconnect: 'Disconnect',
+		documentation: 'Documentation'
 	}
 };

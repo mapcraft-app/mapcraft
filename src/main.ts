@@ -14,7 +14,7 @@ import 'quasar/src/css/index.sass';
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { createPinia } from 'pinia';
-import appProtocol from './vue/plugins/appProtocol';
+import appPlugin from './vue/plugins/app';
 
 import App from './vue/App.vue';
 import router from './router';
@@ -51,5 +51,5 @@ app.use(Quasar, {
 app.use(i18n);
 app.use(pinia);
 app.use(router);
-app.use(appProtocol);
+app.use(appPlugin);
 app.mount('#main-app');

@@ -1,6 +1,12 @@
 export default {
+	darkMode: {
+		title: 'Mode sombre'
+	},
+	mapInfo: {
+		label: 'Changer de carte'
+	},
 	profile: {
-		change: 'Changer d\'utilisateur',
-		documentation: 'documentation'
+		disconnect: 'Déconnection',
+		documentation: 'Documentation'
 	}
 };

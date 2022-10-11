@@ -1,5 +1,5 @@
 export default {
 	404: '404',
-	label: 'Oups, il n\'y a rien ici',
-	button: 'Retourner sur l\'accueil'
+	label: 'Oups. Rien ici...',
+	button: 'Retourner à l\'accueil'
 };

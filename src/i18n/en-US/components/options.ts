@@ -1,5 +1,6 @@
 export default {
 	directory: {
+		title: 'Folder path',
 		game: 'Game',
 		resource: 'Resource',
 		save: 'Save',

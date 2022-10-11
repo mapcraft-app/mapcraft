@@ -11,7 +11,7 @@
 				<q-btn
 					square
 					color="secondary"
-					label="Change map"
+					:label="$t('components.menu.mapInfo.label')"
 					@click="$router.push('/map')"
 				/>
 			</div>

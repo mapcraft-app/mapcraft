@@ -6,17 +6,17 @@
 				<q-input
 					v-model="username"
 					filled
-					label="Username"
-					hint="Your account username"
-					:rules="[val => val && val.length > 0 || 'Username is mandatory']"
+					:label="$t('pages.user.user')"
+					:hint="$t('pages.user.userHint')"
+					:rules="[val => val && val.length > 0 || $t('pages.user.userRule')]"
 				/>
 				<q-input
 					v-model="password"
 					filled
-					label="Password"
+					:label="$t('pages.user.pass')"
 					:type="isPwd ? 'password' : 'text'"
-					hint="Password with toggle"
-					:rules="[val => val && val.length > 0 || 'Password is mandatory']"
+					:hint="$t('pages.user.passHint')"
+					:rules="[val => val && val.length > 0 || $t('pages.user.passRule')]"
 				>
 					<template v-slot:append>
 						<q-icon
@@ -27,17 +27,19 @@
 					</template>
 				</q-input>
 				<div class="row inline no-wrap justify-evenly width-fill">
-					<q-btn label="Submit" type="Submit" color="primary" />
-					<q-btn label="Reset" type="Submit" color="secondary" />
+					<q-btn :label="$t('pages.user.submit')" type="submit" color="primary" />
+					<q-btn :label="$t('pages.user.reset')" type="reset" color="secondary" />
 				</div>
 			</q-form>
+			<q-separator class="q-mt-md q-mb-md sep" size="1px" color="grey-4" />
+			<q-btn unelevated color="green-8" label="Rester hors-ligne" to="/" />
 		</div>
 	</q-page>
 </template>
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
 	name: 'UserPage',
@@ -77,5 +79,8 @@ export default defineComponent({
 }
 .width-fill {
 	width: -webkit-fill-available;
+}
+.sep {
+	width: 50%;
 }
 </style>

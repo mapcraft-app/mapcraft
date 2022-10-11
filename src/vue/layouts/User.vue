@@ -5,18 +5,18 @@
 		</q-page-container>
 		<q-footer class="bg-grey-8 text-white">
 			<q-toolbar class="bg-grey-3 flex justify-evenly">
-				<q-btn color="secondary" label="Options" @click="option?.show()"/>
+				<q-btn color="secondary" :label="$t('layouts.main.main.options')" @click="option?.show()"/>
 				<q-dialog ref="option">
 					<q-card class="layout-map-option-dialog">
 						<q-card-section class="row items-center q-pb-none">
-							<div class="text-h6">Options</div>
+							<div class="text-h6">{{ $t('layouts.main.main.options') }}</div>
 							<q-space />
 							<q-btn v-close-popup icon="close" flat round dense />
 						</q-card-section>
 						<q-card-section>
 							<lang />
 							<div class="flex items-center justify-between">
-								<span class="text-h6">Dark mode</span>
+								<span class="text-h6">{{ $t('components.menu.darkMode.title') }}</span>
 								<dark-mode/>
 							</div>
 						</q-card-section>

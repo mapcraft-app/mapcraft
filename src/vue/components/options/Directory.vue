@@ -1,5 +1,5 @@
 <template>
-	<span class="text-h6">Folder path</span>
+	<span class="text-h6">{{ $t('components.options.directory.title') }}</span>
 	<q-input
 		v-model="game"
 		standard
