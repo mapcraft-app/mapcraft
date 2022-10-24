@@ -55,7 +55,10 @@ export default defineComponent({
 						: '/imgs/app/default_logo.png');
 					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
-					router.push('/user');
+					if ($q.localStorage.has('user') && $q.localStorage.getItem('user').remember)
+						router.push('/');
+					else
+						router.push('/user');
 				}
 			}
 		};

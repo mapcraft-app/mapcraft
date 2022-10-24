@@ -15,16 +15,12 @@ export default function generateEnv(app: Electron.App): void {
 			return join(String(app.getPath('home')), '.minecraft');
 		}
 	};
-	const date = new Date();
-	const num = (n: number) => (n <= 9)
-		? `0${n}`
-		: n;
 
 	process.env.APP = app.getAppPath();
 	process.env.APP_DATA = app.getPath('userData');
 	process.env.GAME = game();
 	process.env.LOG = app.getPath('logs');
-	process.env.DATE = `${date.getFullYear()}-${date.getDay()}-${date.getMonth()}_${num(date.getHours())}-${num(date.getMinutes())}-${num(date.getSeconds())}`;
+	process.env.DATE = new Date().toISOString().normalize().replace(/[-:\\.]/g, '_');
 	process.env.SAVE_GAME = join(game(), 'saves');
 	process.env.RESOURCE_GAME = join(game(), 'resourcepacks');
 	process.env.TEMP = tmpdir();

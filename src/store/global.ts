@@ -20,6 +20,7 @@ export const globalStore = defineStore('global', () => {
 	function setLang(val: string) {
 		lang.value = val;
 	};
+
 	function setDarkMode(val: boolean) {
 		darkMode.value = val;
 	}

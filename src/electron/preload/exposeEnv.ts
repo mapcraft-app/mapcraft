@@ -1,5 +1,11 @@
 import { contextBridge } from 'electron';
 
+export interface userStorage {
+	username: string,
+	offline: boolean,
+	remember: boolean
+}
+
 contextBridge.exposeInMainWorld('env', {
 	directory: {
 		app: String(process.env.APP),
@@ -26,5 +32,11 @@ contextBridge.exposeInMainWorld('env', {
 		if (data)
 			return data.split('|')[1];
 		return 'en-US';
+	},
+	user: (): userStorage => {
+		const ret = window.localStorage.getItem('user')?.split('|')[1];
+		if (ret)
+			return JSON.parse(ret);
+		return {} as userStorage;
 	}
 });

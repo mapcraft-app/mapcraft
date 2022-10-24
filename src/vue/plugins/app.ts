@@ -12,7 +12,12 @@ declare module '@vue/runtime-core' {
 		/**
 		 * Set default image if error occur
 		 */
-		$imgErr: (e: Event) => void
+		$imgErr: (e: Event) => void;
+
+		/**
+		 * Get mapcraft api url
+		 */
+		$api: () => string;
   }
 }
 
@@ -33,5 +38,11 @@ export default {
 		};
 		app.config.globalProperties.$imgErr = imgErr;
 		app.provide('$imgErr', imgErr);
+
+		const api = (import.meta.env.DEV)
+			? 'http://localhost:3000'
+			: 'https://api.mapcraft.app';
+		app.config.globalProperties.$api = api;
+		app.provide('$api', api);
 	}
 };

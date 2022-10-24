@@ -1,14 +1,14 @@
 import { contextBridge } from 'electron';
 import './exposeEnv';
 import 'electron/ipc/render';
-import Log from 'api/log';
+import { log } from 'api/log';
 
 import './mapSelection';
 
-const log = new Log();
 contextBridge.exposeInMainWorld('log', {
-	debug: (s: string): void => log.debug(s),
-	error: (s: string): void => log.error(s),
-	info: (s: string): void => log.info(s),
-	warn: (s: string): void => log.warn(s),
+	debug: (message: any, ...optional: any[]) => log.debug(message, optional),
+	error: (message: any, ...optional: any[]) => log.error(message, optional),
+	info: (message: any, ...optional: any[]) => log.info(message, optional),
+	warn: (message: any, ...optional: any[]) => log.warn(message, optional),
+	psql: (message: any, ...optional: any[]) => log.psql(message, optional)
 });

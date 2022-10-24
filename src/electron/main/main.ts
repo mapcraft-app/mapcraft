@@ -7,8 +7,7 @@ import {
 	session
 } from 'electron';
 
-import Log from 'api/log';
-
+import type Log from 'api/log';
 import errorDialog from 'electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'electron/api/createWindow';
 import generateEnv from 'electron/api/generateEnv';
@@ -17,6 +16,15 @@ import { normalize } from 'path';
 let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;
 let log: Log;
+
+const SecurityPolicy: string[] = [
+	'default-src',
+	'mediastream:', 'blob:', 'filesystem:',
+	'\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\'',
+	'file:///*', 'app:///*',
+	'https://mapcraft.app', 'https://*.mapcraft.app',
+	'https://crafatar.com', 'http://localhost:3000'
+];
 
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { bypassCSP: true }}
@@ -30,9 +38,7 @@ app.whenReady().then(async () => {
 		callback({
 			responseHeaders: {
 				...details.responseHeaders,
-				'Content-Security-Policy': [
-					'default-src mediastream: blob: filesystem: file:///* app:///* \'self\' \'unsafe-eval\' \'unsafe-inline\' https://mapcraft.app https://*.mapcraft.app https://crafatar.com"'
-				]
+				'Content-Security-Policy': SecurityPolicy.join(' ')
 			}
 		});
 	});
@@ -43,7 +49,7 @@ app.whenReady().then(async () => {
 	});
 
 	generateEnv(app); // Generate process.env variables
-	log = new Log(); // Initialize logger
+	log = (await import('api/log')).log;
 	console.log(log.filePath);
 	log.info('Electron started');
 	log.info('Initialize application');
