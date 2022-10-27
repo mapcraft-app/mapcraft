@@ -1,5 +1,75 @@
 /* eslint-disable no-unused-vars */
 import type { App } from 'vue';
+import { globalStore } from 'store/global';
+
+export const path = (url: string): string => {
+	if (import.meta.env.DEV)
+		return `app:///${url}`;
+	return url;
+};
+
+export const imgErr = (e: Event): void => {
+	const target = e.target as HTMLImageElement;
+	if (target)
+		target.src = 'imgs/minecraft/player.png';
+};
+
+export const api = (import.meta.env.DEV)
+	? 'http://localhost:3000'
+	: 'https://api.mapcraft.app';
+
+export interface fetchInterface {
+	get: (url: string) => Promise<globalThis.Response>,
+	post: (url: string, data: Record<string, any>) => Promise<globalThis.Response>,
+	put: (url: string, data: Record<string, any>) => Promise<globalThis.Response>,
+	delete: (url: string, data: Record<string, any>) => Promise<globalThis.Response>,
+}
+export class $fetch {
+	static get(url: string): Promise<globalThis.Response> {
+		return fetch(`${api}/${url}`, {
+			method: 'GET'
+		});
+	}
+	
+	static post(url: string, data: Record<string, any>): Promise<globalThis.Response> {
+		return fetch(`${api}/${url}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				lang: globalStore().lang,
+				...data
+			})
+		});
+	}
+	
+	static put(url: string, data: Record<string, any>): Promise<globalThis.Response> {
+		return fetch(`${api}/${url}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				lang: globalStore().lang,
+				...data
+			})
+		});
+	}
+	
+	static delete(url: string, data: Record<string, any>): Promise<globalThis.Response> {
+		return fetch(`${api}/${url}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				lang: globalStore().lang,
+				...data
+			})
+		});
+	}
+}
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -18,31 +88,26 @@ declare module '@vue/runtime-core' {
 		 * Get mapcraft api url
 		 */
 		$api: () => string;
+
+		/**
+		 * Preconfigured fetch api
+		 */
+		$fetch: fetchInterface;
   }
 }
 
 export default {
 	install: (app: App<Element>): void => {
-		const path = (url: string): string => {
-			if (import.meta.env.DEV)
-				return `app:///${url}`;
-			return url;
-		};
 		app.config.globalProperties.$path = path;
 		app.provide('$path', path);
 
-		const imgErr = (e: Event): void => {
-			const target = e.target as HTMLImageElement;
-			if (target)
-				target.src = 'imgs/minecraft/player.png';
-		};
 		app.config.globalProperties.$imgErr = imgErr;
 		app.provide('$imgErr', imgErr);
 
-		const api = (import.meta.env.DEV)
-			? 'http://localhost:3000'
-			: 'https://api.mapcraft.app';
 		app.config.globalProperties.$api = api;
 		app.provide('$api', api);
+
+		app.config.globalProperties.$fetch = $fetch;
+		app.provide('$fetch', $fetch);
 	}
 };

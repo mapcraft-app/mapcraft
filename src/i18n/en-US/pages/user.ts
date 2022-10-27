@@ -11,6 +11,8 @@ export default {
 	passHint: 'Your account password',
 	passRule: 'Password is mandatory',
 	passRepeat: 'Repeat password',
+	passRepeatHint: 'Repeat your account password',
+	passRepeatRule: 'Passwords don\'t match',
 
 	email: 'Email',
 	emailRule: 'Email is not properly formatted',
@@ -18,6 +20,20 @@ export default {
 
 	remember: 'Remember me',
 
+	token: 'Verification code',
+	tokenRule: 'Verification code is composed by eight digits',
+	tokenHint: 'Your verification code sent to your email address',
+
+	editMail: 'Change my email address',
+
+	titleToken: 'You will soon receive your verification code by email to be entered in the field below',
+	resendToken: 'Resend my code',
+	submitToken: 'Verifiy my account',
+
 	submit: 'Submit',
-	reset: 'Reset'
+	reset: 'Reset',
+
+	create: 'Create account',
+	return: 'Return',
+	returnConnection: 'Return to connection'
 };

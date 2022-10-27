@@ -79,9 +79,7 @@ export default defineComponent({
 .sep {
 	width: 50%;
 }
-
 .width-main {
 	gap: .2em;
-	min-height: 150px;
 }
 </style>

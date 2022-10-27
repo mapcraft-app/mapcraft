@@ -10,6 +10,8 @@ import {
 } from 'quasar';
 import '@quasar/extras/material-icons/material-icons.css';
 import '@quasar/extras/material-icons-outlined/material-icons-outlined.css';
+import '@quasar/extras/animate/fadeIn.css';
+import '@quasar/extras/animate/fadeOut.css';
 import 'quasar/src/css/index.sass';
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
@@ -45,6 +47,11 @@ app.use(Quasar, {
 			spinner: QSpinnerCube,
 			spinnerSize: 80,
 			spinnerColor: 'cyan-7'
+		},
+		Notify: {
+			color: 'light-blue-7',
+			position: 'bottom',
+			timeout: '3000'
 		}
 	}
 });
