@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 
 window.localStorage.setItem('darkMode', `__q_bool|${Number(window.env.darkMode())}`);
 window.localStorage.setItem('lang', `__q_strn|${window.env.lang()}`);
@@ -24,6 +24,12 @@ export const globalStore = defineStore('global', () => {
 	function setDarkMode(val: boolean) {
 		darkMode.value = val;
 	}
+
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+	watch(() => directory.game, (_game) => {
+		directory.save = window.path.resolve(directory.game, 'saves');
+		directory.resource = window.path.resolve(directory.game, 'resourcepacks');
+	});
 
 	return {
 		directory,

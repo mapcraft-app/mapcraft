@@ -1,9 +1,14 @@
 import { contextBridge } from 'electron';
+import { resolve, join } from 'path';
 import './exposeEnv';
 import 'electron/ipc/render';
 import { log } from 'api/log';
-
 import './mapSelection';
+
+contextBridge.exposeInMainWorld('path', {
+	resolve,
+	join
+});
 
 contextBridge.exposeInMainWorld('log', {
 	debug: (message: any, ...optional: any[]) => log.debug(message, optional),

@@ -1,5 +1,13 @@
 import { RouteRecordRaw } from 'vue-router';
 
+import oneRoutes from 'plugins/one/routes';
+
+const pluginPath: RouteRecordRaw[] = [];
+
+pluginPath.push(...oneRoutes);
+console.log(pluginPath);
+
+
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
@@ -8,8 +16,11 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '',
 				name: 'main',
-				component: () => import('pages/Main.vue')
-			}
+				component: () => import('pages/Main.vue'),
+				children: [
+					...oneRoutes
+				]
+			},
 		]
 	},
 	{

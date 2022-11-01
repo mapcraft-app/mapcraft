@@ -1,0 +1,22 @@
+{
+	"private": true,
+	"name": "one",
+	"description": "Plugin one",
+	"license": "MIT",
+	"version": "1.0.0",
+	"author": {
+		"email": "test@test.com",
+		"name": "Clément Bertrand"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/"
+	},
+	"keywords": [ "plugin", "mapcraft" ],
+	"config": {
+		"backend": "backend.ts",
+		"frontend": "plugin.vue",
+		"lang": "./lang",
+		"routes": "routes.ts"
+	}
+}

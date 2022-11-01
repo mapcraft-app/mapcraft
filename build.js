@@ -55,7 +55,7 @@ try {
 		// #endregion Directory & files
 	
 		// #region Asar
-		asar: false,
+		asar: true,
 		asarUnpack: [
 			// 'node_modules/{7zip-bin,7zip-min,kleur,mapcraft-api,prompts,sisteransi}/**/*'
 		],

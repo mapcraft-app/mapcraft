@@ -6,16 +6,16 @@ export interface userStorage {
 	remember: boolean
 }
 
-contextBridge.exposeInMainWorld('env', {
+const generateEnv = {
 	directory: {
-		app: String(process.env.APP),
-		appData: String(process.env.APP_DATA),
-		game: String(process.env.GAME),
-		log: String(process.env.LOG),
-		date: String(process.env.DATE),
-		save: String(process.env.SAVE_GAME),
-		resource: String(process.env.RESOURCE_GAME),
-		temp: String(process.env.TEMP)
+		app: process.env.APP,
+		appData: process.env.APP_DATA,
+		game: process.env.GAME,
+		log: process.env.LOG,
+		date: process.env.DATE,
+		save: process.env.SAVE_GAME,
+		resource: process.env.RESOURCE_GAME,
+		temp: process.env.TEMP
 	},
 	pack: {
 		data: 'Mapcraft-{name}',
@@ -39,4 +39,6 @@ contextBridge.exposeInMainWorld('env', {
 			return JSON.parse(ret);
 		return {} as userStorage;
 	}
-});
+};
+
+contextBridge.exposeInMainWorld('env', generateEnv);

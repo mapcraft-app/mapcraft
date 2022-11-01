@@ -1,23 +1,32 @@
 <template>
-	<div class="flex justify-center items-center flex-height">
-		<template v-if="maps === null">
-			<div class="card-size skeleton">
-				<div class="column justify-center items-center">
-					<q-spinner-cube color="secondary" size="4em" />
+	<q-page>
+		<template v-if="mapsError">
+			<h5 class="text-center">{{ $t(`pages.options.error.${mapsError}`) }}</h5>
+			<div class="flex justify-center items-center q-pb-md">
+				<q-btn round color="deep-orange" icon="restart_alt" @click="reloadSearch" />
+			</div>
+		</template>
+		
+		<div class="flex justify-center items-center">
+			<template v-if="maps === null">
+				<div class="card-size skeleton">
+					<div class="column justify-center items-center">
+						<q-spinner-cube color="secondary" size="4em" />
+					</div>
 				</div>
-			</div>
-		</template>
-		<template v-else>
-			<div v-for="map in maps" :key="map.path" class="card-size" @click="handleClick(map.name)">
-				<img :src="(map.icon !== false) ? $path(map.icon) : '/imgs/app/default_logo.png'" />
-				<span class="text-h6 text-white">{{ capitalize(map.name) }}</span>
-			</div>
-		</template>
-	</div>
+			</template>
+			<template v-else>
+				<div v-for="map in maps" :key="map.path" class="card-size" @click="handleClick(map.name)">
+					<img :src="(map.icon !== false) ? $path(map.icon) : '/imgs/app/default_logo.png'" />
+					<span class="text-h6 text-white">{{ capitalize(map.name) }}</span>
+				</div>
+			</template>
+		</div>
+	</q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onMounted, ref, watch } from 'vue';
+import { defineComponent, inject, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { globalStore } from 'store/global';
 import { mapStore } from 'store/map';
@@ -32,16 +41,26 @@ interface appMapGet {
 export default defineComponent({
 	setup () {
 		const $q = useQuasar();
-		const $path = inject('$path');
+		const $path: any = inject('$path');
 		const store = globalStore();
 		const storeMap = mapStore();
 		const maps = ref<null | appMapGet[]>(null);
-		
+		const mapsError = ref<'noMinecraft' | 'noMaps' | null>(null);
+		// eslint-disable-next-line no-undef
+		let mapsInterval: NodeJS.Timer;
+
 		const getMaps = (dir: string) => {
-			maps.value = null;
+			mapsError.value = null;
 			window.appMap.get(dir)
 				.then((data: appMapGet[]) => {
-					maps.value = data;
+					if (data !== maps.value)
+						maps.value = data;
+				})
+				.catch((e) => {
+					if (e === 'NO_MAPS')
+						mapsError.value = 'noMaps';
+					else
+						mapsError.value = 'noMinecraft';
 				});
 		};
 		
@@ -55,7 +74,8 @@ export default defineComponent({
 						: '/imgs/app/default_logo.png');
 					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
-					if ($q.localStorage.has('user') && $q.localStorage.getItem('user').remember)
+					const user = $q.localStorage.getItem('user') as any;
+					if (user !== null && user.remember)
 						router.push('/');
 					else
 						router.push('/user');
@@ -63,17 +83,24 @@ export default defineComponent({
 			}
 		};
 		const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
-
-		watch(store.directory, (after) => getMaps(after.save));
+		
+		onBeforeMount(() => {
+			getMaps(store.directory.save);
+			mapsInterval = setInterval(() => getMaps(store.directory.save), 5 * 1000);
+		});
 		onMounted(() => {
 			const ret = $q.localStorage.getItem('darkMode');
 			if (ret)
 				$q.dark.set(Boolean(ret));
-			getMaps(store.directory.save);
+			watch(store.directory, (after) => getMaps(after.save));
 		});
+		onBeforeUnmount(() => clearInterval(mapsInterval));
 
 		return {
 			maps,
+			mapsError,
+
+			reloadSearch: (): void => getMaps(store.directory.save),
 			handleClick,
 			capitalize
 		};
@@ -82,9 +109,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-	.flex-height {
-		height: 100%;
-	}
 	.card-size {
 		width: 100%;
     max-width: 200px;

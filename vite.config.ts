@@ -65,10 +65,10 @@ export default defineConfig((env) => ({
 		emptyOutDir: true,
 		minify: (env.mode === 'production'),
 		rollupOptions: {
-			input: [
-				resolve(__dirname, 'load.html'),
-				resolve(__dirname, 'index.html')
-			]
+			input: {
+				'load.html'		: resolve(__dirname, 'load.html'),
+				'index.html'	: resolve(__dirname, 'index.html')
+			}
 		}
 	},
 	plugins: [

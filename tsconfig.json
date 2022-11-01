@@ -12,21 +12,23 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-		"types": ["vite/client"],
+		"types": ["vite/client", "node"],
 
 		"baseUrl": ".",
 		"paths": {
+			"app/*": ["*"],
+			"plugins/*": ["plugins/*"],
+
 			"api/*": ["src/api/*"],
 			"src/*": ["src/*"],
-			"app/*": ["*"],
 			"electron/*": ["src/electron/*"],
 			"vue/*": ["src/vue/*"],
 			"i18n/*": ["src/i18n/*"],
 			"store/*": ["src/store/*"],
+			"assets/*": ["src/assets/*"],
 			"components/*": ["src/vue/components/*"],
 			"layouts/*": ["src/vue/layouts/*"],
-			"pages/*": ["src/vue/pages/*"],
-			"assets/*": ["src/assets/*"]
+			"pages/*": ["src/vue/pages/*"]
 		}
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

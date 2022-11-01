@@ -50,7 +50,8 @@ app.whenReady().then(async () => {
 
 	generateEnv(app); // Generate process.env variables
 	log = (await import('api/log')).log;
-	console.log(log.filePath);
+	if (import.meta.env.DEV)
+		console.log(log.filePath);
 	log.info('Electron started');
 	log.info('Initialize application');
 	log.info('Initialize main and loader window');
@@ -83,7 +84,6 @@ app.whenReady().then(async () => {
 			createWindow();
 	});
 }).catch((err) => {
-	log.error(err.message);
 	loader?.destroy();
 	mainWindow?.destroy();
 	errorDialog(err);
