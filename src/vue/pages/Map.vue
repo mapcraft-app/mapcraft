@@ -51,8 +51,8 @@ export default defineComponent({
 
 		const getMaps = (dir: string) => {
 			mapsError.value = null;
-			window.appMap.get(dir)
-				.then((data: appMapGet[]) => {
+			window.mapcraft.getMap(dir)
+				.then((data) => {
 					if (data !== maps.value)
 						maps.value = data;
 				})

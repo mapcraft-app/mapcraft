@@ -42,7 +42,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { globalStore } from 'src/store/global';
-// import { watch } from 'fs';
 
 export default defineComponent({
 	name: 'OptionsDirectory',

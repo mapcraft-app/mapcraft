@@ -46,15 +46,7 @@ export declare global {
 		},
 
 		/**
-		 * Access to certains path functions
-		 */
-		path: {
-			join: (...paths: string[]) => string,
-			resolve: (...paths: string[]) => string
-		},
-
-		/**
-		 * Write log inside logger file
+		 * Logger system
 		 */
 		log: {
 			debug: (message: any, ...optional: any[]) => void,
@@ -62,12 +54,28 @@ export declare global {
 			info: (message: any, ...optional: any[]) => void,
 			warn: (message: any, ...optional: any[]) => void,
 			psql: (message: any, ...optional: any[]) => void,
-		},
-		/**
-		 * Functions for map selection
-		 */
-		appMap: {
-			get: (dir: string) => Promise<appMapGet[]>
+		}
+
+		mapcraft: {
+			/**
+			 * Access to selected NodeJS module
+			 */
+			module: {
+				path: {
+					join: (...paths: string[]) => string,
+					resolve: (...paths: string[]) => string
+				}
+			},
+
+			/**
+			 * Update configuration file
+			 */
+			updateConfig: (data: { game: string, temp: string, resource_game: string, save_game: string }) => void,
+
+			/**
+			 * Get list of map(s) inside save directory
+			 */
+			getMap: (dir: string) => Promise<appMapGet[]>
 		}
 	}
 }

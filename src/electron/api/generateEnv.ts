@@ -51,6 +51,6 @@ export default function generateEnv(app: Electron.App): void {
 			temp: process.env.TEMP,
 			resource_game: process.env.RESOURCE_GAME,
 			save_game: process.env.SAVE_GAME
-		}, null, 2));
+		}, null, 2), { encoding: 'utf-8', flag: 'w' });
 	}
 }
