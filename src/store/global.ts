@@ -25,10 +25,18 @@ export const globalStore = defineStore('global', () => {
 		darkMode.value = val;
 	}
 
-	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	watch(() => directory.game, (_game) => {
-		directory.save = window.path.resolve(directory.game, 'saves');
-		directory.resource = window.path.resolve(directory.game, 'resourcepacks');
+	watch(() => directory.game, () => {
+		directory.save = window.mapcraft.module.path.resolve(directory.game, 'saves');
+		directory.resource = window.mapcraft.module.path.resolve(directory.game, 'resourcepacks');
+	});
+
+	watch(directory, () => {
+		window.mapcraft.updateConfig({
+			game: directory.game,
+			temp: directory.temp,
+			resource_game: directory.resource,
+			save_game: directory.save
+		});
 	});
 
 	return {

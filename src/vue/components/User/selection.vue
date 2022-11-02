@@ -10,9 +10,9 @@
 			<template v-else>
 				<q-btn
 					color="orange-8"
+					class="button-offline"
 					:disable="isServerMode"
 					:label="$t('pages.user.offline')"
-					style="width: -webkit-fill-available"
 					@click="isOffline"
 				/>
 			</template>
@@ -45,5 +45,8 @@ export default defineComponent({
   align-content: center;
   justify-content: center;
 	padding: 0 .4em;
+}
+.button-offline {
+	width: -webkit-fill-available;
 }
 </style>

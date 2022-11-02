@@ -50,13 +50,14 @@ export default defineComponent({
 		let mapsInterval: NodeJS.Timer;
 
 		const getMaps = (dir: string) => {
-			mapsError.value = null;
 			window.mapcraft.getMap(dir)
 				.then((data) => {
+					mapsError.value = null;
 					if (data !== maps.value)
 						maps.value = data;
 				})
 				.catch((e) => {
+					maps.value = null;
 					if (e === 'NO_MAPS')
 						mapsError.value = 'noMaps';
 					else
@@ -67,6 +68,7 @@ export default defineComponent({
 		const handleClick = (name: string): void => {
 			if (!maps.value)
 				return;
+			$q.loading.show();
 			for (const el of maps.value) {
 				if (el.name === name) {
 					storeMap.setIcon((el.icon !== false)
@@ -76,9 +78,9 @@ export default defineComponent({
 					storeMap.setPath(el.path);
 					const user = $q.localStorage.getItem('user') as any;
 					if (user !== null && user.remember)
-						router.push('/');
+						router.push('/').finally(() => $q.loading.hide());
 					else
-						router.push('/user');
+						router.push('/user').finally(() => $q.loading.hide());
 				}
 			}
 		};

@@ -47,12 +47,13 @@ export default defineComponent({
 		const isServerMode = ref<boolean>(false);
 
 		const offlineConnection = () => {
+			$q.loading.show();
 			$q.localStorage.set('user', {
 				username: 'Steve',
 				offline: true,
 				remember: false
 			});
-			router.push('/');
+			router.push('/').finally(() => $q.loading.hide());
 		};
 
 		return {

@@ -56,6 +56,7 @@
 
 <script lang=ts>
 import router from 'src/router';
+import { useQuasar } from 'quasar';
 import { defineComponent, inject, reactive, ref } from 'vue';
 import type { fetchInterface } from 'vue/plugins/app';
 
@@ -66,6 +67,7 @@ export default defineComponent({
 	},
 	emits: ['mapcraftAccountCreation', 'mapcraftAccountSelected'],
 	setup (_props, { emit }) {
+		const $q = useQuasar();
 		const $fetch = inject('$fetch') as fetchInterface;
 
 		const username = ref<string | null>(null);
@@ -88,13 +90,16 @@ export default defineComponent({
 				.then((d) => d.json())
 				.then(async (d) => {
 					if (d.statusCode !== 200) {
-						error.title = d.info.message;
+						error.title = d.info.message; 
 						if (d.info.code === 'AC_001')
 							error.username = true;
 						else
 							error.password = true;
-					} else
-						await router.push('/');
+					} else {
+						$q.loading.show();
+						router.push('/').finally(() => $q.loading.show());
+					}
+						
 				})
 				.catch((e) => console.error(e))
 				.finally(() => reqSend.value = false);
