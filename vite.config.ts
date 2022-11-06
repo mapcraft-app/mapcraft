@@ -61,8 +61,10 @@ export default defineConfig((env) => ({
 	base: (env.mode === 'production') ? './' : '/',
 	clearScreen: false,
 	publicDir: './src/public',
+	logLevel: 'error',
 	build: {
 		emptyOutDir: true,
+		target: ['esnext', 'chrome100'],
 		minify: (env.mode === 'production'),
 		rollupOptions: {
 			input: {

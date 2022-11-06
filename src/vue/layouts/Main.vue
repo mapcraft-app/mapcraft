@@ -30,16 +30,22 @@
 					<q-btn color="secondary" to="/options" :label="$t('layouts.main.main.more_options')" />
 				</div>
 			</q-expansion-item>
-			<q-separator class="q-mt-sm" inset />
+			<q-separator class="q-mt-sm q-mb-sm" inset />
+			<menu-list />
 		</q-drawer>
 		<q-page-container class="main-router">
-			<router-view />
+			<router-view v-slot="{ Component }">
+				<transition name="fade">
+					<component :is="Component" />
+				</transition>
+			</router-view>
 		</q-page-container>
 	</q-layout>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import MenuList from 'components/menu/List.vue';
 import DarkMode from 'components/menu/DarkMode.vue';
 import Lang from 'components/menu/Lang.vue';
 import MapInfo from 'components/menu/MapInfo.vue';
@@ -48,6 +54,7 @@ import Profile from 'components/menu/Profile.vue';
 export default defineComponent({
 	name: 'MainLayout',
 	components: {
+		MenuList,
 		DarkMode,
 		Lang,
 		MapInfo,

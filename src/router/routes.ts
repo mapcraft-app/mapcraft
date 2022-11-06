@@ -1,12 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
-
-import oneRoutes from 'plugins/one/routes';
-
-const pluginPath: RouteRecordRaw[] = [];
-
-pluginPath.push(...oneRoutes);
-console.log(pluginPath);
-
+import builtinRoutes from 'builtin/routes';
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -15,12 +8,9 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				name: 'main',
-				component: () => import('pages/Main.vue'),
-				children: [
-					...oneRoutes
-				]
+				component: () => import('pages/Main.vue')
 			},
+			...builtinRoutes
 		]
 	},
 	{
@@ -29,7 +19,6 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				name: 'map',
 				component: () => import('pages/Map.vue')
 			}
 		]
@@ -40,7 +29,6 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				name: 'user',
 				component: () => import('pages/User.vue')
 			}
 		]
@@ -51,7 +39,6 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				name: 'options',
 				component: () => import('pages/Options.vue')
 			}
 		]
@@ -62,11 +49,12 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				name: 'error',
 				component: () => import('pages/Error.vue')
 			}
 		]
 	}
 ];
+
+console.log(routes);
 
 export default routes;

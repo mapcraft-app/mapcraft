@@ -1,6 +1,7 @@
 {
 	"private": true,
-	"name": "one",
+	"name": "Hello world",
+	"icon": "waving_hand",
 	"description": "Plugin one",
 	"license": "MIT",
 	"version": "1.0.0",
@@ -12,11 +13,8 @@
 		"type": "git",
 		"url": "https://github.com/"
 	},
-	"keywords": [ "plugin", "mapcraft" ],
-	"config": {
-		"backend": "backend.ts",
-		"frontend": "plugin.vue",
-		"lang": "./lang",
-		"routes": "routes.ts"
-	}
+	"keywords": [
+		"plugin",
+		"mapcraft"
+	]
 }

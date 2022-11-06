@@ -15,6 +15,7 @@ export default defineConfig((env) => ({
 		cssCodeSplit: false,
 		emptyOutDir: false,
 		minify: (env.mode === 'production'),
+		target: ['esnext', 'node16'],
 		rollupOptions: {
 			input: [
 				'src/electron/main/main.ts',

@@ -11,6 +11,7 @@ export default {
 		maximize: 'Maximiser',
 		close: 'Fermer'
 	},
+	builtin: {} as Record<string, any>,
 	components,
 	layouts,
 	pages

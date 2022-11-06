@@ -1,5 +1,6 @@
 import { appMapGet } from 'electron/preload/mapSelection';
 import { userStorage } from 'electron/preload/exposeEnv';
+import { builtinFormat } from 'builtin/index';
 
 export declare global {
 	namespace NodeJS {
@@ -66,6 +67,11 @@ export declare global {
 					resolve: (...paths: string[]) => string
 				}
 			},
+
+			/**
+			 * Builtin
+			 */
+			builtinList: builtinFormat[]
 
 			/**
 			 * Update configuration file
