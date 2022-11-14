@@ -1,6 +1,6 @@
 import { appMapGet } from 'electron/preload/mapSelection';
 import { userStorage } from 'electron/preload/exposeEnv';
-import { builtinFormat } from 'builtin/index';
+import { builtinFormat } from 'app/src/builtin/front';
 
 export declare global {
 	namespace NodeJS {
@@ -39,11 +39,26 @@ export declare global {
 		
 		/**
 		 * Send request to channel
+		 * 
+		 * https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendereronchannel-listener
 		 */
 		ipc: {
+			/**
+			 * Send a message to the main process via channel and expect a promise with the response
+			 */
 			invoke: (channel: string, ...args: any[]) => Promise<any> | undefined,
+			/**
+			 * Send an asynchronous message to the main process via channel, along with arguments
+			 */
 			send: (channel: string, ...args: any[]) => void | undefined,
-			receive: (channel: string, fn: (...args: any[]) => void) => void | undefined
+			/**
+			 * Adds a one time listener function for the event. This listener is invoked only the next time a message is sent to *channel*, after which it is removed
+			 */
+			receive: (channel: string, fn: (...args: any[]) => void) => void | undefined,
+			/**
+			 * Listen to *channel*, when a new message arrives listener would be called with listener(event, args...)
+			 */
+			 receiveAll: (channel: string, fn: (event: IpcRendererEvent, ...args: any[]) => void) => Electron.IpcRenderer | undefined,
 		},
 
 		/**

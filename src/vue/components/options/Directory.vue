@@ -51,7 +51,6 @@ export default defineComponent({
 		
 		const changeDir = (type: number) => {
 			selectedType.value = type;
-			window.ipc.send('dialog::select-directory', store.directory.game);
 			window.ipc.invoke('dialog::select-directory')?.then((data) => {
 				if (data.canceled)
 					return;

@@ -12,7 +12,7 @@
 		"allowSyntheticDefaultImports": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-		"types": ["vite/client", "node"],
+		"types": ["vite/client", "node", "electron"],
 
 		"baseUrl": ".",
 		"paths": {

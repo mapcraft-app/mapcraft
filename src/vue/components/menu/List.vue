@@ -25,7 +25,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { builtinList } from 'app/src/builtin';
+import { builtinList } from 'app/src/builtin/front';
+
+console.log(builtinList);
 
 export default defineComponent({
 	name: 'MenuList',

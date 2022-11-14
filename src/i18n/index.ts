@@ -1,6 +1,6 @@
 import en from './en-US';
 import fr from './fr-FR';
-import { builtinLang } from 'builtin/index';
+import { builtinLang } from 'app/src/builtin/front';
 
 const lang = {
 	'en-US': en,

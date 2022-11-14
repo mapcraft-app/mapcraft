@@ -6,6 +6,7 @@ export interface ipcDefinition {
 	channels: {
 		name: string;
 		type: ipcType;
+		reply?: string;
 	}[]
 }
 export interface ipcFunctions {

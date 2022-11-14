@@ -2,10 +2,13 @@
  * Import this file inside main process
  */
 import { ipcMain } from 'electron';
-import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface, ipcType } from 'src/electron/ipc/ipcType';
+import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface, ipcType } from './ipcType';
 
 import dialogDefinitions from './channels/dialog/definitions';
 import dialogFunctions from './channels/dialog/functions';
+
+import shellDefinitions from './channels/shell/definitions';
+import shellFunctions from './channels/shell/functions';
 
 import windowDefinitions from './channels/window/definitions';
 import windowFunctions from './channels/window/functions';
@@ -17,7 +20,9 @@ const importInList = (definition: ipcDefinition, functions: ipcFunctions): void 
 		fn: functions
 	});
 };
+
 importInList(dialogDefinitions, dialogFunctions);
+importInList(shellDefinitions, shellFunctions);
 importInList(windowDefinitions, windowFunctions);
 
 for (const ipc of ipcList) {

@@ -55,6 +55,4 @@ const routes: RouteRecordRaw[] = [
 	}
 ];
 
-console.log(routes);
-
 export default routes;

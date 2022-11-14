@@ -1,11 +1,18 @@
 import { RouteRecordRaw } from 'vue-router';
-import { normName } from 'builtin/index';
+import { builtinList } from 'app/src/builtin/front';
 
-import helloPack from './hello/package.json';
+const getNormName = (name: string): string | null => {
+	const __name = name.toLowerCase();
+	for (const built of builtinList) {
+		if (built.name.toLowerCase() === __name)
+			return built.path;
+	}
+	return null;
+};
 
 export default [
 	{
-		path: normName(helloPack.name),
-		component: () => import('builtin/hello/main.vue')
+		path: getNormName('cutscene'),
+		component: () => import('builtin/cutscene/main.vue')
 	}
 ] as RouteRecordRaw[];
