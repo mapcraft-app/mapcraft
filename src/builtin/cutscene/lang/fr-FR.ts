@@ -1,5 +1,5 @@
 export default {
 	menu: {
-		name: 'bonjour',
+		name: 'cinématique',
 	}
 };

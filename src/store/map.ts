@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import { reactive } from 'vue';
-import formatString from 'api/formatString';
+import { formatString } from 'mapcraft-api';
 
 export const mapStore = defineStore('map', () => {
 	const info = reactive({
 		icon: '',
 		name: '',
-		path: ''
+		path: '',
 	});
 	const pack = reactive({
 		data: window.env.pack.data,
@@ -36,23 +36,27 @@ export const mapStore = defineStore('map', () => {
 	}
 
 	function getPackData(args: Record<string, string> = pack.dataArgs) {
+		//console.log(args);
+		//return '';
 		return formatString(pack.data, args);
-	};
+	}
 
 	function getPackResource(args: Record<string, string> = pack.resourceArgs){
+		// console.log(args);
+		// return '';
 		return formatString(pack.resource, args);
-	};
+	}
 
 	return {
 		info,
 		pack,
-		
+
 		setIcon,
 		setName,
 		setPath,
 		setPackData,
 		setPackResource,
-		
+
 		getPackData,
 		getPackResource
 	};

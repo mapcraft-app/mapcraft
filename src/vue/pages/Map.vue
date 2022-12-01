@@ -30,7 +30,8 @@ import { defineComponent, inject, onBeforeMount, onBeforeUnmount, onMounted, ref
 import { useQuasar } from 'quasar';
 import { globalStore } from 'store/global';
 import { mapStore } from 'store/map';
-import router from 'src/router';
+import { minecraft } from 'mapcraft-api';
+// import router from 'src/router';
 
 interface appMapGet {
 	icon: string | false;
@@ -76,11 +77,22 @@ export default defineComponent({
 						: '/imgs/app/default_logo.png');
 					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
-					const user = $q.localStorage.getItem('user') as any;
-					if (user !== null && user.remember)
-						router.push('/').finally(() => $q.loading.hide());
-					else
-						router.push('/user').finally(() => $q.loading.hide());
+					// Init engine for map
+					console.log('one');
+					console.log(minecraft.minecraft());
+					// window.mapcraft.engine.init(window.env.directory, name, store.minecraftVersion);
+					/*window.mapcraft.engine.instance().install()
+						.then(() => {
+							const user = $q.localStorage.getItem('user') as any;
+							if (user !== null && user.remember)
+								router.push('/').finally(() => $q.loading.hide());
+							else
+								router.push('/user').finally(() => $q.loading.hide());
+						})
+						.catch((err) => {
+							console.error('plip', err);
+						});
+					*/
 				}
 			}
 		};

@@ -1,13 +1,14 @@
 import { contextBridge } from 'electron';
-import { resolve, join } from 'path';
 import { writeFile } from 'fs';
+import { resolve, join } from 'path';
+import { download } from 'mapcraft-api';
 
 import './exposeEnv';
+// import engine from './engine';
 import 'electron/ipc/render';
 import { log } from 'api/log';
 import getMap from './mapSelection';
 import { Shell } from 'electron/api/shell';
-
 import 'builtin/front';
 import 'builtin/back';
 
@@ -26,6 +27,10 @@ contextBridge.exposeInMainWorld('mapcraft', {
 	module: {
 		path: { resolve, join }
 	},
+
+	download,
+	//engine,
+	
 	updateConfig: (data: { game: string, temp: string, resource_game: string, save_game: string }) => {
 		writeFile(resolve(process.env.APP_DATA, 'config'), JSON.stringify(data, null, 2), { encoding: 'utf-8', flag: 'w' }, (err) => {
 			if (err)

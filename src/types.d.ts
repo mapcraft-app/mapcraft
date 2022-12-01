@@ -1,6 +1,10 @@
 import { appMapGet } from 'electron/preload/mapSelection';
 import { userStorage } from 'electron/preload/exposeEnv';
 import { builtinFormat } from 'app/src/builtin/front';
+import type { download } from 'mapcraft-api';
+
+import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
+import type { mapEngine } from 'electron/preload/engine';
 
 export declare global {
 	namespace NodeJS {
@@ -84,9 +88,13 @@ export declare global {
 			},
 
 			/**
-			 * Builtin
+			 * Acces to mapcraft-api
 			 */
-			builtinList: builtinFormat[]
+			download: download,
+			engine: {
+				init: (env: envInterface, name: string, version?: "1.17" | "1.18" | "1.19" | undefined) => mapEngine;
+				instance: () => mapEngine;
+			}
 
 			/**
 			 * Update configuration file
