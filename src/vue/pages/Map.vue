@@ -22,16 +22,27 @@
 				</div>
 			</template>
 		</div>
+		<div :class="(!mapIsSelected) ? 'custom-loader custom-loader-hide' : 'custom-loader'">
+			<q-card square>
+				<q-card-section class="column justify-center items-center" style="background-color: #383737">
+					<q-spinner-cube
+						size="6em"
+						color="cyan-7"
+					/>
+					<span class="text-h6 text-white text-weight-light q-pt-md">{{ loaderMessage }}</span>
+				</q-card-section>
+			</q-card>
+		</div>
 	</q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, inject, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { globalStore } from 'store/global';
 import { mapStore } from 'store/map';
-import { minecraft } from 'mapcraft-api';
-// import router from 'src/router';
+import router from 'src/router';
 
 interface appMapGet {
 	icon: string | false;
@@ -45,10 +56,13 @@ export default defineComponent({
 		const $path: any = inject('$path');
 		const store = globalStore();
 		const storeMap = mapStore();
+		const { t } = useI18n();
+
 		const maps = ref<null | appMapGet[]>(null);
 		const mapsError = ref<'noMinecraft' | 'noMaps' | null>(null);
-		// eslint-disable-next-line no-undef
-		let mapsInterval: NodeJS.Timer;
+		const mapIsSelected = ref<boolean>(false);
+		const loaderMessage = ref<string>('');
+		let mapsInterval: NodeJS.Timer; // eslint-disable-line no-undef
 
 		const getMaps = (dir: string) => {
 			window.mapcraft.getMap(dir)
@@ -67,9 +81,14 @@ export default defineComponent({
 		};
 		
 		const handleClick = (name: string): void => {
-			if (!maps.value)
+			let instanceInterval: NodeJS.Timer; // eslint-disable-line no-undef
+			let step = 0;
+			
+			mapIsSelected.value = true;
+			if (!maps.value) {
+				mapIsSelected.value = false;
 				return;
-			$q.loading.show();
+			}
 			for (const el of maps.value) {
 				if (el.name === name) {
 					storeMap.setIcon((el.icon !== false)
@@ -77,12 +96,39 @@ export default defineComponent({
 						: '/imgs/app/default_logo.png');
 					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
-					// Init engine for map
-					console.log('one');
-					console.log(minecraft.minecraft());
-					// window.mapcraft.engine.init(window.env.directory, name, store.minecraftVersion);
-					/*window.mapcraft.engine.instance().install()
+					window.mapcraft.engine.init(window.env.directory, name, store.minecraftVersion);
+					instanceInterval = setInterval(() => {
+						if (step === 0) {
+							if (window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent >= 100) {
+								if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent > 0)
+									step = 1;
+								else
+									loaderMessage.value = t('pages.main.install.datapack.install');
+							} else
+								loaderMessage.value = t('pages.main.install.datapack.download', { percents: window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent});
+						}
+
+						if (step === 1) {
+							if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent >= 100) {
+								if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent > 0)
+									step = 2;
+								else
+									loaderMessage.value = t('pages.main.install.resourcepack.default.install');
+							} else
+								loaderMessage.value = t('pages.main.install.resourcepack.default.download', { percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent});
+						}
+
+						if (step === 2) {
+							if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent >= 100) {
+								step = 3;
+								loaderMessage.value = t('pages.main.install.resourcepack.map.install');
+							} else
+								loaderMessage.value = t('pages.main.install.resourcepack.map.download', { percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent});
+						}
+					}, 100);
+					window.mapcraft.engine.install()
 						.then(() => {
+							clearInterval(instanceInterval);
 							const user = $q.localStorage.getItem('user') as any;
 							if (user !== null && user.remember)
 								router.push('/').finally(() => $q.loading.hide());
@@ -92,7 +138,6 @@ export default defineComponent({
 						.catch((err) => {
 							console.error('plip', err);
 						});
-					*/
 				}
 			}
 		};
@@ -113,6 +158,8 @@ export default defineComponent({
 		return {
 			maps,
 			mapsError,
+			mapIsSelected,
+			loaderMessage,
 
 			reloadSearch: (): void => getMaps(store.directory.save),
 			handleClick,
@@ -123,6 +170,24 @@ export default defineComponent({
 </script>
 
 <style scoped>
+	.custom-loader-hide {
+		display: none !important;
+	}
+	.custom-loader {
+		z-index: 10000;
+		position: fixed;
+		background-color: rgba(210, 210, 210, .3);
+		width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+	}
+
 	.card-size {
 		width: 100%;
     max-width: 200px;
@@ -152,5 +217,4 @@ export default defineComponent({
 	.skeleton > div {
 		height: inherit;
 	}
-
 </style>

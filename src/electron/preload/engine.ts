@@ -19,25 +19,25 @@ export class mapEngine {
 		this.instance.build = new buildMap(this.instance.datapack, this.instance.resourcepack);
 	}
 
-	async build(): Promise<string> {
-		return await this.instance.build.start();
+	public async build(): Promise<string> {
+		return this.instance.build.start();
 	}
 
-	async clean(): Promise<void[][]> {
+	public async clean(): Promise<void[][]> {
 		return Promise.all([
 			this.instance.datapack.clean(),
 			this.instance.resourcepack.clean()
 		]);
 	}
 
-	async install(): Promise<void> {
+	public async install(): Promise<void> {
 		if (!this.instance.datapack.check())
 			await this.instance.datapack.install();
 		if (!this.instance.resourcepack.check())
 			await this.instance.resourcepack.install();
 	}
 
-	async update(): Promise<void[]> {
+	public async update(): Promise<void[]> {
 		return Promise.all([
 			this.instance.datapack.update(),
 			this.instance.resourcepack.update()
@@ -51,5 +51,9 @@ export default {
 		__instance__mapengine__ = new mapEngine(env, name, version);
 		return __instance__mapengine__;
 	},
-	instance: (): mapEngine => __instance__mapengine__
+	instance: (): mapEngine => __instance__mapengine__,
+	build: (): Promise<string> => __instance__mapengine__.build(),
+	clean: (): Promise<void[][]> => __instance__mapengine__.clean(),
+	install: (): Promise<void> => __instance__mapengine__.install(),
+	update: (): Promise<void[]> => __instance__mapengine__.update(),
 };
