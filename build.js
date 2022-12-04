@@ -55,10 +55,10 @@ try {
 		// #endregion Directory & files
 	
 		// #region Asar
-		asar: true,
-		asarUnpack: [
-			// 'node_modules/{7zip-bin,7zip-min,kleur,mapcraft-api,prompts,sisteransi}/**/*'
-		],
+		asar: false,
+		//asarUnpack: [
+		//'node_modules/{7zip-bin,7zip-min,mapcraft-api}/**/*'
+		//],
 		// #endregion Asar
 	
 		//#region Windows

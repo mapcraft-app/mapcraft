@@ -17,10 +17,6 @@ const generateEnv = {
 		resource: process.env.RESOURCE_GAME,
 		temp: process.env.TEMP
 	},
-	pack: {
-		data: 'Mapcraft-{name}',
-		resource: 'Mapcraft-{name}'
-	},
 	darkMode: () => {
 		const ret = window.localStorage.getItem('darkMode');
 		if (ret)

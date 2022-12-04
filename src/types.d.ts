@@ -32,10 +32,6 @@ export declare global {
 				resource: string,
 				temp: string
 			},
-			pack: {
-				data: string,
-				resource: string
-			},
 			darkMode: () => boolean,
 			lang: () => string,
 			user: () => userStorage
@@ -50,19 +46,19 @@ export declare global {
 			/**
 			 * Send a message to the main process via channel and expect a promise with the response
 			 */
-			invoke: (channel: string, ...args: any[]) => Promise<any> | undefined,
+			invoke: (channel: string, ...args: any[]) => Promise<any>,
 			/**
 			 * Send an asynchronous message to the main process via channel, along with arguments
 			 */
-			send: (channel: string, ...args: any[]) => void | undefined,
+		 	send: (channel: string, ...args: any[]) => void,
 			/**
 			 * Adds a one time listener function for the event. This listener is invoked only the next time a message is sent to *channel*, after which it is removed
 			 */
-			receive: (channel: string, fn: (...args: any[]) => void) => void | undefined,
+			receive: (channel: string) => Promise<any | any[]>,
 			/**
 			 * Listen to *channel*, when a new message arrives listener would be called with listener(event, args...)
 			 */
-			 receiveAll: (channel: string, fn: (event: IpcRendererEvent, ...args: any[]) => void) => Electron.IpcRenderer | undefined,
+			receiveAll: (channel: string) => Promise<any | any[]>,
 		},
 
 		/**
@@ -93,6 +89,7 @@ export declare global {
 			download: download,
 			engine: {
 				init: (env: envInterface, name: string, version?: '1.17' | '1.18' | '1.19' | undefined) => mapEngine,
+				database: () => database,
 				instance: () => mapEngine,
 				build: () => Promise<string>,
 				clean: () => Promise<void[][]>,

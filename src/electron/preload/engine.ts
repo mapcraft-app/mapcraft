@@ -1,6 +1,9 @@
-import { buildMap, engine } from 'mapcraft-api/backend';
+import { buildMap, engine, sql } from 'mapcraft-api/backend';
+import { log } from 'api/log';
+
 import type datapack from 'mapcraft-api/dist/types/src/engine/datapack';
 import type resource from 'mapcraft-api/dist/types/src/engine/resourcepack';
+import database from 'mapcraft-api/dist/types/src/sql';
 import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
 
 export interface mapEngineInstance {
@@ -11,12 +14,14 @@ export interface mapEngineInstance {
 
 export class mapEngine {
 	public instance: mapEngineInstance;
+	public database: database;
 	
 	constructor(env: envInterface, name: string, version: '1.17' | '1.18' | '1.19' | undefined = undefined) {
 		this.instance = {} as mapEngineInstance;
 		this.instance.datapack = new engine.data(env, name, version);
 		this.instance.resourcepack = new engine.resource(env, name, version);
 		this.instance.build = new buildMap(this.instance.datapack, this.instance.resourcepack);
+		this.database = new sql(env, name, log.info);
 	}
 
 	public async build(): Promise<string> {
@@ -51,6 +56,7 @@ export default {
 		__instance__mapengine__ = new mapEngine(env, name, version);
 		return __instance__mapengine__;
 	},
+	database: (): database => __instance__mapengine__.database,
 	instance: (): mapEngine => __instance__mapengine__,
 	build: (): Promise<string> => __instance__mapengine__.build(),
 	clean: (): Promise<void[][]> => __instance__mapengine__.clean(),

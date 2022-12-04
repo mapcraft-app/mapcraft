@@ -7,6 +7,9 @@ import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface, ipcType } fro
 import dialogDefinitions from './channels/dialog/definitions';
 import dialogFunctions from './channels/dialog/functions';
 
+import editorDefinitions from './channels/editor/definitions';
+import editorFunctions from './channels/editor/functions';
+
 import shellDefinitions from './channels/shell/definitions';
 import shellFunctions from './channels/shell/functions';
 
@@ -22,6 +25,7 @@ const importInList = (definition: ipcDefinition, functions: ipcFunctions): void 
 };
 
 importInList(dialogDefinitions, dialogFunctions);
+importInList(editorDefinitions, editorFunctions);
 importInList(shellDefinitions, shellFunctions);
 importInList(windowDefinitions, windowFunctions);
 

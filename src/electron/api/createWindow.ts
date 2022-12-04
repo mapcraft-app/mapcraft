@@ -27,7 +27,7 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 		icon: iconLoad(),
 		webPreferences: {
 			contextIsolation: true,
-			devTools: import.meta.env.DEV,
+			devTools: true,//import.meta.env.DEV,
 			defaultEncoding: 'utf-8',
 			enableWebSQL: false,
 			nodeIntegration: args.nodeIntegration ?? false,

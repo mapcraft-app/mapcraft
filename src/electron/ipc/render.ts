@@ -8,6 +8,7 @@ import ipcNaming, { ipcDefinition, ipcType } from './ipcType';
 import { IpcError } from 'electron/api/error';
 
 import dialogDefinitions from './channels/dialog/definitions';
+import editorDefinitions from './channels/editor/definitions';
 import shellDefinitions from './channels/shell/definitions';
 import windowDefinitions from './channels/window/definitions';
 
@@ -37,6 +38,7 @@ const pushImport = (def: ipcDefinition): void => {
 };
 
 pushImport(dialogDefinitions);
+pushImport(editorDefinitions);
 pushImport(shellDefinitions);
 pushImport(windowDefinitions);
 
@@ -58,33 +60,45 @@ const checkIpc = (channel: string): boolean => {
 	if (!ipcRenderer || channel === undefined)
 		return true;
 	if (!isExist(channel))
-		throw new IpcError(`Channel ${channel} doesn't exist`);
+		return true;
 	return false;
 };
 
 const ipc = {
-	invoke: (channel: string, ...args: any[]): Promise<any> | undefined => {
+	invoke: (channel: string, ...args: any[]): Promise<any> => {
 		if (checkIpc(channel))
-			return undefined;
+			throw new Error(`Channel ${channel} doesn't exist`);
 		return ipcRenderer.invoke(channel, ...args);
 	},
-	send: (channel: string, ...args: any[]): void | undefined => {
+	send: (channel: string, ...args: any[]): void => {
 		if (checkIpc(channel))
-			return undefined;
+			throw new Error(`Channel ${channel} doesn't exist`);
 		ipcRenderer.send(channel, ...args);
 	},
-	// eslint-disable-next-line no-undef
-	receive: (channel: string, fn: (...args: any[]) => void): Electron.IpcRenderer | undefined => {
-		if (checkIpc(channel))
-			return undefined;
-		ipcRenderer.once(channel, (_event, ...args) => fn(...args));
+	receive: (channel: string): Promise<any | any[]> => {
+		return new Promise((res, rej) => {
+			if (checkIpc(channel))
+				return rej(`Channel ${channel} doesn't exist`);
+			ipcRenderer.once(channel, (_event, ...args) => {
+				if (args.length === 1)
+					return res(args[0]);
+				return res(args);
+			});
+		});
 	},
-	// eslint-disable-next-line no-undef
-	receiveAll: (channel: string, fn: (event: IpcRendererEvent, ...args: any[]) => void): Electron.IpcRenderer | undefined => {
-		if (checkIpc(channel))
-			return undefined;
-		return ipcRenderer.on(channel, fn);
+	receiveAll: (channel: string): Promise<any | any[]> => {
+		return new Promise((res, rej) => {
+			if (checkIpc(channel))
+				return rej(`Channel ${channel} doesn't exist`);
+			ipcRenderer.on(channel, (_event, ...args) => {
+				if (args.length === 1)
+					return res(args[0]);
+				return res(args);
+			});
+		});
 	}
 };
+
 contextBridge.exposeInMainWorld('ipc', ipc);
+
 export default ipc;
