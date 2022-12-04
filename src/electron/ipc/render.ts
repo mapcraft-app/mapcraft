@@ -3,9 +3,8 @@
 /**
  * Import this file inside renderer process (usually preload)
  */
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import ipcNaming, { ipcDefinition, ipcType } from './ipcType';
-import { IpcError } from 'electron/api/error';
 
 import dialogDefinitions from './channels/dialog/definitions';
 import editorDefinitions from './channels/editor/definitions';

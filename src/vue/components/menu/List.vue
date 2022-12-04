@@ -2,10 +2,10 @@
 	<q-list>
 		<q-item clickable @click="$router.push('/')">
 			<q-item-section avatar class="menu-icon">
-				<span class="material-icons" aria-hidden="true">home</span>
+				<span class="material-icons" aria-hidden="true">{{ $t('components.list.home.icon') }}</span>
 			</q-item-section>
 			<q-item-section>
-				Main
+				{{ capitalize($t('components.list.home.title')) }}
 			</q-item-section>
 		</q-item>
 		<q-item
@@ -17,7 +17,7 @@
 				<span class="material-icons" aria-hidden="true">{{ builtin.icon }}</span>
 			</q-item-section>
 			<q-item-section>
-				{{ $t(`builtin.${builtin.path}.menu.name`) }}
+				{{ capitalize($t(`builtin.${builtin.path}.menu.name`)) }}
 			</q-item-section>
 		</q-item>
 	</q-list>
@@ -27,13 +27,12 @@
 import { defineComponent } from 'vue';
 import { builtinList } from 'app/src/builtin/front';
 
-console.log(builtinList);
-
 export default defineComponent({
 	name: 'MenuList',
 	setup () {
 		return {
-			builtins: builtinList
+			builtins: builtinList,
+			capitalize: (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
 		};
 	}
 });
