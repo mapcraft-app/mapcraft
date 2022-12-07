@@ -7,6 +7,13 @@ export const mapStore = defineStore('map', () => {
 		name: '',
 		path: '',
 	});
+	const path = reactive({
+		datapack: {
+			base: '', // mapcraft-data
+			default: '' // mapcraft
+		},
+		resourcepack: ''
+	});
 
 	function setIcon(str: string) {
 		info.icon = str;
@@ -18,10 +25,25 @@ export const mapStore = defineStore('map', () => {
 		info.path = str;
 	}
 
+	function setMapPath(savePath: string, resourcePath: string, nameOfMap: string) {
+		path.resourcepack = window.mapcraft.module.path.resolve(resourcePath, nameOfMap);
+		path.datapack.base = window.mapcraft.module.path.resolve(savePath, nameOfMap, 'datapacks', 'mapcraft-data', 'data', 'mapcraft-data');
+		path.datapack.default = window.mapcraft.module.path.resolve(savePath, nameOfMap, 'datapacks', 'mapcraft', 'data', 'mapcraft');
+	}
+
+	function getMapPath() {
+		return JSON.parse(JSON.stringify(path));
+	}
+
 	return {
 		info,
+		path,
+
 		setIcon,
 		setName,
 		setPath,
+
+		setMapPath,
+		getMapPath
 	};
 });

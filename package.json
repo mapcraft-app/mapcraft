@@ -20,14 +20,14 @@
     "url": "https://github.com/mapcraft-app/mapcraft.git"
   },
   "scripts": {
-    "dev": "yarn appDeps && vite",
+    "dev": "vite",
     "lint": "eslint --fix .",
-    "appDeps": "electron-builder install-app-deps",
     "build": "yarn appDeps && vite build && vite build -c vite.config.electron.ts",
     "preview": "yarn build && electron-builder --dir --config build.js",
     "productionMac": "yarn build && electron-builder -m --config build.js",
     "productionWin": "yarn build && electron-builder -w --config build.js",
-    "productionLin": "yarn build && electron-builder -l --config build.js"
+    "productionLix": "yarn build && electron-builder -l --config build.js",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@quasar/extras": "^1.15.3",

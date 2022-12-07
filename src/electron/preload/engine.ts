@@ -1,27 +1,27 @@
 import { buildMap, engine, sql } from 'mapcraft-api/backend';
 import { log } from 'api/log';
 
-import type datapack from 'mapcraft-api/dist/types/src/engine/datapack';
-import type resource from 'mapcraft-api/dist/types/src/engine/resourcepack';
-import database from 'mapcraft-api/dist/types/src/sql';
-import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
+import type datapack from 'mapcraft-api/dist/types/src/backend/engine/datapack';
+import type resource from 'mapcraft-api/dist/types/src/backend/engine/resourcepack';
+import database, { tableInterface} from 'mapcraft-api/dist/types/src/backend/sql';
+import type { envInterface } from 'mapcraft-api/dist/types/src/backend/engine/interface';
 
-export interface mapEngineInstance {
+export interface mapEngineInstanceInterface {
 	build: buildMap,
 	datapack: datapack,
 	resourcepack: resource
 }
 
 export class mapEngine {
-	public instance: mapEngineInstance;
+	public instance: mapEngineInstanceInterface;
 	public database: database;
 	
 	constructor(env: envInterface, name: string, version: '1.17' | '1.18' | '1.19' | undefined = undefined) {
-		this.instance = {} as mapEngineInstance;
+		this.instance = {} as mapEngineInstanceInterface;
 		this.instance.datapack = new engine.data(env, name, version);
 		this.instance.resourcepack = new engine.resource(env, name, version);
 		this.instance.build = new buildMap(this.instance.datapack, this.instance.resourcepack);
-		this.database = new sql(env, name, log.info);
+		this.database = new sql(env, name, log.psql);
 	}
 
 	public async build(): Promise<string> {
@@ -50,16 +50,22 @@ export class mapEngine {
 	}
 }
 
-let __instance__mapengine__: mapEngine;
+export let mapEngineInstance: mapEngine;
 export default {
 	init: (env: envInterface, name: string, version: '1.17' | '1.18' | '1.19' | undefined = undefined): mapEngine => {
-		__instance__mapengine__ = new mapEngine(env, name, version);
-		return __instance__mapengine__;
+		mapEngineInstance = new mapEngine(env, name, version);
+		return mapEngineInstance;
 	},
-	database: (): database => __instance__mapengine__.database,
-	instance: (): mapEngine => __instance__mapengine__,
-	build: (): Promise<string> => __instance__mapengine__.build(),
-	clean: (): Promise<void[][]> => __instance__mapengine__.clean(),
-	install: (): Promise<void> => __instance__mapengine__.install(),
-	update: (): Promise<void[]> => __instance__mapengine__.update(),
+	database: (): database => mapEngineInstance.database,
+	instance: (): mapEngine => mapEngineInstance,
+	build: (): Promise<string> => mapEngineInstance.build(),
+	clean: (): Promise<void[][]> => mapEngineInstance.clean(),
+	install: (): Promise<void> => mapEngineInstance.install(),
+	update: (): Promise<void[]> => mapEngineInstance.update(),
+	sql: {
+		add: (tables: tableInterface | tableInterface[]): void => mapEngineInstance.database.addTable(tables),
+		exist: (names: string | string[]): number | number[] => mapEngineInstance.database.isExistTable(names),
+		remove: (names: string | string[]): void => mapEngineInstance.database.removeTable(names),
+		update: (tables: tableInterface | tableInterface[]): void => mapEngineInstance.database.updateTable(tables),
+	}
 };

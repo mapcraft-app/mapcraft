@@ -25,9 +25,15 @@ export default class Log {
 	 * this.fileName = join(String(process.env.LOG), `${process.env.DATE}.log`);
 	*/
 	constructor(filename?: string) {
-
 		const resolvePath = process.env.LOG ?? resolve('.', 'log');
 		this.path = resolve(resolvePath, `${filename ?? process.env.DATE}.log`);
+		// bind this for correct refer to this
+		this.write = this.write.bind(this);
+		this.debug = this.debug.bind(this);
+		this.error = this.error.bind(this);
+		this.info = this.info.bind(this);
+		this.warn = this.warn.bind(this);
+		this.psql = this.psql.bind(this);
 		try {
 			accessSync(resolvePath, constants.F_OK);
 		} catch (___) {

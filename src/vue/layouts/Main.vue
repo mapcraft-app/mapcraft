@@ -1,14 +1,11 @@
 <template>
-	<q-layout view="hhh lpr lFr" :container="true">
-		<q-header class="bg-primary text-white">
-			<q-toolbar>
-				<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-				<div class="row no-wrap justify-center main-layout-title-bar">
-					{{ $t('layouts.main.main.title') }}
-				</div>
-				<q-btn dense flat round icon="menu" />
-			</q-toolbar>
-		</q-header>
+	<q-toolbar class="bg-primary text-white">
+		<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+		<div class="row no-wrap justify-center q-pr-md main-layout-title-bar">
+			{{ $t('layouts.main.main.title') }}
+		</div>
+	</q-toolbar>
+	<q-layout view="hHh lpr lFr" :container="true">
 		<q-drawer
 			v-model="leftDrawerOpen"
 			show-if-above

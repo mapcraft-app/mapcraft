@@ -96,6 +96,7 @@ export default defineComponent({
 						: '/imgs/app/default_logo.png');
 					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
+					storeMap.setMapPath(window.env.directory.save, window.env.directory.resource, name);
 					window.mapcraft.engine.init(window.env.directory, name, store.minecraftVersion);
 					instanceInterval = setInterval(() => {
 						if (step === 0) {

@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron';
+import { contextBridge, clipboard } from 'electron';
 import { writeFile } from 'fs';
 import { resolve, join } from 'path';
 import { download } from 'mapcraft-api';
@@ -28,6 +28,13 @@ contextBridge.exposeInMainWorld('mapcraft', {
 		path: { resolve, join }
 	},
 	download,
+	clipboard: {
+		clear: () => clipboard.clear(),
+		readHtml: () => clipboard.readHTML(),
+		writeHtml: (html: string) => clipboard.writeHTML(html),
+		readText: () => clipboard.readText(),
+		writeText: (text: string) => clipboard.writeText(text),
+	},
 	engine,
 	updateConfig: (data: { game: string, temp: string, resource_game: string, save_game: string }) => {
 		writeFile(resolve(process.env.APP_DATA, 'config'), JSON.stringify(data, null, 2), { encoding: 'utf-8', flag: 'w' }, (err) => {

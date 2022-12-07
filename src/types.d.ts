@@ -82,6 +82,13 @@ export declare global {
 					resolve: (...paths: string[]) => string
 				}
 			},
+			clipboard: {
+				clear: () => void,
+				readHtml: () => string,
+				writeHtml: (html: string) => void,
+				readText: () => string,
+				writeText: (text: string) => void,
+			},
 
 			/**
 			 * Acces to mapcraft-api
