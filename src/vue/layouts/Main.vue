@@ -5,6 +5,7 @@
 			{{ $t('layouts.main.main.title') }}
 		</div>
 	</q-toolbar>
+	<editor-dialog />
 	<q-layout view="hHh lpr lFr" :container="true">
 		<q-drawer
 			v-model="leftDrawerOpen"
@@ -47,6 +48,7 @@ import DarkMode from 'components/menu/DarkMode.vue';
 import Lang from 'components/menu/Lang.vue';
 import MapInfo from 'components/menu/MapInfo.vue';
 import Profile from 'components/menu/Profile.vue';
+import EditorDialog from 'components/editor/Dialog.vue';
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -55,13 +57,13 @@ export default defineComponent({
 		DarkMode,
 		Lang,
 		MapInfo,
-		Profile
+		Profile,
+		EditorDialog
 	},
 	setup() {
 		const leftDrawerOpen = ref(false);
 		const toggleLeftDrawer = () =>
 			(leftDrawerOpen.value = !leftDrawerOpen.value);
-
 		return {
 			leftDrawerOpen,
 			toggleLeftDrawer

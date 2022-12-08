@@ -74,27 +74,23 @@ const ipc = {
 			throw new Error(`Channel ${channel} doesn't exist`);
 		ipcRenderer.send(channel, ...args);
 	},
-	receive: (channel: string): Promise<any | any[]> => {
-		return new Promise((res, rej) => {
-			if (checkIpc(channel))
-				return rej(`Channel ${channel} doesn't exist`);
-			ipcRenderer.once(channel, (_event, ...args) => {
-				if (args.length === 1)
-					return res(args[0]);
-				return res(args);
-			});
-		});
+	receive: (channel: string, fn: (...args: any[]) => void): void => {
+		if (checkIpc(channel))
+			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcRenderer.once(channel, (_event, ...args) => fn(...args));
 	},
-	receiveAll: (channel: string): Promise<any | any[]> => {
-		return new Promise((res, rej) => {
-			if (checkIpc(channel))
-				return rej(`Channel ${channel} doesn't exist`);
-			ipcRenderer.on(channel, (_event, ...args) => {
-				if (args.length === 1)
-					return res(args[0]);
-				return res(args);
-			});
-		});
+	receiveAll: (channel: string, fn: (...args: any[]) => void): void => {
+		if (checkIpc(channel))
+			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcRenderer.on(channel, (_event, ...args) => fn(...args));
+	},
+	remove: (channel: string, fn: (...args: any[]) => void): void => {
+		if (checkIpc(channel))
+			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcRenderer.removeListener(channel, (_event, ...args) => fn(...args));
+	},
+	removeAll: (channel: string): void => {
+		ipcRenderer.removeAllListeners(channel);
 	}
 };
 

@@ -6,11 +6,13 @@
 import bezierEasing from 'bezier-easing';
 import { writeFile, mkdir, access, rm } from 'fs/promises';
 import { resolve } from 'path';
+import ipc from 'electron/ipc/render';
 import { fs } from 'mapcraft-api/backend';
 import database, { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
 
 import { mapEngineInstance } from 'electron/preload/engine';
 import { exposeInMainWorld } from 'api/plugins/backend';
+import { existsSync, writeFileSync } from 'fs';
 
 export interface envInterface {
 	datapack: {
@@ -102,6 +104,20 @@ class cutscene {
 			.catch(async () => await mkdir(this._path.dir, { recursive: true }));
 		return await writeFile(this._path.main, '', { encoding: 'utf-8', flag: 'wx' })
 			.catch(() => { /* make nothing */ });
+	}
+
+	openFile(id: number, start: boolean = true): void {
+		const link = resolve(this._path.dir, id.toString(), `${start
+			? 'start'
+			: 'end'
+		}.mcfunction`);
+		if (!existsSync(link)) {
+			writeFileSync(link, `# Cutscene ${start
+				? 'start'
+				: 'end'
+			}\n`, { encoding: 'utf-8', flag: 'w' });
+		}
+		ipc.send('editor::open-editor', link);
 	}
 
 	//#region Getter
@@ -302,6 +318,7 @@ const __instance__ = new cutscene();
 exposeInMainWorld('cutscene', {
 	__builtin__: true,
 	init: (env: envInterface, name: string) => __instance__.init(env, name),
+	openFile: (id: number, start: boolean = true) => __instance__.openFile(id, start),
 	getCutscene: (id: number | undefined = undefined) => __instance__.getCutscene(id),
 	getPoints: (id: number) => __instance__.getPoints(id),
 	create: (name: string) => __instance__.createCutscene(name),

@@ -16,6 +16,7 @@
 						icon="add" title="Create new cutscene"
 						@click="(createCutsceneModal = true)"
 					/>
+					<!--<q-btn @click="(editorOpen = !editorOpen)" label="toto" />-->
 				</div>
 				<q-list v-if="cutsceneList.length" separator>
 					<q-slide-item
@@ -47,7 +48,6 @@
 					
 				</q-list>
 			</div>
-			<div class="toto"></div>
 			<q-dialog v-model="createCutsceneModal" persistent>
 				<q-card style="width: 40%">
 					<q-card-section class="q-pt-none">
@@ -73,9 +73,21 @@
 						<span >{{ printTime(cutsceneSelected.duration) }}</span>
 					</div>
 					<div>
-						<q-btn square unelevated color="light-blue-7" icon="play_arrow" class="q-mr-sm" />
-						<q-btn square unelevated color="orange-7" icon="stop" class="q-mr-sm" />
-						<q-btn square unelevated color="green-7" icon="settings" />
+						<q-btn
+							square unelevated color="light-blue-7"
+							icon="play_arrow" class="q-mr-sm"
+							@click="openFile(true)"
+						/>
+						<q-btn
+							square unelevated color="orange-7"
+							icon="stop" class="q-mr-sm"
+							@click="openFile(false)"
+						/>
+						<q-btn
+							square unelevated color="green-7"
+							icon="settings"
+							@click="generateCutscene()"
+						/>
 					</div>
 				</div>
 				<q-separator />
@@ -160,6 +172,10 @@ export default defineComponent({
 					: '-250px';
 			}
 		};
+		const openFile = (start: boolean) => {
+			if (cutsceneSelected.value)
+				window.cutscene.openFile(cutsceneSelected.value.id, start);
+		};
 		//#endregion General
 
 		//#region Cutscene
@@ -229,6 +245,11 @@ export default defineComponent({
 				cutscenePointsList.value = null;
 			}
 		};
+
+		const generateCutscene = async () => {
+			if (cutsceneSelected.value)
+				await window.cutscene.generate(cutsceneSelected.value.id);
+		};
 		//#endregion Cutscene
 		
 		onBeforeMount(() => {
@@ -252,6 +273,7 @@ export default defineComponent({
 			drawerOpen,
 			
 			openNav,
+			openFile,
 
 			// Cutscene
 			cutsceneList,
@@ -265,7 +287,8 @@ export default defineComponent({
 			openCutscene,
 			createCutscene,
 			modifyCutscene,
-			deleteCutscene
+			deleteCutscene,
+			generateCutscene
 		};
 	}
 });

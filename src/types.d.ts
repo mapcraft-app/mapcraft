@@ -47,18 +47,31 @@ export declare global {
 			 * Send a message to the main process via channel and expect a promise with the response
 			 */
 			invoke: (channel: string, ...args: any[]) => Promise<any>,
+
 			/**
 			 * Send an asynchronous message to the main process via channel, along with arguments
 			 */
 		 	send: (channel: string, ...args: any[]) => void,
+
 			/**
 			 * Adds a one time listener function for the event. This listener is invoked only the next time a message is sent to *channel*, after which it is removed
 			 */
-			receive: (channel: string) => Promise<any | any[]>,
+			receive: (channel: string, fn: (...args: any[]) => void) => void,
+
 			/**
 			 * Listen to *channel*, when a new message arrives listener would be called with listener(event, args...)
 			 */
-			receiveAll: (channel: string) => Promise<any | any[]>,
+			receiveAll: (channel: string, fn: (...args: any[]) => void) => void,
+
+			/**
+			 * Remove the specified listener for the specified channel
+			 */
+			remove: (channel: string, fn: (...args: any[]) => void) => void,
+
+			/**
+			 * Remove all listeners for the specified channel
+			 */
+			remove: (channel: string) => void
 		},
 
 		/**

@@ -24,8 +24,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import type { PropType } from 'vue';
 
-interface editorData {
+export interface editorData {
 	extension: string;
 	filename: string;
 	data: string
@@ -33,7 +34,14 @@ interface editorData {
 
 export default defineComponent({
 	name: 'Editor',
-	setup () {
+	props: {
+		data: {
+			type: Object as PropType<editorData>,
+			required: true
+		}
+	},
+	emits: [ 'close', 'save' ],
+	setup (props, { emit }) {
 		let aceEditor: any | undefined = undefined;
 		const error = ref<string | undefined>(undefined);
 		const title = ref<string | undefined>(undefined);
@@ -42,41 +50,28 @@ export default defineComponent({
 			if (!title.value)
 				return;
 			if (save)
-				window.ipc.send('editor::save-editor', aceEditor.getValue());
+				emit('save', aceEditor.getValue());
 			else
-				window.ipc.send('editor::close-editor');
+				emit('close');
 		};
 
 		onMounted(() => {
-			if (aceEditor === 'undefined') {
-				aceEditor = ace.edit('ace-editor', { // eslint-disable-line no-undef
-					theme: 'ace/theme/chaos',
-					selectionStyle: 'text',
-					enableBasicAutocompletion: true,
-					enableSnippets: true,
-					enableLiveAutocompletion: true,
-					autoScrollEditorIntoView: true,
-					showPrintMargin: false,
-					showLineNumbers: true,
-					minLines: 25,
-					maxLines: 25,
-					fontSize: '0.80em' 
-				});
-			}
-			window.ipc.receiveAll('editor::open')
-				.then((data: editorData) => {
-					aceEditor.session.setValue(data.data);
-					aceEditor.session.setMode(`ace/mode/${data.extension}`);
-					title.value = data.filename;
-				})
-				.catch((e) => error.value = e);
-			window.ipc.receiveAll('editor::close')
-				.then(() => {
-					aceEditor.session.setValue('');
-					title.value = '';
-				})
-				.catch((e) => error.value = e);
-			// window.ipc.send('editor::open-editor', 'C:\\Users\\Clement\\Desktop\\MAPCRAFT\\data_pack\\data\\mapcraft\\functions\\built_in\\paintbrush\\brush\\sphere\\11\\block.mcfunction');
+			aceEditor = ace.edit('ace-editor', { // eslint-disable-line no-undef
+				theme: 'ace/theme/chaos',
+				selectionStyle: 'text',
+				enableBasicAutocompletion: true,
+				enableSnippets: true,
+				enableLiveAutocompletion: true,
+				autoScrollEditorIntoView: true,
+				showPrintMargin: false,
+				showLineNumbers: true,
+				minLines: 25,
+				maxLines: 25,
+				fontSize: '0.80em' 
+			});
+			aceEditor.session.setValue(props.data.data);
+			aceEditor.session.setMode(`ace/mode/${props.data.extension}`);
+			title.value = props.data.filename;
 		});
 
 		return {
