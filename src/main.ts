@@ -48,7 +48,7 @@ app.use(Quasar, {
 			spinnerSize: 80,
 			spinnerColor: 'cyan-7'
 		},
-		Notify: {
+		notify: {
 			color: 'light-blue-7',
 			position: 'bottom',
 			timeout: '3000'

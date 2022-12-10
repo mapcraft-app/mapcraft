@@ -5,14 +5,14 @@
 				class="card" square
 				@click="$router.push('/')">
 				<q-icon :name="$t('components.list.home.icon')" color="primary" size="4em"/>
-				<span class="text-h6">{{ capitalize($t('components.list.home.title')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('components.list.home.title')) }}</span>
 			</q-card>
 			<q-card
 				v-for="builtin in builtins" :key="builtin.path"
 				class="card" square
 				@click="$router.push(`/${builtin.path}`)">
 				<q-icon :name="builtin.icon" color="primary" size="4em"/>
-				<span class="text-h6">{{ capitalize(builtin.name) }}</span>
+				<span class="text-h6">{{ $capitalize(builtin.name) }}</span>
 			</q-card>
 		</div>
 	</q-page>
@@ -26,8 +26,7 @@ export default defineComponent({
 	name: 'MainPage',
 	setup () {
 		return {
-			builtins: builtinList,
-			capitalize: (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
+			builtins: builtinList
 		};
 	}
 });

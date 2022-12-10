@@ -6,7 +6,11 @@
 		</div>
 	</q-toolbar>
 	<editor-dialog />
-	<q-layout view="hHh lpr lFr" :container="true">
+	<q-layout
+		view="hHh lpr lFr"
+		:container="true"
+		class="main-layout"
+	>
 		<q-drawer
 			v-model="leftDrawerOpen"
 			show-if-above
@@ -81,5 +85,8 @@ export default defineComponent({
 }
 .main-router {
 	height: 100%;
+}
+.main-layout {
+	height: calc(100% - 50px) !important;
 }
 </style>

@@ -14,9 +14,11 @@ export const imgErr = (e: Event): void => {
 		target.src = 'imgs/minecraft/player.png';
 };
 
-export const api = (import.meta.env.DEV)
+export const api = (): string => (import.meta.env.DEV)
 	? 'http://localhost:3000'
 	: 'https://api.mapcraft.app';
+
+export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
 export interface fetchInterface {
 	get: (url: string) => Promise<globalThis.Response>,
@@ -90,6 +92,11 @@ declare module '@vue/runtime-core' {
 		$api: () => string;
 
 		/**
+		 * Capitalize string
+		 */
+		$capitalize: (str: string) => string;
+
+		/**
 		 * Preconfigured fetch api
 		 */
 		$fetch: fetchInterface;
@@ -106,6 +113,9 @@ export default {
 
 		app.config.globalProperties.$api = api;
 		app.provide('$api', api);
+
+		app.config.globalProperties.$capitalize = capitalize;
+		app.provide('$capitalize', capitalize);
 
 		app.config.globalProperties.$fetch = $fetch;
 		app.provide('$fetch', $fetch);

@@ -32,6 +32,8 @@ export interface cutsceneInterface {
 	name: string;
 	tag: string;
 	duration: number;
+	description: string;
+	position: string;
 }
 
 export interface cutscenePointInterface {
@@ -68,6 +70,7 @@ class cutscene {
 					"tag" TEXT,\
 					"duration" INTEGER,\
 					"description" TEXT,\
+					"position" INTEGER,\
 					PRIMARY KEY("id" AUTOINCREMENT)\
 					UNIQUE("name")\
 				);'
@@ -120,7 +123,6 @@ class cutscene {
 		ipc.send('editor::open-editor', link);
 	}
 
-	//#region Getter
 	async getCutscene(id: number | undefined = undefined): Promise<cutsceneInterface | cutsceneInterface[]> {
 		if (id === undefined)
 			return this.db.all('SELECT * FROM cutscene');
@@ -130,7 +132,6 @@ class cutscene {
 	async getPoints(id: number): Promise<cutscenePointInterface[]> {
 		return this.db.all('SELECT * FROM cutscenePoint WHERE cutsceneId = ?', id);
 	}
-	//#endregion Getter
 
 	async createCutscene(name: string): Promise<cutsceneInterface> {
 		await this.db.update('INSERT INTO cutscene (name, duration) VALUES (?, ?)', name, 0);
@@ -144,7 +145,9 @@ class cutscene {
 			id: Number(ret.id),
 			name: String(ret.name),
 			tag: `Cutscene_${ret.id}`,
-			duration: Number(ret.duration)
+			duration: Number(ret.duration),
+			description: '',
+			position: 'origin'
 		};
 	}
 
@@ -155,6 +158,27 @@ class cutscene {
 			fs.removeLine(this._path.main, `tag=cutscene_${id.toString()}`),
 		]);
 		return rm(resolve(this._path.dir, id.toString()), { recursive: true });
+	}
+
+	async saveCutscene(cutscene: cutsceneInterface, points: cutscenePointInterface[]): Promise<void> {
+		const oldPoints: { cutsceneId: number, point: number }[] = await this.db.all('SELECT cutsceneId, point FROM cutscenePoint WHERE cutsceneId = ?', cutscene.id);
+		const prepare = {
+			insertPoint: this.db.prepare('INSERT INTO cutscenePoint (cutsceneId, point, x, y, z, rx, ry, duration, transition) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'),
+			updatePoint: this.db.prepare('UPDATE cutscenePoint SET x = ?, y = ?, z = ?, rx = ?, ry = ?, duration = ?, transition = ? WHERE cutsceneId = ? AND point = ?'),
+			cutscene: this.db.prepare('UPDATE cutscene SET name = ?, duration = ?, description = ?, position = ? WHERE id = ?')
+		};
+		const isExist = (x: number) => !!oldPoints.find((e) => e.cutsceneId === points[x].cutsceneId && e.point === points[x].point);
+		let i = 0;
+
+		prepare.cutscene.run(cutscene.name, cutscene.duration, cutscene.description, cutscene.position, cutscene.id);
+		for (; i < points.length; i++) {
+			if (isExist(Number(i)))
+				prepare.updatePoint.run(points[i].x, points[i].y, points[i].z, points[i].rx, points[i].ry, points[i].duration, points[i].transition, points[i].cutsceneId, points[i].point);
+			else
+				prepare.insertPoint.run(points[i].cutsceneId, points[i].point, points[i].x, points[i].y, points[i].z, points[i].rx, points[i].ry, points[i].duration, points[i].transition);
+		}
+		for (; i < oldPoints.length; i++)
+			this.db.update('DELETE FROM cutscenePoint WHERE cutsceneId = ? AND point = ?', oldPoints[i].cutsceneId, oldPoints[i].point);
 	}
 
 	//#region cutscene generation
@@ -183,7 +207,7 @@ class cutscene {
 			curve: { last: 0.0, current: 0.0 },
 			percent: { last: 0.0, current: 0.0 },
 		};
-		const ret: bezier = {} as bezier;
+		const ret: bezier = { transition: 'ease', points: [] };
 
 		if (transition === 'linear')
 			ret.points.push(parseFloat((distance / duration).toFixed(6)));
@@ -211,13 +235,10 @@ class cutscene {
 
 	async generateCutscene(id: number): Promise<void[]> {
 		const cutscene: cutsceneInterface = await this.db.get('SELECT * FROM cutscene WHERE id = ?', id);
-		const points: cutscenePointInterface[] = await this.db.get('SELECT * FROM cutscenePoint WHERE cutsceneId = ? ORDER BY point', id);
-		// create dir if not exist
-		await access(resolve(this._path.dir, id.toString()))
-			.catch(() => mkdir(resolve(this._path.dir, id.toString()), { recursive: true }));
-
+		const parse = cutscene.position.split(';');
+		const points: cutscenePointInterface[] = await this.db.all('SELECT * FROM cutscenePoint WHERE cutsceneId = ? ORDER BY point', id);
 		if (points.length <= 1)
-			throw new Error('');
+			throw new Error('cutscene need two points');
 		const tag = `cutscene_${id.toString()}`;
 		const name = cutscene.name;
 		const time = { Max: cutscene.duration * 20 };
@@ -236,11 +257,23 @@ class cutscene {
 				5: ['execute if score @s MC_Cutscene matches 0 if entity @s[tag=debug] run data merge entity @e[tag=', tag, ',tag=cutscene,tag=Camera,tag=debugCutscene,sort=nearest,limit=1] {CustomNameVisible:1b,CustomName:\'{"text":"', name, '"}\'}'],
 				6: ['execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run gamemode spectator @s'],
 				7: ['execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run spectate @e[tag=', tag, ',tag=cutscene,tag=Camera,sort=nearest,limit=1] @s'],
-				8: ['execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run function mapcraft-data:cutscene/', id.toString(), '/start'],
-				9: ['execute if entity @s[tag=debug] positioned as @e[tag=', tag, ',tag=cutscene,tag=Camera,tag=debugCutscene,sort=nearest,limit=1] run particle minecraft:happy_villager ~ ~0.6 ~ 0 0 0 0 0 force'],
-				10: ['execute if score @s MC_Cutscene matches 0.. if entity @s[tag=', tag, ',tag=!debug] run kill @e[tag=', tag, ',tag=cutscene,tag=Camera,tag=debugCutscene,sort=nearest,limit=1]'],
-				11: ['scoreboard players add @s MC_Cutscene 1'],
-				12: ['# Cutscene'],
+				8: () => {
+					if (parse[0] === 'origin') {
+						return [
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveX run data get entity @s Pos[0]',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveY run data get entity @s Pos[1]',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveZ run data get entity @s Pos[2]',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveRx run data get entity @s Rotation[0]',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveRy run data get entity @s Rotation[1]'
+						];
+					}
+					return undefined;
+				},
+				9: ['execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run function mapcraft-data:cutscene/', id.toString(), '/start'],
+				10: ['execute if entity @s[tag=debug] positioned as @e[tag=', tag, ',tag=cutscene,tag=Camera,tag=debugCutscene,sort=nearest,limit=1] run particle minecraft:happy_villager ~ ~0.6 ~ 0 0 0 0 0 force'],
+				11: ['execute if score @s MC_Cutscene matches 0.. if entity @s[tag=', tag, ',tag=!debug] run kill @e[tag=', tag, ',tag=cutscene,tag=Camera,tag=debugCutscene,sort=nearest,limit=1]'],
+				12: ['scoreboard players add @s MC_Cutscene 1'],
+				13: ['# Cutscene'],
 			},
 			End: {
 				0: ['# End'],
@@ -248,8 +281,48 @@ class cutscene {
 				2: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=', tag, ',tag=!debug] run gamemode creative @s'],
 				3: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. run kill @e[tag=', tag, ',tag=cutscene,tag=Camera,sort=nearest,limit=1]'],
 				4: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run tag @s remove ', tag],
-				5: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run function mapcraft-data:cutscene/', id.toString(), '/end'],
-				6: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. run scoreboard players set @s MC_Cutscene 0'],
+				5: () => {
+					if (parse[0] === 'custom') {
+						// put the entity to an exact position
+						const point = { x: 0, y: 0, z: 0, rx: 0, ry: 0 };
+						const temp = {
+							x: /x:([0-9]+)/g.exec(parse[1]),
+							y: /y:([0-9]+)/g.exec(parse[2]),
+							z: /z:([0-9]+)/g.exec(parse[3]),
+							rx: /rx:([0-9]+)/g.exec(parse[4]),
+							ry: /ry:([0-9]+)/g.exec(parse[5])
+						};
+						if (temp.x)
+							point.x = Number(temp.x[1]);
+						if (temp.y)
+							point.y = Number(temp.y[1]);
+						if (temp.z)
+							point.y = Number(temp.z[1]);
+						if (temp.rx)
+							point.rx = Number(temp.rx[1]);
+						if (temp.ry)
+							point.ry = Number(temp.ry[1]);
+						return [
+							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. run tp @s ',
+							`${point.x} `, `${point.y} `, `${point.z} `,
+							`${point.rx} `, `${point.rx}`,
+						];
+					} else if (parse[0] === 'last') {
+						// put the entity at the last point of the cutscene
+						return undefined;
+					} else if (parse[0] === 'origin') {
+						return [
+							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerX = @s MC_CutsceneSaveX',
+							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerY = @s MC_CutsceneSaveY',
+							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerZ = @s MC_CutsceneSaveZ',
+							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerRx = @s MC_CutsceneSaveRx',
+							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerRy = @s MC_CutsceneSaveRy',
+							'function mapcraft:built_in/instant_tp/main'
+						];
+					}
+				},
+				6: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run function mapcraft-data:cutscene/', id.toString(), '/end'],
+				7: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. run scoreboard players set @s MC_Cutscene 0'],
 			},
 			LaunchCamera: ['execute if score @s MC_Cutscene matches 0..', time.Max.toString(), ' at @e[tag=', tag, ',tag=cutscene,tag=Camera,sort=nearest,limit=1] run function mapcraft-data:cutscene/', id.toString(), '/camera'],
 			Camera: ['execute if score @s MC_Cutscene matches ', ' run tp @e[tag=Camera,sort=nearest]'],
@@ -265,12 +338,19 @@ class cutscene {
 			let _data = '';
 			for (const id in JSON) {
 				if (Object.prototype.hasOwnProperty.call(JSON, id)) {
-					_data += JSON[id].join('');
-					_data += '\n';
+					if (typeof JSON[id] === 'function') {
+						const ret = JSON[id]();
+						if (ret)
+							_data += `${ret.join('')}\n`;
+					} else
+						_data += `${JSON[id].join('')}\n`;
 				}
 			}
 			return (_data);
 		};
+
+		await access(resolve(this._path.dir, id.toString()))
+			.catch(() => mkdir(resolve(this._path.dir, id.toString()), { recursive: true }));
 		fs.modifyLine(this._path.main, `tag=${tag}`, commands.Launch.join(''), true);
 		data.file += Join(commands.Core);
 		data.file += `${commands.LaunchCamera.join('')}\n`;
@@ -304,11 +384,14 @@ class cutscene {
 		data.file += `# Put the player back in place\n${commands.TeleportPlayer.join('')}\n`;
 		data.file += Join(commands.End);
 
+		await Promise.all([
+			writeFile(resolve(this._path.dir, id.toString(), 'start.mcfunction'), '# Cutscene start\n', { encoding: 'utf-8', flag: 'wx' }),
+			writeFile(resolve(this._path.dir, id.toString(), 'end.mcfunction'), '# Cutscene end\n', { encoding: 'utf-8', flag: 'wx' })
+		]).catch(() => { /* make nothing */ });
+
 		return Promise.all([
 			writeFile(resolve(this._path.dir, id.toString(), 'cutscene.mcfunction'), data.file, { encoding: 'utf-8', flag: 'w' }),
 			writeFile(resolve(this._path.dir, id.toString(), 'camera.mcfunction'), data.camera, { encoding: 'utf-8', flag: 'w' }),
-			writeFile(resolve(this._path.dir, id.toString(), 'start.mcfunction'), '# Cutscene start\n', { encoding: 'utf-8', flag: 'wx' }),
-			writeFile(resolve(this._path.dir, id.toString(), 'end.mcfunction'), '# Cutscene end\n', { encoding: 'utf-8', flag: 'wx' })
 		]);
 	}
 	//#endregion cutscene generation
@@ -323,5 +406,6 @@ exposeInMainWorld('cutscene', {
 	getPoints: (id: number) => __instance__.getPoints(id),
 	create: (name: string) => __instance__.createCutscene(name),
 	delete: (id: number) => __instance__.deleteCutscene(id),
-	generate: (id: number) => __instance__.generateCutscene(id)
+	save: (cutscene: cutsceneInterface, points: cutscenePointInterface[]) => __instance__.saveCutscene(cutscene, points),
+	generate: (id: number) => __instance__.generateCutscene(id),
 });

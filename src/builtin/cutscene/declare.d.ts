@@ -11,6 +11,7 @@ export declare global {
 			getPoints: (id: number) => Promise<cutscenePointInterface[]>,
 			create: (name: string) => Promise<cutsceneInterface>,
 			delete: (id: number) => Promise<void[]>,
+			save: (cutscene: cutsceneInterface, points: cutscenePointInterface[]) => Promise<void>,
 			generate: (id: number) => Promise<void[]>
 		}
 	}
