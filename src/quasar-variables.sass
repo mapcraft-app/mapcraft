@@ -33,19 +33,31 @@ body
 	display: flex
 	flex-direction: column
 	align-items: stretch
+	margin-top: 2em !important
+	height: calc(100vh - 2em) !important
+	min-height: calc(100vh - 2em) !important
+	width: 100vw !important
+	min-width: 100vw !important
+#main-app
+	width: 100vw
+	height: 100vh
 
 /* titlebar */
 .titlebar
-	-webkit-app-region: drag
-	background-color: #2a2a2a
-	color: white !important
 	display: flex
+	position: fixed
 	flex-direction: row
 	flex-wrap: nowrap
 	align-items: center
 	justify-content: space-between
 	height: 2em
+	width: 100vw
+	top: 0
+	left: 0
 	z-index: 999999999
+	-webkit-app-region: drag
+	background-color: #2a2a2a
+	color: white !important
 .titlebar-title
 	display: inline-flex
 	justify-content: center
@@ -82,9 +94,10 @@ body
 .titlebar-buttons div > span.material-icons.min-max
 	transform: rotate(90deg) scale(1, -1)
 .titlebar-page
-	min-height: calc(100% - 2em)
-	max-height: calc(100% - 2em)
-	height: calc(100% - 2em)
+	height: 100%
+	min-height: 100%
+	min-width: 100%
+	width: 100%
 	overflow: hidden
 
 /* scrollbar */
@@ -96,3 +109,14 @@ body
 	background: #939393
 ::-webkit-scrollbar-thumb:hover
 	background: #ababab
+
+/* Patch quasar for handle custom window */
+.q-layout-container > div
+	top: 0 !important
+.absolute-full, .fullscreen, .fixed-full
+	top: 2em !important
+.q-dialog__backdrop
+	top: 0 !important
+.q-menu
+	max-height: 50% !important
+	height: 35% !important

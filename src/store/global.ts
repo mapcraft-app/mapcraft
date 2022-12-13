@@ -16,7 +16,6 @@ export const globalStore = defineStore('global', () => {
 	});
 	const darkMode = ref<boolean>(window.env.darkMode());
 	const lang = ref<string>(window.env.lang());
-	const minecraftVersion = ref<'1.17' | '1.18' | '1.19' | undefined>('1.19');
 	
 	function setLang(val: string) {
 		lang.value = val;
@@ -44,9 +43,8 @@ export const globalStore = defineStore('global', () => {
 		directory,
 		darkMode,
 		lang,
-		minecraftVersion,
 	
 		setLang,
-		setDarkMode
+		setDarkMode,
 	};
 });

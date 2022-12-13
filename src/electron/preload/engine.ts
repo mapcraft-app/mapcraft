@@ -12,16 +12,27 @@ export interface mapEngineInstanceInterface {
 	resourcepack: resource
 }
 
+export interface mapEngineInfoTable {
+	name: string;
+	minecraftVersion: string;
+}
+
 export class mapEngine {
 	public instance: mapEngineInstanceInterface;
 	public database: database;
 	
-	constructor(env: envInterface, name: string, version: '1.17' | '1.18' | '1.19' | undefined = undefined) {
+	constructor(env: envInterface, name: string, version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') {
 		this.instance = {} as mapEngineInstanceInterface;
 		this.instance.datapack = new engine.data(env, name, version);
 		this.instance.resourcepack = new engine.resource(env, name, version);
 		this.instance.build = new buildMap(this.instance.datapack, this.instance.resourcepack);
-		this.database = new sql(env, name, log.psql);
+		this.database = new sql(env, name, log.psql, {
+			name: 'info',
+			sql: 'CREATE TABLE IF NOT EXISTS "info" (\
+				"name"              TEXT NOT NULL UNIQUE,\
+				"minecraftVersion"  TEXT NOT NULL\
+			)'
+		});
 	}
 
 	public async build(): Promise<string> {
@@ -48,11 +59,22 @@ export class mapEngine {
 			this.instance.resourcepack.update()
 		]);
 	}
+
+	public async getInfo(): Promise<mapEngineInfoTable> {
+		return new Promise((res, rej) => {
+			this.database.get('SELECT * FROM info')
+				.then((data: mapEngineInfoTable | undefined) => {
+					if (data === undefined || !data.name || !data.minecraftVersion)
+						return rej(data);
+					res(data);
+				});
+		});
+	}
 }
 
 export let mapEngineInstance: mapEngine;
 export default {
-	init: (env: envInterface, name: string, version: '1.17' | '1.18' | '1.19' | undefined = undefined): mapEngine => {
+	init: (env: envInterface, name: string, version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3' = '1.19.3'): mapEngine => {
 		mapEngineInstance = new mapEngine(env, name, version);
 		return mapEngineInstance;
 	},
@@ -62,6 +84,7 @@ export default {
 	clean: (): Promise<void[][]> => mapEngineInstance.clean(),
 	install: (): Promise<void> => mapEngineInstance.install(),
 	update: (): Promise<void[]> => mapEngineInstance.update(),
+	getInfo: (): Promise<mapEngineInfoTable> => mapEngineInstance.getInfo(),
 	sql: {
 		add: (tables: tableInterface | tableInterface[]): void => mapEngineInstance.database.addTable(tables),
 		exist: (names: string | string[]): number | number[] => mapEngineInstance.database.isExistTable(names),

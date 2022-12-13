@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 export const mapStore = defineStore('map', () => {
 	const info = reactive({
@@ -14,6 +14,7 @@ export const mapStore = defineStore('map', () => {
 		},
 		resourcepack: ''
 	});
+	const minecraftVersion = ref<'1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3'>('1.19.3');
 
 	function setIcon(str: string) {
 		info.icon = str;
@@ -23,6 +24,10 @@ export const mapStore = defineStore('map', () => {
 	}
 	function setPath(str: string) {
 		info.path = str;
+	}
+
+	function setMinecraftVersion(val: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') {
+		minecraftVersion.value = val;
 	}
 
 	function setMapPath(savePath: string, resourcePath: string, nameOfMap: string) {
@@ -38,12 +43,15 @@ export const mapStore = defineStore('map', () => {
 	return {
 		info,
 		path,
+		minecraftVersion,
 
 		setIcon,
 		setName,
 		setPath,
 
 		setMapPath,
-		getMapPath
+		getMapPath,
+
+		setMinecraftVersion
 	};
 });

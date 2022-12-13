@@ -22,12 +22,12 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint --fix .",
+    "buildDeps": "electron-builder install-app-deps",
     "build": "yarn appDeps && vite build && vite build -c vite.config.electron.ts",
     "preview": "yarn build && electron-builder --dir --config build.js",
     "productionMac": "yarn build && electron-builder -m --config build.js",
     "productionWin": "yarn build && electron-builder -w --config build.js",
-    "productionLix": "yarn build && electron-builder -l --config build.js",
-    "postinstall": "electron-builder install-app-deps"
+    "productionLix": "yarn build && electron-builder -l --config build.js"
   },
   "dependencies": {
     "@quasar/extras": "^1.15.3",

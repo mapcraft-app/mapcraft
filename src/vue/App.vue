@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from 'vue';
-import { useMeta } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { generateMeta } from 'src/meta';
 import router from 'src/router';
 
@@ -38,7 +38,8 @@ export default defineComponent({
 	name: 'App',
 	setup () {
 		useMeta(generateMeta());
-	
+		const $q = useQuasar();
+
 		const isDev = ref(import.meta.env.DEV);
 		const isMaximize = ref(false);
 		const isFullscreen = ref(false);
@@ -74,7 +75,13 @@ export default defineComponent({
 			isDev,
 			isMaximize,
 			isFullscreen,
-			click
+			click,
+
+			test: () => $q.notify({
+				message: 'hello world',
+				position: 'top',
+				timeout: 1000
+			}),
 		};
 	}
 });

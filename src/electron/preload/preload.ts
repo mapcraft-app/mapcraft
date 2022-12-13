@@ -1,7 +1,7 @@
 import { contextBridge, clipboard } from 'electron';
 import { writeFile } from 'fs';
 import { resolve, join } from 'path';
-import { download } from 'mapcraft-api';
+import { download } from 'mapcraft-api/backend';
 
 import './exposeEnv';
 import engine from './engine';

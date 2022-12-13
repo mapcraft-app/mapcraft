@@ -4,6 +4,7 @@ import { builtinFormat } from 'app/src/builtin/front';
 import type { download } from 'mapcraft-api';
 
 import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
+import type { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
 import type { dataEngineInterface, mapEngine, mapEngineInstance } from 'electron/preload/engine';
 
 export declare global {
@@ -108,13 +109,20 @@ export declare global {
 			 */
 			download: download,
 			engine: {
-				init: (env: envInterface, name: string, version?: '1.17' | '1.18' | '1.19' | undefined) => mapEngine,
+				init: (env: envInterface, name: string, version?: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') => mapEngine,
 				database: () => database,
 				instance: () => mapEngine,
 				build: () => Promise<string>,
 				clean: () => Promise<void[][]>,
 				install: () => Promise<void>,
-				update: () => Promise<void[]>
+				update: () => Promise<void[]>,
+				getInfo: () => Promise<mapEngineInfoTable>,
+				sql: {
+					add: (tables: tableInterface | tableInterface[]) => void,
+					exist: (names: string | string[]) => number | number[],
+					remove: (names: string | string[]) => void,
+					update: (tables: tableInterface | tableInterface[]) => void,
+				}
 			}
 
 			/**
