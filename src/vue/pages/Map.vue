@@ -33,7 +33,6 @@
 				</q-card-section>
 			</q-card>
 		</div>
-		<q-btn label="click" @click="dialogDef = true"/>
 		<!-- Dialog for init name map and minecraft version if one or all of them not exist -->
 		<q-dialog v-model="dialogDef" persistent>
 			<q-card style="width: 700px; max-width: 80vw;">
@@ -56,14 +55,6 @@
 							</q-item>
 						</template>
 					</q-select>
-					<!--
-					<q-option-group
-						v-model="mapVersion"
-						class="row"
-						:options="minecraftVersions.map((e) => { return {'label': e, value: e } })"
-						type="radio"
-					/>
-					-->
 				</q-card-section>
 				<q-card-actions align="right" class="bg-white text-teal">
 					<q-btn v-close-popup flat label="OK" />

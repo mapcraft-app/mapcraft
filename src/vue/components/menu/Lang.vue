@@ -18,8 +18,8 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import localeOptions from 'src/i18n/options';
 import { globalStore } from 'src/store/global';
+import localeOptions from 'src/i18n/options';
 
 export default defineComponent({
 	name: 'SelectLang',
@@ -30,16 +30,22 @@ export default defineComponent({
 		const store = globalStore();
 		const $q = useQuasar();
 		const { locale } = useI18n({ useScope: 'global' });
-
-		watch(locale, (ret) => {
-			$q.localStorage.set('lang', ret);
-			store.setLang(String(ret));
-		});
-
+		
 		onMounted(() => {
 			const ret = $q.localStorage.getItem('lang');
 			if (ret)
 				locale.value = ret;
+		});
+
+		watch(locale, (ret) => {
+			for (const lang of localeOptions) {
+				if (lang.value === ret as string) {
+					$q.lang.set(lang.quasar);
+					$q.localStorage.set('lang', ret);
+					store.setLang(String(ret));
+					break;
+				}
+			}
 		});
 
 		return {
