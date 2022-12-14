@@ -14,9 +14,16 @@ export const imgErr = (e: Event): void => {
 		target.src = 'imgs/minecraft/player.png';
 };
 
-export const api = (): string => (import.meta.env.DEV)
-	? 'http://localhost:3000'
-	: 'https://api.mapcraft.app';
+export const api = (path?: string): string => {
+	if (path) {
+		return (import.meta.env.DEV)
+			? `http://localhost:3000/${path}`
+			: `https://api.mapcraft.app/${path}`;
+	}
+	return (import.meta.env.DEV)
+		? 'http://localhost:3000'
+		: 'https://api.mapcraft.app';
+};
 
 export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -28,13 +35,13 @@ export interface fetchInterface {
 }
 export class $fetch {
 	static get(url: string): Promise<globalThis.Response> {
-		return fetch(`${api}/${url}`, {
+		return fetch(api(url), {
 			method: 'GET'
 		});
 	}
 	
 	static post(url: string, data: Record<string, any>): Promise<globalThis.Response> {
-		return fetch(`${api}/${url}`, {
+		return fetch(api(url), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -47,7 +54,7 @@ export class $fetch {
 	}
 	
 	static put(url: string, data: Record<string, any>): Promise<globalThis.Response> {
-		return fetch(`${api}/${url}`, {
+		return fetch(api(url), {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -60,7 +67,7 @@ export class $fetch {
 	}
 	
 	static delete(url: string, data: Record<string, any>): Promise<globalThis.Response> {
-		return fetch(`${api}/${url}`, {
+		return fetch(api(url), {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'

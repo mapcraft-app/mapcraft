@@ -3,30 +3,44 @@
 		<div class="flex justify-center items-center">
 			<q-card
 				class="card" square
-				@click="$router.push('/')">
+				@click="handleClick(); $router.push('/')"
+			>
 				<q-icon :name="$t('components.list.home.icon')" color="primary" size="4em"/>
-				<span class="text-h6">{{ $capitalize($t('components.list.home.title')) }}</span>
+				<span class="text-h6">
+					{{ $capitalize($t('components.list.home.title')) }}
+				</span>
 			</q-card>
 			<q-card
 				v-for="builtin in builtins" :key="builtin.path"
 				class="card" square
-				@click="$router.push(`/${builtin.path}`)">
+				@click="handleClick({name: builtin.name, path: builtin.path}); $router.push(`/${builtin.path}`)"
+			>
 				<q-icon :name="builtin.icon" color="primary" size="4em"/>
-				<span class="text-h6">{{ $capitalize(builtin.name) }}</span>
+				<span class="text-h6">
+					{{ $capitalize($t(`builtin.${builtin.path}.menu.name`)) }}
+				</span>
 			</q-card>
 		</div>
 	</q-page>
 </template>
 
 <script lang="ts">
+import { globalStore } from 'store/global';
 import { defineComponent } from 'vue';
 import { builtinList } from 'app/src/builtin/front';
 
 export default defineComponent({
 	name: 'MainPage',
 	setup () {
+		const store = globalStore();
+
+		const handleClick = (data: { name: string, path: string } | null = null) => {
+			store.plugin = data;
+		};
+
 		return {
-			builtins: builtinList
+			builtins: builtinList,
+			handleClick
 		};
 	}
 });

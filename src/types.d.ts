@@ -109,7 +109,8 @@ export declare global {
 			 */
 			download: download,
 			engine: {
-				init: (env: envInterface, name: string, version?: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') => mapEngine,
+				newInstance: (env: envInterface, name: string) => mapEngine,
+				init: (version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') => void,
 				database: () => database,
 				instance: () => mapEngine,
 				build: () => Promise<string>,
@@ -117,11 +118,17 @@ export declare global {
 				install: () => Promise<void>,
 				update: () => Promise<void[]>,
 				getInfo: () => Promise<mapEngineInfoTable>,
+				updateInfo: (name: string, version: string) => Promise<void>,
 				sql: {
-					add: (tables: tableInterface | tableInterface[]) => void,
-					exist: (names: string | string[]) => number | number[],
-					remove: (names: string | string[]) => void,
-					update: (tables: tableInterface | tableInterface[]) => void,
+					table: {
+						add: (tables: tableInterface | tableInterface[]) => void,
+						exist: (names: string | string[]) => number | number[],
+						remove: (names: string | string[]) => void,
+						update: (tables: tableInterface | tableInterface[]) => void
+					},
+					get(req: string, ...args: any[]): Promise<any>;
+					all(req: string, ...args: any[]): Promise<any[]>;
+					update(req: string, ...args: any[]): Promise<RunResult>;
 				}
 			}
 

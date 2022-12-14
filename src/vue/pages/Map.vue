@@ -33,31 +33,46 @@
 				</q-card-section>
 			</q-card>
 		</div>
+
+		<q-btn label="click" @click="dialogDef = true" />
 		<!-- Dialog for init name map and minecraft version if one or all of them not exist -->
 		<q-dialog v-model="dialogDef" persistent>
 			<q-card style="width: 700px; max-width: 80vw;">
 				<q-card-section>
-					<div class="text-h6">Definition</div>
+					<div class="text-h6">Informations</div>
 				</q-card-section>
 				<q-card-section class="q-pt-none">
-					<q-input v-model="mapName" label="Name of project" />
+					<q-input v-model="mapName" label="Name of project" class="q-pb-md"/>
 					<q-select
 						v-model="mapVersion"
 						filled use-input input-debounce="0"
 						style="max-height: 50px"
-						label="Simple filter" :options="minecraftVersions" @filter="filterVersion"
+						label="Minecraft version"
+						:options="minecraftVersions" @filter="filterVersion"
 					>
 						<template v-slot:no-option>
 							<q-item>
 								<q-item-section class="text-grey">
-									No results
+									{{ $q.lang.table.noResults }}
 								</q-item-section>
 							</q-item>
 						</template>
 					</q-select>
 				</q-card-section>
-				<q-card-actions align="right" class="bg-white text-teal">
-					<q-btn v-close-popup flat label="OK" />
+				<q-card-actions align="right" >
+					<q-btn
+						v-close-popup
+						flat icon="close"
+						class="bg-white text-red-7"
+						@click="dialogDef = false; mapVersion = ''; mapName = ''"
+					/>
+					<q-btn
+						v-close-popup
+						flat icon="check"
+						class="bg-white text-teal"
+						:disable="(!mapName || !mapName.length || !mapVersion || !mapVersion.length)"
+						@click="dialogDefRegister"
+					/>
 				</q-card-actions>
 			</q-card>
 		</q-dialog>
@@ -92,11 +107,13 @@ export default defineComponent({
 		const mapIsSelected = ref<boolean>(false);
 		const loaderMessage = ref<string>('');
 		let mapsInterval: NodeJS.Timer; // eslint-disable-line no-undef
-
+		
 		const mapName = ref<string>('');
 		const mapVersion = ref<string>('');
 		const minecraftVersions = ref<string[]>(minecraft.minecraft());
 		const dialogDef = ref<boolean>(false);
+		let instanceInterval: NodeJS.Timer; // eslint-disable-line no-undef
+		let step = 0;
 
 		const getMaps = (dir: string) => {
 			window.mapcraft.getMap(dir)
@@ -113,12 +130,68 @@ export default defineComponent({
 						mapsError.value = 'noMinecraft';
 				});
 		};
+
+		const reloadSearch = (): void => getMaps(store.directory.save);
 		
-		const handleClick = (name: string): void => {
-			let instanceInterval: NodeJS.Timer; // eslint-disable-line no-undef
-			let step = 0;
-			
+		// eslint-disable-next-line no-unused-vars
+		const filterVersion = (val: string, update: (...args: any[]) => void) => {
+			if (val === '')
+				update(() => minecraftVersions.value = minecraft.minecraft());
+			else {
+				update(() => {
+					const needle = val.toLowerCase();
+					minecraftVersions.value = minecraft.minecraft().filter(v => v.toLowerCase().indexOf(needle) > -1);
+				});
+			}
+		};
+
+		const startInstall = () => {
+			window.mapcraft.engine.init(mapVersion.value as any);
 			mapIsSelected.value = true;
+			instanceInterval = setInterval(() => {
+				if (step === 0) {
+					if (window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent >= 100) {
+						if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent > 0)
+							step = 1;
+						else
+							loaderMessage.value = t('pages.main.install.datapack.install');
+					} else
+						loaderMessage.value = t('pages.main.install.datapack.download', { percents: window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent});
+				}
+
+				if (step === 1) {
+					if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent >= 100) {
+						if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent > 0)
+							step = 2;
+						else
+							loaderMessage.value = t('pages.main.install.resourcepack.default.install');
+					} else
+						loaderMessage.value = t('pages.main.install.resourcepack.default.download', { percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent});
+				}
+
+				if (step === 2) {
+					if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent >= 100) {
+						step = 3;
+						loaderMessage.value = t('pages.main.install.resourcepack.map.install');
+					} else
+						loaderMessage.value = t('pages.main.install.resourcepack.map.download', { percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent});
+				}
+			}, 100);
+			window.mapcraft.engine.install()
+				.then(() => {
+					clearInterval(instanceInterval);
+					const user = $q.localStorage.getItem('user') as any;
+					if (user !== null && user.remember)
+						router.push('/').finally(() => $q.loading.hide());
+					else
+						router.push('/user').finally(() => $q.loading.hide());
+				})
+				.catch((err) => {
+					console.error('plip', err);
+				});
+		};
+
+		const handleClick = (name: string): void => {
 			if (!maps.value) {
 				mapIsSelected.value = false;
 				return;
@@ -131,62 +204,36 @@ export default defineComponent({
 					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
 					storeMap.setMapPath(window.env.directory.save, window.env.directory.resource, name);
-					
-					const startInstall = () => {
-						instanceInterval = setInterval(() => {
-							if (step === 0) {
-								if (window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent >= 100) {
-									if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent > 0)
-										step = 1;
-									else
-										loaderMessage.value = t('pages.main.install.datapack.install');
-								} else
-									loaderMessage.value = t('pages.main.install.datapack.download', { percents: window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent});
-							}
-
-							if (step === 1) {
-								if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent >= 100) {
-									if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent > 0)
-										step = 2;
-									else
-										loaderMessage.value = t('pages.main.install.resourcepack.default.install');
-								} else
-									loaderMessage.value = t('pages.main.install.resourcepack.default.download', { percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent});
-							}
-
-							if (step === 2) {
-								if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent >= 100) {
-									step = 3;
-									loaderMessage.value = t('pages.main.install.resourcepack.map.install');
-								} else
-									loaderMessage.value = t('pages.main.install.resourcepack.map.download', { percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent});
-							}
-						}, 100);
-						window.mapcraft.engine.install()
-							.then(() => {
-								clearInterval(instanceInterval);
-								const user = $q.localStorage.getItem('user') as any;
-								if (user !== null && user.remember)
-									router.push('/').finally(() => $q.loading.hide());
-								else
-									router.push('/user').finally(() => $q.loading.hide());
-							})
-							.catch((err) => {
-								console.error('plip', err);
-							});
-					};
-
-					window.mapcraft.engine.init(window.env.directory, name, storeMap.minecraftVersion);
-
+					window.mapcraft.engine.newInstance(window.env.directory, name);
 					window.mapcraft.engine.getInfo()
-						.then(() => startInstall())
+						.then((d: any) => {
+							mapName.value = d.name;
+							mapVersion.value = d.minecraftVersion;
+							startInstall();
+						})
 						.catch((d: any) => {
-							mapName.value = d.name ?? '';
-							mapVersion.value = d.version ?? '';
+							mapName.value = (d && d.name && d.name.length)
+								? d.name
+								: name;
+							mapVersion.value = (d && d.minecraftVersion && d.minecraftVersion.length)
+								? d.minecraftVersion
+								: minecraft.minecraft()[minecraft.minecraft().length - 1];
 							dialogDef.value = true;
 						});
+					return;
 				}
 			}
+		};
+
+		const dialogDefRegister = () => {
+			if (!mapName.value.length || !mapVersion.value.length || !minecraft.minecraft().includes(mapVersion.value))
+				return;
+			window.mapcraft.engine.updateInfo(mapName.value, mapVersion.value)
+				.then(() => {
+					dialogDef.value = false;
+					startInstall();
+				})
+				.catch((e) => console.error(e));
 		};
 		
 		onBeforeMount(() => {
@@ -212,19 +259,10 @@ export default defineComponent({
 			dialogDef,
 			minecraftVersions,
 
-			// eslint-disable-next-line no-unused-vars
-			filterVersion: (val: string, update: (...args: any[]) => void) => {
-				if (val === '')
-					update(() => minecraftVersions.value = minecraft.minecraft());
-				else {
-					update(() => {
-						const needle = val.toLowerCase();
-						minecraftVersions.value = minecraft.minecraft().filter(v => v.toLowerCase().indexOf(needle) > -1);
-					});
-				}
-			},
-			reloadSearch: (): void => getMaps(store.directory.save),
-			handleClick
+			filterVersion,
+			reloadSearch,
+			handleClick,
+			dialogDefRegister
 		};
 	}
 });

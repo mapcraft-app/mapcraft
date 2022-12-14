@@ -16,6 +16,7 @@ export const globalStore = defineStore('global', () => {
 	});
 	const darkMode = ref<boolean>(window.env.darkMode());
 	const lang = ref<string>(window.env.lang());
+	const plugin = ref<{ name: string, path: string } | null>(null);
 	
 	function setLang(val: string) {
 		lang.value = val;
@@ -43,6 +44,7 @@ export const globalStore = defineStore('global', () => {
 		directory,
 		darkMode,
 		lang,
+		plugin,
 	
 		setLang,
 		setDarkMode,

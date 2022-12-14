@@ -2,7 +2,7 @@
 	<q-toolbar class="bg-primary text-white">
 		<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 		<div class="row no-wrap justify-center q-pr-md main-layout-title-bar">
-			{{ $t('layouts.main.main.title') }}
+			{{ (store.plugin) ? $capitalize($t(`builtin.${store.plugin.path}.menu.name`)) : $t('layouts.main.main.title') }}
 		</div>
 	</q-toolbar>
 	<editor-dialog />
@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts">
+import { globalStore } from 'store/global';
 import { defineComponent, ref } from 'vue';
 import MenuList from 'components/menu/List.vue';
 import DarkMode from 'components/menu/DarkMode.vue';
@@ -65,10 +66,12 @@ export default defineComponent({
 		EditorDialog
 	},
 	setup() {
+		const store = globalStore();
 		const leftDrawerOpen = ref(false);
 		const toggleLeftDrawer = () =>
 			(leftDrawerOpen.value = !leftDrawerOpen.value);
 		return {
+			store,
 			leftDrawerOpen,
 			toggleLeftDrawer
 		};
