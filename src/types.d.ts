@@ -126,6 +126,7 @@ export declare global {
 						remove: (names: string | string[]) => void,
 						update: (tables: tableInterface | tableInterface[]) => void
 					},
+					check(): Promise<void>,
 					get(req: string, ...args: any[]): Promise<any>;
 					all(req: string, ...args: any[]): Promise<any[]>;
 					update(req: string, ...args: any[]): Promise<RunResult>;

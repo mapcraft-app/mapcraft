@@ -1,21 +1,5 @@
 <template>
 	<q-page style="height: calc(100vh - 79px);">
-		<q-card
-			v-if="saveNotify"
-			flat
-			:class="`text-white notify ${saveNotify.background}`"
-			@click="saveNotify = null"
-		>
-			<q-card-section>
-				<template v-if="saveNotify.loader">
-					<q-spinner-puff color="white" size="2em" />
-				</template>
-				<template v-else>
-					<q-icon :name="!saveNotify.error ? 'task_alt' : 'error'" size="2em" />
-				</template>
-				{{ $capitalize($t(saveNotify.text)) }}
-			</q-card-section>
-		</q-card>
 		<div ref="sideNav" :class="!$q.dark.isActive ? 'main-layout-day layout-menu' : 'main-layout-night layout-menu'">
 			<div class="layout-menu-button-back" :style="drawerOpen ? 'left: 250px; visibility: visible; opacity: 1' : 'left:0'" @click="openNav"></div>
 			<q-btn
@@ -33,7 +17,6 @@
 						icon="add" :title="$capitalize($t('builtin.cutscene.list.add'))"
 						@click="(createCutsceneModal = true)"
 					/>
-					<!--<q-btn @click="(editorOpen = !editorOpen)" label="toto" />-->
 				</div>
 				<q-list v-if="cutsceneList.length" separator>
 					<q-slide-item
@@ -86,7 +69,7 @@
 		</div>
 		<div v-if="cutsceneSelected" class="layout-content">
 			<div>
-				<div class="row justify-evenly q-pt-sm q-pb-sm">
+				<div class="row justify-evenly q-pt-sm q-pb-sm q-ml-xl">
 					<span class="text-h6 q-mr-md">{{ cutsceneSelected.name }}</span>
 					<div class="text-h6 row items-center">
 						<q-icon size="sm" name="schedule"/>
@@ -225,54 +208,58 @@
 					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.transition')) }}</span>
 				</div>
 			</div>
-			
-			<div
-				v-for="point in cutscenePointsList" :key="point.point"
-				class="table"
-			>
-				<span class="five">{{ point.point }}</span>
-				<q-input v-model="point.x" type="number" dense :rules="[val => !!val || '']" />
-				<q-input v-model="point.y" type="number" dense :rules="[val => !!val || '']" />
-				<q-input v-model="point.z" type="number" dense :rules="[val => !!val || '']" />
-				<q-input v-model="point.rx" type="number" dense :rules="[val => !!val || '']" />
-				<q-input v-model="point.ry" type="number" dense :rules="[val => !!val || '']" />
-				<div class="duration">
-					<q-input
-						v-model="point.duration" type="number"
-						step="1" min="0"
+			<template v-if="cutscenePointsList">
+				<div
+					v-for="point in cutscenePointsList" :key="point.point"
+					class="table"
+				>
+					<span class="five">{{ point.point }}</span>
+					<q-input v-model="point.x" type="number" dense :rules="[val => !!val || '']" />
+					<q-input v-model="point.y" type="number" dense :rules="[val => !!val || '']" />
+					<q-input v-model="point.z" type="number" dense :rules="[val => !!val || '']" />
+					<q-input v-model="point.rx" type="number" dense :rules="[val => !!val || '']" />
+					<q-input v-model="point.ry" type="number" dense :rules="[val => !!val || '']" />
+					<div class="duration">
+						<q-input
+							v-model="point.duration" type="number"
+							step="1" min="0"
+							:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
+							:rules="[val => !!val && Number(val) >= 0 || '']" 
+							dense class="q-mr-xs"
+						>
+							<template v-slot:append>
+								<span>s</span>
+							</template>
+						</q-input>
+					</div>
+					<q-select
+						v-model="point.transition"
 						:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
-						:rules="[val => !!val && Number(val) >= 0 || '']" 
-						dense class="q-mr-xs"
-					>
-						<template v-slot:append>
-							<span>s</span>
-						</template>
-					</q-input>
-				</div>
-				<q-select
-					v-model="point.transition"
-					:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
-					:options="['ease', 'ease-in', 'ease-in-out', 'ease-out', 'linear']"
-					dense
-				/>
-				<div class="seven">
-					<q-btn
-						square unelevated color="red-7"
-						icon="delete" class="button"
-						@click="removePoint(point.point)"
+						:options="['ease', 'ease-in', 'ease-in-out', 'ease-out', 'linear']"
+						dense
 					/>
+					<div class="seven">
+						<q-btn
+							square unelevated color="red-7"
+							icon="delete" class="button"
+							@click="removePoint(point.point)"
+						/>
+					</div>
 				</div>
-			</div>
-			<div class="add-point" @click="addPoint">
-				<q-icon name="add" size="2em" />
-			</div>
+				<div class="add-point" @click="addPoint">
+					<q-icon name="add" size="2em" />
+				</div>
+			</template>
 		</div>
 	</q-page>
 </template>
 
 <script lang="ts">
+import { useQuasar, QSpinnerPuff } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { defineComponent, onBeforeMount, onUnmounted, onMounted, ref, watch } from 'vue';
 import { mapStore } from 'store/map';
+import { capitalize } from 'app/src/vue/plugins/app';
 
 interface cutsceneInterface {
 	id: number;
@@ -295,22 +282,16 @@ interface cutscenePointInterface {
 	transition: 'ease' | 'ease-in' | 'ease-in-out' | 'ease-out' | 'linear'
 }
 
-interface notifyInterface {
-	background: string;
-	text: string;
-	loader?: boolean;
-	error?: string; 
-	icon?: string;
-}
-
 export default defineComponent({
 	name: 'CutsceneBuiltin',
 	setup () {
+		const $q = useQuasar();
+		const { t } = useI18n();
+
 		//#region General
 		const storeMap = mapStore();
 		const sideNav = ref<HTMLDivElement | null>(null);
 		const drawerOpen = ref<boolean>(false);
-		const saveNotify = ref<notifyInterface | null>(null);
 		let saveCutscene: NodeJS.Timer; // eslint-disable-line no-undef
 
 		const openNav = () => {
@@ -338,33 +319,50 @@ export default defineComponent({
 					retOptions.push(`ry:${optionsCustom.value.ry ?? ''}`);
 				}
 				cutsceneSelected.value.position = retOptions.join(';');
-				saveNotify.value = {
-					background: 'bg-orange-7',
-					loader: true,
-					text: auto
-						? 'builtin.cutscene.content.menu.autosave.start'
-						: 'builtin.cutscene.content.menu.save.start'
-				};
+				const notif = $q.notify({
+					group: false,
+					timeout: 0,
+					position: 'top-right',
+					spinner: QSpinnerPuff,
+					color: 'orange-7',
+					message: auto
+						? capitalize(t('builtin.cutscene.content.menu.autosave.start'))
+						: capitalize(t('builtin.cutscene.content.menu.save.start'))
+				});
+				// eslint-disable-next-line vue/no-ref-as-operand
 				window.cutscene.save(cutsceneSelected._rawValue, cutscenePointsList._rawValue)
 					.then(() => {
-						saveNotify.value = {
-							background: 'bg-green-7',
-							text: auto
-								? 'builtin.cutscene.content.menu.autosave.end'
-								: 'builtin.cutscene.content.menu.save.end'
-						};
-						setTimeout(() => saveNotify.value = null, 2500);
+						notif({
+							color: 'green-7',
+							spinner: false,
+							icon: 'task_alt',
+							timeout: 2500,
+							message: auto
+								? capitalize(t('builtin.cutscene.content.menu.autosave.end'))
+								: capitalize(t('builtin.cutscene.content.menu.save.end'))
+						});
 					})
 					.catch((e) => {
-						console.error(e);
-						saveNotify.value = {
-							background: 'bg-red-7',
-							error: e,
-							text: auto
-								? 'builtin.cutscene.content.menu.autosave.fail'
-								: 'builtin.cutscene.content.menu.save.fail'
-						};
-						setTimeout(() => saveNotify.value = null, 2500);
+						window.log.error(e);
+						if (e.code && e.code === 'SQLITE_BUSY') {
+							notif({
+								color: 'red-7',
+								spinner: false,
+								icon: 'error',
+								timeout: 2500,
+								message: capitalize(t('sql.busy'))
+							});
+						} else {
+							notif({
+								color: 'red-7',
+								spinner: false,
+								icon: 'error',
+								timeout: 2500,
+								message: auto
+									? capitalize(t('builtin.cutscene.content.menu.autosave.fail'))
+									: capitalize(t('builtin.cutscene.content.menu.save.fail'))
+							});
+						}
 					});
 			}
 		};
@@ -465,27 +463,43 @@ export default defineComponent({
 
 		const generateCutscene = async () => {
 			if (cutsceneSelected.value) {
-				saveNotify.value = {
-					background: 'bg-orange-7',
-					loader: true,
-					text: 'builtin.cutscene.content.menu.generate.start'
-				};
+				const notif = $q.notify({
+					group: false,
+					timeout: 0,
+					position: 'top-right',
+					spinner: QSpinnerPuff,
+					color: 'orange-7',
+					message: capitalize(t('builtin.cutscene.content.menu.generate.start'))
+				});
 				window.cutscene.generate(cutsceneSelected.value.id)
 					.then(() => {
-						saveNotify.value = {
-							background: 'bg-green-7',
-							text: 'builtin.cutscene.content.menu.generate.end'
-						};
-						setTimeout(() => saveNotify.value = null, 25000);
+						notif({
+							color: 'green-7',
+							spinner: false,
+							icon: 'task_alt',
+							timeout: 2500,
+							message: capitalize(t('builtin.cutscene.content.menu.generate.end'))
+						});
 					})
 					.catch((e) =>  {
-						console.error(e);
-						saveNotify.value = {
-							background: 'bg-red-7',
-							error: e,
-							text: 'builtin.cutscene.content.menu.generate.fail'
-						};
-						setTimeout(() => saveNotify.value = null, 25000);
+						window.log.error(e);
+						if (e.code && e.code === 'SQLITE_BUSY') {
+							notif({
+								color: 'red-7',
+								spinner: false,
+								icon: 'error',
+								timeout: 2500,
+								message: capitalize(t('sql.busy'))
+							});
+						} else {
+							notif({
+								color: 'red-7',
+								spinner: false,
+								icon: 'error',
+								timeout: 2500,
+								message: capitalize(t('builtin.cutscene.content.menu.generate.fail'))
+							});
+						}
 					});
 			}
 		};
@@ -554,14 +568,13 @@ export default defineComponent({
 
 		onUnmounted(() => {
 			clearInterval(saveCutscene);
-			saveNotify.value = null;
+			saveData();
 		});
 
 		return {
 			// General
 			sideNav,
 			drawerOpen,
-			saveNotify,
 			
 			openNav,
 			openFile,
@@ -679,16 +692,6 @@ export default defineComponent({
 	height: 4em;
 	border: dashed 2px;
 	margin: 0.5em;
-	cursor: pointer;
-}
-
-.notify {
-	position: fixed;
-	margin: .5e;
-	top: 1em;
-	right: 1em;
-	z-index: 9;
-	transition: .3s;
 	cursor: pointer;
 }
 </style>

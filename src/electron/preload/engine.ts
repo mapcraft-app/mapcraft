@@ -119,6 +119,7 @@ export default {
 			update: (tables: tableInterface | tableInterface[]): void => mapEngineInstance.database.updateTable(tables),
 			remove: (names: string | string[]): void => mapEngineInstance.database.removeTable(names)
 		},
+		check: (): Promise<void> => mapEngineInstance.database.check(),
 		get: (req: string, ...args: any[]): Promise<any> => mapEngineInstance.database.get(req, ...args),
 		all: (req: string, ...args: any[]): Promise<any[]> => mapEngineInstance.database.all(req, ...args),
 		update: (req: string, ...args: any[]): Promise<RunResult> => mapEngineInstance.database.get(req, ...args),

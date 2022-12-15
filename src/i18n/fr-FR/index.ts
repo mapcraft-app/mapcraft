@@ -11,6 +11,9 @@ export default {
 		maximize: 'Maximiser',
 		close: 'Fermer'
 	},
+	sql: {
+		busy: 'La base de données est utilisée par un autre processus'
+	},
 	builtin: {} as Record<string, any>,
 	components,
 	layouts,
