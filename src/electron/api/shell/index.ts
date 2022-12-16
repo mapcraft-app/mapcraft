@@ -17,10 +17,12 @@ export class Shell {
 		this.COMMAND = '/mapcraft';
 		this.commands = [];
 		builtinList.forEach((el) => {
-			if (Array.isArray(el.shell))
-				el.shell.forEach((s) => this.commands.push(s));
-			else
-				this.commands.push(el.shell);
+			if (el.shell !== undefined) {
+				if (Array.isArray(el.shell))
+					el.shell.forEach((s) => this.commands.push(s));
+				else
+					this.commands.push(el.shell);
+			}
 		});
 		console.log(this.commands);
 		this.command = {} as commandRet;

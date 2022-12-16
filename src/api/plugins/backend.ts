@@ -70,6 +70,10 @@ export async function exposeInMainWorld(apiKey: string, api: unknown): Promise<v
 			;
 		throw new Error(`${apiKey} channel is already registered. The closest available channel is ${apiKey}_${i}`);
 	}
-	contextBridge.exposeInMainWorld(apiKey, api);
+	try {
+		contextBridge.exposeInMainWorld(apiKey, api);
+	} catch (___) {
+		throw new Error(`${apiKey} channel is already registered. The closest available channel is ${apiKey}_0`);
+	}
 }
 //#endregion expose in main world wrapper

@@ -14,5 +14,9 @@ export default [
 	{
 		path: getNormName('cutscene'),
 		component: () => import('builtin/cutscene/main.vue')
+	},
+	{
+		path: getNormName('recipe'),
+		component: () => import('builtin/recipe/main.vue')
 	}
 ] as RouteRecordRaw[];

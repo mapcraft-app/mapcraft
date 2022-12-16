@@ -25,7 +25,7 @@ export interface list {
 	description: string;
 	author: { email: string; name: string; };
 	keywords: string[];
-	shell: shellModel | shellModel[]
+	shell: shellModel | shellModel[] | undefined
 }
 
 export interface lang {
