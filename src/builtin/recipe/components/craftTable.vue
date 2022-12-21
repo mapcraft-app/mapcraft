@@ -1,32 +1,59 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">Stonecutter</span>
+		<span class="text-h6 q-pb-sm">Crafting table</span>
 		<q-separator />
 	</div>
 	<div class="craft">
 		<div class="craft_background">
-			<div class="case"></div>
-			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
-			<div>
+			<div class="recipes_cases_3x3">
 				<div class="case"></div>
-				<input type="number" value="1" min="1" max="64" step="1"/>
+				<div class="case"></div>
+				<div class="case"></div>
+				<div class="case"></div>
+				<div class="case"></div>
+				<div class="case"></div>
+				<div class="case"></div>
+				<div class="case"></div>
+				<div class="case"></div>
+			</div>
+			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
+			<div class="craft_result">
+				<div class="case"></div>
+				<q-input
+					v-model.number="count"
+					input-class="input-reduce"
+					square filled dense
+					class="input" type="number" value="1"
+					min="1" max="64" step="1"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-	name: 'Furnace',
+	name: 'CraftTable',
 	setup () {
-		return {};
+		const count = ref<number>(0);
+		return {
+			count
+		};
 	}
 });
 </script>
 
 <style scoped>
+.input {
+	position: absolute;
+	width: 4em;
+	margin-top: 4.5em;
+}
+.q-field__control {
+	padding: 0 4px !important;
+}
 .craft {
 	display: flex;
 	justify-content: center;
@@ -41,6 +68,13 @@ export default defineComponent({
 	max-width: 480px;
 	min-width: 480px;
 	border: 5px inset;
+}
+.recipes_cases_3x3 {
+	display: flex;
+	width: 13em;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: center;
 }
 .case-disabled {
 	background-color: #4e4e4e;
@@ -75,5 +109,10 @@ export default defineComponent({
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 	-ms-interpolation-mode: nearest-neighbor;
+}
+.craft_result {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
 }
 </style>

@@ -9,7 +9,8 @@ export default {
 		fullscreen: 'Fullscreen',
 		minimize: 'Minimize',
 		maximize: 'Maximize',
-		close: 'Close'
+		close: 'Close',
+		logError: 'Waiting for the game log file'
 	},
 	sql: {
 		busy: 'Database is used by another process'

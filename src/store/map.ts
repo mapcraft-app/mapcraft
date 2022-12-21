@@ -1,3 +1,4 @@
+import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
 
@@ -14,7 +15,7 @@ export const mapStore = defineStore('map', () => {
 		},
 		resourcepack: ''
 	});
-	const minecraftVersion = ref<'1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3'>('1.19.3');
+	const minecraftVersion = ref<minecraftVersion>('1.19.3');
 
 	function setIcon(str: string) {
 		info.icon = str;
@@ -26,7 +27,7 @@ export const mapStore = defineStore('map', () => {
 		info.path = str;
 	}
 
-	function setMinecraftVersion(val: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') {
+	function setMinecraftVersion(val: minecraftVersion) {
 		minecraftVersion.value = val;
 	}
 

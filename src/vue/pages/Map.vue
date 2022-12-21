@@ -34,7 +34,6 @@
 			</q-card>
 		</div>
 
-		<q-btn label="click" @click="dialogDef = true" />
 		<!-- Dialog for init name map and minecraft version if one or all of them not exist -->
 		<q-dialog v-model="dialogDef" persistent>
 			<q-card style="width: 700px; max-width: 80vw;">

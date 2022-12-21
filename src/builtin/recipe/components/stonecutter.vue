@@ -1,37 +1,46 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">Crafting player</span>
+		<span class="text-h6 q-pb-sm">Stonecutter</span>
 		<q-separator />
 	</div>
 	<div class="craft">
 		<div class="craft_background">
-			<div class="recipes_cases_2x2">
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-			</div>
+			<div class="case"></div>
 			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
-			<div>
+			<div class="craft_result">
 				<div class="case"></div>
-				<input type="number" value="1" min="1" max="64" step="1"/>
+				<q-input
+					v-model.number="count"
+					input-class="input-reduce"
+					square filled dense
+					class="input" type="number" value="1"
+					min="1" max="64" step="1"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-	name: 'CraftPlayer',
+	name: 'Furnace',
 	setup () {
-		return {};
+		const count = ref<number>(0);
+		return {
+			count
+		};
 	}
 });
 </script>
 
 <style scoped>
+.input {
+	position: absolute;
+	width: 4em;
+	margin-top: 4.5em;
+}
 .craft {
 	display: flex;
 	justify-content: center;
@@ -47,13 +56,6 @@ export default defineComponent({
 	min-width: 480px;
 	border: 5px inset;
 }
-.recipes_cases_2x2 {
-	display: flex;
-	width: 9em;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-content: center;
-}
 .case-disabled {
 	background-color: #4e4e4e;
 	width: 4em;
@@ -61,7 +63,6 @@ export default defineComponent({
 	margin: 0.15em;
 	text-align: center;
 }
-
 .case {
 	background-color: #8c8a8c;
 	width: 4em;
@@ -80,7 +81,6 @@ export default defineComponent({
 .case:hover {
 	background-color: rgba(24, 26, 27, 0.5);
 }
-
 .craft_arrow {
 	width: 5em;
 	height: 5em;
@@ -89,5 +89,10 @@ export default defineComponent({
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 	-ms-interpolation-mode: nearest-neighbor;
+}
+.craft_result {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
 }
 </style>

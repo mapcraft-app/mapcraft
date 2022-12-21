@@ -1,4 +1,5 @@
 import { constants, watch } from 'fs';
+import type { FSWatcher } from 'fs';
 import { access, readFile } from 'fs/promises';
 import { resolve } from 'path';
 import { IpcError } from 'electron/api/error';
@@ -12,10 +13,15 @@ export class Shell {
 	commands: shellModel[];
 	command: commandRet;
 	logPath: string;
+	watch: FSWatcher | undefined;
 	
 	constructor(logPath: string | undefined = undefined) {
 		this.COMMAND = '/mapcraft';
 		this.commands = [];
+		this.command = {} as commandRet;
+		this.logPath = logPath ?? resolve(process.env.GAME, 'logs', 'latest.log');
+		this.watch = undefined;
+
 		builtinList.forEach((el) => {
 			if (el.shell !== undefined) {
 				if (Array.isArray(el.shell))
@@ -24,11 +30,7 @@ export class Shell {
 					this.commands.push(el.shell);
 			}
 		});
-		console.log(this.commands);
-		this.command = {} as commandRet;
-		this.logPath = logPath ?? resolve(process.env.GAME, 'logs', 'latest.log');
-		access(this.logPath, constants.F_OK | constants.R_OK)
-			.catch(() => new Error('Log file not exist'));
+		console.log('SHELL :', this.commands);
 	}
 
 	private isExist(name: string) {
@@ -99,12 +101,33 @@ export class Shell {
 	}
 
 	/**
+	 * Check if log file exist
+	 */
+	async check(): Promise<void> {
+		return new Promise((res, rej) => {
+			access(this.logPath, constants.F_OK | constants.R_OK)
+				.then(() => {
+					res();
+					if (this.watch === undefined)
+						this.watchLog();
+				})
+				.catch(() => {
+					rej();
+					if (this.watch) {
+						this.watch.close();
+						this.watch = undefined;
+					}
+				});
+		});
+	}
+
+	/**
 	 * Watch log game file
 	 */
 	watchLog(): void {
 		let isReading = false;
 
-		watch(this.logPath, { persistent: true }, (eventType) => {
+		this.watch = watch(this.logPath, { persistent: true }, (eventType) => {
 			if (eventType !== 'change')
 				return;
 			if (isReading)

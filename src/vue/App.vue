@@ -29,8 +29,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from 'vue';
-import { useMeta, useQuasar } from 'quasar';
+import { defineComponent, onBeforeMount, onBeforeUnmount, ref } from 'vue';
+import { QSpinnerPuff, useMeta, useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { generateMeta } from 'src/meta';
 import router from 'src/router';
 
@@ -38,9 +39,13 @@ export default defineComponent({
 	name: 'App',
 	setup () {
 		const $q = useQuasar();
+		const { t } = useI18n();
 		const isDev = ref(import.meta.env.DEV);
 		const isMaximize = ref(false);
 		const isFullscreen = ref(false);
+
+		let interval: NodeJS.Timer; // eslint-disable-line no-undef
+		let notif: any = undefined;
 
 		useMeta(generateMeta());
 
@@ -69,19 +74,30 @@ export default defineComponent({
 		onBeforeMount(() => {
 			window.log.info('Application finish to mounted');
 			router.push('/map');
+			interval = setInterval(() => {
+				if (!window.mapcraft.logIsWatch() && !notif) {
+					notif = $q.notify({
+						group: false,
+						timeout: 0,
+						color: 'orange-7',
+						spinner: QSpinnerPuff,
+						position: 'bottom-right',
+						message: t('app.logError'),
+					});
+				} else if (window.mapcraft.logIsWatch() && notif !== undefined) {
+					notif();
+					notif = undefined;
+				}
+			}, 2500);
 		});
+
+		onBeforeUnmount(() => clearInterval(interval));
 
 		return {
 			isDev,
 			isMaximize,
 			isFullscreen,
-			click,
-
-			test: () => $q.notify({
-				message: 'hello world',
-				position: 'top',
-				timeout: 1000
-			}),
+			click
 		};
 	}
 });

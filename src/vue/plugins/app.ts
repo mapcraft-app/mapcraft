@@ -11,7 +11,7 @@ export const path = (url: string): string => {
 export const imgErr = (e: Event): void => {
 	const target = e.target as HTMLImageElement;
 	if (target)
-		target.src = 'imgs/minecraft/player.png';
+		target.src = 'imgs/minecraft/no_data.png';
 };
 
 export const api = (path?: string): string => {

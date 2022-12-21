@@ -12,8 +12,23 @@ import { Shell } from 'electron/api/shell';
 import 'builtin/front';
 import 'builtin/back';
 
+//#region Repeat checking minecraft log file
 const shell = new Shell();
-shell.watchLog();
+let isWatch = false;
+setInterval(() => {
+	shell.check()
+		.then(() => {
+			if (!isWatch)
+				log.info('Log file is watched');
+			isWatch = true;
+		})
+		.catch(() => {
+			if (isWatch)
+				log.warn('Log file is not present, waiting for the creation of the file by Minecraft');
+			isWatch = false;
+		});
+}, 2500);
+//#endregion Repeat checking minecraft log file
 
 contextBridge.exposeInMainWorld('log', {
 	debug : (message: any, ...optional: any[]) => log.debug(message, optional),
@@ -22,7 +37,7 @@ contextBridge.exposeInMainWorld('log', {
 	warn  : (message: any, ...optional: any[]) => log.warn(message, optional),
 	psql  : (message: any, ...optional: any[]) => log.psql(message, optional)
 });
-	
+
 contextBridge.exposeInMainWorld('mapcraft', {
 	module: {
 		path: { resolve, join }
@@ -36,6 +51,7 @@ contextBridge.exposeInMainWorld('mapcraft', {
 		writeText: (text: string) => clipboard.writeText(text),
 	},
 	engine,
+	logIsWatch: () => isWatch,
 	updateConfig: (data: { game: string, temp: string, resource_game: string, save_game: string }) => {
 		writeFile(resolve(process.env.APP_DATA, 'config'), JSON.stringify(data, null, 2), { encoding: 'utf-8', flag: 'w' }, (err) => {
 			if (err)

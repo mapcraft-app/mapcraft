@@ -133,6 +133,8 @@ export declare global {
 				}
 			}
 
+			logIsWatch: () => boolean,
+
 			/**
 			 * Update configuration file
 			 */

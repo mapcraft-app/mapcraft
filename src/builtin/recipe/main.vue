@@ -34,9 +34,19 @@
 				<img src="imgs/minecraft/block/smithing_table.webp" />
 			</q-tab>
 		</q-tabs>
-		<q-tab-panels v-model="selectedTab" animated style="height: 100%">
+		<q-tab-panels
+			v-model="selectedTab"
+			animated
+			transition-prev="fade"
+			transition-next="fade"
+		>
 			<q-tab-panel name="player" class="q-pa-none">
-				<craft-player-vue />
+				<craft-player-vue
+					:selection="selectionReturn"
+					@open-dialog="openDialog"
+					@create="creation"
+					@delete="deletion"
+				/>
 			</q-tab-panel>
 			<q-tab-panel name="craft" class="q-pa-none">
 				<craft-table-vue />
@@ -68,80 +78,31 @@
 				<smithing-vue />
 			</q-tab-panel>
 		</q-tab-panels>
+		<keep-alive>
+			<dialog-vue
+				:modal="openSelectionModal"
+				@close="handleClose"
+				@selected="handleSelection"
+			/>
+		</keep-alive>
 	</q-page>
 </template>
 
 <script lang="ts">
 // import { useQuasar } from 'quasar';
 // import { useI18n } from 'vue-i18n';
-import { defineComponent, ref } from 'vue';
 //import { mapStore } from 'store/map';
 //import { capitalize } from 'app/src/vue/plugins/app';
+import { defineComponent, ref, onBeforeMount } from 'vue';
+import { mapStore } from 'store/map';
+import { tableGen, tabsName } from './interface';
 
-import craftPlayerVue from './craftPlayer.vue';
-import craftTableVue from './craftTable.vue';
-import furnaceVue from './furnace.vue';
-import smithingVue from './smithing.vue';
-import stonecutterVue from './stonecutter.vue';
-
-type Tabs = 'player' | 'craft' | 'furnace' | 'blast' | 'campfire' | 'smoker' | 'stonecutter' | 'smithing';
-
-/**
- * shapeless, ingredients is using, and pattern & key is deleted
- * shape, ingredients is deleted, and pattern & key is using
- */
-interface crafting {
-	type: string,
-	group: string,
-	ingredients: string[],
-	pattern: string[],
-	key: Record<string, string>,
-	result: {
-		item: string,
-		count: number,
-	},
-	isPlayer: boolean,
-	exactPosition: boolean
-}
-
-/**
- * furnace: smelting
- * blast_furnace: blasting
- * campfire: campfire_cooking
- * smoker: smoking
- */
-interface furnace {
-	type: 'smelting' | 'blasting' | 'campfire_cooking' | 'smoking' | string,
-	group: string,
-	ingredient: string[],
-	result: string,
-	experience: number,
-	cookingtime: number
-}
-
-interface stonecutter {
-	ype: string,
-	group: string,
-	ingredient: {
-		item: string
-	},
-	result: string,
-	count: number
-}
-
-interface smithing {
-	type: string,
-	group: string,
-	base: {
-		item: string
-	},
-	addition: {
-		item: string
-	},
-	result: {
-		item: string
-	}
-}
+import craftPlayerVue from './components/craftPlayer.vue';
+import craftTableVue from './components/craftTable.vue';
+import furnaceVue from './components/furnace.vue';
+import dialogVue from './components/dialog.vue';
+import smithingVue from './components/smithing.vue';
+import stonecutterVue from './components/stonecutter.vue';
 
 export default defineComponent({
 	name: 'CutsceneBuiltin',
@@ -149,16 +110,73 @@ export default defineComponent({
 		craftPlayerVue,
 		craftTableVue,
 		furnaceVue,
+		dialogVue,
 		smithingVue,
 		stonecutterVue
 	},
 	setup () {
+		const storeMap = mapStore();
 		//const $q = useQuasar();
 		//const { t } = useI18n();
-		const selectedTab = ref<Tabs>('player');
+		const selectedTab = ref<tabsName>('player');
+
+		//#region Block/Item Modal
+		const openSelectionModal = ref<boolean>(false);
+		const saveModalData = ref<{ type: 'recipe' | 'result', id: number}>();
+		const selectionReturn = ref<{ type: 'block' | 'item', id: string, path: string, case: number }>();
+
+		const handleClose = () => {
+			openSelectionModal.value = false;
+		};
+
+		const handleSelection = (data: { type: 'block' | 'item', path: string, selected: string }) => {
+			openSelectionModal.value = false;
+			if (!saveModalData.value)
+				return;
+			selectionReturn.value = {
+				type: data.type,
+				id: data.selected,
+				path: data.path,
+				case: saveModalData.value.id
+			};
+		};
+		
+		const openDialog = (data: { type: 'recipe' | 'result', id: number}) => {
+			saveModalData.value = data;
+			openSelectionModal.value = true;
+		};
+		//#endregion Handle modal
+
+		//#region Creation/Deletion
+		const creation = (d: tableGen) => {
+			window.recipe.generate.table(d)
+				.then((e) => console.log(e))
+				.catch((e) => console.error(e));
+		};
+
+		const deletion = (name: tableGen) => {
+			console.log('delete', name);
+		};
+		//#endregion Creation/Deletion
+
+		onBeforeMount(() => window.recipe.init(storeMap.getMapPath(), storeMap.minecraftVersion));
 
 		return {
-			selectedTab
+			selectedTab,
+			//#region Block/Item Modal
+			openSelectionModal,
+			saveModalData,
+			selectionReturn,
+
+			handleClose,
+			handleSelection,
+			openDialog,
+			//#endregion Block/Item Modal
+
+			//#region Creation/Deletion
+			creation,
+			deletion
+			//#endregion Creation/Deletion
 		};
 	}
 });
