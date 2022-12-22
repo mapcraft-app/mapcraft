@@ -36,6 +36,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import type { PropType } from 'vue';
+import random from './random';
 import { caseData } from '../interface';
 
 import caseVue from './case.vue';
@@ -67,7 +68,7 @@ export default defineComponent({
 			shapeless: false,
 			exactPosition: false,
 			group: null,
-			outputName: null
+			outputName: random()
 		});
 
 		const removeSelect = (id: number) => {

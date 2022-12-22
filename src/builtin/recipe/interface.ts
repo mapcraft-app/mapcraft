@@ -3,8 +3,8 @@
  * shape, ingredients is deleted, and pattern & key is using
  */
 export interface crafting {
-	type: string,
-	group: string,
+	type: 'minecraft:crafting_shapeless' | 'minecraft:crafting_shaped',
+	group?: string,
 	ingredients?: { item: string }[],
 	pattern?: string[],
 	key?: Record<string, { item: string }>,
@@ -22,10 +22,14 @@ export interface crafting {
  * campfire: campfire_cooking
  * smoker: smoking
  */
+export type typeFurnace = 'minecraft:smelting' | 'minecraft:blasting' | 'minecraft:campfire_cooking' | 'minecraft:smoking';
+
 export interface furnace {
-	type: 'smelting' | 'blasting' | 'campfire_cooking' | 'smoking' | string,
-	group: string,
-	ingredient: string[],
+	type: typeFurnace,
+	group?: string,
+	ingredient: {
+		item: string
+	},
 	result: string,
 	experience: number,
 	cookingtime: number
@@ -33,7 +37,7 @@ export interface furnace {
 
 export interface stonecutter {
 	type: string,
-	group: string,
+	group?: string,
 	ingredient: {
 		item: string
 	},
@@ -43,7 +47,7 @@ export interface stonecutter {
 
 export interface smithing {
 	type: string,
-	group: string,
+	group?: string,
 	base: {
 		item: string
 	},
@@ -71,6 +75,34 @@ export interface tableGen {
 		group: string | null,
 		outputName: string | null
 	}
+}
+
+export interface furnaceGen {
+	type: typeFurnace,
+	recipe: string,
+	result: string,
+	options: {
+		experience: number,
+		time: number,
+		group: string | null,
+		outputName: string | null
+	}
+}
+
+export interface stonecutterGen {
+	recipe: string,
+	result: string,
+	count: number,
+	group?: string
+	outputName?: string
+}
+
+export interface smithingGen {
+	base: string,
+	addition: string,
+	result: string,
+	group?: string
+	outputName?: string
 }
 
 export type tabsName = 'player' | 'craft' | 'furnace' | 'blast' | 'campfire' | 'smoker' | 'stonecutter' | 'smithing';

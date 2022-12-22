@@ -56,13 +56,13 @@
 			</q-input>
 			<div class="row inline no-wrap justify-evenly width-fill">
 				<q-btn
-					:label="$t('pages.user.submit')" type="submit" color="primary"
-					:disable="awaitResponse"
-					:loading="awaitResponse"
-				/>
-				<q-btn
 					:label="$t('pages.user.reset')" type="reset" color="secondary"
 					:disable="awaitResponse"
+				/>
+				<q-btn
+					:label="$t('pages.user.submit')" type="submit" color="positive"
+					:disable="awaitResponse"
+					:loading="awaitResponse"
 				/>
 			</div>
 			<q-separator color="grey-1" />

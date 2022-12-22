@@ -31,13 +31,13 @@
 		<q-toggle v-model="remember" color="green" :label="$t('pages.user.remember')" />
 		<div class="row inline no-wrap justify-evenly width-fill">
 			<q-btn
-				:label="$t('pages.user.submit')" type="submit" color="primary"
-				:disable="reqSend"
-				:loading="reqSend"
-			/>
-			<q-btn
 				:label="$t('pages.user.reset')" type="reset" color="secondary"
 				:disable="reqSend"
+			/>
+			<q-btn
+				:label="$t('pages.user.submit')" type="submit" color="positive"
+				:disable="reqSend"
+				:loading="reqSend"
 			/>
 		</div>
 		<q-separator color="grey-1" />
@@ -46,7 +46,7 @@
 				<q-icon left name="arrow_back_ios" />
 				<span>{{ $t('pages.user.return') }}</span>
 			</q-btn>
-			<q-btn color="positive" :ripple="false" @click="creation">
+			<q-btn color="primary" :ripple="false" @click="creation">
 				<q-icon left name="person_add" />
 				<span>{{ $t('pages.user.create') }}</span>
 			</q-btn>

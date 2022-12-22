@@ -5,10 +5,10 @@
 	</div>
 	<div class="craft">
 		<div class="craft_background">
-			<div class="case"></div>
+			<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
 			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
 			<div class="craft_result">
-				<div class="case"></div>
+				<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
 				<q-input
 					v-model.number="count"
 					input-class="input-reduce"
@@ -19,17 +19,95 @@
 			</div>
 		</div>
 	</div>
+	<optionButtonVue
+		@create="createRecipe"
+		@delete="deleteRecipe"
+	/>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import random from './random';
+import type { PropType } from 'vue';
+import { caseData, stonecutterGen } from '../interface';
+
+import caseVue from './case.vue';
+import optionButtonVue from './optionButton.vue';
+
+interface options {
+	group: string | null,
+	outputName: string | null
+}
 
 export default defineComponent({
-	name: 'Furnace',
-	setup () {
+	name: 'Stonecutter',
+	components: { caseVue, optionButtonVue },
+	props: {
+		selection: {
+			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
+			default: undefined,
+			required: false
+		}
+	},
+	emits: ['openDialog', 'create', 'delete'],
+	setup (props, { emit }) {
+		const recipeCases = ref<(caseData)[]>([
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' }
+		]);
 		const count = ref<number>(0);
+		const isSelected = ref<boolean>(false);
+		const options = ref<options>({
+			group: null,
+			outputName: random()
+		});
+		
+		const removeSelect = (id: number) => {
+			recipeCases.value[id] = { type: 'block', id: '', path: '' };
+		};
+		const openSelect = (id: number) => {
+			isSelected.value = true;
+			emit('openDialog', { type: 'recipe', id });
+		};
+
+		const changeOptions = (d: options) => {
+			options.value.group = d.group;
+			options.value.outputName = d.outputName;
+		};
+
+		const createRecipe = () => {
+			emit('create', {
+				recipe: recipeCases.value[0].id,
+				result: recipeCases.value[1].id,
+				count: count.value,
+				group: options.value.group,
+				outputName: options.value.outputName
+			} as stonecutterGen);
+		};
+		const deleteRecipe = () => {
+			emit('delete', options.value.outputName);
+		};
+
+		onMounted(() => {
+			watch(() => props.selection, (after) => {
+				if (after && isSelected.value) {
+					isSelected.value = false;
+					recipeCases.value[after.case] = after;
+				}
+			});
+		});
+
 		return {
-			count
+			recipeCases,
+			count,
+			isSelected,
+			options,
+
+			removeSelect,
+			openSelect,
+			changeOptions,
+			createRecipe,
+			deleteRecipe
 		};
 	}
 });

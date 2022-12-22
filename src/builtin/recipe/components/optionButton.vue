@@ -1,5 +1,5 @@
 <template>
-	<div class="row justify-evenly">
+	<div class="row justify-evenly q-pt-sm q-pb-sm">
 		<q-btn
 			color="red-7" label="Delete recipe"
 			@click="$emit('delete')"

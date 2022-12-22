@@ -6,19 +6,13 @@
 	<div class="craft">
 		<div class="craft_background">
 			<div class="recipes_cases_3x3">
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
-				<div class="case"></div>
+				<template v-for="i in 9" :key="i">
+					<case-vue :data="recipeCases[i - 1]" @remove="removeSelect(i - 1)" @select="openSelect(i - 1)" />
+				</template>
 			</div>
 			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
 			<div class="craft_result">
-				<div class="case"></div>
+				<case-vue :data="recipeCases[9]" @remove="removeSelect(9)" @select="openSelect(9)" />
 				<q-input
 					v-model.number="count"
 					input-class="input-reduce"
@@ -29,17 +23,112 @@
 			</div>
 		</div>
 	</div>
+	<option-table-vue
+		:config="options"
+		@change="changeOptions"
+	/>
+	<optionButtonVue
+		@create="createRecipe"
+		@delete="deleteRecipe"
+	/>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import random from './random';
+import type { PropType } from 'vue';
+import { caseData } from '../interface';
+import caseVue from './case.vue';
+import optionButtonVue from './optionButton.vue';
+import optionTableVue from './optionTable.vue';
 
 export default defineComponent({
 	name: 'CraftTable',
-	setup () {
+	components: { caseVue, optionButtonVue, optionTableVue },
+	props: {
+		selection: {
+			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
+			default: undefined,
+			required: false
+		}
+	},
+	emits: ['openDialog', 'create', 'delete'],
+	setup (props, { emit }) {
+		const recipeCases = ref<(caseData)[]>([
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' }
+		]);
 		const count = ref<number>(0);
+		const isSelected = ref<boolean>(false);
+		const options = ref<{ shapeless: boolean, exactPosition: boolean, group: string | null, outputName: string | null }>({
+			shapeless: false,
+			exactPosition: false,
+			group: null,
+			outputName: random()
+		});
+
+		const removeSelect = (id: number) => {
+			recipeCases.value[id] = { type: 'block', id: '', path: '' };
+		};
+
+		const openSelect = (id: number) => {
+			isSelected.value = true;
+			emit('openDialog', { type: 'recipe', id });
+		};
+
+		const changeOptions = (d: { shapeless: boolean, exactPosition: boolean, group: string | null, outputName: string | null }) => {
+			options.value.exactPosition = d.exactPosition;
+			options.value.group = d.group;
+			options.value.outputName = d.outputName;
+			options.value.shapeless = d.shapeless;
+		};
+
+		const createRecipe = () => {
+			emit('create', {
+				recipes: recipeCases.value.slice(0, 9).map((e) => e.id),
+				result: recipeCases.value[9].id,
+				count: count.value,
+				options: {
+					shapeless: options.value.shapeless,
+					exactPosition: options.value.exactPosition,
+					group: options.value.group,
+					outputName: options.value.outputName
+				}
+			});
+		};
+
+		const deleteRecipe = () => {
+			emit('delete', options.value.outputName);
+		};
+
+		onMounted(() => {
+			watch(() => props.selection, (after) => {
+				if (after && isSelected.value) {
+					isSelected.value = false;
+					recipeCases.value[after.case] = after;
+				}
+			});
+		});
+
 		return {
-			count
+			recipeCases,
+			count,
+			isSelected,
+			options,
+
+			removeSelect,
+			openSelect,
+			changeOptions,
+			createRecipe,
+			deleteRecipe
 		};
 	}
 });

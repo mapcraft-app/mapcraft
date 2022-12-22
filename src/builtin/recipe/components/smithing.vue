@@ -5,24 +5,102 @@
 	</div>
 	<div class="craft">
 		<div class="craft_background">
-			<div class="case"></div>
+			<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
 			<img class="craft_fire_and_cross" src="imgs/minecraft/cross.png"/>
-			<div class="case"></div>
+			<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
 			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
-			<div>
-				<div class="case"></div>
-			</div>
+			<case-vue :data="recipeCases[2]" @remove="removeSelect(2)" @select="openSelect(2)" />
 		</div>
 	</div>
+	<optionButtonVue
+		@create="createRecipe"
+		@delete="deleteRecipe"
+	/>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import random from './random';
+import type { PropType } from 'vue';
+import { caseData, smithingGen } from '../interface';
+
+import caseVue from './case.vue';
+import optionButtonVue from './optionButton.vue';
+
+interface options {
+	group: string | null,
+	outputName: string | null
+}
 
 export default defineComponent({
-	name: 'Furnace',
-	setup () {
-		return {};
+	name: 'Smithing',
+	components: { caseVue, optionButtonVue },
+	props: {
+		selection: {
+			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
+			default: undefined,
+			required: false
+		}
+	},
+	emits: ['openDialog', 'create', 'delete'],
+	setup (props, { emit }) {
+		const recipeCases = ref<(caseData)[]>([
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' },
+			{ type: 'block', id: '', path: '' }
+		]);
+		const isSelected = ref<boolean>(false);
+		const options = ref<options>({
+			group: null,
+			outputName: random()
+		});
+
+		const removeSelect = (id: number) => {
+			recipeCases.value[id] = { type: 'block', id: '', path: '' };
+		};
+		const openSelect = (id: number) => {
+			isSelected.value = true;
+			emit('openDialog', { type: 'recipe', id });
+		};
+
+		const changeOptions = (d: options) => {
+			options.value.group = d.group;
+			options.value.outputName = d.outputName;
+		};
+
+		const createRecipe = () => {
+			emit('create', {
+				base: recipeCases.value[0].id,
+				addition: recipeCases.value[1].id,
+				result: recipeCases.value[2].id,
+				group: options.value.group,
+				outputName: options.value.outputName
+			} as smithingGen);
+		};
+		const deleteRecipe = () => {
+			emit('delete', options.value.outputName);
+		};
+
+		onMounted(() => {
+			watch(() => props.selection, (after) => {
+				if (after && isSelected.value) {
+					isSelected.value = false;
+					recipeCases.value[after.case] = after;
+				}
+			});
+		});
+
+		return {
+			recipeCases,
+			isSelected,
+			options,
+
+			removeSelect,
+			openSelect,
+			changeOptions,
+			createRecipe,
+			deleteRecipe
+		};
 	}
 });
 </script>

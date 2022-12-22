@@ -1,12 +1,27 @@
 <template>
 	<div class="row justify-evenly q-ma-md">
 		<div class="column justify-center items-center">
-			<span class="text-body1">Shapeless</span>
-			<q-toggle v-model="data.shapeless" size="xl" color="primary" :disable="data.exactPosition" />
+			<span class="text-body1">Experience</span>
+			<q-input
+				v-model.number="data.experience"
+				type="number"
+				filled
+				step="0.1" min="0"
+				class="max-width"
+			/>
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Exact position</span>
-			<q-toggle v-model="data.exactPosition" size="xl" color="primary" :disable="data.shapeless" />
+			<span class="text-body1">Waiting time</span>
+			<q-input
+				v-model.number="data.time"
+				type="number"
+				step="0.1" min="0"
+				class="max-width"
+			>
+				<template v-slot:append>
+					<span>s</span>
+				</template>
+			</q-input>
 		</div>
 		<div class="column justify-center items-center">
 			<span class="text-body1">Group</span>
@@ -28,8 +43,8 @@ export default defineComponent({
 	props: {
 		config: {
 			type: Object as PropType<{
-				shapeless: boolean,
-				exactPosition: boolean,
+				experience: number,
+				time: number,
 				group: string | null,
 				outputName: string | null
 			}>,
@@ -39,16 +54,14 @@ export default defineComponent({
 	emits: ['change'],
 	setup (props, { emit }) {
 		const data = reactive({
-			shapeless: props.config.shapeless,
-			exactPosition: props.config.exactPosition,
+			experience: props.config.experience,
+			time: props.config.time,
 			group: props.config.group,
 			outputName: props.config.outputName
 		});
 
 		onMounted(() => {
 			watch(data, (newData) => {
-				if (newData.shapeless)
-					newData.exactPosition = false;
 				emit('change', newData);
 			});
 		});
@@ -59,3 +72,9 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style scoped>
+.max-width {
+	width: 6em;
+}
+</style>
