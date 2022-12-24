@@ -108,3 +108,50 @@ export interface smithingGen {
 export type tabsName = 'player' | 'craft' | 'furnace' | 'blast' | 'campfire' | 'smoker' | 'stonecutter' | 'smithing';
 
 export type texturesType = 'block' | 'item';
+
+export interface listInterface {
+	group: string,
+	el: {
+		name: string,
+		type: tabsName,
+		path: string
+	}[]
+}
+
+// Read data interface
+export interface resultTable {
+	cases: caseData[],
+	result: { item: caseData, count: number },
+	options: {
+		exact: boolean,
+		group?: string,
+		outputName?: string
+	}
+}
+
+export interface furnaceTable {
+	recipe: caseData,
+	result: caseData,
+	options: {
+		experience: number,
+		time: number,
+		group?: string,
+		outputName?: string
+	}
+}
+
+export interface stonecutterTable {
+	recipe: caseData,
+	result: caseData,
+	count: number,
+	group?: string
+	outputName?: string
+}
+
+export interface smithingTable {
+	base: caseData,
+	addition: caseData,
+	result: caseData,
+	group?: string
+	outputName?: string
+}

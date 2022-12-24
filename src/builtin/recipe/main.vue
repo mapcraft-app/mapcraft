@@ -2,7 +2,7 @@
 	<q-page style="height: calc(100vh - 79px);">
 		<div class="row">
 			<div style="width: 30%">
-				<list-vue />
+				<list-vue @select="handleListSelection" />
 			</div>
 			<div style="width: 70%">
 				<q-tabs
@@ -147,6 +147,12 @@ import dialogVue from './components/dialog.vue';
 import smithingVue from './components/smithing.vue';
 import stonecutterVue from './components/stonecutter.vue';
 
+interface selectedRecipe {
+	name: string;
+	type: tabsName;
+	path: string;
+}
+
 export default defineComponent({
 	name: 'CutsceneBuiltin',
 	components: {
@@ -163,6 +169,8 @@ export default defineComponent({
 		//const $q = useQuasar();
 		//const { t } = useI18n();
 		const selectedTab = ref<tabsName>('player');
+		const selectedRecipe = ref<selectedRecipe | null>(null);
+		const passData = ref<any | null>(null);
 
 		//#region Block/Item Modal
 		const openSelectionModal = ref<boolean>(false);
@@ -221,10 +229,27 @@ export default defineComponent({
 		};
 		//#endregion creation/deletion
 
+		//#region Handle list
+		const handleListSelection = (recipe: selectedRecipe) => {
+			window.recipe.file.read(recipe.path)
+				.then((data) => JSON.parse(data))
+				.then((data) => {
+					console.log(data);
+					selectedRecipe.value = recipe;
+					selectedTab.value = recipe.type;
+					passData.value = data;
+				})
+				.catch((e) => console.error(e));
+		};
+		//#endregion Handle list
+
 		onBeforeMount(() => window.recipe.init(storeMap.getMapPath(), storeMap.minecraftVersion));
 
 		return {
 			selectedTab,
+			selectedRecipe,
+			passData,
+
 			//#region Block/Item Modal
 			openSelectionModal,
 			saveModalData,
@@ -240,8 +265,12 @@ export default defineComponent({
 			creationFurnace,
 			creationStonecutter,
 			creationSmithing,
-			deletion
+			deletion,
 			//#endregion creation/deletion
+
+			//#region Handle list
+			handleListSelection
+			//#endregion Handle list
 		};
 	}
 });
