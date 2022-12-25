@@ -37,7 +37,7 @@
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import type { PropType } from 'vue';
 import random from './random';
-import { caseData } from '../interface';
+import { caseData, resultTable } from '../interface';
 
 import caseVue from './case.vue';
 import optionButtonVue from './optionButton.vue';
@@ -47,6 +47,11 @@ export default defineComponent({
 	name: 'CraftPlayer',
 	components: { caseVue, optionButtonVue, optionTableVue },
 	props: {
+		read: {
+			type: Object as PropType<resultTable>,
+			default: undefined,
+			required: false
+		},
 		selection: {
 			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
 			default: undefined,
@@ -103,6 +108,19 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
+			watch(() => props.read, (after) => {
+				if (!after)
+					return;
+				recipeCases.value = after.cases;
+				count.value = after.result.count;
+				changeOptions({
+					shapeless: false,
+					exactPosition: after.options.exact,
+					group: after.options.group ?? null,
+					outputName: after.options.outputName ?? null
+				});
+			});
+
 			watch(() => props.selection, (after) => {
 				if (after && isSelected.value) {
 					isSelected.value = false;

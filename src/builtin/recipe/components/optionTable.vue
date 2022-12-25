@@ -46,6 +46,14 @@ export default defineComponent({
 		});
 
 		onMounted(() => {
+			watch(props.config, (d) => {
+				if (d) {
+					data.exactPosition = d.exactPosition;
+					data.group = d.group;
+					data.outputName = d.outputName;
+					data.shapeless = d.shapeless;
+				}
+			});
 			watch(data, (newData) => {
 				if (newData.shapeless)
 					newData.exactPosition = false;

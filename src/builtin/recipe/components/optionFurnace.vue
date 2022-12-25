@@ -61,6 +61,14 @@ export default defineComponent({
 		});
 
 		onMounted(() => {
+			watch(props.config, (d) => {
+				if (d) {
+					data.experience = d.experience;
+					data.time = d.time;
+					data.group = d.group;
+					data.outputName = d.outputName;
+				}
+			});
 			watch(data, (newData) => {
 				emit('change', newData);
 			});

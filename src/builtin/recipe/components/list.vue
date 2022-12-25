@@ -1,23 +1,28 @@
 <template>
 	<q-list>
-		<q-expansion-item
+		<template
 			v-for="(item, x) in list"
 			:key="item.group"
-			:caption="item.group"
-			expand-separator
 		>
-			<q-list dense>
-				<q-item
-					v-for="el in item.el"
-					:key="el.name"
-					v-ripple
-					clickable
-					@click="openRecipe(x, el.name)"
+			<template v-if="item.el.length > 0">
+				<q-expansion-item
+					:caption="item.group"
+					expand-separator
 				>
-					<q-item-section>{{ el.name }}</q-item-section>
-				</q-item>
-			</q-list>
-		</q-expansion-item>
+					<q-list dense>
+						<q-item
+							v-for="el in item.el"
+							:key="el.name"
+							v-ripple
+							clickable
+							@click="openRecipe(x, el.name)"
+						>
+							<q-item-section>{{ el.name }}</q-item-section>
+						</q-item>
+					</q-list>
+				</q-expansion-item>
+			</template>
+		</template>
 	</q-list>
 </template>
 

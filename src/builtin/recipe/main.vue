@@ -1,6 +1,6 @@
 <template>
 	<q-page style="height: calc(100vh - 79px);">
-		<div class="row">
+		<div class="row" style="height: inherit">
 			<div style="width: 30%">
 				<list-vue @select="handleListSelection" />
 			</div>
@@ -40,13 +40,17 @@
 					</q-tab>
 				</q-tabs>
 				<q-tab-panels
+					ref="tabsPanels"
 					v-model="selectedTab"
+					style="height: calc(100% - 65px);"
 					animated
 					transition-prev="fade"
 					transition-next="fade"
+					@vnode-updated="tabIsUpdate"
 				>
 					<q-tab-panel name="player" class="q-pa-none">
 						<craft-player-vue
+							:read="readPlayer"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationTable"
@@ -55,6 +59,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="craft" class="q-pa-none">
 						<craft-table-vue
+							:read="readTable"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationTable"
@@ -65,6 +70,7 @@
 						<furnace-vue
 							name="Furnace"
 							type="minecraft:smelting"
+							:read="readFurnace"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationFurnace"
@@ -75,6 +81,7 @@
 						<furnace-vue
 							name="Blast"
 							type="minecraft:blasting"
+							:read="readFurnace"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationFurnace"
@@ -85,6 +92,7 @@
 						<furnace-vue
 							name="Campfire"
 							type="minecraft:campfire_cooking"
+							:read="readFurnace"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationFurnace"
@@ -95,6 +103,7 @@
 						<furnace-vue
 							name="Smoker"
 							type="minecraft:smoking"
+							:read="readFurnace"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationFurnace"
@@ -103,6 +112,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="stonecutter" class="q-pa-none">
 						<stonecutter-vue
+							:read="readStonecutter"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationStonecutter"
@@ -111,6 +121,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="smithing" class="q-pa-none">
 						<smithing-vue
+							:read="readSmithing"
 							:selection="selectionReturn"
 							@open-dialog="openDialog"
 							@create="creationSmithing"
@@ -131,13 +142,19 @@
 </template>
 
 <script lang="ts">
-// import { useQuasar } from 'quasar';
-// import { useI18n } from 'vue-i18n';
-//import { mapStore } from 'store/map';
-//import { capitalize } from 'app/src/vue/plugins/app';
-import { defineComponent, ref, onBeforeMount } from 'vue';
+import { defineComponent, onBeforeMount, ref, toRaw } from 'vue';
 import { mapStore } from 'store/map';
-import { tableGen, tabsName, furnaceGen, smithingGen, stonecutterGen } from './interface';
+import {
+	tableGen,
+	tabsName,
+	furnaceGen,
+	furnaceTable,
+	smithingGen,
+	stonecutterGen,
+	resultTable,
+	stonecutterTable,
+	smithingTable
+} from './interface';
 
 import craftPlayerVue from './components/craftPlayer.vue';
 import craftTableVue from './components/craftTable.vue';
@@ -146,6 +163,7 @@ import listVue from './components/list.vue';
 import dialogVue from './components/dialog.vue';
 import smithingVue from './components/smithing.vue';
 import stonecutterVue from './components/stonecutter.vue';
+import { QTabPanels } from 'quasar';
 
 interface selectedRecipe {
 	name: string;
@@ -165,12 +183,10 @@ export default defineComponent({
 		stonecutterVue
 	},
 	setup () {
+		const tabsPanels = ref<QTabPanels | null>(null);
 		const storeMap = mapStore();
-		//const $q = useQuasar();
-		//const { t } = useI18n();
 		const selectedTab = ref<tabsName>('player');
 		const selectedRecipe = ref<selectedRecipe | null>(null);
-		const passData = ref<any | null>(null);
 
 		//#region Block/Item Modal
 		const openSelectionModal = ref<boolean>(false);
@@ -230,25 +246,58 @@ export default defineComponent({
 		//#endregion creation/deletion
 
 		//#region Handle list
+		const readSave = ref<{type: 'furnace' | 'stonecutter' | 'smithing' | 'table' | null, recipe: selectedRecipe, data: any} | null>(null);
+		const readPlayer = ref<resultTable>();
+		const readTable = ref<resultTable>();
+		const readFurnace = ref<furnaceTable>();
+		const readSmithing = ref<smithingTable>();
+		const readStonecutter = ref<stonecutterTable>();
+
 		const handleListSelection = (recipe: selectedRecipe) => {
 			window.recipe.file.read(recipe.path)
 				.then((data) => JSON.parse(data))
 				.then((data) => {
-					console.log(data);
+					readSave.value = {
+						type: window.recipe.read.type(data),
+						recipe,
+						data
+					};
 					selectedRecipe.value = recipe;
-					selectedTab.value = recipe.type;
-					passData.value = data;
+					if (selectedTab.value === recipe.type)
+						tabIsUpdate();
+					else
+						selectedTab.value = recipe.type;
 				})
 				.catch((e) => console.error(e));
+		};
+
+		const tabIsUpdate = () => {
+			if (readSave.value === null)
+				return;
+			if (readSave.value.type === 'furnace')
+				readFurnace.value = window.recipe.read.furnace(readSave.value.recipe.name, toRaw(readSave.value.data));
+			else if (readSave.value.type === 'smithing')
+				readSmithing.value = window.recipe.read.smithing(readSave.value.recipe.name, toRaw(readSave.value.data));
+			else if (readSave.value.type === 'stonecutter')
+				readStonecutter.value = window.recipe.read.stonecutter(readSave.value.recipe.name, toRaw(readSave.value.data));
+		 	else {
+				// table
+				const temp = window.recipe.read.table(readSave.value.recipe.name, toRaw(readSave.value.data));
+				if (temp.cases.length === 10)
+					readTable.value = temp;
+				else
+					readPlayer.value = temp;
+			}
+			readSave.value = null;
 		};
 		//#endregion Handle list
 
 		onBeforeMount(() => window.recipe.init(storeMap.getMapPath(), storeMap.minecraftVersion));
 
 		return {
+			tabsPanels,
 			selectedTab,
 			selectedRecipe,
-			passData,
 
 			//#region Block/Item Modal
 			openSelectionModal,
@@ -269,7 +318,15 @@ export default defineComponent({
 			//#endregion creation/deletion
 
 			//#region Handle list
-			handleListSelection
+			readSave,
+			readPlayer,
+			readTable,
+			readFurnace,
+			readSmithing,
+			readStonecutter,
+
+			handleListSelection,
+			tabIsUpdate
 			//#endregion Handle list
 		};
 	}

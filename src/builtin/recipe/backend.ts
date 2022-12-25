@@ -242,8 +242,8 @@ class recipe {
 				}
 				const __key = key;
 				key = String.fromCharCode(key.charCodeAt(0) + 1);
-				model.key[__key] = { item: id };
-				return { key: __key, item: id };
+				model.key[__key] = { item: `minecraft:${id}` };
+				return { key: __key, item: `minecraft:${id}` };
 			};
 				
 			for (let i = 0; i < size; i++)
@@ -394,14 +394,6 @@ class recipe {
 		return { isBlock, data: exist };
 	}
 
-	private getItemWithKey(json: any, key: string) {
-		for (const element in json.key) {
-			if (element === key)
-				return json.key[key].item.match(/(?<=^minecraft:).*/gm)[0];
-		}
-		return undefined;
-	}
-
 	private getElement(item: string): caseData | undefined {
 		const reg = item.match(/(?<=^minecraft:).*/m);
 		if (!reg)
@@ -413,10 +405,34 @@ class recipe {
 					? 'block'
 					: 'item',
 				id: temp.data.id,
-				path: String(temp.data.path)
+				path: (temp.isBlock)
+					? `/imgs/minecraft/block/${temp.data.id}.webp`
+					: String(temp.data.path)
 			};
 		}
 		return undefined;
+	}
+
+	recipeType(data: any) {
+		switch (data.type) {
+		case 'minecraft:crafting_shapeless':
+		case 'minecraft:crafting_shaped':
+			return 'table';
+			// return this.readTable(name, data);
+		case 'minecraft:smelting':
+		case 'minecraft:blasting':
+		case 'minecraft:campfire_cooking':
+		case 'minecraft:smoking':
+			return 'furnace';
+			// return this.readFurnace(name, data);
+		case 'minecraft:smithing':
+			return 'smithing';
+			// return this.readSmithing(name, data);
+		case 'minecraft:stonecutting':
+		default:
+			return 'stonecutter';
+			// return this.readStonecutter(name, data);
+		}
 	}
 
 	readTable(name: string, data: any): resultTable {
@@ -442,15 +458,25 @@ class recipe {
 						? 'block'
 						: 'item',
 					id: temp.data.id,
-					path: String(temp.data.path)
+					path: (temp.isBlock)
+						? `/imgs/minecraft/block/${temp.data.id}.webp`
+						: String(temp.data.path)
 				};
 			}
+		};
+		const getItemWithKey = (json: any, key: string) => {
+			for (const element in json.key) {
+				if (element === key)
+					return json.key[key].item;
+			}
+			return undefined;
 		};
 
 		for (let i = 0; i < limit; i++)
 			ret.cases.push({ type: 'block', id: '', path: '' });
 		ret.result.count = data.result.count;
 		addCase(data.result.item, limit - 1);
+		ret.result.item = this.getElement(data.result.item) as caseData;
 		ret.options.outputName = name;
 		if (data.group)
 			ret.options.group = data.group;
@@ -458,15 +484,14 @@ class recipe {
 			for (const i in data.ingredients)
 				addCase(data.ingredients[i].item, Number(i));
 		} else {
-			for (let row = 0, _case = 0; data.pattern.length < row; row++) {
+			for (let row = 0, _case = 0; data.pattern.length > row; row++) {
 				_case = row * size;
 				const items: string[] = Array.from(data.pattern[row]);
 				for (const item of items) {
-					const key = this.getItemWithKey(data, item);
+					const key = getItemWithKey(data, item);
 					if (key !== undefined)
 						addCase(key, _case);
-					else if (item === ' ')
-						++_case;
+					++_case;
 				}
 			}
 		}
@@ -530,6 +555,7 @@ exposeInMainWorld('recipe', {
 		smithing: (data: smithingGen) => __instance__.generateSmithing(data)
 	},
 	read: {
+		type: (data: any) => __instance__.recipeType(data),
 		table: (name: string, data: any) => __instance__.readTable(name, data),
 		furnace: (name: string, data: any) => __instance__.readFurnace(name, data),
 		stonecutter: (name: string, data: any) => __instance__.readStonecutter(name, data),

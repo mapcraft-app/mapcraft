@@ -28,7 +28,7 @@
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import random from './random';
 import type { PropType } from 'vue';
-import { caseData, furnaceGen, typeFurnace } from '../interface';
+import { caseData, furnaceGen, furnaceTable, typeFurnace } from '../interface';
 
 import caseVue from './case.vue';
 import optionFurnaceVue from './optionFurnace.vue';
@@ -52,6 +52,11 @@ export default defineComponent({
 		type: {
 			type: String as PropType<typeFurnace>,
 			required: true
+		},
+		read: {
+			type: Object as PropType<furnaceTable>,
+			default: undefined,
+			required: false
 		},
 		selection: {
 			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
@@ -106,6 +111,19 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
+			watch(() => props.read, (after) => {
+				if (!after)
+					return;
+				recipeCases.value[0] = after.recipe;
+				recipeCases.value[1] = after.result;
+				changeOptions({
+					experience: after.options.experience,
+					time: after.options.time,
+					group: after.options.group ?? null,
+					outputName: after.options.outputName ?? null
+				});
+			});
+
 			watch(() => props.selection, (after) => {
 				if (after && isSelected.value) {
 					isSelected.value = false;

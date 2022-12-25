@@ -13,7 +13,7 @@
 					<q-tab name="block" label="Block"></q-tab>
 					<q-tab name="item" label="Item"></q-tab>
 				</q-tabs>
-				<q-input v-model="search" label="Search" />
+				<q-input v-model="search" debounce="250" label="Search" />
 			</q-card-section>
 			<q-tab-panels
 				v-model="tabs"

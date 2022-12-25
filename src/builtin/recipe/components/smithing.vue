@@ -22,7 +22,7 @@
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import random from './random';
 import type { PropType } from 'vue';
-import { caseData, smithingGen } from '../interface';
+import { caseData, smithingGen, smithingTable } from '../interface';
 
 import caseVue from './case.vue';
 import optionButtonVue from './optionButton.vue';
@@ -36,6 +36,11 @@ export default defineComponent({
 	name: 'Smithing',
 	components: { caseVue, optionButtonVue },
 	props: {
+		read: {
+			type: Object as PropType<smithingTable>,
+			default: undefined,
+			required: false
+		},
 		selection: {
 			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
 			default: undefined,
@@ -82,6 +87,16 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
+			watch(() => props.read, (after) => {
+				if (!after)
+					return;
+				recipeCases.value[0] = after.base;
+				recipeCases.value[1] = after.addition;
+				recipeCases.value[2] = after.result;
+				options.value.group = after.group ?? null;
+				options.value.outputName = after.outputName ?? null;
+			});
+
 			watch(() => props.selection, (after) => {
 				if (after && isSelected.value) {
 					isSelected.value = false;

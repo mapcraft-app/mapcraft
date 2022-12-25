@@ -26,6 +26,7 @@ export declare global {
 				smithing: (data: smithingGen) => Promise<smithing>
 			},
 			read: {
+				type: (data: any) => 'furnace' | 'stonecutter' | 'smithing' | 'table',
 				table: (name: string, data: any) => resultTable,
 				furnace: (name: string, data: any) => furnaceTable,
 				stonecutter: (name: string, data: any) => stonecutterTable,
