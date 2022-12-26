@@ -5,7 +5,6 @@
 			<q-input
 				v-model.number="data.experience"
 				type="number"
-				filled
 				step="0.1" min="0"
 				class="max-width"
 			/>

@@ -337,4 +337,7 @@ export default defineComponent({
 .q-tab img {
 	width: 3em;
 }
+.q-panel > div {
+	height: unset;
+}
 </style>

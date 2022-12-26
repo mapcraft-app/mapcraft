@@ -28,6 +28,7 @@ import {
 	smithingTable
 } from './interface';
 import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import random from './components/random';
 
 interface list {
 	id: string,
@@ -170,6 +171,11 @@ class recipe {
 	//#endregion Data
 
 	//#region Generation
+	writeRecipe(data: any, model: any) {
+		const name = data.options.outputName ?? random(16);
+		this.createFile(model, name);
+	}
+
 	async generateFurnace(data: furnaceGen) {
 		if (!data.recipe.length)
 			throw new Error('empty_recipe');
@@ -185,11 +191,12 @@ class recipe {
 		model.ingredient = { item: `minecraft:${data.recipe}` };
 		model.result = `minecraft:${data.result}`;
 		model.experience = data.options.experience;
-		model.cookingtime = data.options.time;
+		model.cookingtime = data.options.time * 20;
 		if (data.options.group)
 			model.group = data.options.group;
 		else
 			delete model.group;
+		this.writeRecipe(data, model);
 		return model;
 	}
 
@@ -306,6 +313,7 @@ class recipe {
 				model.pattern.push(line);
 			}
 		};
+		this.writeRecipe(data, model);
 		return model;
 	}
 
@@ -328,6 +336,7 @@ class recipe {
 			model.group = data.group;
 		else
 			delete model.group;
+		this.writeRecipe(data, model);
 		return model;
 	}
 
@@ -348,6 +357,7 @@ class recipe {
 			model.group = data.group;
 		else
 			delete model.group;
+		this.writeRecipe(data, model);
 		return model;
 	}
 	//#endregion Generation
@@ -503,11 +513,12 @@ class recipe {
 
 		ret.recipe = this.getElement(data.ingredient.item) as caseData;
 		ret.result = this.getElement(data.result) as caseData;
-		ret.options.experience = data.experience;
-		ret.options.time = data.cookingtime / 20;
-		ret.options.outputName = name;
-		if (data.group)
-			ret.options.group = data.group;
+		ret.options = {
+			experience: data.experience,
+			time: data.cookingtime / 20,
+			outputName: name,
+			group: data.group ?? undefined
+		};
 		return ret;
 	}
 

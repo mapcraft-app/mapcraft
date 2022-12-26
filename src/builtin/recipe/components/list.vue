@@ -15,6 +15,7 @@
 							:key="el.name"
 							v-ripple
 							clickable
+							:class="(selected === el.name) ? 'selected' : ''"
 							@click="openRecipe(x, el.name)"
 						>
 							<q-item-section>{{ el.name }}</q-item-section>
@@ -35,6 +36,8 @@ export default defineComponent({
 	emits: ['select'],
 	setup (_props, { emit }) {
 		const list = ref<listInterface[]>([]);
+		const selected = ref<string | null>(null);
+
 		const get = (list: listInterface, name: string) => {
 			for (const el of list.el) {
 				if (el.name === name)
@@ -44,6 +47,7 @@ export default defineComponent({
 		};
 
 		const openRecipe = (x: number, name: string) => {
+			selected.value = name;
 			const temp = get(list.value[x], name);
 			if (temp)
 				emit('select', temp);
@@ -60,8 +64,16 @@ export default defineComponent({
 
 		return {
 			list,
+			selected,
 			openRecipe
 		};
 	}
 });
 </script>
+
+<style scoped>
+.selected {
+	color: #fff;
+	background-color: var(--q-info);
+}
+</style>
