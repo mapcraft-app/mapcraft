@@ -1,5 +1,5 @@
 <template>
-	<q-page style="height: calc(100vh - 79px);">
+	<q-page class="page">
 		<div ref="sideNav" :class="!$q.dark.isActive ? 'main-layout-day layout-menu' : 'main-layout-night layout-menu'">
 			<div class="layout-menu-button-back" :style="drawerOpen ? 'left: 250px; visibility: visible; opacity: 1' : 'left:0'" @click="openNav"></div>
 			<q-btn
@@ -178,7 +178,6 @@
 						<q-btn
 							square unelevated color="green-7"
 							icon="save"
-							
 							@click="saveData(false)"
 						>
 							<q-tooltip :delay="500" class="bg-green-7">

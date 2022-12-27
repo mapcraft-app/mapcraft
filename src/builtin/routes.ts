@@ -18,5 +18,9 @@ export default [
 	{
 		path: getNormName('recipe'),
 		component: () => import('builtin/recipe/main.vue')
+	},
+	{
+		path: getNormName('trigger'),
+		component: () => import('builtin/trigger/main.vue')
 	}
 ] as RouteRecordRaw[];

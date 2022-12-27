@@ -1,5 +1,5 @@
 <template>
-	<q-page class="main-page">
+	<q-page class="page">
 		<div class="row">
 			<div class="left">
 				<list-vue @select="handleListSelection" />
@@ -391,10 +391,7 @@ export default defineComponent({
 .q-panel > div {
 	height: unset;
 }
-.main-page {
-	height: calc(100vh - 79px);
-}
-.main-page > div {
+.page > div {
 	height: inherit;
 }
 .left {
