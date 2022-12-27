@@ -1,6 +1,6 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">Crafting table</span>
+		<span class="text-h6 q-pb-sm">{{ $capitalize($t('builtin.recipe.tabs.table')) }}</span>
 		<q-separator />
 	</div>
 	<div class="craft">
@@ -130,7 +130,6 @@ export default defineComponent({
 
 			watch(() => props.selection, (after) => {
 				if (after && isSelected.value) {
-					console.log(after);
 					isSelected.value = false;
 					recipeCases.value[after.case] = after;
 				}

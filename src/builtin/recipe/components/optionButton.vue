@@ -1,11 +1,11 @@
 <template>
 	<div class="row justify-evenly q-pt-sm q-pb-sm">
 		<q-btn
-			color="red-7" label="Delete recipe"
+			color="red-7" :label="$capitalize($t('builtin.recipe.options.buttons.delete'))"
 			@click="$emit('delete')"
 		/>
 		<q-btn
-			color="green-7" label="Create recipe"
+			color="green-7" :label="$capitalize($t('builtin.recipe.options.buttons.create'))"
 			@click="$emit('create')"
 		/>
 	</div>

@@ -1,6 +1,6 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">Stonecutter</span>
+		<span class="text-h6 q-pb-sm">{{ $capitalize($t('builtin.recipe.tabs.stonecutter')) }}</span>
 		<q-separator />
 	</div>
 	<div class="craft">

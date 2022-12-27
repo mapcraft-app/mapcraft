@@ -1,7 +1,7 @@
 <template>
 	<div class="row justify-evenly q-ma-md">
 		<div class="column justify-center items-center">
-			<span class="text-body1">Experience</span>
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.furnace.experience')) }}</span>
 			<q-input
 				v-model.number="data.experience"
 				type="number"
@@ -10,7 +10,7 @@
 			/>
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Waiting time</span>
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.furnace.time')) }}</span>
 			<q-input
 				v-model.number="data.time"
 				type="number"
@@ -23,12 +23,12 @@
 			</q-input>
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Group</span>
-			<q-input v-model="data.group" label="Group" />
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.group')) }}</span>
+			<q-input v-model="data.group" :label="$capitalize($t('builtin.recipe.options.group'))" />
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Output name</span>
-			<q-input v-model="data.outputName" label="Output Name" />
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.name')) }}</span>
+			<q-input v-model="data.outputName" :label="$capitalize($t('builtin.recipe.options.name'))" />
 		</div>
 	</div>
 </template>

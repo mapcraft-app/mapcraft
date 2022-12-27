@@ -1,20 +1,20 @@
 <template>
 	<div class="row justify-evenly q-ma-md">
 		<div class="column justify-center items-center">
-			<span class="text-body1">Shapeless</span>
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.table.shapeless')) }}</span>
 			<q-toggle v-model="data.shapeless" size="xl" color="primary" :disable="data.exactPosition" />
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Exact position</span>
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.table.exact')) }}</span>
 			<q-toggle v-model="data.exactPosition" size="xl" color="primary" :disable="data.shapeless" />
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Group</span>
-			<q-input v-model="data.group" label="Group" />
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.group')) }}</span>
+			<q-input v-model="data.group" :label="$capitalize($t('builtin.recipe.options.group'))" />
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">Output name</span>
-			<q-input v-model="data.outputName" label="Output Name" />
+			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.name'))  }}</span>
+			<q-input v-model="data.outputName" :label="$capitalize($t('builtin.recipe.options.name'))" />
 		</div>
 	</div>
 </template>

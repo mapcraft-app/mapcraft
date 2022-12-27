@@ -1,10 +1,10 @@
 <template>
-	<q-page style="height: calc(100vh - 79px);">
-		<div class="row" style="height: inherit">
-			<div style="width: 30%">
+	<q-page class="main-page">
+		<div class="row">
+			<div class="left">
 				<list-vue @select="handleListSelection" />
 			</div>
-			<div style="width: 70%">
+			<div class="right">
 				<q-tabs
 					v-model="selectedTab"
 					dense
@@ -40,7 +40,6 @@
 					</q-tab>
 				</q-tabs>
 				<q-tab-panels
-					ref="tabsPanels"
 					v-model="selectedTab"
 					style="height: calc(100% - 65px);"
 					animated
@@ -68,7 +67,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="furnace" class="q-pa-none">
 						<furnace-vue
-							name="Furnace"
+							:name="$capitalize($t('builtin.recipe.tabs.furnace'))"
 							type="minecraft:smelting"
 							:read="readFurnace"
 							:selection="selectionReturn"
@@ -79,7 +78,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="blast" class="q-pa-none">
 						<furnace-vue
-							name="Blast"
+							:name="$capitalize($t('builtin.recipe.tabs.blast'))"
 							type="minecraft:blasting"
 							:read="readFurnace"
 							:selection="selectionReturn"
@@ -90,7 +89,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="campfire" class="q-pa-none">
 						<furnace-vue
-							name="Campfire"
+							:name="$capitalize($t('builtin.recipe.tabs.campfire'))"
 							type="minecraft:campfire_cooking"
 							:read="readFurnace"
 							:selection="selectionReturn"
@@ -101,7 +100,7 @@
 					</q-tab-panel>
 					<q-tab-panel name="smoker" class="q-pa-none">
 						<furnace-vue
-							name="Smoker"
+							:name="$capitalize($t('builtin.recipe.tabs.smoker'))"
 							type="minecraft:smoking"
 							:read="readFurnace"
 							:selection="selectionReturn"
@@ -142,8 +141,12 @@
 </template>
 
 <script lang="ts">
+import { useQuasar } from 'quasar';
 import { defineComponent, onBeforeMount, ref, toRaw } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { mapStore } from 'store/map';
+import { capitalize } from 'app/src/vue/plugins/app';
+
 import {
 	tableGen,
 	tabsName,
@@ -155,7 +158,6 @@ import {
 	stonecutterTable,
 	smithingTable
 } from './interface';
-
 import craftPlayerVue from './components/craftPlayer.vue';
 import craftTableVue from './components/craftTable.vue';
 import furnaceVue from './components/furnace.vue';
@@ -163,7 +165,6 @@ import listVue from './components/list.vue';
 import dialogVue from './components/dialog.vue';
 import smithingVue from './components/smithing.vue';
 import stonecutterVue from './components/stonecutter.vue';
-import { QTabPanels } from 'quasar';
 
 interface selectedRecipe {
 	name: string;
@@ -183,7 +184,8 @@ export default defineComponent({
 		stonecutterVue
 	},
 	setup () {
-		const tabsPanels = ref<QTabPanels | null>(null);
+		const $q = useQuasar();
+		const { t } = useI18n();
 		const storeMap = mapStore();
 		const selectedTab = ref<tabsName>('player');
 		const selectedRecipe = ref<selectedRecipe | null>(null);
@@ -216,32 +218,77 @@ export default defineComponent({
 		//#endregion Handle modal
 
 		//#region creation/deletion
+		const creationSuccessNotif = (name: string) => {
+			$q.notify({
+				position: 'top-right',
+				message: capitalize(t('builtin.recipe.notify.create', { name })),
+				icon: 'check_circle',
+				color: 'green-7'
+			});
+		};
+
+		const creationErrorNotif = (name: string) => {
+			$q.notify({
+				position: 'top-right',
+				message: capitalize(t('builtin.recipe.notify.createError', { name })),
+				icon: 'error',
+				color: 'red-7'
+			});
+		};
+
 		const creationTable = (d: tableGen) => {
 			window.recipe.generate.table(d)
-				.then((e) => console.log(e))
-				.catch((e) => console.error(e));
+				.then(() => creationSuccessNotif(d.options.outputName ?? ''))
+				.catch((e) => {
+					window.log.error('table', e);
+					creationErrorNotif(d.options.outputName ?? '');
+				});
 		};
 
 		const creationFurnace = (d: furnaceGen) => {
 			window.recipe.generate.furnace(d)
-				.then((e) => console.log(e))
-				.catch((e) => console.error(e));
+				.then(() => creationSuccessNotif(d.options.outputName ?? ''))
+				.catch((e) => {
+					window.log.error('furnace', e);
+					creationErrorNotif(d.options.outputName ?? '');
+				});
 		};
 
 		const creationStonecutter = (d: stonecutterGen) => {
 			window.recipe.generate.stonecutter(d)
-				.then((e) => console.log(e))
-				.catch((e) => console.error(e));
+				.then(() => creationSuccessNotif(d.outputName ?? ''))
+				.catch((e) => {
+					window.log.error('stonecutter', e);
+					creationErrorNotif(d.outputName ?? '');
+				});
 		};
 
 		const creationSmithing = (d: smithingGen) => {
 			window.recipe.generate.smithing(d)
-				.then((e) => console.log(e))
-				.catch((e) => console.error(e));
+				.then(() => creationSuccessNotif(d.outputName ?? ''))
+				.catch((e) => {
+					window.log.error('smithing', e);
+					creationErrorNotif(d.outputName ?? '');
+				});
 		};
 
 		const deletion = (name: string) => {
-			console.log('delete', name);
+			window.recipe.file.delete(name)
+				.then(() => $q.notify({
+					position: 'top-right',
+					message: capitalize(t('builtin.recipe.notify.delete', { name })),
+					icon: 'check_circle',
+					color: 'green-7'
+				}))
+				.catch((e) => {
+					window.log.error('delete', e);
+					$q.notify({
+						position: 'top-right',
+						message: capitalize(t('builtin.recipe.notify.deleteError', { name })),
+						icon: 'error',
+						color: 'red-7'
+					});
+				});
 		};
 		//#endregion creation/deletion
 
@@ -268,7 +315,12 @@ export default defineComponent({
 					else
 						selectedTab.value = recipe.type;
 				})
-				.catch((e) => console.error(e));
+				.catch((e) => $q.notify({
+					position: 'top-right',
+					message: capitalize(e),
+					icon: 'error',
+					color: 'red-7'
+				}));
 		};
 
 		const tabIsUpdate = () => {
@@ -295,7 +347,6 @@ export default defineComponent({
 		onBeforeMount(() => window.recipe.init(storeMap.getMapPath(), storeMap.minecraftVersion));
 
 		return {
-			tabsPanels,
 			selectedTab,
 			selectedRecipe,
 
@@ -339,5 +390,18 @@ export default defineComponent({
 }
 .q-panel > div {
 	height: unset;
+}
+.main-page {
+	height: calc(100vh - 79px);
+}
+.main-page > div {
+	height: inherit;
+}
+.left {
+	width: 30%;
+	border-right: 1px solid #c1c1c1;
+}
+.right {
+	width: 70%
 }
 </style>

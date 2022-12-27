@@ -257,7 +257,7 @@
 <script lang="ts">
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { useI18n } from 'vue-i18n';
-import { defineComponent, onBeforeMount, onUnmounted, onMounted, ref, watch } from 'vue';
+import { defineComponent, onBeforeMount, onUnmounted, onMounted, ref, toRaw, watch } from 'vue';
 import { mapStore } from 'store/map';
 import { capitalize } from 'app/src/vue/plugins/app';
 
@@ -330,7 +330,7 @@ export default defineComponent({
 						: capitalize(t('builtin.cutscene.content.menu.save.start'))
 				});
 				// eslint-disable-next-line vue/no-ref-as-operand
-				window.cutscene.save(cutsceneSelected._rawValue, cutscenePointsList._rawValue)
+				window.cutscene.save(toRaw(cutsceneSelected.value), toRaw(cutscenePointsList.value))
 					.then(() => {
 						notif({
 							color: 'green-7',

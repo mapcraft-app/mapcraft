@@ -10,10 +10,10 @@
 					align="justify"
 					narrow-indicator
 				>
-					<q-tab name="block" label="Block"></q-tab>
-					<q-tab name="item" label="Item"></q-tab>
+					<q-tab name="block" :label="$capitalize($t('builtin.recipe.dialog.block'))"></q-tab>
+					<q-tab name="item" :label="$capitalize($t('builtin.recipe.dialog.item'))"></q-tab>
 				</q-tabs>
-				<q-input v-model="search" debounce="250" label="Search" />
+				<q-input v-model="search" debounce="250" :label="$capitalize($t('builtin.recipe.dialog.search'))" />
 			</q-card-section>
 			<q-tab-panels
 				v-model="tabs"

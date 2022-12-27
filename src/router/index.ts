@@ -7,9 +7,4 @@ const router = createRouter({
 	scrollBehavior: () => ({ left: 0, top: 0 })
 });
 
-router.beforeEach((to, from) => {
-	console.log('to', to),
-	console.log('from', from);
-});
-
 export default router;

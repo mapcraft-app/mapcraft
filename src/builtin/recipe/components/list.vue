@@ -5,10 +5,7 @@
 			:key="item.group"
 		>
 			<template v-if="item.el.length > 0">
-				<q-expansion-item
-					:caption="item.group"
-					expand-separator
-				>
+				<q-expansion-item :caption="item.group" expand-separator>
 					<q-list dense>
 						<q-item
 							v-for="el in item.el"
@@ -28,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from 'vue';
+import { defineComponent, onBeforeMount, onUnmounted, ref } from 'vue';
 import { listInterface } from '../interface';
 
 export default defineComponent({
@@ -37,6 +34,7 @@ export default defineComponent({
 	setup (_props, { emit }) {
 		const list = ref<listInterface[]>([]);
 		const selected = ref<string | null>(null);
+		let timer: NodeJS.Timer; // eslint-disable-line no-undef
 
 		const get = (list: listInterface, name: string) => {
 			for (const el of list.el) {
@@ -53,14 +51,21 @@ export default defineComponent({
 				emit('select', temp);
 		};
 
-		onBeforeMount(() => {
+		const getFiles = () => {
 			window.recipe.list()
 				.then((files) => {
-					list.value = files;
-					console.log(files);
+					if (list.value !== files)
+						list.value = files;
 				})
 				.catch((e) => console.error(e));
+		};
+
+		onBeforeMount(() => {
+			timer = setInterval(() => getFiles(), 10000);
+			getFiles();
 		});
+
+		onUnmounted(() => clearInterval(timer));
 
 		return {
 			list,
