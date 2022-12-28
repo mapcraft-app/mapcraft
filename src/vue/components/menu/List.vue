@@ -43,6 +43,10 @@ export default defineComponent({
 			if (data)
 				store.plugin = data;
 			$q.loading.show();
+			window.log.info(`[PLUGIN] ${data
+				? data.name
+				: '/'} is selected`
+			);
 			router.push({ path: route }).finally(() => $q.loading.hide());
 		};
 
