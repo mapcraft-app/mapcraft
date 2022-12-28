@@ -1,23 +1,17 @@
 <template>
 	<q-page>
 		<div class="column">
-			<div class="row justify-between q-pt-sm q-pb-sm">
-				<q-checkbox
-					v-model="selectAllTriggers"
-					toogle-indeterminate
-					label="Select every trigger"
-				/>
+			<div class="row reverse q-pt-sm q-pb-sm">
 				<q-btn
 					color="green-7"
 					label="Create new trigger"
 					class="q-ma-md"
-					@click="createTrigger"
+					@click="createTrigger(undefined)"
 				/>
 			</div>
 			<div class="row no-wrap text-center">
-				<div class="check"></div>
 				<div class="col-1">ID</div>
-				<div class="col-2">Name</div>
+				<div class="col-3">Name</div>
 				<div class="col-1">X1</div>
 				<div class="col-1">Y1</div>
 				<div class="col-1">Z1</div>
@@ -26,91 +20,77 @@
 				<div class="col-1">Z2</div>
 			</div>
 			<div class="container">
-				<div
-					v-for="trigger of triggers"
-					:key="trigger.id"
-					class="row no-wrap line"
-				>
-					<div class="check">
-						<q-checkbox v-model.boolean="trigger.select" />
+				<template v-for="trigger of triggers" :key="trigger.id">
+					<div class="row no-wrap line">
+						<row-vue
+							:data="trigger"
+							@delete="deleteTrigger"
+							@update="editTrigger"
+							@edit-file="editFile"
+						/>
 					</div>
-					<div class="col-1">{{ trigger.id }}</div>
-					<q-input
-						v-model="trigger.name"
-						type="text" dense :rules="[val => val.length > 0]"
-						hide-bottom-space
-						class="col-2 q-pl-xs q-pr-xs"
-					/>
-					<q-input
-						v-model.number="trigger.x1"
-						type="number" dense :rules="[val => !!val || '']"
-						class="col-1 q-pl-xs q-pr-xs"
-						hide-bottom-space
-					/>
-					<q-input
-						v-model.number="trigger.y1"
-						type="number" dense :rules="[val => !!val || '']"
-						class="col-1 q-pl-xs q-pr-xs"
-						hide-bottom-space
-					/>
-					<q-input
-						v-model.number="trigger.z1"
-						type="number" dense :rules="[val => !!val || '']"
-						class="col-1 q-pl-xs q-pr-xs"
-						hide-bottom-space
-					/>
-					<q-input
-						v-model.number="trigger.x2"
-						type="number" dense :rules="[val => !!val || '']"
-						class="col-1 q-pl-xs q-pr-xs"
-						hide-bottom-space
-					/>
-					<q-input
-						v-model.number="trigger.y2"
-						type="number" dense :rules="[val => !!val || '']"
-						class="col-1 q-pl-xs q-pr-xs"
-						hide-bottom-space
-					/>
-					<q-input
-						v-model.number="trigger.z2"
-						type="number" dense :rules="[val => !!val || '']"
-						class="col-1 q-pl-xs q-pr-xs"
-						hide-bottom-space
-					/>
-					<div class="end">
-						<q-btn square unelevated color="light-blue-7" icon="play_arrow"/>
-						<q-btn square unelevated color="red-7" icon="delete" />
-					</div>
-				</div>
+				</template>
 			</div>
-			
 		</div>
 	</q-page>
 </template>
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { defineComponent, onBeforeMount, ref, toRaw } from 'vue';
 import { mapStore } from 'store/map';
-import { triggerInterface, triggerList } from './interface';
+import { createTrigger, triggerInterface } from './interface';
+import rowVue from './components/row.vue';
 
 export default defineComponent({
 	name: 'Trigger',
+	components: { rowVue },
 	setup () {
 		const $q = useQuasar();
 		const storeMap = mapStore();
-		const { t } = useI18n();
+		// const { t } = useI18n();
+		const triggers = ref<triggerInterface[]>([]);
 
-		const triggers = ref<triggerList[]>([]);
-		const selectAllTriggers = ref<boolean | null>(null);
+		const random = (length = 16) => {
+			const chars = '0123456789abcdef';
+			let str = '';
+			for (let i = 0; i < length; i++)
+				str += chars.charAt(Math.floor(Math.random() * chars.length));
+			return str;
+		};
+
+		const errorNotif = (e: any) => {
+			$q.notify({
+				position: 'top-right',
+				color: 'red-7',
+				icon: 'cancel',
+				message: e,
+				timeout: 2500
+			});
+			window.log.error('trigger', e);
+		};
 
 		const editFile = (id: number) => window.trigger.editFile(id);
-		const createTrigger = () => {
-			console.log('create');
+		const createTrigger = (d: createTrigger | undefined = undefined) => {
+			const data: createTrigger = (d)
+				? { name: d.name ?? random(), x1: d.x1 ?? 0, y1: d.y1 ?? 0, z1: d.z1 ?? 0, x2: d.x2 ?? 0, y2: d.y2 ?? 0, z2: d.z2 ?? 0 }
+				: { name: random(), x1: 0, y1: 0, z1: 0, x2: 0, y2: 0, z2: 0 };
+			window.trigger.create(data)
+				.then((ret) => {
+					triggers.value.push(ret);
+				})
+				.catch((e) => errorNotif(e));
 		};
-		const editTrigger = (data: triggerInterface) => window.trigger.edit(data);
-		const deleteTrigger = (id: number) => window.trigger.delete(id);
+		const editTrigger = (data: triggerInterface) => window.trigger.edit(toRaw(data));
+		const deleteTrigger = (id: number) => {
+			window.trigger.delete(id)
+				.then(() => {
+					const x = triggers.value.findIndex((e) => e.id === id);
+					if (x !== -1)
+						triggers.value.splice(x, 1);
+				})
+				.catch((e) => errorNotif(e));
+		};
 
 		onBeforeMount(() => {
 			window.trigger.init(storeMap.getMapPath());
@@ -118,7 +98,6 @@ export default defineComponent({
 				.then((els) => {
 					if (Array.isArray(els)) {
 						triggers.value = els.map((e) => ({
-							select: false,
 							id: e.id,
 							name: e.name,
 							x1: e.x1, y1: e.y1, z1: e.z1,
@@ -126,7 +105,6 @@ export default defineComponent({
 						}));
 					} else {
 						triggers.value = [{
-							select: false,
 							id: els.id,
 							name: els.name,
 							x1: els.x1, y1: els.y1, z1: els.z1,
@@ -134,40 +112,11 @@ export default defineComponent({
 						}];
 					}
 				})
-				.catch((e) => console.error(e));
-		});
-
-		onMounted(() => {
-			watch(selectAllTriggers, (after) => {
-				if (after === null)
-					return;
-				triggers.value.forEach((e) => e.select = after);
-			});
-			watch(triggers, (after) => {
-				console.log(after);
-				if (after === null)
-					return;
-				let isCheck = 0;
-				triggers.value.forEach((e) => {
-					if (e.select)
-						++isCheck;
-				});
-				if (isCheck >= triggers.value.length)
-					selectAllTriggers.value = true;
-				else if (isCheck < triggers.value.length && isCheck > 0)
-					selectAllTriggers.value = null;
-				else
-					selectAllTriggers.value = false;
-			}, { deep: true });
-		});
-
-		onUnmounted(() => {
-			console.log('unmounted');
+				.catch((e) => errorNotif(e));
 		});
 
 		return {
 			triggers,
-			selectAllTriggers,
 
 			editFile,
 			createTrigger,

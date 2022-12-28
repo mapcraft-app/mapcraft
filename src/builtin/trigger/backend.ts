@@ -66,8 +66,12 @@ class trigger {
 	async delete(id: number): Promise<void> {
 		const link = resolve(this.datapackDir, `${id.toString()}.mcfunction`);
 
-		if (!existsSync(link))
-			rm(link, { recursive: true });
+		try {
+			if (existsSync(link))
+				rm(link, { recursive: true });
+		} catch (___) {
+			///
+		}
 		await this.db.update('DELETE FROM trigger WHERE id = ?', id);
 	}
 
@@ -83,5 +87,7 @@ exposeInMainWorld('trigger', {
 	},
 	editFile: (id: number) => __instance__.editFile(id),
 	get: (id: number | undefined = undefined) => __instance__.getTriggers(id),
-	delete: (id: number) => __instance__.delete(id)
+	create: (data: createTrigger) => __instance__.create(data),
+	delete: (id: number) => __instance__.delete(id),
+	edit: (data: triggerInterface) => __instance__.editTrigger(data)
 });
