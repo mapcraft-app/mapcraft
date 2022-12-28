@@ -4,20 +4,20 @@
 			<div class="row reverse q-pt-sm q-pb-sm">
 				<q-btn
 					color="green-7"
-					label="Create new trigger"
+					:label="$capitalize($t('builtin.trigger.main.create'))"
 					class="q-ma-md"
 					@click="createTrigger(undefined)"
 				/>
 			</div>
 			<div class="row no-wrap text-center">
-				<div class="col-1">ID</div>
-				<div class="col-3">Name</div>
-				<div class="col-1">X1</div>
-				<div class="col-1">Y1</div>
-				<div class="col-1">Z1</div>
-				<div class="col-1">X2</div>
-				<div class="col-1">Y2</div>
-				<div class="col-1">Z2</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.id') }}</div>
+				<div class="col-3">{{ $capitalize($t('builtin.trigger.main.name')) }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.x1') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.y1') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.z1') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.x2') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.y2') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.z2') }}</div>
 			</div>
 			<div class="container">
 				<template v-for="trigger of triggers" :key="trigger.id">
@@ -132,7 +132,7 @@ export default defineComponent({
 	height: inherit;
 }
 .container > .line:nth-child(2n + 1) {
-	background-color: rgb(235, 235, 235);
+	background-color: rgba(0, 0, 0, .1);
 }
 .line {
 	padding-top: .2rem;

@@ -55,7 +55,7 @@
 			<q-popup-proxy>
 				<q-card square>
 					<q-card-section class="column">
-						<span class="text-center">Are you sure ?</span>
+						<span class="text-center">{{ $capitalize($t('builtin.trigger.main.delete')) }}</span>
 						<q-btn icon="delete" color="red-7" @click="deleteTrigger(trigger.id)"/>
 					</q-card-section>
 				</q-card>
