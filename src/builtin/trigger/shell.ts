@@ -4,7 +4,11 @@ export default {
 	name: 'trigger',
 	builtin: true,
 	fn: (args) => {
-		console.log(args);
-		return commandFormat(args, { one: 'two' }, true);
+		return commandFormat(args, {
+			coordinates: {
+				p1: [args[2], args[3], args[4]],
+				p2: [args[5], args[6], args[7]],
+			}
+		});
 	}
 } as shellModel;

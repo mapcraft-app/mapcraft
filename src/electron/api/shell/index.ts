@@ -7,6 +7,7 @@ import ipc from 'electron/ipc/render';
 import { commandRet, shellModel } from './interface';
 
 import { builtinList } from 'app/src/builtin/front';
+import { ipcRenderer } from 'electron';
 
 export class Shell {
 	COMMAND: string;
@@ -21,6 +22,14 @@ export class Shell {
 		this.command = {} as commandRet;
 		this.logPath = logPath ?? resolve(process.env.GAME, 'logs', 'latest.log');
 		this.watch = undefined;
+
+		// Test is watch is available throw plateform
+		try {
+			watch(process.env.APP_DATA).close();
+		} catch (err) {
+			ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
+		}
+		ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
 
 		builtinList.forEach((el) => {
 			if (el.shell !== undefined) {

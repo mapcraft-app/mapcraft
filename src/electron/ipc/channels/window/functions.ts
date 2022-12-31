@@ -27,5 +27,8 @@ export default [
 	},
 	(event: Electron.IpcMainEvent): void => {
 		ipcWindow.minimize();
+	},
+	(event: Electron.IpcMainEvent, error: string): void => {
+		throw new Error(error);
 	}
 ] as ipcFunctions;

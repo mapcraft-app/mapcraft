@@ -53,7 +53,7 @@ export function loaderWindows(): BrowserWindow {
 		width: 350,
 		height: 350,
 		resizable: false,
-		alwaysOnTop: true,
+		alwaysOnTop: false,
 		center: true,
 		frame: false,
 		show: false,

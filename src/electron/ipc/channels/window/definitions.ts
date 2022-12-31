@@ -22,6 +22,10 @@ export default {
 		{
 			name: 'minimize',
 			type: ipcType.SEND
+		},
+		{
+			name: 'crash',
+			type: ipcType.SEND
 		}
 	]
 } as ipcDefinition;
