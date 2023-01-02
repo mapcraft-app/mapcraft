@@ -52,29 +52,27 @@ export function loaderWindows(): BrowserWindow {
 	const window = new BrowserWindow({
 		width: 350,
 		height: 350,
-		resizable: true,
+		resizable: false,
 		alwaysOnTop: false,
 		center: true,
-		frame: true,
-		show: true,
+		frame: false,
+		show: false,
 		icon: iconLoad(),
 		webPreferences: {
-			contextIsolation: false,
+			contextIsolation: true,
 			defaultEncoding: 'utf-8',
-			devTools: true,
-			javascript: true,
-			nodeIntegration: true,
-			sandbox: false
+			devTools: false,
+			javascript: false,
+			nodeIntegration: false,
+			sandbox: true
 		}
 	});
 	if (!window)
 		throw new WindowError('Failed to create loader window, close app');
 
-	if (import.meta.env.DEV) {
-		console.log(import.meta.env);
+	if (import.meta.env.DEV)
 		window.loadURL(import.meta.env.ELECTRON_LOAD_URL);
-		window.webContents.openDevTools();
-	} else
+	else
 		window.loadFile(import.meta.env.ELECTRON_LOAD_URL);
 	window.once('ready-to-show', () => window.show());
 	return window;

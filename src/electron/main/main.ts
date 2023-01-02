@@ -31,9 +31,6 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 app.whenReady().then(async () => {
-	if (import.meta.env.DEV)
-		import('electron-reload').then((obj) => obj.default(__dirname, {}));
-
 	session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
 		callback({
 			responseHeaders: {
