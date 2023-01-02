@@ -2,13 +2,13 @@ import { constants, watch } from 'fs';
 import type { FSWatcher } from 'fs';
 import { access, readFile } from 'fs/promises';
 import { resolve } from 'path';
-// import { IpcError } from 'electron/api/error';
+import { IpcError } from 'electron/api/error';
 import ipc from 'electron/ipc/render';
 import { commandRet, shellModel } from './interface';
 
 import { builtinList } from 'app/src/builtin/front';
 import { ipcRenderer } from 'electron';
-import readLastLines from '../readLastLines';
+import readLastLines from 'api/readLastLines';
 
 export class Shell {
 	COMMAND: string;
@@ -98,12 +98,10 @@ export class Shell {
 	 * @returns return of executed command, or null if command is undefined
 	 */
 	exec(input: string | string[]): (commandRet | null)[] | commandRet | null {
-		// ^\[(?<time>\d\d?:\d\d?:\d\d?)\]\s+\[[\w\s]+\/(?<type>\w+)\]:\s+(?<data>.*)$
 		const ret = (data: string) => {
 			const check = data.indexOf(this.COMMAND);
 			if (check !== -1) {
 				const args = data.substring(check + this.COMMAND.length).split(/\s/).filter((e) => e.length);
-				console.log(args);
 				const name = args[0].toLowerCase();
 				for (const command of this.commands) {
 					if (command.name.toLowerCase() === name) {
@@ -114,7 +112,6 @@ export class Shell {
 			}
 			return null;
 		};
-		
 		if (Array.isArray(input)) {
 			const __ret: (commandRet | null)[]  = [];
 			input.forEach((e) => __ret.push(ret(e)));
@@ -155,51 +152,34 @@ export class Shell {
 	 */
 	watchLog(): void {
 		let isReading = false;
-
 		this.watch = watch(this.logPath, { persistent: true }, (eventType) => {
 			if (eventType !== 'change')
 				return;
 			if (isReading)
 				return;
 			isReading = true;
-
 			this.rll.read()
-				.then((d) => console.log('rll', d))
-				.catch((e) => console.error('rll', e));
-
-			/*
-			readFile(this.logPath, { encoding: 'utf-8', flag: 'r' })
 				.then((data) => {
-					const diff = data.substring(this.oldData.length);
-					const lines = diff.split(/\r?\n/).filter((e) => e.length);
-					console.log('one', diff, lines);
-					const commands = this.exec(diff.split(/\r?\n/));
+					const commands = this.exec(
+						(data.length <= 1)
+							? data.at(0) as string
+							: data as string[]
+					);
 					if (commands && Array.isArray(commands)) {
 						commands.forEach((e) => {
 							if (e)
 								ipc.send('shell::new-command', e);
 						});
-					} else if (commands)
-						ipc.send('shell::new-command', commands);
-					this.oldData = data;
-					/*
-					const line = /\r?\n\[(?<time>\d\d:\d\d:\d\d)\] \[(?<info>.*)\]:(?<input>.*)\r?\n$/.exec(data);
-					console.log(line);
-					if (line && line.groups && line.groups.time && line.groups.info && line.groups.input) {
-						const command = this.exec(line.groups.input.trim());
-						if (command) {
-							console.log(command);
-							ipc.send('shell::new-command', command);
-						}
+					} else if (commands) {
+						if (commands)
+							ipc.send('shell::new-command', commands);
 					}
-					
 				})
 				.catch((e) => {
-					console.error(e);
+					window.log.error(e);
 					throw new IpcError('Read log file failed');
 				})
 				.finally(() => isReading = false);
-			*/
 		});
 	}
 }
