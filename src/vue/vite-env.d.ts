@@ -4,3 +4,8 @@ declare module '*.vue' {
 	const component: DefineComponent<{}, {}, any>;
 	export default component;
 }
+
+declare const APP_VERSION: string
+declare const APP_GIT_URL: string
+declare const ELECTRON_APP_URL: string
+declare const ELECTRON_LOAD_URL: string

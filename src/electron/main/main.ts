@@ -67,7 +67,7 @@ app.whenReady().then(async () => {
 		if (isLoading)
 			app.exit(0);
 	});
-	
+
 	import('src/electron/ipc/main'); // Set IpcMain listeners
 
 	mainWindow.on('ready-to-show', () => {
@@ -84,6 +84,7 @@ app.whenReady().then(async () => {
 			createWindow();
 	});
 }).catch((err) => {
+	log.error(err);
 	loader?.destroy();
 	mainWindow?.destroy();
 	errorDialog(err);

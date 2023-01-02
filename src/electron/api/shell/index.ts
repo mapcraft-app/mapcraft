@@ -2,26 +2,31 @@ import { constants, watch } from 'fs';
 import type { FSWatcher } from 'fs';
 import { access, readFile } from 'fs/promises';
 import { resolve } from 'path';
-import { IpcError } from 'electron/api/error';
+// import { IpcError } from 'electron/api/error';
 import ipc from 'electron/ipc/render';
 import { commandRet, shellModel } from './interface';
 
 import { builtinList } from 'app/src/builtin/front';
 import { ipcRenderer } from 'electron';
+import readLastLines from '../readLastLines';
 
 export class Shell {
 	COMMAND: string;
 	commands: shellModel[];
 	command: commandRet;
 	logPath: string;
+	oldData: string;
 	watch: FSWatcher | undefined;
+	rll: readLastLines;
 	
 	constructor(logPath: string | undefined = undefined) {
 		this.COMMAND = '/mapcraft';
 		this.commands = [];
 		this.command = {} as commandRet;
 		this.logPath = logPath ?? resolve(process.env.GAME, 'logs', 'latest.log');
+		this.oldData = '';
 		this.watch = undefined;
+		this.rll = new readLastLines(this.logPath, 25);
 
 		// Test is watch is available throw plateform
 		try {
@@ -29,7 +34,6 @@ export class Shell {
 		} catch (err) {
 			ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
 		}
-		ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
 
 		builtinList.forEach((el) => {
 			if (el.shell !== undefined) {
@@ -93,20 +97,30 @@ export class Shell {
 	 * @param input Line of user input
 	 * @returns return of executed command, or null if command is undefined
 	 */
-	exec(input: string): commandRet | null {
-		const check = input.indexOf(this.COMMAND);
-
-		if (check !== -1) {
-			const args = input.substring(check + this.COMMAND.length).split(/\s/).filter((e) => e.length);
-			const name = args[0].toLowerCase();
-			for (const command of this.commands) {
-				if (command.name.toLowerCase() === name) {
-					this.command = command.fn(args);
-					return this.command;
+	exec(input: string | string[]): (commandRet | null)[] | commandRet | null {
+		// ^\[(?<time>\d\d?:\d\d?:\d\d?)\]\s+\[[\w\s]+\/(?<type>\w+)\]:\s+(?<data>.*)$
+		const ret = (data: string) => {
+			const check = data.indexOf(this.COMMAND);
+			if (check !== -1) {
+				const args = data.substring(check + this.COMMAND.length).split(/\s/).filter((e) => e.length);
+				console.log(args);
+				const name = args[0].toLowerCase();
+				for (const command of this.commands) {
+					if (command.name.toLowerCase() === name) {
+						this.command = command.fn(args);
+						return this.command;
+					}
 				}
 			}
-		}
-		return null;
+			return null;
+		};
+		
+		if (Array.isArray(input)) {
+			const __ret: (commandRet | null)[]  = [];
+			input.forEach((e) => __ret.push(ret(e)));
+			return __ret;
+		} else
+			return ret(input);
 	}
 
 	/**
@@ -117,8 +131,14 @@ export class Shell {
 			access(this.logPath, constants.F_OK | constants.R_OK)
 				.then(() => {
 					res();
-					if (this.watch === undefined)
-						this.watchLog();
+					if (this.watch === undefined) {
+						readFile(this.logPath, { encoding: 'utf-8', flag: 'r' })
+							.then((d) => {
+								this.oldData = d;
+								this.watchLog();
+							})
+							.catch((e) => ipc.send('window::crash', 'NodeJs.fs.readFile crash', e));
+					}
 				})
 				.catch(() => {
 					rej();
@@ -142,9 +162,29 @@ export class Shell {
 			if (isReading)
 				return;
 			isReading = true;
+
+			this.rll.read()
+				.then((d) => console.log('rll', d))
+				.catch((e) => console.error('rll', e));
+
+			/*
 			readFile(this.logPath, { encoding: 'utf-8', flag: 'r' })
 				.then((data) => {
+					const diff = data.substring(this.oldData.length);
+					const lines = diff.split(/\r?\n/).filter((e) => e.length);
+					console.log('one', diff, lines);
+					const commands = this.exec(diff.split(/\r?\n/));
+					if (commands && Array.isArray(commands)) {
+						commands.forEach((e) => {
+							if (e)
+								ipc.send('shell::new-command', e);
+						});
+					} else if (commands)
+						ipc.send('shell::new-command', commands);
+					this.oldData = data;
+					/*
 					const line = /\r?\n\[(?<time>\d\d:\d\d:\d\d)\] \[(?<info>.*)\]:(?<input>.*)\r?\n$/.exec(data);
+					console.log(line);
 					if (line && line.groups && line.groups.time && line.groups.info && line.groups.input) {
 						const command = this.exec(line.groups.input.trim());
 						if (command) {
@@ -152,11 +192,14 @@ export class Shell {
 							ipc.send('shell::new-command', command);
 						}
 					}
+					
 				})
-				.catch(() => {
+				.catch((e) => {
+					console.error(e);
 					throw new IpcError('Read log file failed');
 				})
 				.finally(() => isReading = false);
+			*/
 		});
 	}
 }
