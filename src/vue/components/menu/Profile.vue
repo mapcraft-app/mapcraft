@@ -44,7 +44,6 @@ export default defineComponent({
 
 		onBeforeMount(() => {
 			avatar();
-			console.log(avatarUrl);
 			watch(() => user.minecraftUsername, (after) => {
 				if (after)
 					avatar(after);

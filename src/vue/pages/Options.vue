@@ -45,6 +45,7 @@
 						<div class="flex justify-center">
 							<span class="text-h4">{{ $t('pages.options.info') }}</span>
 						</div>
+						<options-info />
 					</q-tab-panel>
 				</q-tab-panels>
 			</template>
@@ -56,12 +57,14 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import optionsDirectory from 'components/options/Directory.vue';
+import optionsInfo from 'components/options/Info.vue';
 import optionsMinecraftUser from 'components/options/MinecraftUser.vue';
 import Lang from 'components/menu/Lang.vue';
 
 export default defineComponent({
 	components: {
 		optionsDirectory,
+		optionsInfo,
 		optionsMinecraftUser,
 		Lang
 	},

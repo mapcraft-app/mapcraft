@@ -22,6 +22,8 @@ const SecurityPolicy: string[] = [
 	'\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\'',
 	'file:///*', 'app:///*',
 	'https://mapcraft.app', 'https://*.mapcraft.app',
+	'https://raw.githubusercontent.com', 'https://github.com',
+	'https://gitlab.com',
 	'http://cravatar.eu', 'http://localhost:3000'
 ];
 

@@ -60,5 +60,5 @@ contextBridge.exposeInMainWorld('mapcraft', {
 				log.info('config file saved');
 		});
 	},
-	getMap,
+	getMap
 });
