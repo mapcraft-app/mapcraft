@@ -72,7 +72,7 @@ export declare global {
 			/**
 			 * Remove all listeners for the specified channel
 			 */
-			remove: (channel: string) => void
+			removeAll: (channel: string) => void
 		},
 
 		/**

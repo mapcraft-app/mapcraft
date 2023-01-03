@@ -18,7 +18,7 @@ export interface triggerInterface {
 }
 
 export interface createTrigger {
-	name: string;
+	name?: string;
 	x1: number;
 	y1: number;
 	z1: number;

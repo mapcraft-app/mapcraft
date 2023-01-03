@@ -1,5 +1,7 @@
 <template>
-	<div class="col-1">{{ trigger.id }}</div>
+	<div class="col-1">
+		<q-badge color="light-blue-7">{{ trigger.id }}</q-badge>
+	</div>
 	<q-input
 		v-model="trigger.name"
 		type="text" dense :rules="[val => val.length > 0]"

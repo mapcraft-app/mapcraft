@@ -1,6 +1,6 @@
 import { constants, watch } from 'fs';
 import type { FSWatcher } from 'fs';
-import { access, readFile } from 'fs/promises';
+import { access } from 'fs/promises';
 import { resolve } from 'path';
 import { IpcError } from 'electron/api/error';
 import ipc from 'electron/ipc/render';
@@ -8,7 +8,7 @@ import { commandRet, shellModel } from './interface';
 
 import { builtinList } from 'app/src/builtin/front';
 import { ipcRenderer } from 'electron';
-import readLastLines from 'api/readLastLines';
+import readLastLines, { line } from 'api/readLastLines';
 
 export class Shell {
 	COMMAND: string;
@@ -43,7 +43,8 @@ export class Shell {
 					this.commands.push(el.shell);
 			}
 		});
-		console.log('SHELL :', this.commands);
+		if (import.meta.env.DEV)
+			console.log('SHELL:', this.commands);
 	}
 
 	private isExist(name: string) {
@@ -128,14 +129,8 @@ export class Shell {
 			access(this.logPath, constants.F_OK | constants.R_OK)
 				.then(() => {
 					res();
-					if (this.watch === undefined) {
-						readFile(this.logPath, { encoding: 'utf-8', flag: 'r' })
-							.then((d) => {
-								this.oldData = d;
-								this.watchLog();
-							})
-							.catch((e) => ipc.send('window::crash', 'NodeJs.fs.readFile crash', e));
-					}
+					if (this.watch === undefined)
+						this.watchLog();
 				})
 				.catch(() => {
 					rej();
@@ -152,34 +147,44 @@ export class Shell {
 	 */
 	watchLog(): void {
 		let isReading = false;
-		this.watch = watch(this.logPath, { persistent: true }, (eventType) => {
-			if (eventType !== 'change')
-				return;
-			if (isReading)
-				return;
-			isReading = true;
-			this.rll.read()
-				.then((data) => {
-					const commands = this.exec(
-						(data.length <= 1)
-							? data.at(0) as string
-							: data as string[]
-					);
-					if (commands && Array.isArray(commands)) {
-						commands.forEach((e) => {
-							if (e)
-								ipc.send('shell::new-command', e);
-						});
-					} else if (commands) {
-						if (commands)
-							ipc.send('shell::new-command', commands);
-					}
-				})
-				.catch((e) => {
-					window.log.error(e);
-					throw new IpcError('Read log file failed');
-				})
-				.finally(() => isReading = false);
-		});
+		let oldData: line[] = [];
+
+		try {
+			this.watch = watch(this.logPath, { persistent: true }, (eventType) => {
+				if (eventType !== 'change' || isReading)
+					return;
+				isReading = true;
+				this.rll.read()
+					.then((data) => {
+						if (
+							oldData.length
+							&& data.every((el, i) => el.line === oldData[i].line && el.n === oldData[i].n)
+						)
+							return;
+						oldData = data;
+						const lines = this.rll.diff();
+						const commands = this.exec(
+							(lines.length <= 1)
+								? lines.at(0)?.line as string
+								: lines.map((e) => e.line) as string[]
+						);
+						if (commands && Array.isArray(commands)) {
+							commands.forEach((e) => {
+								if (e)
+									ipc.send('shell::new-command', e);
+							});
+						} else if (commands) {
+							if (commands)
+								ipc.send('shell::new-command', commands);
+						}
+					})
+					.catch((e) => {
+						throw new IpcError(`Read log file failed: ${e}`);
+					})
+					.finally(() => isReading = false);
+			});
+		} catch (e) {
+			ipc.send('window::crash', 'NodeJs.fs.watch crash', e);
+		}
 	}
 }
