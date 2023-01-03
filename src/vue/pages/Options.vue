@@ -1,6 +1,6 @@
 <template>
 	<q-page>
-		<q-splitter v-model="splitter">
+		<q-splitter v-model="splitter" class="page">
 			<template v-slot:before>
 				<q-tabs
 					v-model="tab"
@@ -8,6 +8,7 @@
 					class="text-teal"
 				>
 					<q-tab name="general" icon="settings" :label="$t('pages.options.general')" />
+					<q-tab name="account" icon="account_circle" :label="$t('pages.options.user')" />
 					<q-tab name="info" icon="info" :label="$t('pages.options.info')" />
 				</q-tabs>
 			</template>
@@ -34,8 +35,16 @@
 							</div>
 						</div>
 					</q-tab-panel>
+					<q-tab-panel name="account">
+						<div class="flex justify-center">
+							<span class="text-h4">{{ $t('pages.options.user') }}</span>
+						</div>
+						<options-minecraft-user />
+					</q-tab-panel>
 					<q-tab-panel name="info">
-						<h1>{{ $t('pages.options.info') }}</h1>
+						<div class="flex justify-center">
+							<span class="text-h4">{{ $t('pages.options.info') }}</span>
+						</div>
 					</q-tab-panel>
 				</q-tab-panels>
 			</template>
@@ -44,18 +53,24 @@
 </template>
 
 <script lang="ts">
+import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import optionsDirectory from 'components/options/Directory.vue';
-import Lang from '../components/menu/Lang.vue';
+import optionsMinecraftUser from 'components/options/MinecraftUser.vue';
+import Lang from 'components/menu/Lang.vue';
 
 export default defineComponent({
 	components: {
 		optionsDirectory,
+		optionsMinecraftUser,
 		Lang
 	},
 	setup () {
+		const $q = useQuasar();
 		const splitter = ref<number>(15);
 		const tab = ref<string>('general');
+
+		console.log($q.localStorage.getItem('user'));
 
 		return {
 			splitter,
@@ -64,3 +79,9 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style scoped>
+.page {
+	min-height: inherit;
+}
+</style>

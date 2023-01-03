@@ -1,9 +1,16 @@
 <template>
 	<div class="row no-wrap justify-around q-pa-md">
-		<img :src="avatar()" />
+		<img
+			class="img"
+			:src="avatarUrl"
+			@error="avatarUrl = 'imgs/minecraft/player.png'"
+		/>
 		<div class="column justify-center q-pl-sm">
 			<span class="text-h5 text-center text-weight-light q-pb-sm">
 				{{ user.username }}
+				<q-tooltip class="bg-secondary text-body2" anchor="top middle" self="bottom middle">
+					{{ user.minecraftUsername }}
+				</q-tooltip>
 			</span>
 			<q-btn outline square :label="$t('components.menu.profile.disconnect')" @click="disconnect()" />
 		</div>
@@ -15,7 +22,7 @@
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 
 import router from 'src/router';
 import { userStore } from 'store/user';
@@ -24,11 +31,10 @@ export default defineComponent({
 	setup() {
 		const $q = useQuasar();
 		const user = userStore();
+		const avatarUrl = ref<string>('imgs/minecraft/player.png');
 
-		const avatar = (): string => {
-			if (!user.offline)
-				return `http://cravatar.eu/avatar/${user.username}/${64}.png`;
-			return 'imgs/minecraft/player.png';
+		const avatar = (def: string | null = null) => {
+			avatarUrl.value = `http://cravatar.eu/avatar/${def ?? user.minecraftUsername}/${64}.png`;
 		};
 
 		const disconnect = () => {
@@ -36,11 +42,29 @@ export default defineComponent({
 			router.push('/user');
 		};
 
+		onBeforeMount(() => {
+			avatar();
+			console.log(avatarUrl);
+			watch(() => user.minecraftUsername, (after) => {
+				if (after)
+					avatar(after);
+			});
+		});
+
 		return {
 			user,
+			avatarUrl,
 			avatar,
 			disconnect
 		};
 	}
 });
 </script>
+
+<style scoped>
+.img {
+	width: 80px;
+  height: 80px;
+	image-rendering: pixelated;
+}
+</style>

@@ -2,6 +2,7 @@ import { contextBridge } from 'electron';
 
 export interface userStorage {
 	username: string,
+	minecraftUsername: string,
 	offline: boolean,
 	remember: boolean
 }

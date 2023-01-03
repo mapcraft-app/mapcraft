@@ -28,7 +28,7 @@ export default function errorDialog(err: Error, exit: boolean = true): void {
 		detail: [
 			'This error will be copied to your clipboard if you decide to submit the bug so that you can use it :\n',
 			defineError
-		].join('\n').toString(),
+		].join('\n'),
 		cancelId: 1,
 		noLink: true,
 		buttons: [ 'Send issue to dev', 'Close application' ]

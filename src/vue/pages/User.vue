@@ -32,6 +32,7 @@ import { defineComponent, ref } from 'vue';
 import selectionVue from 'components/User/selection.vue';
 import accountConnectionVue from 'components/User/accountConnection.vue';
 import accountCreationVue from 'components/User/accountCreation.vue';
+import { userStorage } from 'app/src/electron/preload/exposeEnv';
 
 export default defineComponent({
 	name: 'UserPage',
@@ -48,11 +49,17 @@ export default defineComponent({
 
 		const offlineConnection = () => {
 			$q.loading.show();
+			const temp = $q.localStorage.getItem('user') as userStorage;
 			$q.localStorage.set('user', {
-				username: 'Steve',
+				username: (temp && temp.username)
+					? temp.username
+					: 'Steve',
+				minecraftUsername: (temp && temp.minecraftUsername)
+					? temp.minecraftUsername
+					: 'Steve',
 				offline: true,
 				remember: false
-			});
+			} as userStorage);
 			router.push('/').finally(() => $q.loading.hide());
 		};
 

@@ -1,7 +1,6 @@
 import {
 	app,
 	BrowserWindow,
-	dialog,
 	globalShortcut,
 	protocol,
 	session
@@ -23,7 +22,7 @@ const SecurityPolicy: string[] = [
 	'\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\'',
 	'file:///*', 'app:///*',
 	'https://mapcraft.app', 'https://*.mapcraft.app',
-	'https://crafatar.com', 'http://localhost:3000'
+	'http://cravatar.eu', 'http://localhost:3000'
 ];
 
 protocol.registerSchemesAsPrivileged([
@@ -110,16 +109,8 @@ app.on('window-all-closed', async () => {
 });
 
 process.on('uncaughtException', (err, origin) => {
-	const message = (process.env.DEV)
-		? `${err.toString()}\nOrigin: ${origin}`
-		: `${err.toString()}`;
-	const messageBoxOptions = {
-		type: 'error',
-		title: 'Error in Main process',
-		message,
-	};
-	log.error(err.toString());
-	log.warn('Mapcraft exit with error code 1');
-	dialog.showMessageBoxSync(messageBoxOptions);
-	app.exit(1);
+	log.error(origin.toString());
+	log.error(err.message);
+	log.error('Mapcraft exit with uncaughtException');
+	errorDialog(err, true);
 });
