@@ -282,6 +282,7 @@ export default defineComponent({
 	width: inherit;
 }
 .pixelated {
+	padding: .3em;
 	image-rendering: pixelated;
 	image-rendering: -moz-crisp-edges;
 	image-rendering: crisp-edges;
@@ -302,7 +303,7 @@ export default defineComponent({
 	background-color: rgba(0,0,0,0.1);
 	margin: .1em;
 	width: 4em;
-	height: 4em;
+	min-height: 4em;
 	display: inline-flex;
   flex-wrap: nowrap;
   align-items: center;
