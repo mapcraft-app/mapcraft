@@ -12,6 +12,9 @@ import triggerPack from './trigger/package.json';
 import triggerLang from './trigger/lang';
 import triggerShell from './trigger/shell';
 
+import utilityPack from './utility/package.json';
+import utilityLang from './utility/lang';
+
 export const builtinList: list[] = [];
 export const builtinLang: lang[] = [];
 export const normName = (str: string): string => str.toLowerCase().normalize().replace(/[_*.\s]+/, '_');
@@ -34,3 +37,4 @@ export const addBuiltin = (d: info, lang: Record<string, any>, sh: shellModel | 
 addBuiltin(cutscenePack, cutsceneLang, cutsceneShell);
 addBuiltin(recipePack, recipeLang);
 addBuiltin(triggerPack, triggerLang, triggerShell);
+addBuiltin(utilityPack, utilityLang);

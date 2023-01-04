@@ -184,8 +184,7 @@ export default defineComponent({
 	cursor: pointer;
 }
 .grid img {
-	width: inherit;
-	/*height: inherit;*/
+	height: inherit;
 	image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
