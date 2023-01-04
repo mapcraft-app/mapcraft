@@ -40,8 +40,7 @@ export default defineComponent({
 			const route = (data)
 				? `/${data.path}`
 				: '/';
-			if (data)
-				store.plugin = data;
+			store.plugin = data;
 			$q.loading.show();
 			window.log.info(`[PLUGIN] ${data
 				? data.name
