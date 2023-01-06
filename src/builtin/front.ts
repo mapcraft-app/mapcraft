@@ -5,6 +5,10 @@ import cutscenePack from './cutscene/package.json';
 import cutsceneLang from './cutscene/lang';
 import cutsceneShell from './cutscene/shell';
 
+import musicPack from './music/package.json';
+import musicLang from './music/lang';
+import musicShell from './music/shell';
+
 import recipePack from './recipe/package.json';
 import recipeLang from './recipe/lang';
 
@@ -35,6 +39,7 @@ export const addBuiltin = (d: info, lang: Record<string, any>, sh: shellModel | 
 };
 
 addBuiltin(cutscenePack, cutsceneLang, cutsceneShell);
+addBuiltin(musicPack, musicLang, musicShell);
 addBuiltin(recipePack, recipeLang);
 addBuiltin(triggerPack, triggerLang, triggerShell);
 addBuiltin(utilityPack, utilityLang);
