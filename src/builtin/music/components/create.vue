@@ -7,6 +7,11 @@
 					round dense @click="$emit('close')"
 				/>
 			</q-card-section>
+			<q-card-section v-if="error">
+				<q-banner inline-actions class="text-white text-center bg-red">
+					<span class="text-body1">{{ options.name }} sound exist</span>
+				</q-banner>
+			</q-card-section>
 			<q-card-section>
 				<q-input v-model="options.name" label="name"/>
 				<q-select v-model="options.category" :options="category" label="category"/>
@@ -41,17 +46,20 @@ export default defineComponent({
 	setup (_props, { emit }) {
 		const category: category[] = ['none', 'ambient', 'block', 'hostile', 'master', 'music', 'neutral', 'player', 'record', 'voice', 'weather'];
 		const options = ref<sound>({ category: 'none' } as sound);
+		const error = ref<boolean>(false);
 
 		const create = () => {
 			window.music.music.add(toRaw(options.value))
 				.then((d) => {
 					emit('create', d);
-				});
+				})
+				.catch(() => error.value = true);
 		};
 
 		return {
 			category,
 			options,
+			error,
 
 			create
 		};

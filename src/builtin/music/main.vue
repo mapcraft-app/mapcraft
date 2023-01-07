@@ -8,10 +8,10 @@
 			/>
 			<list-vue
 				:list="soundList"
-				@select="selectSound"
+				@select="selectMusic"
 			/>
 		</div>
-		<div v-if="selectedSound" class="right column">
+		<div v-if="selectedSoundKey" class="right">
 			<q-tabs
 				v-model="tab"
 				dense
@@ -30,27 +30,39 @@
 				class="q-pl-sm q-pr-sm"
 			>
 				<q-tab-panel name="general">
-					<q-input v-model="selectedSound.name" label="name"/>
-					<q-select v-model="selectedSound.category" :options="category" label="category"/>
+					<q-input v-model="soundList[selectedSoundKey].name" label="name"/>
+					<q-select v-model="soundList[selectedSoundKey].category" :options="category" label="category"/>
 					<q-toggle
-						v-model="selectedSound.replace" label="replace"
+						v-model="soundList[selectedSoundKey].replace" label="replace"
 						size="lg" left-label
 						class="q-pt-sm"
 					/>
-					<q-input v-model="selectedSound.subtitle" label="subtitle"/>
+					<q-input v-model="soundList[selectedSoundKey].subtitle" label="subtitle"/>
+					<q-btn
+						color="red" label="Delete" icon="delete"
+						class="q-mt-md" @click="deleteMusic(soundList[selectedSoundKey].name)"
+					/>
 				</q-tab-panel>
-				--q-dark-page
-
-				<q-tab-panel name="sounds" class="no-padding">
-					<q-list bordered>
+				<q-tab-panel name="sounds" class="q-pa-xs">
+					<q-btn
+						class="add" outline square
+						size="lg" icon="add" color="secondary"
+						@click="addMusic"
+					/>
+					<q-list v-if="soundList[selectedSoundKey].sounds.length" bordered>
 						<q-expansion-item
-							v-for="sound in selectedSound.sounds"
+							v-for="sound in soundList[selectedSoundKey].sounds"
 							:key="sound.name"
-							:label="sound.name"
+							:label="sound.name.length ? sound.name : 'blank'"
 						>
 							<q-card>
+								<q-card-section class="row reverse">
+									<q-btn flat icon="delete" color="red" size="md"/>
+								</q-card-section>
 								<q-card-section>
-									<audio class="audio-player" controls></audio>
+									<audio class="audio-player" controls>
+										<source :src="$path(getSound(sound.name))" type="audio/ogg"/>
+									</audio>
 								</q-card-section>
 								<q-card-section class="row justify-around">
 									<q-toggle v-model="sound.preload" label="Preload" left-label />
@@ -89,7 +101,7 @@
 		</div>
 		<create-vue
 			:dialog="createDialog"
-			@create="createNewSound"
+			@create="createNewMusic"
 			@close="createDialog = false"
 		/>
 	</q-page>
@@ -115,17 +127,18 @@ export default defineComponent({
 		const tab = ref<'general' | 'sounds'>('general');
 		const createDialog = ref<boolean>(false);
 		const soundList = ref<Record<string, sound>>({});
-		const selectedSound = ref<sound | null>(null);
+		const selectedSoundKey = ref<string | null>(null);
 		
-		const createNewSound = (d: sound) => {
-			selectedSound.value = d;
+		//#region Music
+		const createNewMusic = (d: sound) => {
+			selectedSoundKey.value = d.name;
 			soundList.value[d.name] = d;
 			createDialog.value = false;
 		};
 
-		const selectSound = (d: sound) => {
-			selectedSound.value = d;
-			selectedSound.value.sounds = d.sounds.map((e) => ({
+		const selectMusic = (key: string) => {
+			selectedSoundKey.value = key;
+			soundList.value[key].sounds = soundList.value[key].sounds.map((e) => ({
 				attenuation_distance: e.attenuation_distance ?? 16,
 				name: e.name,
 				pitch: e.pitch ?? 1,
@@ -137,6 +150,30 @@ export default defineComponent({
 			}));
 		};
 
+		const deleteMusic = (name: string) => window.music.music.remove(name)
+			.then(() => {
+				console.log('hello');
+			})
+			.catch((e) => console.error(e));
+
+		const addMusic = () => {
+			if (selectedSoundKey.value) {
+				soundList.value[selectedSoundKey.value].sounds.push({
+					attenuation_distance: 16,
+					name: '',
+					pitch: 1,
+					preload: undefined,
+					stream: undefined,
+					type: 'event',
+					volume: 1,
+					weight: 1
+				});
+			}
+		};
+		//#endregion Music
+
+		const getSound = (name: string) => window.music.sound.get(name);
+
 		onBeforeMount(() => {
 			window.music.init(store.getMapPath());
 			soundList.value = window.music.get();
@@ -147,10 +184,14 @@ export default defineComponent({
 			tab,
 			createDialog,
 			soundList,
-			selectedSound,
+			selectedSoundKey,
 
-			createNewSound,
-			selectSound
+			createNewMusic,
+			selectMusic,
+			addMusic,
+			deleteMusic,
+
+			getSound
 		};
 	}
 });
@@ -169,6 +210,9 @@ export default defineComponent({
 	width: 65%;
 	max-height: calc(100vh - 5.6em);
 	overflow-x: auto;
+}
+.add {
+	width: 100%;
 }
 .audio-player {
 	width: 100%;

@@ -1,6 +1,6 @@
 import { exposeInMainWorld } from 'app/src/api/plugins/backend';
-import { readFileSync } from 'fs';
-import { mkdir, readFile, rm } from 'fs/promises';
+import { existsSync, readFileSync } from 'fs';
+import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { catogory, envInterface, type, sounds, sound } from './interface';
 
@@ -33,8 +33,14 @@ class music {
 		return false;
 	}
 
+	async saveFile() {
+		return writeFile(this.path.json, JSON.stringify(this.json, null, 2), { encoding: 'utf-8', flag: 'w' });
+	}
+
 	async addMusic(sound: sound) {
 		const path = resolve(this.path.base, sound.name);
+		if (existsSync(path))
+			throw new Error(`${sound.name} exist`);
 		const temp = {
 			category: sound.category ?? 'none',
 			id: ++this.id,
@@ -43,8 +49,9 @@ class music {
 			replace: sound.replace ?? undefined,
 			subtitle: sound.subtitle ?? undefined
 		} as sound;
-		// await mkdir(path);
-		// this.json[sound.name] = temp;
+		await mkdir(path);
+		this.json[sound.name] = temp;
+		this.saveFile();
 		return temp;
 	}
 
@@ -53,11 +60,18 @@ class music {
 			throw new Error(`${name} not exist`);
 		const path = resolve(this.path.base, name);
 		await rm(path, { force: true, recursive: true });
+		this.saveFile();
 		delete this.json[name];
 	}
 
 	async addSound(name: string, sound: sounds) {
 		this.json[name].sounds.push(sound);
+	}
+
+	getSound(name: string | undefined) {
+		if (!name)
+			return '';
+		return resolve(this.path.base, ...name.slice(name.indexOf(':') + 1).concat('.ogg').split('/'));
 	}
 
 	async removeSound(name: string, soundName: string) {
@@ -78,12 +92,14 @@ exposeInMainWorld('music', {
 		__instance__ = new music(env);
 	},
 	get: () => __instance__.json,
+	save: () => __instance__.saveFile(),
 	music: {
 		add: (sound: sound) => __instance__.addMusic(sound),
 		remove: (name: string) => __instance__.removeMusic(name),
 	},
 	sound: {
 		add: (name: string, sound: sounds) => __instance__.addSound(name, sound),
+		get: (name: string) => __instance__.getSound(name),
 		remove: (name: string, soundName: string) => __instance__.removeSound(name, soundName),
 	}
 });

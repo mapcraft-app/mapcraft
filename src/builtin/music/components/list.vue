@@ -11,7 +11,7 @@
 					v-ripple
 					clickable
 					:class="(el.id === selectEl) ? 'background': ''"
-					@click="select(el)"
+					@click="select(el.id, el.name)"
 				>
 					<q-item-section class="q-pl-sm">
 						<q-item-label>{{ el.name }}</q-item-label>
@@ -56,9 +56,9 @@ export default defineComponent({
 		]);
 		const selectEl = ref<number>(0);
 
-		const select = (d: sound) => {
-			selectEl.value = d.id;
-			emit('select', d);
+		const select = (id: number, key: string) => {
+			selectEl.value = id;
+			emit('select', key);
 		};
 
 		const getSort = (type: category) => {
@@ -82,7 +82,7 @@ export default defineComponent({
 			sortData(props.list);
 			watch(() => props.list, (after) => {
 				sortData(after);
-			});
+			}, { deep: true });
 		});
 
 		return {
