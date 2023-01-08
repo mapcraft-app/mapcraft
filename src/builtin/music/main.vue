@@ -13,11 +13,8 @@
 		</div>
 		<div v-if="selectedSoundKey" class="right">
 			<q-tabs
-				v-model="tab"
-				dense
-				align="justify"
-				narrow-indicator
-				class="q-pb-sm"
+				v-model="tab" dense align="justify"
+				narrow-indicator class="q-pb-sm"
 			>
 				<q-tab name="general" label="General" />
 				<q-tab name="sounds" label="Sounds" />
@@ -40,60 +37,29 @@
 					<q-input v-model="soundList[selectedSoundKey].subtitle" label="subtitle"/>
 					<q-btn
 						color="red" label="Delete" icon="delete"
-						class="q-mt-md" @click="deleteMusic(soundList[selectedSoundKey].name)"
+						class="q-mt-md" @click="deleteMusic"
 					/>
 				</q-tab-panel>
 				<q-tab-panel name="sounds" class="q-pa-xs">
 					<q-btn
 						class="add" outline square
 						size="lg" icon="add" color="secondary"
-						@click="addMusic"
+						@click="addSound"
 					/>
 					<q-list v-if="soundList[selectedSoundKey].sounds.length" bordered>
 						<q-expansion-item
-							v-for="sound in soundList[selectedSoundKey].sounds"
-							:key="sound.name"
+							v-for="(sound, key) in soundList[selectedSoundKey].sounds"
+							:key="key"
 							:label="sound.name.length ? sound.name : 'blank'"
 						>
-							<q-card>
-								<q-card-section class="row reverse">
-									<q-btn flat icon="delete" color="red" size="md"/>
-								</q-card-section>
-								<q-card-section>
-									<audio class="audio-player" controls>
-										<source :src="$path(getSound(sound.name))" type="audio/ogg"/>
-									</audio>
-								</q-card-section>
-								<q-card-section class="row justify-around">
-									<q-toggle v-model="sound.preload" label="Preload" left-label />
-									<q-toggle v-model="sound.stream" label="Stream" left-label />
-								</q-card-section>
-								<q-card-section>
-									<span class="text-body2">Attenuation distance</span>
-									<q-slider
-										v-model="sound.attenuation_distance" label
-										:min="0" :max="32" :step="1"
-									/>
-									<q-separator class="q-mb-sm" />
-									<span class="text-body2">Pitch</span>
-									<q-slider
-										v-model="sound.pitch" label
-										:min="0" :max="2" :step="0.05"
-									/>
-									<q-separator class="q-mb-sm" />
-									<span class="text-body2">Volume</span>
-									<q-slider
-										v-model="sound.volume" label
-										:min="0" :max="2" :step="0.05"
-									/>
-									<q-separator class="q-mb-sm" />
-									<span class="text-body2">Weight</span>
-									<q-slider
-										v-model="sound.weight" label
-										:min="0" :max="2" :step="0.05"
-									/>
-								</q-card-section>
-							</q-card>
+							<sound-vue
+								:index="key"
+								:selected-sound="selectedSoundKey"
+								:sound="sound"
+								@change-audio="(d: string) => changeAudio(key, d)"
+								@delete-sound="() => deleteSound(key)"
+								@set-stream="() => sound.stream = true"
+							/>
 						</q-expansion-item>
 					</q-list>
 				</q-tab-panel>
@@ -108,21 +74,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from 'vue';
+import { useQuasar, QSpinnerPuff } from 'quasar';
+import { defineComponent, onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import { mapStore } from 'store/map';
+import { category, sound, sounds } from './interface';
+
 import createVue from './components/create.vue';
 import listVue from './components/list.vue';
-import { category, sound } from './interface';
+import soundVue from './components/sound.vue';
 
 export default defineComponent({
 	name: 'Music',
 	components: {
 		createVue,
-		listVue
+		listVue,
+		soundVue
 	},
 	setup () {
+		const $q = useQuasar();
 		const store = mapStore();
 		const category: category[] = ['none', 'ambient', 'block', 'hostile', 'master', 'music', 'neutral', 'player', 'record', 'voice', 'weather'];
+		let autosaveInterval: NodeJS.Timer; // eslint-disable-line no-undef
 
 		const tab = ref<'general' | 'sounds'>('general');
 		const createDialog = ref<boolean>(false);
@@ -144,19 +116,29 @@ export default defineComponent({
 				pitch: e.pitch ?? 1,
 				preload: e.preload,
 				stream: e.stream,
-				type: e.type ?? 'event',
+				type: e.type ?? 'sound',
 				volume: e.volume ?? 1,
 				weight: e.weight ?? 1
 			}));
 		};
 
-		const deleteMusic = (name: string) => window.music.music.remove(name)
-			.then(() => {
-				console.log('hello');
-			})
-			.catch((e) => console.error(e));
+		const deleteMusic = () => {
+			if (selectedSoundKey.value) {
+				const name = soundList.value[selectedSoundKey.value].name;
+				window.music.music.remove(name)
+					.then(() => {
+						console.log('hello');
+						if (selectedSoundKey.value)
+							delete soundList.value[selectedSoundKey.value];
+						selectedSoundKey.value = null;
+					})
+					.catch((e) => console.error(e));
+			}
+		};
+		//#endregion Music
 
-		const addMusic = () => {
+		//#region Sound
+		const addSound = () => {
 			if (selectedSoundKey.value) {
 				soundList.value[selectedSoundKey.value].sounds.push({
 					attenuation_distance: 16,
@@ -164,19 +146,108 @@ export default defineComponent({
 					pitch: 1,
 					preload: undefined,
 					stream: undefined,
-					type: 'event',
+					type: 'sound',
 					volume: 1,
 					weight: 1
-				});
+				} as sounds);
+				window.music.sound.add(selectedSoundKey.value, { name: '' });
 			}
 		};
-		//#endregion Music
 
-		const getSound = (name: string) => window.music.sound.get(name);
+		const changeAudio = (key: number, d: string) => {
+			if (selectedSoundKey.value)
+				soundList.value[selectedSoundKey.value].sounds[key].name = d;
+		};
+
+		const deleteSound = (key: number) => {
+			if (selectedSoundKey.value)
+				soundList.value[selectedSoundKey.value].sounds.splice(key, 1);
+		};
+		//#endregion Sound
+
+		//#endregion Autosave
+		const save = (autosave: boolean) => {
+			const notif = $q.notify({
+				group: false,
+				timeout: 0,
+				position: 'top-right',
+				spinner: QSpinnerPuff,
+				color: 'orange-7',
+				message: autosave
+					? 'autosave'
+					: 'save'
+			});
+			const retData: Record<string, sound> = {};
+			for (const key in soundList.value) {
+				retData[key] = {
+					category: soundList.value[key].category,
+					id: soundList.value[key].id,
+					name: soundList.value[key].name,
+					replace: (!soundList.value[key].replace || soundList.value[key].replace && soundList.value[key].replace === false)
+						? undefined
+						: soundList.value[key].replace,
+					subtitle: soundList.value[key].subtitle ?? undefined,
+					sounds: soundList.value[key].sounds.map((e) => ({
+						name: e.name,
+						attenuation_distance: (!e.attenuation_distance || e.attenuation_distance && e.attenuation_distance === 16)
+							? undefined
+							: e.attenuation_distance,
+						pitch: (!e.pitch || e.pitch && e.pitch === 1)
+							? undefined
+							: e.pitch,
+						preload: (!e.preload)
+							? undefined
+							: e.preload,
+						stream: (!e.stream)
+							? undefined
+							: e.preload,
+						type: (e.type === 'sound')
+							? undefined
+							: 'event',
+						volume: (!e.volume || e.volume && e.volume === 1)
+							? undefined
+							: e.volume,
+						weight: (!e.weight || e.weight && e.weight === 1)
+							? undefined
+							: e.weight
+					}))
+				} as sound;
+			}
+			window.music.save(retData)
+				.then(() => {
+					notif({
+						color: 'green-7',
+						spinner: false,
+						icon: 'task_alt',
+						timeout: 2500,
+						message: autosave
+							? 'finish autosave'
+							: 'finish save'
+					});
+				})
+				.catch(() => {
+					notif({
+						color: 'red-7',
+						spinner: false,
+						icon: 'error',
+						timeout: 2500,
+						message: autosave
+							? 'autosave error'
+							: 'save error'
+					});
+				});
+		};
+		//#endregion Autosave
 
 		onBeforeMount(() => {
 			window.music.init(store.getMapPath());
 			soundList.value = window.music.get();
+			autosaveInterval = setInterval(() => save(true), 300000 /* 5min */);
+		});
+
+		onBeforeUnmount(() => {
+			clearInterval(autosaveInterval);
+			save(false);
 		});
 
 		return {
@@ -188,10 +259,11 @@ export default defineComponent({
 
 			createNewMusic,
 			selectMusic,
-			addMusic,
 			deleteMusic,
 
-			getSound
+			addSound,
+			changeAudio,
+			deleteSound
 		};
 	}
 });
@@ -212,9 +284,6 @@ export default defineComponent({
 	overflow-x: auto;
 }
 .add {
-	width: 100%;
-}
-.audio-player {
 	width: 100%;
 }
 </style>
