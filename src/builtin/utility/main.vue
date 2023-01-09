@@ -35,7 +35,9 @@
 						@click="copyToClipboard(block.id)"
 					>
 						<img
-							:src="block.path ? `/imgs/minecraft/block/${block.id}.webp` : '/imgs/minecraft/no_data.png'"
+							:src="block.path 
+								? $toPublic(`/imgs/minecraft/block/${block.id}.webp`)
+								: $toPublic('/imgs/minecraft/no_data.png')"
 							loading="lazy"
 							@error="$imgErr"
 						/>
@@ -51,7 +53,9 @@
 						@click="copyToClipboard(item.id)"
 					>
 						<img
-							:src="item.path ? $path(String(item.path)) : '/imgs/minecraft/no_data.png'"
+							:src="item.path
+								? $path(String(item.path))
+								: $toPublic('/imgs/minecraft/no_data.png')"
 							loading="lazy"
 							class="pixelated"
 							@error="$imgErr"
@@ -78,14 +82,18 @@
 							>
 								<template v-if="el.type === 'blocks'">
 									<img
-										:src="el.href ? `/imgs/minecraft/block/${el.name}.webp` : '/imgs/minecraft/no_data.png'"
+										:src="el.href
+											? $toPublic(`/imgs/minecraft/block/${el.name}.webp`)
+											: $toPublic('/imgs/minecraft/no_data.png')"
 										loading="lazy"
 										@error="$imgErr"
 									/>
 								</template>
 								<template v-else-if="el.type === 'items'">
 									<img
-										:src="el.href ? $path(String(el.href)) : '/imgs/minecraft/no_data.png'"
+										:src="el.href
+											? $path(String(el.href))
+											: $toPublic('/imgs/minecraft/no_data.png')"
 										loading="lazy"
 										class="pixelated"
 										@error="$imgErr"
@@ -113,10 +121,13 @@ import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { minecraft } from 'mapcraft-api';
 import { mapStore } from 'app/src/store/map';
-import { tags } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { capitalize } from 'app/src/vue/plugins/app';
 
 type tabsType = 'blocks' | 'items' | 'tags';
+
+interface tags {
+  [index: string]: string[];
+}
 
 interface list {
 	id: string,

@@ -1,7 +1,11 @@
 <template>
 	<q-page>
 		<div class="row column justify-center items-center center-div">
-			<q-img src="imgs/app/icon_small.png" width="5em" class="q-mb-md" />
+			<q-img
+				:src="$toPublic('imgs/app/icon_small.png')"
+				width="5em"
+				class="q-mb-md"
+			/>
 			<div v-if="!mapcraftAccountSelected" class="row no-wrap q-pa-sm width-main">
 				<selection-vue
 					:is-server-mode="isServerMode"

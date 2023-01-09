@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts">
-import { useQuasar } from 'quasar';
 import { defineComponent, ref } from 'vue';
 import optionsDirectory from 'components/options/Directory.vue';
 import optionsInfo from 'components/options/Info.vue';
@@ -69,11 +68,8 @@ export default defineComponent({
 		Lang
 	},
 	setup () {
-		const $q = useQuasar();
 		const splitter = ref<number>(15);
 		const tab = ref<string>('general');
-
-		console.log($q.localStorage.getItem('user'));
 
 		return {
 			splitter,

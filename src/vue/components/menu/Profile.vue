@@ -3,7 +3,7 @@
 		<img
 			class="img"
 			:src="avatarUrl"
-			@error="avatarUrl = 'imgs/minecraft/player.png'"
+			@error="avatarUrl = $toPublic('imgs/minecraft/player.png')"
 		/>
 		<div class="column justify-center q-pl-sm">
 			<span class="text-h5 text-center text-weight-light q-pb-sm">
@@ -26,6 +26,7 @@ import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 
 import router from 'src/router';
 import { userStore } from 'store/user';
+import { toPublic } from '../../plugins/app';
 
 export default defineComponent({
 	setup() {

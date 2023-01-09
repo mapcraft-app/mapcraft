@@ -10,17 +10,17 @@ const info = {
 		? 'icns'
 		: 'ico'}`,
 	artifactName: '${productName}_${os}.${ext}',
-	arch: [ 'x64' ]
+	arch: (d = undefined) => d ?? [ 'x64' ]
 };
-const build = (type) => {
+const build = (type, arch = undefined) => {
 	return [
 		{
 			target: type,
-			arch: info.arch,
+			arch: info.arch(arch),
 		},
 		{
 			target: '7z',
-			arch: info.arch
+			arch: info.arch(arch)
 		}
 	];
 };
@@ -55,7 +55,8 @@ try {
 		// #endregion Directory & files
 	
 		// #region Asar
-		asar: false,
+		asar: package.builder.asar ?? true,
+		asarUnpack: package.builder.asarUnpack ?? undefined,
 		//asarUnpack: [
 		//'node_modules/{7zip-bin,7zip-min,mapcraft-api}/**/*'
 		//],
@@ -79,7 +80,7 @@ try {
 		win: {
 			icon: info.icon(),
 			artifactName: info.artifactName,
-			target: build('nsis')
+			target: build('nsis', package.builder.arch ?? undefined)
 		},
 		//#endregion Windows
 
@@ -109,7 +110,7 @@ try {
 			type: 'distribution',
 			icon: info.icon(true),
 			artifactName: info.artifactName,
-			target: build('dmg')
+			target: build('dmg', package.builder.arch ?? undefined)
 		},
 		//#endregion Mac
 
@@ -122,7 +123,7 @@ try {
 			synopsis: 'Mapcraft is a software that increases the possibilities of mapmakers without any complex installation',
 			icon: info.icon(),
 			artifactName: info.artifactName,
-			target: build('AppImage')
+			target: build('AppImage', package.builder.arch ?? undefined)
 		}
 		//#endregion Linux
 	};

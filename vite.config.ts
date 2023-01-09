@@ -71,7 +71,8 @@ export default defineConfig((env) => ({
 				'load.html'		: resolve(__dirname, 'load.html'),
 				'index.html'	: resolve(__dirname, 'index.html')
 			}
-		}
+		},
+		sourcemap: false
 	},
 	plugins: [
 		nodePolyfills(),

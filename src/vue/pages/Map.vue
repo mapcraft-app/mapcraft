@@ -17,7 +17,7 @@
 			</template>
 			<template v-else>
 				<div v-for="map in maps" :key="map.path" class="card-size" @click="handleClick(map.name)">
-					<img :src="(map.icon !== false) ? $path(map.icon) : '/imgs/app/default_logo.png'" />
+					<img :src="(map.icon !== false) ? $path(map.icon) : $toPublic('/imgs/app/default_logo.png')" />
 					<span class="text-h6 text-white">{{ $capitalize(map.name) }}</span>
 				</div>
 			</template>

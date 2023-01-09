@@ -19,15 +19,14 @@
 					class="tab"
 					@click="get(el)"
 				>
-					<img :src="`imgs/app/framework/${el.img}`" class="img" />
+					<img :src="$toPublic(`imgs/app/framework/${el.img}`)" class="img" />
 				</q-tab>
 			</q-tabs>
 		</template>
-		<template v-slot:after>
-			<div v-if="select && data" class="q-pl-sm render" v-html="render(data)"></div>
-			<q-spinner-radio v-if="select && !data" />
-			<div v-if="select && !data" class="row justify-center items-center" style="height: inherit">
-				<q-spinner-puff size="4em" color="primary"/>
+		<template v-if="select" v-slot:after>
+			<div v-if="data" class="q-pl-sm render" v-html="render(data)"></div>
+			<div v-else class="row justify-center items-center" style="height: inherit">
+				<q-spinner-puff size="4em" color="primary" />
 			</div>
 		</template>
 	</q-splitter>

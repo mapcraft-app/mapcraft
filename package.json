@@ -19,6 +19,10 @@
     "type": "git",
     "url": "https://github.com/mapcraft-app/mapcraft.git"
   },
+	"builder" : {
+		"arch": [ "x64" ],
+		"asar": true
+	},
   "scripts": {
     "dev": "vite",
     "lint": "eslint --fix .",
