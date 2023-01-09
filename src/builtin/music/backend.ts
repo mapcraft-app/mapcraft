@@ -2,7 +2,8 @@ import { exposeInMainWorld } from 'app/src/api/plugins/backend';
 import { existsSync, readFileSync } from 'fs';
 import { cp, mkdir, rm, writeFile } from 'fs/promises';
 import { basename, resolve } from 'path';
-import { envInterface, sounds, sound } from './interface';
+import { fs } from 'mapcraft-api/backend';
+import { envInterface, sounds, sound, category } from './interface';
 
 class music {
 	private env: envInterface;
@@ -12,17 +13,27 @@ class music {
 		base: string,
 		json: string
 	};
+	public datapack: {
+		execute: string,
+		function: string
+	};
 
 	constructor(env: envInterface) {
 		this.path = {
 			base: resolve(env.resourcepack, 'assets', 'mapcraft', 'sounds'),
 			json: resolve(env.resourcepack, 'assets', 'mapcraft', 'sounds.json')
 		};
+		this.datapack = {
+			execute: resolve(env.datapack.base, 'functions', 'music', 'execute.mcfunction'),
+			function: resolve(env.datapack.base, 'functions', 'music')
+		};
 		this.env = env;
 		this.id = 0;
 		this.json = JSON.parse(readFileSync(this.path.json, { encoding: 'utf-8', flag: 'r' })) as Record<string, sound>;
 		for (const id in this.json)
 			this.id = this.json[id].id;
+		if (!existsSync(this.datapack.function))
+			mkdir(this.datapack.function, { recursive: true });
 	}
 
 	isExist(name: string): boolean {
@@ -69,14 +80,18 @@ class music {
 		this.saveFile();
 	}
 
-	async uploadSound(d: { name: string, key: number, file: File }) {
+	async uploadSound(d: {
+		index: number,
+		name: string,
+		file: File
+	}) {
 		if (!d)
 			return;
 		const retName = `mapcraft:${this.json[d.name].name}/${basename(d.file.path).replace('.ogg', '')}`;
 		const destPath = resolve(this.path.base, this.json[d.name].name, basename(d.file.path));
-		await rm(resolve(this.path.base, ...this.json[d.name].sounds[d.key].name.slice(this.json[d.name].sounds[d.key].name.indexOf(':') + 1).concat('.ogg').split('/')), { force: true, recursive: true });
+		await rm(resolve(this.path.base, ...this.json[d.name].sounds[d.index].name.slice(this.json[d.name].sounds[d.index].name.indexOf(':') + 1).concat('.ogg').split('/')), { force: true, recursive: true });
 		await cp(d.file.path, destPath, { force: true, recursive: false });
-		this.json[d.name].sounds[d.key].name = retName;
+		this.json[d.name].sounds[d.index].name = retName;
 		this.saveFile();
 		return retName;
 	}
@@ -98,6 +113,55 @@ class music {
 		}
 		throw new Error('no sound to delete');
 	}
+
+	//#region datapack
+
+	/**
+	 * 1: 11, 12, 13, ...
+	 * 2: 21, 22, 23, ...
+	 * ...
+	 */
+	async datapackCreateMusic(d: {
+		id: number,
+		name: string,
+		index: number,
+		category: category,
+		duration: number
+	}) {
+		const soundId = `${d.id}${d.index}`;
+		const category: category = (d.category === 'none')
+			? 'master'
+			: d.category;
+		const duration = isNaN(d.duration)
+			? 0
+			: d.duration;
+		const path = resolve(this.datapack.function, `${soundId}.mcfunction`);
+		const data = [
+			`execute if score @s MC_MusicTime matches 1 run playsound ${d.name} ${category} @s ~ ~ ~`,
+			`execute if score @s[tag=!RepeatMusic] MC_MusicTime matches ${duration}.. run scoreboard players set @s MC_Music 0`,
+			`execute if score @s MC_MusicTime matches ${duration}.. run scoreboard players set @s MC_MusicTime -1`,
+			'scoreboard players add @s MC_MusicTime 1',
+		];
+		if (!existsSync(this.datapack.execute))
+			await writeFile(this.datapack.execute, '', { encoding: 'utf-8', flag: 'w', mode: 0o666 });
+		await writeFile(path, data.join('\n'), { encoding: 'utf-8', flag: 'w' });
+		await fs.modifyLine(
+			this.datapack.execute,
+			`function mapcraft-data:music/${soundId}`,
+			`execute if score @s MC_Music matches ${soundId} run function mapcraft-data:music/${soundId}`,
+			true
+		);
+	}
+
+	async datapackDeleteMusic(id: number, index: number) {
+		const soundId = `${id}${index}`;
+		const path = resolve(this.datapack.function, `${soundId}.mcfunction`);
+		if (!existsSync(this.datapack.execute))
+			return;
+		await rm(path, { force: true });
+		await fs.removeLine(this.datapack.execute, `matches ${soundId.toString()}`);
+	}
+	//#endregion datapack
 }
 
 let __instance__: music;
@@ -108,6 +172,15 @@ exposeInMainWorld('music', {
 	},
 	get: () => __instance__.json,
 	save: (data?: Record<string, sound>) => __instance__.saveFile(data),
+	datapack: {
+		create: (d: {
+			id: number,
+			name: string,
+			index: number,
+			category: category,
+			duration: number}) => __instance__.datapackCreateMusic(d),
+		delete: (id: number, index: number) => __instance__.datapackDeleteMusic(id, index)
+	},
 	music: {
 		add: (sound: sound) => __instance__.addMusic(sound),
 		remove: (name: string) => __instance__.removeMusic(name),
@@ -115,7 +188,7 @@ exposeInMainWorld('music', {
 	sound: {
 		add: (name: string, sound: sounds) => __instance__.addSound(name, sound),
 		get: (name: string) => __instance__.getSound(name),
-		upload: (d: { name: string, key: number, file: File; }) => __instance__.uploadSound(d),
+		upload: (d: { name: string, index: number, file: File }) => __instance__.uploadSound(d),
 		remove: (name: string, soundName: string) => __instance__.removeSound(name, soundName),
 	}
 });

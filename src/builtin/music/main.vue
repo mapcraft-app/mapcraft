@@ -1,11 +1,19 @@
 <template>
 	<q-page class="page row">
 		<div class="left">
-			<q-btn
-				label="Create sound" color="green-7"
-				class="q-ma-md"
-				@click="createDialog = true"
-			/>
+			<div class="row no-wrap justify-around q-ma-md">
+				<q-btn
+					color="orange-7"
+					icon="save"
+					@click="save(false)"
+				/>
+				<q-btn
+					:label="$capitalize($t('builtin.music.create.button'))"
+					color="green-7"
+					@click="createDialog = true"
+				/>
+			</div>
+			<q-separator />
 			<list-vue
 				:list="soundList"
 				@select="selectMusic"
@@ -16,8 +24,8 @@
 				v-model="tab" dense align="justify"
 				narrow-indicator class="q-pb-sm"
 			>
-				<q-tab name="general" label="General" />
-				<q-tab name="sounds" label="Sounds" />
+				<q-tab name="general" :label="$capitalize($t('builtin.music.general.title'))" />
+				<q-tab name="sounds" :label="$capitalize($t('builtin.music.sounds.title'))" />
 			</q-tabs>
 			<q-tab-panels
 				v-model="tab"
@@ -27,17 +35,9 @@
 				class="q-pl-sm q-pr-sm"
 			>
 				<q-tab-panel name="general">
-					<q-input v-model="soundList[selectedSoundKey].name" label="name"/>
-					<q-select v-model="soundList[selectedSoundKey].category" :options="category" label="category"/>
-					<q-toggle
-						v-model="soundList[selectedSoundKey].replace" label="replace"
-						size="lg" left-label
-						class="q-pt-sm"
-					/>
-					<q-input v-model="soundList[selectedSoundKey].subtitle" label="subtitle"/>
-					<q-btn
-						color="red" label="Delete" icon="delete"
-						class="q-mt-md" @click="deleteMusic"
+					<general-vue
+						:sound="soundList[selectedSoundKey]"
+						@delete-music="deleteMusic"
 					/>
 				</q-tab-panel>
 				<q-tab-panel name="sounds" class="q-pa-xs">
@@ -46,13 +46,15 @@
 						size="lg" icon="add" color="secondary"
 						@click="addSound"
 					/>
-					<q-list v-if="soundList[selectedSoundKey].sounds.length" bordered>
+					<q-list v-if="soundList[selectedSoundKey].sounds.length" bordered separator>
 						<q-expansion-item
 							v-for="(sound, key) in soundList[selectedSoundKey].sounds"
 							:key="key"
 							:label="sound.name.length ? sound.name : 'blank'"
 						>
 							<sound-vue
+								:id="soundList[selectedSoundKey].id"
+								:category="soundList[selectedSoundKey].category"
 								:index="key"
 								:selected-sound="selectedSoundKey"
 								:sound="sound"
@@ -76,10 +78,13 @@
 <script lang="ts">
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { defineComponent, onBeforeMount, onBeforeUnmount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { mapStore } from 'store/map';
+import { capitalize, path } from 'app/src/vue/plugins/app';
 import { category, sound, sounds } from './interface';
 
 import createVue from './components/create.vue';
+import generalVue from './components/general.vue';
 import listVue from './components/list.vue';
 import soundVue from './components/sound.vue';
 
@@ -87,11 +92,13 @@ export default defineComponent({
 	name: 'Music',
 	components: {
 		createVue,
+		generalVue,
 		listVue,
 		soundVue
 	},
 	setup () {
 		const $q = useQuasar();
+		const { t } = useI18n();
 		const store = mapStore();
 		const category: category[] = ['none', 'ambient', 'block', 'hostile', 'master', 'music', 'neutral', 'player', 'record', 'voice', 'weather'];
 		let autosaveInterval: NodeJS.Timer; // eslint-disable-line no-undef
@@ -166,7 +173,7 @@ export default defineComponent({
 		//#endregion Sound
 
 		//#endregion Autosave
-		const save = (autosave: boolean) => {
+		const save = async (autosave: boolean) => {
 			const notif = $q.notify({
 				group: false,
 				timeout: 0,
@@ -174,8 +181,8 @@ export default defineComponent({
 				spinner: QSpinnerPuff,
 				color: 'orange-7',
 				message: autosave
-					? 'autosave'
-					: 'save'
+					? capitalize(t('builtin.music.autosave.start'))
+					: capitalize(t('builtin.music.save.start'))
 			});
 			const retData: Record<string, sound> = {};
 			for (const key in soundList.value) {
@@ -212,6 +219,28 @@ export default defineComponent({
 							: e.weight
 					}))
 				} as sound;
+				
+				let audio: HTMLAudioElement = document.createElement('audio');
+				const getDuration = (src: string): Promise<number> => {
+					return new Promise((res) => {
+						audio.src = src;
+						audio.addEventListener('loadedmetadata', () => {
+							res(Math.round(audio.duration));
+						}, { once: true });
+					});
+				};
+
+				for (const id in soundList.value[key].sounds) {
+					window.music.datapack.create({
+						id:soundList.value[key].id,
+						name: soundList.value[key].sounds[id].name,
+						index: Number(id),
+						category: soundList.value[key].category,
+						duration: await getDuration(
+							path(window.music.sound.get(soundList.value[key].sounds[id].name))
+						)
+					});
+				}
 			}
 			window.music.save(retData)
 				.then(() => {
@@ -221,8 +250,8 @@ export default defineComponent({
 						icon: 'task_alt',
 						timeout: 2500,
 						message: autosave
-							? 'finish autosave'
-							: 'finish save'
+							? capitalize(t('builtin.music.autosave.end'))
+							: capitalize(t('builtin.music.save.end'))
 					});
 				})
 				.catch(() => {
@@ -232,8 +261,8 @@ export default defineComponent({
 						icon: 'error',
 						timeout: 2500,
 						message: autosave
-							? 'autosave error'
-							: 'save error'
+							? capitalize(t('builtin.music.autosave.fail'))
+							: capitalize(t('builtin.music.save.fail'))
 					});
 				});
 		};
@@ -247,7 +276,7 @@ export default defineComponent({
 
 		onBeforeUnmount(() => {
 			clearInterval(autosaveInterval);
-			save(false);
+			save(true);
 		});
 
 		return {
@@ -263,7 +292,9 @@ export default defineComponent({
 
 			addSound,
 			changeAudio,
-			deleteSound
+			deleteSound,
+
+			save
 		};
 	}
 });

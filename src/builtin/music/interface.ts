@@ -18,7 +18,7 @@ export interface sounds {
 	stream?: boolean,
 	type?: type,
 	volume?: number,
-	weight?: number,
+	weight?: number
 }
 
 export interface sound {

@@ -9,21 +9,24 @@
 			</q-card-section>
 			<q-card-section v-if="error">
 				<q-banner inline-actions class="text-white text-center bg-red">
-					<span class="text-body1">{{ options.name }} sound exist</span>
+					<span class="text-body1">
+						{{ $capitalize($t('builtin.music.create.button', options.name)) }}
+					</span>
 				</q-banner>
 			</q-card-section>
 			<q-card-section>
-				<q-input v-model="options.name" label="name"/>
-				<q-select v-model="options.category" :options="category" label="category"/>
+				<q-input v-model="options.name" :label="$capitalize($t('builtin.music.general.name'))" />
+				<q-select v-model="options.category" :options="category" :label="$capitalize($t('builtin.music.general.category'))" />
 				<q-toggle
-					v-model="options.replace" label="replace"
+					v-model="options.replace"
+					:label="$capitalize($t('builtin.music.general.replace'))"
 					size="lg" left-label
 					class="q-pt-sm"
 				/>
-				<q-input v-model="options.subtitle" label="subtitle"/>
+				<q-input v-model="options.subtitle" :label="$capitalize($t('builtin.music.general.subtitle'))"/>
 			</q-card-section>
 			<q-card-section class="row reverse">
-				<q-btn label="create" color="green-7" @click="create"/>
+				<q-btn :label="$capitalize($t('builtin.music.create.create'))" color="green-7" @click="create"/>
 			</q-card-section>
 		</q-card>
 	</q-dialog>

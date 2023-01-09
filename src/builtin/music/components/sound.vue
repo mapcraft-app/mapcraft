@@ -5,13 +5,14 @@
 				<q-icon name="upload" size="3em" />
 				<input
 					ref="uploadSound" type="file" accept="audio/ogg"
+					:label="$capitalize($t('builtin.music.sounds.add'))"
 					@change="uploadNewSound"
 					@drop="dropNewSound"
 				/>
 			</div>
 			<q-btn
 				square icon="delete" color="red"
-				size="md" label="Delete"
+				size="md" :label="$capitalize($t('builtin.music.general.delete'))"
 				@click="deleteSound"
 			/>
 		</q-card-section>
@@ -28,40 +29,55 @@
 		<q-card-section>
 			<q-separator />
 			<div class="row justify-around">
-				<q-toggle v-model="$props.sound.preload" label="Preload" left-label />
-				<q-toggle v-model="$props.sound.stream" label="Stream" left-label />
+				<q-toggle
+					v-model="$props.sound.preload"
+					:label="$capitalize($t('builtin.music.sounds.preload'))"
+					left-label
+					:disable="!$props.sound.name.length"
+				/>
+				<q-toggle
+					v-model="$props.sound.stream"
+					:label="$capitalize($t('builtin.music.sounds.stream'))"
+					left-label
+					:disable="!$props.sound.name.length"
+				/>
 			</div>
 			<q-separator class="q-mb-sm" />
-			<span class="text-body2">Type</span>
+			<span class="text-body2">{{ $capitalize($t('builtin.music.sounds.type')) }}</span>
 			<q-select
 				v-model="$props.sound.type"
 				:bottom-slots="false"
 				dense
 				:options="['event', 'sound']"
 				class="q-pb-sm"
+				:disable="!$props.sound.name.length"
 			/>
-			<span class="text-body2">Attenuation distance</span>
+			<span class="text-body2">{{ $capitalize($t('builtin.music.sounds.attenuation')) }}</span>
 			<q-slider
-				v-model="$props.sound.attenuation_distance" label
+				v-model="$props.sound.attenuation_distance"
 				:min="0" :max="32" :step="1"
+				:disable="!$props.sound.name.length"
 			/>
 			<q-separator class="q-mb-sm" />
-			<span class="text-body2">Pitch</span>
+			<span class="text-body2">{{ $capitalize($t('builtin.music.sounds.pitch')) }}</span>
 			<q-slider
-				v-model="$props.sound.pitch" label
+				v-model="$props.sound.pitch"
 				:min="0" :max="2" :step="0.05"
+				:disable="!$props.sound.name.length"
 			/>
 			<q-separator class="q-mb-sm" />
-			<span class="text-body2">Volume</span>
+			<span class="text-body2">{{ $capitalize($t('builtin.music.sounds.volume')) }}</span>
 			<q-slider
-				v-model="$props.sound.volume" label
+				v-model="$props.sound.volume"
 				:min="0" :max="2" :step="0.05"
+				:disable="!$props.sound.name.length"
 			/>
 			<q-separator class="q-mb-sm" />
-			<span class="text-body2">Weight</span>
+			<span class="text-body2">{{ $capitalize($t('builtin.music.sounds.weight')) }}</span>
 			<q-slider
-				v-model="$props.sound.weight" label
+				v-model="$props.sound.weight"
 				:min="0" :max="2" :step="0.05"
+				:disable="!$props.sound.name.length"
 			/>
 		</q-card-section>
 	</q-card>
@@ -74,6 +90,14 @@ import { sounds } from '../interface';
 export default defineComponent({
 	name: 'Sound',
 	props: {
+		category: {
+			type: String,
+			required: true
+		},
+		id: {
+			type: Number,
+			required: true
+		},
 		index: {
 			type: Number,
 			required: true
@@ -89,7 +113,7 @@ export default defineComponent({
 	},
 	emits: ['change-audio', 'delete-sound', 'set-stream'],
 	setup (props, { emit }) {
-		const isSoundUpdate = ref<boolean>(false);
+		const isSoundUpdate = ref<boolean>(!!props.sound.name.length);
 		const isEvent = ref<boolean>(false);
 		const audioPlayer = ref<HTMLAudioElement | null>(null);
 
@@ -98,8 +122,8 @@ export default defineComponent({
 		const copySound = (files: FileList) => {
 			if (props.selectedSound) {
 				window.music.sound.upload({
-					name: props.selectedSound,
-					key: props.index,
+					index: props.index,
+					name: props.sound.name,
 					file: files[0]
 				})
 					.then((d) => {
@@ -135,7 +159,10 @@ export default defineComponent({
 				props.selectedSound,
 				props.sound.name
 			)
-				.then(() => emit('delete-sound'))
+				.then(() => {
+					emit('delete-sound');
+					window.music.datapack.delete(props.id, props.index);
+				})
 				.catch((e) => console.error(e));
 		};
 
