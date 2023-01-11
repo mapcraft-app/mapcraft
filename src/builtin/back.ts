@@ -1,3 +1,4 @@
+import './advancement/backend';
 import './cutscene/backend';
 import './music/backend';
 import './recipe/backend';

@@ -1,256 +1,254 @@
 <template>
-	<q-page class="page">
-		<div ref="sideNav" :class="!$q.dark.isActive ? 'main-layout-day layout-menu' : 'main-layout-night layout-menu'">
-			<div class="layout-menu-button-back" :style="drawerOpen ? 'left: 250px; visibility: visible; opacity: 1' : 'left:0'" @click="openNav"></div>
-			<q-btn
-				class="layout-menu-button"
-				color="secondary" square unelevated
-				:style="drawerOpen ? 'left: 250px' : 'left: 0px'"
-				:icon="drawerOpen ? 'close' : 'list'"
-				@click="openNav"
-			/>
-			<div>
-				<div class="column justify-center q-mb-md">
-					<q-btn
-						color="green-7" square unelevated
-						style="height: 3em"
-						icon="add" :title="$capitalize($t('builtin.cutscene.list.add'))"
-						@click="(createCutsceneModal = true)"
-					/>
-				</div>
-				<q-list v-if="cutsceneList.length" separator>
-					<q-slide-item
-						v-for="cutscene in cutsceneList"
-						:key="cutscene.id" clickable
-						right-color="red-7"
-						:class="!$q.dark.isActive ? 'main-layout-day' : 'main-layout-night'"
-						@click="openCutscene(cutscene.id)"
-						@right="deleteCutscene(cutscene.id)"
-					>
-						<template v-slot:right>
-							<q-icon name="delete"/>
-						</template>
-						<q-item>
-							<q-item-section no-wrap>
-								<span class="q-mr-md">
-									<q-icon name="sell" class="q-mr-xs"/>
-									{{ cutscene.name }}
-								</span>
-							</q-item-section>
-							<q-item-section no-wrap>
-								<span>
-									<q-icon name="tag" class="q-mr-xs"/>
-									{{ cutscene.tag }}
-								</span>
-							</q-item-section>
-						</q-item>
-					</q-slide-item>
-				</q-list>
+	<div ref="sideNav" :class="!$q.dark.isActive ? 'main-layout-day layout-menu' : 'main-layout-night layout-menu'">
+		<div class="layout-menu-button-back" :style="drawerOpen ? 'left: 250px; visibility: visible; opacity: 1' : 'left:0'" @click="openNav"></div>
+		<q-btn
+			class="layout-menu-button"
+			color="secondary" square unelevated
+			:style="drawerOpen ? 'left: 250px' : 'left: 0px'"
+			:icon="drawerOpen ? 'close' : 'list'"
+			@click="openNav"
+		/>
+		<div>
+			<div class="column justify-center q-mb-md">
+				<q-btn
+					color="green-7" square unelevated
+					style="height: 3em"
+					icon="add" :title="$capitalize($t('builtin.cutscene.list.add'))"
+					@click="(createCutsceneModal = true)"
+				/>
 			</div>
-			<q-dialog v-model="createCutsceneModal" persistent>
-				<q-card style="width: 40%">
-					<q-card-section class="q-pt-none">
-						<q-input
-							v-model="cutsceneName"
-							:label="$capitalize($t('builtin.cutscene.list.addName'))"
-							:rules="[val => !!val || $t('builtin.cutscene.content.table.error.noData')]"
-						>
-							<template v-slot:prepend>
-								<q-icon name="label" />
-							</template>
-						</q-input>
-					</q-card-section>
-					<q-card-actions align="right" class="text-teal">
-						<q-btn v-close-popup square color="red-7" icon="close" />
-						<q-btn v-close-popup square color="green-7" icon="check" @click="createCutscene()" />
-					</q-card-actions>
-				</q-card>
-			</q-dialog>
-		</div>
-		<div v-if="cutsceneSelected" class="layout-content">
-			<div>
-				<div class="row justify-evenly q-pt-sm q-pb-sm q-ml-xl">
-					<span class="text-h6 q-mr-md">{{ cutsceneSelected.name }}</span>
-					<div class="text-h6 row items-center">
-						<q-icon size="sm" name="schedule"/>
-						<span >{{ printTime(cutsceneSelected.duration) }}</span>
-					</div>
-					<div class="row no-wrap justify-between">
-						<q-btn
-							square unelevated color="light-blue-7"
-							icon="play_arrow"
-							@click="openFile(true)"
-						>
-							<q-tooltip :delay="500" class="bg-light-blue-7">
-								{{ $capitalize($t('builtin.cutscene.content.menu.editStart')) }}
-							</q-tooltip>
-						</q-btn>
-						<q-btn
-							square unelevated color="red-7"
-							icon="stop"
-							@click="openFile(false)"
-						>
-							<q-tooltip :delay="500" class="bg-red-7">
-								{{ $capitalize($t('builtin.cutscene.content.menu.editEnd')) }}
-							</q-tooltip>
-						</q-btn>
-						<q-btn
-							square unelevated color="secondary"
-							icon="settings"
-							@click="optionCutsceneModal = true"
-						>
-							<q-tooltip :delay="500" class="bg-secondary">
-								{{ $capitalize($t('builtin.cutscene.content.menu.option')) }}
-							</q-tooltip>
-						</q-btn>
-						<q-dialog v-model="optionCutsceneModal">
-							<q-card style="width: 700px; max-width: 80vw;">
-								<q-card-section class="row justify-between">
-									<div class="text-h6">{{ $capitalize($t('builtin.cutscene.option.title')) }}</div>
-									<q-btn v-close-popup icon="close" flat round dense />
-								</q-card-section>
-								<q-card-section class="column q-pt-none">
-									<span class="text-h6 q-pt-md">{{ $capitalize($t('builtin.cutscene.option.name')) }}</span>
-									<q-input v-model="cutsceneSelected.name" />
-									<span class="text-h6 q-pt-md">{{ $capitalize($t('builtin.cutscene.option.description')) }}</span>
-									<q-input v-model="cutsceneSelected.description" />
-									<span class="text-h6 q-pt-md">{{ $capitalize($t('builtin.cutscene.option.end.title')) }}</span>
-									<q-list>
-										<q-item v-ripple tag="label">
-											<q-item-section avatar top>
-												<q-radio v-model="cutsceneEndOption" val="origin" color="teal" />
-											</q-item-section>
-											<q-item-section>
-												<q-item-label>{{ $capitalize($t('builtin.cutscene.option.end.origin.label')) }}</q-item-label>
-												<q-item-label caption>{{ $capitalize($t('builtin.cutscene.option.end.origin.desc')) }}</q-item-label>
-											</q-item-section>
-										</q-item>
-										<q-item v-ripple tag="label">
-											<q-item-section avatar top>
-												<q-radio v-model="cutsceneEndOption" val="last" color="orange" />
-											</q-item-section>
-											<q-item-section>
-												<q-item-label>{{ $capitalize($t('builtin.cutscene.option.end.last.label')) }}</q-item-label>
-												<q-item-label caption>{{ $capitalize($t('builtin.cutscene.option.end.last.desc')) }}</q-item-label>
-											</q-item-section>
-										</q-item>
-										<q-item v-ripple tag="label">
-											<q-item-section avatar top>
-												<q-radio v-model="cutsceneEndOption" val="custom" color="cyan" />
-											</q-item-section>
-											<q-item-section>
-												<q-item-label>{{ $capitalize($t('builtin.cutscene.option.end.custom.label')) }}</q-item-label>
-												<q-item-label caption>{{ $capitalize($t('builtin.cutscene.option.end.custom.desc')) }}</q-item-label>
-												<div v-if="cutsceneEndOption === 'custom'" class="row no-wrap">
-													<q-input
-														v-model.number="optionsCustom.x" type="number"
-														class="q-pr-xs"
-														:label="$t('builtin.cutscene.content.header.x')"
-													/>
-													<q-input
-														v-model.number="optionsCustom.y" type="number"
-														class="q-pl-xs q-pr-xs"
-														:label="$t('builtin.cutscene.content.header.y')"
-													/>
-													<q-input
-														v-model.number="optionsCustom.z" type="number"
-														class="q-pl-xs q-pr-xs"
-														:label="$t('builtin.cutscene.content.header.z')"
-													/>
-													<q-input
-														v-model.number="optionsCustom.rx" type="number"
-														class="q-pl-xs q-pr-xs"
-														:label="$t('builtin.cutscene.content.header.rx')"
-													/>
-													<q-input
-														v-model.number="optionsCustom.ry" type="number"
-														class="q-pl-xs"
-														:label="$t('builtin.cutscene.content.header.ry')"
-													/>
-												</div>
-											</q-item-section>
-										</q-item>
-									</q-list>
-								</q-card-section>
-							</q-card>
-						</q-dialog>
-						<q-separator vertical size="2px" class="q-ml-xs q-mr-xs"/>
-						<q-btn
-							square unelevated color="green-7"
-							icon="save"
-							@click="saveData(false)"
-						>
-							<q-tooltip :delay="500" class="bg-green-7">
-								{{ $capitalize($t('builtin.cutscene.content.menu.save.start')) }}
-							</q-tooltip>
-						</q-btn>
-						<q-btn
-							square unelevated color="orange-7"
-							icon="videocam"
-							:disable="!!(cutscenePointsList && cutscenePointsList.length <= 1)"
-							@click="generateCutscene()"
-						>
-							<q-tooltip :delay="500" class="bg-orange-7">
-								{{ $capitalize($t('builtin.cutscene.content.menu.generate.start')) }}
-							</q-tooltip>
-						</q-btn>
-					</div>
-				</div>
-				<div class="table table-header">
-					<span class="text-h6 five"></span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.x')) }}</span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.y')) }}</span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.z')) }}</span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.rx')) }}</span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.ry')) }}</span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.duration')) }}</span>
-					<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.transition')) }}</span>
-				</div>
-			</div>
-			<template v-if="cutscenePointsList">
-				<div
-					v-for="point in cutscenePointsList" :key="point.point"
-					class="table"
+			<q-list v-if="cutsceneList.length" separator>
+				<q-slide-item
+					v-for="cutscene in cutsceneList"
+					:key="cutscene.id" clickable
+					right-color="red-7"
+					:class="!$q.dark.isActive ? 'main-layout-day' : 'main-layout-night'"
+					@click="openCutscene(cutscene.id)"
+					@right="deleteCutscene(cutscene.id)"
 				>
-					<span class="five">{{ point.point }}</span>
-					<q-input v-model="point.x" type="number" dense :rules="[val => !!val || '']" />
-					<q-input v-model="point.y" type="number" dense :rules="[val => !!val || '']" />
-					<q-input v-model="point.z" type="number" dense :rules="[val => !!val || '']" />
-					<q-input v-model="point.rx" type="number" dense :rules="[val => !!val || '']" />
-					<q-input v-model="point.ry" type="number" dense :rules="[val => !!val || '']" />
-					<div class="duration">
-						<q-input
-							v-model="point.duration" type="number"
-							step="1" min="0"
-							:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
-							:rules="[val => !!val && Number(val) >= 0 || '']" 
-							dense class="q-mr-xs"
-						>
-							<template v-slot:append>
-								<span>s</span>
-							</template>
-						</q-input>
-					</div>
-					<q-select
-						v-model="point.transition"
-						:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
-						:options="['ease', 'ease-in', 'ease-in-out', 'ease-out', 'linear']"
-						dense
-					/>
-					<div class="seven">
-						<q-btn
-							square unelevated color="red-7"
-							icon="delete" class="button"
-							@click="removePoint(point.point)"
-						/>
-					</div>
-				</div>
-				<div class="add-point" @click="addPoint">
-					<q-icon name="add" size="2em" />
-				</div>
-			</template>
+					<template v-slot:right>
+						<q-icon name="delete"/>
+					</template>
+					<q-item>
+						<q-item-section no-wrap>
+							<span class="q-mr-md">
+								<q-icon name="sell" class="q-mr-xs"/>
+								{{ cutscene.name }}
+							</span>
+						</q-item-section>
+						<q-item-section no-wrap>
+							<span>
+								<q-icon name="tag" class="q-mr-xs"/>
+								{{ cutscene.tag }}
+							</span>
+						</q-item-section>
+					</q-item>
+				</q-slide-item>
+			</q-list>
 		</div>
-	</q-page>
+		<q-dialog v-model="createCutsceneModal" persistent>
+			<q-card style="width: 40%">
+				<q-card-section class="q-pt-none">
+					<q-input
+						v-model="cutsceneName"
+						:label="$capitalize($t('builtin.cutscene.list.addName'))"
+						:rules="[val => !!val || $t('builtin.cutscene.content.table.error.noData')]"
+					>
+						<template v-slot:prepend>
+							<q-icon name="label" />
+						</template>
+					</q-input>
+				</q-card-section>
+				<q-card-actions align="right" class="text-teal">
+					<q-btn v-close-popup square color="red-7" icon="close" />
+					<q-btn v-close-popup square color="green-7" icon="check" @click="createCutscene()" />
+				</q-card-actions>
+			</q-card>
+		</q-dialog>
+	</div>
+	<div v-if="cutsceneSelected" class="layout-content">
+		<div>
+			<div class="row justify-evenly q-pt-sm q-pb-sm q-ml-xl">
+				<span class="text-h6 q-mr-md">{{ cutsceneSelected.name }}</span>
+				<div class="text-h6 row items-center">
+					<q-icon size="sm" name="schedule"/>
+					<span >{{ printTime(cutsceneSelected.duration) }}</span>
+				</div>
+				<div class="row no-wrap justify-between">
+					<q-btn
+						square unelevated color="light-blue-7"
+						icon="play_arrow"
+						@click="openFile(true)"
+					>
+						<q-tooltip :delay="500" class="bg-light-blue-7">
+							{{ $capitalize($t('builtin.cutscene.content.menu.editStart')) }}
+						</q-tooltip>
+					</q-btn>
+					<q-btn
+						square unelevated color="red-7"
+						icon="stop"
+						@click="openFile(false)"
+					>
+						<q-tooltip :delay="500" class="bg-red-7">
+							{{ $capitalize($t('builtin.cutscene.content.menu.editEnd')) }}
+						</q-tooltip>
+					</q-btn>
+					<q-btn
+						square unelevated color="secondary"
+						icon="settings"
+						@click="optionCutsceneModal = true"
+					>
+						<q-tooltip :delay="500" class="bg-secondary">
+							{{ $capitalize($t('builtin.cutscene.content.menu.option')) }}
+						</q-tooltip>
+					</q-btn>
+					<q-dialog v-model="optionCutsceneModal">
+						<q-card style="width: 700px; max-width: 80vw;">
+							<q-card-section class="row justify-between">
+								<div class="text-h6">{{ $capitalize($t('builtin.cutscene.option.title')) }}</div>
+								<q-btn v-close-popup icon="close" flat round dense />
+							</q-card-section>
+							<q-card-section class="column q-pt-none">
+								<span class="text-h6 q-pt-md">{{ $capitalize($t('builtin.cutscene.option.name')) }}</span>
+								<q-input v-model="cutsceneSelected.name" />
+								<span class="text-h6 q-pt-md">{{ $capitalize($t('builtin.cutscene.option.description')) }}</span>
+								<q-input v-model="cutsceneSelected.description" />
+								<span class="text-h6 q-pt-md">{{ $capitalize($t('builtin.cutscene.option.end.title')) }}</span>
+								<q-list>
+									<q-item v-ripple tag="label">
+										<q-item-section avatar top>
+											<q-radio v-model="cutsceneEndOption" val="origin" color="teal" />
+										</q-item-section>
+										<q-item-section>
+											<q-item-label>{{ $capitalize($t('builtin.cutscene.option.end.origin.label')) }}</q-item-label>
+											<q-item-label caption>{{ $capitalize($t('builtin.cutscene.option.end.origin.desc')) }}</q-item-label>
+										</q-item-section>
+									</q-item>
+									<q-item v-ripple tag="label">
+										<q-item-section avatar top>
+											<q-radio v-model="cutsceneEndOption" val="last" color="orange" />
+										</q-item-section>
+										<q-item-section>
+											<q-item-label>{{ $capitalize($t('builtin.cutscene.option.end.last.label')) }}</q-item-label>
+											<q-item-label caption>{{ $capitalize($t('builtin.cutscene.option.end.last.desc')) }}</q-item-label>
+										</q-item-section>
+									</q-item>
+									<q-item v-ripple tag="label">
+										<q-item-section avatar top>
+											<q-radio v-model="cutsceneEndOption" val="custom" color="cyan" />
+										</q-item-section>
+										<q-item-section>
+											<q-item-label>{{ $capitalize($t('builtin.cutscene.option.end.custom.label')) }}</q-item-label>
+											<q-item-label caption>{{ $capitalize($t('builtin.cutscene.option.end.custom.desc')) }}</q-item-label>
+											<div v-if="cutsceneEndOption === 'custom'" class="row no-wrap">
+												<q-input
+													v-model.number="optionsCustom.x" type="number"
+													class="q-pr-xs"
+													:label="$t('builtin.cutscene.content.header.x')"
+												/>
+												<q-input
+													v-model.number="optionsCustom.y" type="number"
+													class="q-pl-xs q-pr-xs"
+													:label="$t('builtin.cutscene.content.header.y')"
+												/>
+												<q-input
+													v-model.number="optionsCustom.z" type="number"
+													class="q-pl-xs q-pr-xs"
+													:label="$t('builtin.cutscene.content.header.z')"
+												/>
+												<q-input
+													v-model.number="optionsCustom.rx" type="number"
+													class="q-pl-xs q-pr-xs"
+													:label="$t('builtin.cutscene.content.header.rx')"
+												/>
+												<q-input
+													v-model.number="optionsCustom.ry" type="number"
+													class="q-pl-xs"
+													:label="$t('builtin.cutscene.content.header.ry')"
+												/>
+											</div>
+										</q-item-section>
+									</q-item>
+								</q-list>
+							</q-card-section>
+						</q-card>
+					</q-dialog>
+					<q-separator vertical size="2px" class="q-ml-xs q-mr-xs"/>
+					<q-btn
+						square unelevated color="green-7"
+						icon="save"
+						@click="saveData(false)"
+					>
+						<q-tooltip :delay="500" class="bg-green-7">
+							{{ $capitalize($t('builtin.cutscene.content.menu.save.start')) }}
+						</q-tooltip>
+					</q-btn>
+					<q-btn
+						square unelevated color="orange-7"
+						icon="videocam"
+						:disable="!!(cutscenePointsList && cutscenePointsList.length <= 1)"
+						@click="generateCutscene()"
+					>
+						<q-tooltip :delay="500" class="bg-orange-7">
+							{{ $capitalize($t('builtin.cutscene.content.menu.generate.start')) }}
+						</q-tooltip>
+					</q-btn>
+				</div>
+			</div>
+			<div class="table table-header">
+				<span class="text-h6 five"></span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.x')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.y')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.z')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.rx')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.ry')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.duration')) }}</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.cutscene.content.header.transition')) }}</span>
+			</div>
+		</div>
+		<template v-if="cutscenePointsList">
+			<div
+				v-for="point in cutscenePointsList" :key="point.point"
+				class="table"
+			>
+				<span class="five">{{ point.point }}</span>
+				<q-input v-model="point.x" type="number" dense :rules="[val => !!val || '']" />
+				<q-input v-model="point.y" type="number" dense :rules="[val => !!val || '']" />
+				<q-input v-model="point.z" type="number" dense :rules="[val => !!val || '']" />
+				<q-input v-model="point.rx" type="number" dense :rules="[val => !!val || '']" />
+				<q-input v-model="point.ry" type="number" dense :rules="[val => !!val || '']" />
+				<div class="duration">
+					<q-input
+						v-model="point.duration" type="number"
+						step="1" min="0"
+						:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
+						:rules="[val => !!val && Number(val) >= 0 || '']" 
+						dense class="q-mr-xs"
+					>
+						<template v-slot:append>
+							<span>s</span>
+						</template>
+					</q-input>
+				</div>
+				<q-select
+					v-model="point.transition"
+					:disable="cutscenePointsList[cutscenePointsList.length - 1].point === point.point"
+					:options="['ease', 'ease-in', 'ease-in-out', 'ease-out', 'linear']"
+					dense
+				/>
+				<div class="seven">
+					<q-btn
+						square unelevated color="red-7"
+						icon="delete" class="button"
+						@click="removePoint(point.point)"
+					/>
+				</div>
+			</div>
+			<div class="add-point" @click="addPoint">
+				<q-icon name="add" size="2em" />
+			</div>
+		</template>
+	</div>
 </template>
 
 <script lang="ts">

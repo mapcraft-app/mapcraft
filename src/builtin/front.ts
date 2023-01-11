@@ -1,6 +1,9 @@
 import { info, list, lang } from './interface';
 import { shellModel } from 'electron/api/shell/interface';
 
+import advancementPack from './advancement/package.json';
+import advancementLang from './advancement/lang';
+
 import cutscenePack from './cutscene/package.json';
 import cutsceneLang from './cutscene/lang';
 import cutsceneShell from './cutscene/shell';
@@ -37,6 +40,7 @@ export const addBuiltin = (d: info, lang: Record<string, any>, sh: shellModel | 
 	});
 };
 
+addBuiltin(advancementPack, advancementLang);
 addBuiltin(cutscenePack, cutsceneLang, cutsceneShell);
 addBuiltin(musicPack, musicLang);
 addBuiltin(recipePack, recipeLang);

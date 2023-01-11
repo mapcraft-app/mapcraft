@@ -12,6 +12,10 @@ const getNormName = (name: string): string | null => {
 
 export default [
 	{
+		path: getNormName('advancement'),
+		component: () => import('builtin/advancement/main.vue')
+	},
+	{
 		path: getNormName('cutscene'),
 		component: () => import('builtin/cutscene/main.vue')
 	},

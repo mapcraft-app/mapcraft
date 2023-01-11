@@ -1,5 +1,5 @@
 <template>
-	<q-page class="page row">
+	<div class="row main">
 		<div class="left">
 			<div class="row no-wrap justify-around q-ma-md">
 				<q-btn
@@ -72,7 +72,7 @@
 			@create="createNewMusic"
 			@close="createDialog = false"
 		/>
-	</q-page>
+	</div>
 </template>
 
 <script lang="ts">
@@ -301,6 +301,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.main {
+	display: flex;
+	min-height: inherit;
+}
 .left {
 	display: inline-flex;
 	flex-direction: column;

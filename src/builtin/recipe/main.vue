@@ -1,143 +1,141 @@
 <template>
-	<q-page class="page">
-		<div class="row">
-			<div class="left">
-				<list-vue @select="handleListSelection" />
-			</div>
-			<div class="right">
-				<q-tabs
-					v-model="selectedTab"
-					dense
-					infinite
-					class="text-grey q-pb-md"
-					active-color="primary"
-					indicator-color="primary"
-					align="justify"
-				>
-					<q-tab name="player">
-						<img :src="$toPublic('imgs/minecraft/player.png')" />
-					</q-tab>
-					<q-tab name="craft">
-						<img :src="$toPublic('imgs/minecraft/block/crafting_table.webp')" />
-					</q-tab>
-					<q-tab name="furnace">
-						<img :src="$toPublic('imgs/minecraft/block/furnace.webp')" />
-					</q-tab>
-					<q-tab name="blast">
-						<img :src="$toPublic('imgs/minecraft/block/blast_furnace.webp')" />
-					</q-tab>
-					<q-tab name="campfire">
-						<img :src="$toPublic('imgs/minecraft/block/campfire.webp')" />
-					</q-tab>
-					<q-tab name="smoker">
-						<img :src="$toPublic('imgs/minecraft/block/smoker.webp')" />
-					</q-tab>
-					<q-tab name="stonecutter">
-						<img :src="$toPublic('imgs/minecraft/block/stonecutter.webp')" />
-					</q-tab>
-					<q-tab name="smithing">
-						<img :src="$toPublic('imgs/minecraft/block/smithing_table.webp')" />
-					</q-tab>
-				</q-tabs>
-				<q-tab-panels
-					v-model="selectedTab"
-					style="height: calc(100% - 65px);"
-					animated
-					transition-prev="fade"
-					transition-next="fade"
-					@vnode-updated="tabIsUpdate"
-				>
-					<q-tab-panel name="player" class="q-pa-none">
-						<craft-player-vue
-							:read="readPlayer"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationTable"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="craft" class="q-pa-none">
-						<craft-table-vue
-							:read="readTable"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationTable"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="furnace" class="q-pa-none">
-						<furnace-vue
-							:name="$capitalize($t('builtin.recipe.tabs.furnace'))"
-							type="minecraft:smelting"
-							:read="readFurnace"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationFurnace"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="blast" class="q-pa-none">
-						<furnace-vue
-							:name="$capitalize($t('builtin.recipe.tabs.blast'))"
-							type="minecraft:blasting"
-							:read="readFurnace"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationFurnace"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="campfire" class="q-pa-none">
-						<furnace-vue
-							:name="$capitalize($t('builtin.recipe.tabs.campfire'))"
-							type="minecraft:campfire_cooking"
-							:read="readFurnace"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationFurnace"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="smoker" class="q-pa-none">
-						<furnace-vue
-							:name="$capitalize($t('builtin.recipe.tabs.smoker'))"
-							type="minecraft:smoking"
-							:read="readFurnace"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationFurnace"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="stonecutter" class="q-pa-none">
-						<stonecutter-vue
-							:read="readStonecutter"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationStonecutter"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="smithing" class="q-pa-none">
-						<smithing-vue
-							:read="readSmithing"
-							:selection="selectionReturn"
-							@open-dialog="openDialog"
-							@create="creationSmithing"
-							@delete="deletion"
-						/>
-					</q-tab-panel>
-				</q-tab-panels>
-			</div>
+	<div class="row main">
+		<div class="left">
+			<list-vue @select="handleListSelection" />
 		</div>
-		<keep-alive>
-			<dialog-vue
-				:modal="openSelectionModal"
-				@close="handleClose"
-				@selected="handleSelection"
-			/>
-		</keep-alive>
-	</q-page>
+		<div class="right">
+			<q-tabs
+				v-model="selectedTab"
+				dense
+				infinite
+				class="text-grey q-pb-md"
+				active-color="primary"
+				indicator-color="primary"
+				align="justify"
+			>
+				<q-tab name="player">
+					<img :src="$toPublic('imgs/minecraft/player.png')" />
+				</q-tab>
+				<q-tab name="craft">
+					<img :src="$toPublic('imgs/minecraft/block/crafting_table.webp')" />
+				</q-tab>
+				<q-tab name="furnace">
+					<img :src="$toPublic('imgs/minecraft/block/furnace.webp')" />
+				</q-tab>
+				<q-tab name="blast">
+					<img :src="$toPublic('imgs/minecraft/block/blast_furnace.webp')" />
+				</q-tab>
+				<q-tab name="campfire">
+					<img :src="$toPublic('imgs/minecraft/block/campfire.webp')" />
+				</q-tab>
+				<q-tab name="smoker">
+					<img :src="$toPublic('imgs/minecraft/block/smoker.webp')" />
+				</q-tab>
+				<q-tab name="stonecutter">
+					<img :src="$toPublic('imgs/minecraft/block/stonecutter.webp')" />
+				</q-tab>
+				<q-tab name="smithing">
+					<img :src="$toPublic('imgs/minecraft/block/smithing_table.webp')" />
+				</q-tab>
+			</q-tabs>
+			<q-tab-panels
+				v-model="selectedTab"
+				style="height: calc(100% - 65px);"
+				animated
+				transition-prev="fade"
+				transition-next="fade"
+				@vnode-updated="tabIsUpdate"
+			>
+				<q-tab-panel name="player" class="q-pa-none">
+					<craft-player-vue
+						:read="readPlayer"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationTable"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="craft" class="q-pa-none">
+					<craft-table-vue
+						:read="readTable"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationTable"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="furnace" class="q-pa-none">
+					<furnace-vue
+						:name="$capitalize($t('builtin.recipe.tabs.furnace'))"
+						type="minecraft:smelting"
+						:read="readFurnace"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationFurnace"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="blast" class="q-pa-none">
+					<furnace-vue
+						:name="$capitalize($t('builtin.recipe.tabs.blast'))"
+						type="minecraft:blasting"
+						:read="readFurnace"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationFurnace"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="campfire" class="q-pa-none">
+					<furnace-vue
+						:name="$capitalize($t('builtin.recipe.tabs.campfire'))"
+						type="minecraft:campfire_cooking"
+						:read="readFurnace"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationFurnace"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="smoker" class="q-pa-none">
+					<furnace-vue
+						:name="$capitalize($t('builtin.recipe.tabs.smoker'))"
+						type="minecraft:smoking"
+						:read="readFurnace"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationFurnace"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="stonecutter" class="q-pa-none">
+					<stonecutter-vue
+						:read="readStonecutter"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationStonecutter"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+				<q-tab-panel name="smithing" class="q-pa-none">
+					<smithing-vue
+						:read="readSmithing"
+						:selection="selectionReturn"
+						@open-dialog="openDialog"
+						@create="creationSmithing"
+						@delete="deletion"
+					/>
+				</q-tab-panel>
+			</q-tab-panels>
+		</div>
+	</div>
+	<keep-alive>
+		<dialog-vue
+			:modal="openSelectionModal"
+			@close="handleClose"
+			@selected="handleSelection"
+		/>
+	</keep-alive>
 </template>
 
 <script lang="ts">
@@ -391,7 +389,7 @@ export default defineComponent({
 .q-panel > div {
 	height: unset;
 }
-.page > div {
+.main {
 	height: inherit;
 }
 .left {

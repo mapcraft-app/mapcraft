@@ -36,11 +36,13 @@
 			<menu-list />
 		</q-drawer>
 		<q-page-container class="main-router">
-			<router-view v-slot="{ Component }">
-				<transition name="fade">
-					<component :is="Component" />
-				</transition>
-			</router-view>
+			<q-page class="page page-container">
+				<router-view v-slot="{ Component }">
+					<transition name="fade">
+						<component :is="Component" />
+					</transition>
+				</router-view>
+			</q-page>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -91,5 +93,8 @@ export default defineComponent({
 }
 .main-layout {
 	height: calc(100% - 50px) !important;
+}
+.page-container > * {
+	display: inherit;
 }
 </style>

@@ -1,45 +1,43 @@
 <template>
-	<q-page>
-		<div class="column">
-			<div :class="(Quasar.dark.isActive) ? 'shadow-3 sticky dark' : 'shadow-3 sticky'">
-				<div class="row justify-between q-pt-sm q-pb-sm">
-					<q-input v-model="search" debounce="500" class="q-pl-md">
-						<template v-slot:append>
-							<q-icon name="search" />
-						</template>
-					</q-input>
-					<q-btn
-						color="green-7"
-						class="q-ma-md"
-						:label="$capitalize($t('builtin.trigger.main.create'))"
-						@click="createTrigger(undefined)"
-					/>
-				</div>
-				<div class="row no-wrap text-center">
-					<div class="col-1">{{ $t('builtin.trigger.main.id') }}</div>
-					<div class="col-3">{{ $capitalize($t('builtin.trigger.main.name')) }}</div>
-					<div class="col-1">{{ $t('builtin.trigger.main.x1') }}</div>
-					<div class="col-1">{{ $t('builtin.trigger.main.y1') }}</div>
-					<div class="col-1">{{ $t('builtin.trigger.main.z1') }}</div>
-					<div class="col-1">{{ $t('builtin.trigger.main.x2') }}</div>
-					<div class="col-1">{{ $t('builtin.trigger.main.y2') }}</div>
-					<div class="col-1">{{ $t('builtin.trigger.main.z2') }}</div>
-				</div>
+	<div class="column">
+		<div :class="(Quasar.dark.isActive) ? 'shadow-3 sticky dark' : 'shadow-3 sticky'">
+			<div class="row justify-between q-pt-sm q-pb-sm">
+				<q-input v-model="search" debounce="500" class="q-pl-md">
+					<template v-slot:append>
+						<q-icon name="search" />
+					</template>
+				</q-input>
+				<q-btn
+					color="green-7"
+					class="q-ma-md"
+					:label="$capitalize($t('builtin.trigger.main.create'))"
+					@click="createTrigger(undefined)"
+				/>
 			</div>
-			<div class="container">
-				<template v-for="trigger of filter()" :key="trigger.id">
-					<div class="row no-wrap line">
-						<row-vue
-							:data="trigger"
-							@delete="deleteTrigger"
-							@update="editTrigger"
-							@edit-file="editFile"
-						/>
-					</div>
-				</template>
+			<div class="row no-wrap text-center">
+				<div class="col-1">{{ $t('builtin.trigger.main.id') }}</div>
+				<div class="col-3">{{ $capitalize($t('builtin.trigger.main.name')) }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.x1') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.y1') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.z1') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.x2') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.y2') }}</div>
+				<div class="col-1">{{ $t('builtin.trigger.main.z2') }}</div>
 			</div>
 		</div>
-	</q-page>
+		<div class="container">
+			<template v-for="trigger of filter()" :key="trigger.id">
+				<div class="row no-wrap line">
+					<row-vue
+						:data="trigger"
+						@delete="deleteTrigger"
+						@update="editTrigger"
+						@edit-file="editFile"
+					/>
+				</div>
+			</template>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">

@@ -1,118 +1,116 @@
 <template>
-	<q-page class="page">
-		<q-tabs
-			v-model="tab"
-			active-color="secondary"
-			indicator-color="secondary"
-			align="justify"
-		>
-			<q-tab name="blocks" :label="$capitalize($t('builtin.utility.blocks'))" />
-			<q-tab name="items" :label="$capitalize($t('builtin.utility.items'))" />
-			<q-tab name="tags" :label="$capitalize($t('builtin.utility.tags'))" />
-		</q-tabs>
-		<q-input
-			v-model="search"
-			debounce="500"
-			:label="$capitalize($t('builtin.utility.search'))"
-			class="q-pa-md"
-		>
-			<template v-slot:append>
-				<q-icon name="search"/>
-			</template>
-		</q-input>
-		<q-tab-panels
-			v-model="tab"
-			animated
-			transition-prev="jump-right"
-			transition-next="jump-left"
-			keep-alive
-		>
-			<q-tab-panel name="blocks">
-				<div class="grid">
-					<div
-						v-for="block of (filter('blocks') as list[])"
-						:key="block.name"
-						@click="copyToClipboard(block.id)"
-					>
-						<img
-							:src="block.path 
-								? $toPublic(`/imgs/minecraft/block/${block.id}.webp`)
-								: $toPublic('/imgs/minecraft/no_data.png')"
-							loading="lazy"
-							@error="$imgErr"
-						/>
-						<q-tooltip class="bg-secondary text-body2">{{ repUnderscore(block.name) }}</q-tooltip>
-					</div>
+	<q-tabs
+		v-model="tab"
+		active-color="secondary"
+		indicator-color="secondary"
+		align="justify"
+	>
+		<q-tab name="blocks" :label="$capitalize($t('builtin.utility.blocks'))" />
+		<q-tab name="items" :label="$capitalize($t('builtin.utility.items'))" />
+		<q-tab name="tags" :label="$capitalize($t('builtin.utility.tags'))" />
+	</q-tabs>
+	<q-input
+		v-model="search"
+		debounce="500"
+		:label="$capitalize($t('builtin.utility.search'))"
+		class="q-pa-md"
+	>
+		<template v-slot:append>
+			<q-icon name="search"/>
+		</template>
+	</q-input>
+	<q-tab-panels
+		v-model="tab"
+		animated
+		transition-prev="jump-right"
+		transition-next="jump-left"
+		keep-alive
+	>
+		<q-tab-panel name="blocks">
+			<div class="grid">
+				<div
+					v-for="block of (filter('blocks') as list[])"
+					:key="block.name"
+					@click="copyToClipboard(block.id)"
+				>
+					<img
+						:src="block.path 
+							? $toPublic(`/imgs/minecraft/block/${block.id}.webp`)
+							: $toPublic('/imgs/minecraft/no_data.png')"
+						loading="lazy"
+						@error="$imgErr"
+					/>
+					<q-tooltip class="bg-secondary text-body2">{{ repUnderscore(block.name) }}</q-tooltip>
 				</div>
-			</q-tab-panel>
-			<q-tab-panel name="items">
-				<div class="grid">
-					<div
-						v-for="item of (filter('items') as list[])"
-						:key="item.name"
-						@click="copyToClipboard(item.id)"
-					>
-						<img
-							:src="item.path
-								? $path(String(item.path))
-								: $toPublic('/imgs/minecraft/no_data.png')"
-							loading="lazy"
-							class="pixelated"
-							@error="$imgErr"
-						/>
-						<q-tooltip class="bg-secondary text-body2">{{ repUnderscore(item.name) }}</q-tooltip>
-					</div>
+			</div>
+		</q-tab-panel>
+		<q-tab-panel name="items">
+			<div class="grid">
+				<div
+					v-for="item of (filter('items') as list[])"
+					:key="item.name"
+					@click="copyToClipboard(item.id)"
+				>
+					<img
+						:src="item.path
+							? $path(String(item.path))
+							: $toPublic('/imgs/minecraft/no_data.png')"
+						loading="lazy"
+						class="pixelated"
+						@error="$imgErr"
+					/>
+					<q-tooltip class="bg-secondary text-body2">{{ repUnderscore(item.name) }}</q-tooltip>
 				</div>
-			</q-tab-panel>
-			<q-tab-panel name="tags">
-				<div class="tags">
-					<div
-						v-for="tag in (filter('tags') as tagEl[])"
-						:id="tag.id"
-						:key="tag.tag"
-						class="row"
-					>
-						<span class="id text-body2">{{ tag.tag }}</span>
-						<div class="row elements">
-							<div
-								v-for="el in tag.els"
-								:key="el.name"
-								class="element"
-								@click="copyToClipboard(el.name)"
-							>
-								<template v-if="el.type === 'blocks'">
-									<img
-										:src="el.href
-											? $toPublic(`/imgs/minecraft/block/${el.name}.webp`)
-											: $toPublic('/imgs/minecraft/no_data.png')"
-										loading="lazy"
-										@error="$imgErr"
-									/>
-								</template>
-								<template v-else-if="el.type === 'items'">
-									<img
-										:src="el.href
-											? $path(String(el.href))
-											: $toPublic('/imgs/minecraft/no_data.png')"
-										loading="lazy"
-										class="pixelated"
-										@error="$imgErr"
-									/>
-								</template>
-								<template v-else>
-									<a :href="el.tag">{{ el.name }}</a>
-								</template>
-								<q-tooltip class="bg-secondary text-body2">
-									{{ repUnderscore(el.name) }}
-								</q-tooltip>
-							</div>
+			</div>
+		</q-tab-panel>
+		<q-tab-panel name="tags">
+			<div class="tags">
+				<div
+					v-for="tag in (filter('tags') as tagEl[])"
+					:id="tag.id"
+					:key="tag.tag"
+					class="row"
+				>
+					<span class="id text-body2">{{ tag.tag }}</span>
+					<div class="row elements">
+						<div
+							v-for="el in tag.els"
+							:key="el.name"
+							class="element"
+							@click="copyToClipboard(el.name)"
+						>
+							<template v-if="el.type === 'blocks'">
+								<img
+									:src="el.href
+										? $toPublic(`/imgs/minecraft/block/${el.name}.webp`)
+										: $toPublic('/imgs/minecraft/no_data.png')"
+									loading="lazy"
+									@error="$imgErr"
+								/>
+							</template>
+							<template v-else-if="el.type === 'items'">
+								<img
+									:src="el.href
+										? $path(String(el.href))
+										: $toPublic('/imgs/minecraft/no_data.png')"
+									loading="lazy"
+									class="pixelated"
+									@error="$imgErr"
+								/>
+							</template>
+							<template v-else>
+								<a :href="el.tag">{{ el.name }}</a>
+							</template>
+							<q-tooltip class="bg-secondary text-body2">
+								{{ repUnderscore(el.name) }}
+							</q-tooltip>
 						</div>
-						<hr />
 					</div>
+					<hr />
 				</div>
-			</q-tab-panel>
-		</q-tab-panels>
-	</q-page>
+			</div>
+		</q-tab-panel>
+	</q-tab-panels>
 </template>
 
 <script lang="ts">
