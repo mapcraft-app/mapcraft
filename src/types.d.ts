@@ -10,6 +10,8 @@ import type { dataEngineInterface, mapEngine, mapEngineInstance } from 'electron
 export declare global {
 	namespace NodeJS {
 		interface ProcessEnv {
+			DEV: string,
+			PACKAGED: string,
 			APP: string,
 			APP_DATA: string,
 			GAME: string,

@@ -57,9 +57,6 @@ try {
 		// #region Asar
 		asar: package.builder.asar ?? true,
 		asarUnpack: package.builder.asarUnpack ?? undefined,
-		//asarUnpack: [
-		//'node_modules/{7zip-bin,7zip-min,mapcraft-api}/**/*'
-		//],
 		// #endregion Asar
 	
 		//#region Windows

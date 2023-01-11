@@ -15,7 +15,10 @@ export default function generateEnv(app: Electron.App): void {
 			return join(String(app.getPath('home')), '.minecraft');
 		}
 	};
+	const tempGame = game();
 
+	process.env.DEV = import.meta.env.DEV;
+	process.env.PACKAGED = app.isPackaged,
 	process.env.APP = app.getAppPath();
 	process.env.APP_DATA = resolve(app.getPath('userData'), 'appdata');
 	const configFile = resolve(process.env.APP_DATA, 'config');
@@ -24,15 +27,15 @@ export default function generateEnv(app: Electron.App): void {
 		: undefined;
 	process.env.GAME = data
 		? data.game
-		: game();
+		: tempGame;
 	process.env.LOG = app.getPath('logs');
 	process.env.DATE = new Date().toISOString().normalize().replace(/[-:\\.]/g, '_');
 	process.env.SAVE_GAME = data
 		? data.save_game
-		: join(game(), 'saves');
+		: join(tempGame, 'saves');
 	process.env.RESOURCE_GAME = data
 		? data.resource_game
-		: join(game(), 'resourcepacks');
+		: join(tempGame, 'resourcepacks');
 	process.env.TEMP = data
 		? data.temp
 		: tmpdir();
