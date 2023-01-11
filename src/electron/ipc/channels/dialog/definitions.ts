@@ -19,5 +19,17 @@ export default {
 			name: 'select-directories',
 			type: ipcType.INVOKE
 		},
+		{
+			name: 'open-directory',
+			type: ipcType.SEND
+		},
+		{
+			name: 'open-path',
+			type: ipcType.SEND
+		},
+		{
+			name: 'open-external',
+			type: ipcType.SEND
+		}
 	]
 } as ipcDefinition;

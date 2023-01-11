@@ -30,7 +30,7 @@
 							@click="selectedItem('block', `/imgs/minecraft/block/${block.id}.webp`, block.id)"
 						>
 							<img
-								:src="`/imgs/minecraft/block/${block.id}.webp`"
+								:src="$toPublic(`/imgs/minecraft/block/${block.id}.webp`)"
 								loading="lazy"
 								@error="$imgErr"
 							/>

@@ -10,7 +10,7 @@
 					<case-vue :data="recipeCases[i - 1]" @remove="removeSelect(i - 1)" @select="openSelect(i - 1)" />
 				</template>
 			</div>
-			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
+			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
 			<div class="craft_result">
 				<case-vue :data="recipeCases[4]" @remove="removeSelect(4)" @select="openSelect(4)" />
 				<q-input

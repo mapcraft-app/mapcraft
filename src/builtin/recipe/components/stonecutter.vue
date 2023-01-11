@@ -6,7 +6,7 @@
 	<div class="craft">
 		<div class="craft_background">
 			<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
-			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
+			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
 			<div class="craft_result">
 				<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
 				<q-input

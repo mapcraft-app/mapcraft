@@ -6,9 +6,9 @@
 	<div class="craft">
 		<div class="craft_background">
 			<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
-			<img class="craft_fire_and_cross" src="imgs/minecraft/cross.png"/>
+			<img class="craft_fire_and_cross" :src="$toPublic('imgs/minecraft/cross.png')"/>
 			<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
-			<img class="craft_arrow" src="imgs/minecraft/arrow.png"/>
+			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
 			<case-vue :data="recipeCases[2]" @remove="removeSelect(2)" @select="openSelect(2)" />
 		</div>
 	</div>

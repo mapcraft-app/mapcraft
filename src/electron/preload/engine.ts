@@ -25,6 +25,8 @@ export class mapEngine {
 
 	public instance: mapEngineInstanceInterface;
 	public database: database;
+
+	public eventStatus: string;
 	
 	constructor(env: envInterface, name: string) {
 		this.__env = env;
@@ -38,6 +40,7 @@ export class mapEngine {
 				"minecraftVersion"  TEXT NOT NULL\
 			)'
 		});
+		this.eventStatus = '';
 	}
 
 	public init(version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3'): void {
@@ -46,6 +49,7 @@ export class mapEngine {
 		this.instance.datapack = new engine.data(this.__env, this.__name, version);
 		this.instance.resourcepack = new engine.resource(this.__env, this.__name, version);
 		this.instance.build = new buildMap(this.instance.datapack, this.instance.resourcepack);
+		this.instance.build.on('change', (e) => this.eventStatus = e as string);
 	}
 
 	public async build(): Promise<string> {
@@ -107,6 +111,7 @@ export default {
 	database: (): database => mapEngineInstance.database,
 	instance: (): mapEngine => mapEngineInstance,
 	build: (): Promise<string> => mapEngineInstance.build(),
+	buildStatus: (): string => mapEngineInstance.eventStatus,
 	clean: (): Promise<void[][]> => mapEngineInstance.clean(),
 	install: (): Promise<void> => mapEngineInstance.install(),
 	update: (): Promise<void[]> => mapEngineInstance.update(),

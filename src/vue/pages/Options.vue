@@ -9,6 +9,7 @@
 				>
 					<q-tab name="general" icon="settings" :label="$t('pages.options.general')" />
 					<q-tab name="account" icon="account_circle" :label="$t('pages.options.user')" />
+					<q-tab name="build" icon="build" label="build"/>
 					<q-tab name="info" icon="info" :label="$t('pages.options.info')" />
 				</q-tabs>
 			</template>
@@ -41,6 +42,12 @@
 						</div>
 						<options-minecraft-user />
 					</q-tab-panel>
+					<q-tab-panel name="build">
+						<div class="flex justify-center">
+							<span class="text-h4">{{ $t('pages.options.build') }}</span>
+						</div>
+						<options-build />
+					</q-tab-panel>
 					<q-tab-panel name="info">
 						<div class="flex justify-center">
 							<span class="text-h4">{{ $t('pages.options.info') }}</span>
@@ -55,6 +62,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import optionsBuild from 'components/options/Build.vue';
 import optionsDirectory from 'components/options/Directory.vue';
 import optionsInfo from 'components/options/Info.vue';
 import optionsMinecraftUser from 'components/options/MinecraftUser.vue';
@@ -62,6 +70,7 @@ import Lang from 'components/menu/Lang.vue';
 
 export default defineComponent({
 	components: {
+		optionsBuild,
 		optionsDirectory,
 		optionsInfo,
 		optionsMinecraftUser,

@@ -1,7 +1,7 @@
 <template>
 	<div class="titlebar">
 		<div class="titlebar-title">
-			<img :src="$toPublic('imgs/app/icon_small.png')" />
+			<img src="imgs/app/icon_small.png" />
 			<span>{{ $t('app.title') }}</span>
 		</div>
 		<div class="titlebar-buttons">
@@ -29,11 +29,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onBeforeUnmount, ref } from 'vue';
+import { defineComponent, onBeforeMount, onBeforeUnmount, provide, ref } from 'vue';
 import { QSpinnerPuff, useMeta, useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { generateMeta } from 'src/meta';
 import router from 'src/router';
+import type { QNotifyUpdateOptions } from 'quasar';
 
 export default defineComponent({
 	name: 'App',
@@ -43,8 +44,7 @@ export default defineComponent({
 		const isDev = ref(import.meta.env.DEV);
 		const isMaximize = ref(false);
 		const isFullscreen = ref(false);
-
-		let interval: NodeJS.Timer; // eslint-disable-line no-undef
+		let interval: NodeJS.Timer, statusInterval: NodeJS.Timer; // eslint-disable-line no-undef
 		let notif: any = undefined;
 
 		useMeta(generateMeta());
@@ -70,6 +70,64 @@ export default defineComponent({
 				window.ipc.send('window::minimize');
 			}
 		};
+
+		//#region Build map
+		const build = ref<boolean>(false);
+		const buildStatus = ref<number>(0);
+		const buildPath = ref<string | null>(null);
+		const buildStart = () => buildMap();
+		// eslint-disable-next-line no-undef, no-unused-vars
+		let buildNotif: (_props?: QNotifyUpdateOptions | undefined) => void;
+
+		provide('build', { build, buildStatus, buildPath, buildStart });
+
+		const buildMap = () => {
+			const ret = () => buildStatus.value > 0
+				? buildStatus.value
+				: 1;
+
+			if (build.value)
+				return;
+			build.value = true;
+			buildStatus.value = 1;
+			buildPath.value = null;
+			buildNotif = $q.notify({
+				group: false,
+				timeout: 0,
+				spinner: true,
+				color: 'info',
+				multiLine: true,
+				message: t(`components.options.build.${ret()}`)
+			});
+			statusInterval = setInterval(() => {
+				buildStatus.value = Number(window.mapcraft.engine.buildStatus());
+				buildNotif({ message: t(`components.options.build.${ret()}`) });
+			}, 10);
+			window.mapcraft.engine.build()
+				.then((path) => {
+					build.value = false;
+					buildPath.value = path;
+					buildStatus.value = 8;
+					clearInterval(statusInterval);
+					buildNotif({
+						timeout: 7500,
+						spinner: false,
+						icon: 'handyman',
+						message: t(`components.options.build.${ret()}`),
+						actions: [
+							{
+								label: t('components.options.build.download'),
+								color: 'yellow',
+								handler: () => window.ipc.send('dialog::open-directory', buildPath.value)
+							}
+						]
+					});
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		};
+		//#endregion Build map
 
 		onBeforeMount(() => {
 			window.log.info('Application finish to mounted');

@@ -114,6 +114,7 @@ export declare global {
 				database: () => database,
 				instance: () => mapEngine,
 				build: () => Promise<string>,
+				buildStatus: () => string,
 				clean: () => Promise<void[][]>,
 				install: () => Promise<void>,
 				update: () => Promise<void[]>,

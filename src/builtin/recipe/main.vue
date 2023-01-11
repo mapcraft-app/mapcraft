@@ -15,28 +15,28 @@
 					align="justify"
 				>
 					<q-tab name="player">
-						<img src="imgs/minecraft/player.png" />
+						<img :src="$toPublic('imgs/minecraft/player.png')" />
 					</q-tab>
 					<q-tab name="craft">
-						<img src="imgs/minecraft/block/crafting_table.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/crafting_table.webp')" />
 					</q-tab>
 					<q-tab name="furnace">
-						<img src="imgs/minecraft/block/furnace.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/furnace.webp')" />
 					</q-tab>
 					<q-tab name="blast">
-						<img src="imgs/minecraft/block/blast_furnace.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/blast_furnace.webp')" />
 					</q-tab>
 					<q-tab name="campfire">
-						<img src="imgs/minecraft/block/campfire.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/campfire.webp')" />
 					</q-tab>
 					<q-tab name="smoker">
-						<img src="imgs/minecraft/block/smoker.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/smoker.webp')" />
 					</q-tab>
 					<q-tab name="stonecutter">
-						<img src="imgs/minecraft/block/stonecutter.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/stonecutter.webp')" />
 					</q-tab>
 					<q-tab name="smithing">
-						<img src="imgs/minecraft/block/smithing_table.webp" />
+						<img :src="$toPublic('imgs/minecraft/block/smithing_table.webp')" />
 					</q-tab>
 				</q-tabs>
 				<q-tab-panels
