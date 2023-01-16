@@ -1,0 +1,76 @@
+<template>
+	<q-select
+		v-model="select"
+		use-input
+		input-debounce="250"
+		:dense="$props.dense ?? true"
+		:options="list"
+		:label="$props.label"
+		@filter="filter"
+	/>
+</template>
+
+<script lang="ts">
+import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
+import { minecraft } from 'mapcraft-api/frontend';
+import { mapStore } from 'app/src/store/map';
+import { entities } from 'mapcraft-api/dist/types/src/minecraft/interface';
+
+export default defineComponent({
+	name: 'SelectEntity',
+	props: {
+		modelValue: {
+			type: [String, null] as PropType<string | null>,
+			required: true
+		},
+		label: {
+			type: String,
+			required: false,
+			default: 'Entity'
+		},
+		dense: {
+			type: Boolean,
+			required: false,
+			default: true
+		}
+	},
+	emits: ['update:modelValue'],
+	setup (props, { emit }) {
+		const store = mapStore();
+		const select = ref<string | null>(props.modelValue ?? null);
+		const elementsList = ref<string[]>([]);
+		const list = ref<string[]>([]);
+
+		const filter = (val: string, update: any) => {
+			if (val === '') {
+				update(() => {
+					list.value = elementsList.value;
+				});
+			} else {
+				update(() => {
+					const needle = val.toLowerCase();
+					list.value = elementsList.value.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+				});
+			}
+		};
+
+		onBeforeMount(() => {
+			const retEntities = minecraft.get(store.minecraftVersion, 'entity') as entities[];
+			if (retEntities)
+				elementsList.value = [ ...elementsList.value, ...retEntities.map((e) => e.name) ];
+			list.value = elementsList.value;
+			watch(select, (after) => {
+				if (after)
+					emit('update:modelValue', after);
+			});
+		});
+
+		return {
+			select,
+			elementsList,
+			list,
+			filter
+		};
+	}
+});
+</script>

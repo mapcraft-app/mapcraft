@@ -1,5 +1,5 @@
 <template>
-	<div class="row main">
+	<div class="row inherit-height main">
 		<div class="left">
 			<div class="row no-wrap justify-around q-ma-md">
 				<q-btn

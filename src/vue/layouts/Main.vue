@@ -39,7 +39,10 @@
 			<q-page class="page page-container">
 				<router-view v-slot="{ Component }">
 					<transition name="fade">
-						<component :is="Component" />
+						<div>
+							<!-- DIV is present for transition -->
+							<component :is="Component" />
+						</div>
 					</transition>
 				</router-view>
 			</q-page>
@@ -94,7 +97,8 @@ export default defineComponent({
 .main-layout {
 	height: calc(100% - 50px) !important;
 }
-.page-container > * {
+.page-container > div {
 	display: inherit;
+	height: inherit;
 }
 </style>

@@ -19,15 +19,14 @@ const declare = `export declare global {
 }
 `;
 const main = `<template>
-	<q-page class="page">
-	</q-page>
+	<span class="text-h6">${capitalize(args[0].toLowerCase())}</span>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-	name: '${capitalize(args[0])}',
+	name: '${capitalize(args[0].toLowerCase())}',
 	setup () {
 		return {};
 	}
@@ -39,9 +38,9 @@ export default defineComponent({
 `;
 const package = {
 	'private': true,
-	'name': args[0],
+	'name': args[0].toLowerCase(),
 	'icon': 'token',
-	'description': `${args[0]} plugin`,
+	'description': `${args[0].toLowerCase()} plugin`,
 	'license': 'MIT',
 	'version': '1.0.0',
 	'author': {
@@ -55,14 +54,14 @@ const package = {
 	'keywords': [
 		'builtin',
 		'mapcraft',
-		args[0]
+		args[0].toLowerCase()
 	]
 };
 const shell =
 `import { commandFormat, shellModel } from 'app/src/electron/api/shell/interface';
 
 export default {
-	name: '${args[0]}',
+	name: '${args[0].toLowerCase()}',
 	builtin: true,
 	fn: (args) => {
 		return commandFormat(args, {});
@@ -80,24 +79,24 @@ export default {
 `;
 const langBase = `export default {
 	menu: {
-		name: '${capitalize(args[0])}'
+		name: '${capitalize(args[0].toLowerCase())}'
 	}
 };
 `;
 
 async function __main__() {
-	await mkdir(resolve(__dirname, args[0], 'lang'), { recursive: true });
-	await mkdir(resolve(__dirname, args[0], 'components'), { recursive: true });
+	await mkdir(resolve(__dirname, args[0].toLowerCase(), 'lang'), { recursive: true });
+	await mkdir(resolve(__dirname, args[0].toLowerCase(), 'components'), { recursive: true });
 	
-	writeFile(resolve(__dirname, args[0], 'backend.ts'), backend, { flag: 'w' });
-	writeFile(resolve(__dirname, args[0], 'declare.d.ts'), declare, { flag: 'w' });
-	writeFile(resolve(__dirname, args[0], 'main.vue'), main, { flag: 'w' });
-	writeFile(resolve(__dirname, args[0], 'package.json'), JSON.stringify(package, null, 2), { flag: 'w' });
-	writeFile(resolve(__dirname, args[0], 'shell.ts'), shell, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'backend.ts'), backend, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'declare.d.ts'), declare, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'main.vue'), main, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'package.json'), JSON.stringify(package, null, 2), { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'shell.ts'), shell, { flag: 'w' });
 
-	writeFile(resolve(__dirname, args[0], 'lang', 'index.ts'), langIndex, { flag: 'w' });
-	writeFile(resolve(__dirname, args[0], 'lang', 'en-US.ts'), langBase, { flag: 'w' });
-	writeFile(resolve(__dirname, args[0], 'lang', 'fr-FR.ts'), langBase, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'lang', 'index.ts'), langIndex, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'lang', 'en-US.ts'), langBase, { flag: 'w' });
+	writeFile(resolve(__dirname, args[0].toLowerCase(), 'lang', 'fr-FR.ts'), langBase, { flag: 'w' });
 }
 
 __main__();
