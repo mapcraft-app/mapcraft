@@ -1,8 +1,8 @@
 export type textColor = 'black' | 'dark_blue' | 'dark_green' | 'dark_aqua' | 'dark_red' | 'dark_purple' | 'gold' | 'gray' | 'dark_gray' | 'blue' | 'green' | 'aqua' | 'red' | 'light_purple' | 'yellow' | 'white';
-export type frameType = 'challenge' | 'task' | 'goal';
-export type potionType = 'empty' | 'mundane' | 'thick' | 'awkward' | 'night vision' | 'long night vision' | 'invisibility' | 'long invisibility' | 'Leaping' | 'Long Leaping' | 'Strong Leaping' | 'Fire Resistance' | 'Long Fire Resistance' | 'Swiftness' | 'Long Swiftness' | 'Strong Swiftness' | 'long invisibility' | 'Slowness' | 'Long Slowness' | 'Strong Slowness' | 'Turtle Master' | 'Long Turtle Master' | 'Strong Turtle Master' | 'Slowness' | 'Slowness' | 'Slowness' | 'Slowness' | 'Slowness' | 'Slowness' | 'Slowness' | 'Slowness';
+export type frameType = 'challenge' | 'goal' | 'task';
+export type potionType = 'empty' | 'mundane' | 'thick' | 'awkward' | 'night vision' | 'long night vision' | 'invisibility' | 'long invisibility' | 'leaping' | 'long leaping' | 'strong leaping' | 'fire resistance' | 'long fire resistance' | 'swiftness' | 'long swiftness' | 'strong swiftness' | 'slowness' | 'long slowness' | 'strong slowness' | 'turtle master' | 'long turtle master' | 'strong turtle master';
 export type gamemodeType = 'adventure' | 'creative' | 'spectator' | 'survival';
-export type dimensionType = 'the_end' | 'overworld' | 'the_nether';
+export type dimensionType = 'overworld' | 'the_end' | 'the_nether';
 
 //#region Display
 export interface titleModel {
@@ -58,32 +58,32 @@ export interface recipe {
 //#region Interface
 export interface biome {
 	biome: string,
-	block?: block,
-	fluid?: fluid,
-	dimension?: string,
-	feature?: string,
-	smokey?: boolean,
-	position?: {
-		x?: number | numberRange,
-		y?: number | numberRange,
-		z?: number | numberRange,
+	block: block | null,
+	fluid: fluid | null,
+	dimension: dimensionType | null,
+	feature: string | null,
+	smokey: boolean | null,
+	position: {
+		x: number | numberRange | null,
+		y: number | numberRange | null,
+		z: number | numberRange | null
 	},
-	light?: light
+	light: light
 }
 
 export interface block {
 	block: string,
-	tag?: string,
-	nbt?: string,
-	state?: state
+	tag: string | null,
+	nbt: string | null,
+	state: state | null
 }
 
 export interface damage {
 	dealt: number | numberRange,
 	taken: number | numberRange,
-	blocked?: boolean,
-	type?: type,
-	source_entity?: entity
+	blocked: boolean | null,
+	type: type | null,
+	source_entity: entity | null
 }
 
 export interface distance {
@@ -138,20 +138,20 @@ export interface equipement {
 }
 
 export interface fluid {
-	state?: state,
 	id: string,
-	tag?: string
+	state: state | null,
+	tag: string | null
 }
 
 export interface item {
 	item: string,
-	count?: number | numberRange,
-	durability?: number | numberRange,
-	nbt?: string,
-	tag?: string,
-	potion?: string,
-	enchantements?: enchantement[],
-	stored_enchantements?: enchantement[],
+	count: number | numberRange | null,
+	durability: number | numberRange | null,
+	nbt: string | null,
+	tag: string | null,
+	potion: potionType | null,
+	enchantements: enchantement[] | null,
+	stored_enchantements: enchantement[] | null,
 }
 
 export interface light {

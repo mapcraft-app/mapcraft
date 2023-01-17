@@ -1,23 +1,25 @@
 <template>
-	<div>
-		<block-item v-model="value.block" />
-		
-	</div>
+	<block-item v-model="data.block" :item="false" label="Block"/>
+	<q-input v-model="data.tag" label="Tag" />
+	<q-input v-model="data.nbt" label="Nbt" />
+	<state v-model="data.state" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref, watch, PropType } from 'vue';
+import { defineComponent, PropType, onBeforeMount, ref, watch } from 'vue';
 import blockItem from '../select/blockItem.vue';
+import state from '../type/state.vue';
 import { block } from '../../model';
 
 export default defineComponent({
-	name: 'Interface',
+	name: 'InterfaceBlock',
 	components: {
-		blockItem
+		blockItem,
+		state
 	},
 	props: {
 		modelValue: {
-			type: Object as PropType<block>,
+			type: [Object, null] as PropType<block | null>,
 			required: true
 		},
 		dense: {
@@ -28,17 +30,22 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const value = ref<block>(props.modelValue);
-		
+		const data = ref<block>({
+			block: props.modelValue?.block ?? null,
+			tag: props.modelValue?.tag ?? null,
+			nbt: props.modelValue?.nbt ?? null,
+			state: props.modelValue?.state ?? null
+		} as block);
+
 		onBeforeMount(() => {
-			watch(value, (after) => {
+			watch(data, (after) => {
 				if (after)
 					emit('update:modelValue', after);
-			});
+			}, { deep: true });
 		});
-
+		
 		return {
-			value
+			data
 		};
 	}
 });

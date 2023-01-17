@@ -30,15 +30,17 @@ export default defineComponent({
 	name: 'TypeRecipe',
 	props: {
 		modelValue: {
-			type: Object as PropType<recipe>,
+			type: [Object, null] as PropType<recipe | null>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
 		const recipes = ref<recipeInterface[]>([]);
-		for (const key in props.modelValue)
-			recipes.value.push({ key, value: props.modelValue[key] });
+		if (props.modelValue) {
+			for (const key in props.modelValue)
+				recipes.value.push({ key, value: props.modelValue[key] });
+		}
 
 		const addRecipe = () => recipes.value.push({ key: '', value: false });
 

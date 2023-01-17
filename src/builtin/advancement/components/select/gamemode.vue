@@ -3,7 +3,7 @@
 		v-model="color"
 		use-input
 		input-debounce="250"
-		:dense="$props.dense ?? true"
+		:dense="$props.dense"
 		:options="optionsList"
 		:label="$props.label"
 		@filter="filter"

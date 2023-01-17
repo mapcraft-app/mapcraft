@@ -1,7 +1,7 @@
 <template>
 	<div class="q-pa-md row items-start q-gutter-md">
 		<q-card
-			v-for="(el, i) in enchantements"
+			v-for="(el, i) in enchantementsArray"
 			:key="String(i)"
 			style="width: 100%; max-width: 250px"
 		>
@@ -54,26 +54,25 @@ interface enchants {
 }
 
 export default defineComponent({
-	name: 'Enchantement',
+	name: 'InterfaceEnchantement',
 	components: {
 		numberRange
 	},
 	props: {
 		modelValue: {
-			type: Array as PropType<enchantement[]>,
+			type: [Array, null] as PropType<enchantement[] | null>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
 		const store = mapStore();
-		const id = ref<number>(0);
 		const selectedEnchantement = ref<string | null>(null);
 		const enchantementList = ref<enchants[]>([]);
-		const enchantements = ref<enchantement[]>(props.modelValue);
+		const enchantementsArray = ref<enchantement[]>(props.modelValue ?? []);
 
 		const addEnchantement = () => {
-			enchantements.value.push({
+			enchantementsArray.value.push({
 				levels: {
 					min: 0,
 					max: 0,
@@ -82,9 +81,7 @@ export default defineComponent({
 			} as enchantement);
 		};
 
-		const removeEnchantement = (i: number) => {
-			enchantements.value.splice(i, 1);
-		};
+		const removeEnchantement = (i: number) => enchantementsArray.value.splice(i, 1);
 
 		const getVal = (type: string, min = true) => {
 			for (const i in enchantementList.value) {
@@ -102,28 +99,16 @@ export default defineComponent({
 			if (ret)
 				enchantementList.value = ret;
 
-			watch(enchantements, (after) => {
+			watch(enchantementsArray, (after) => {
 				if (after)
 					emit('update:modelValue', after);
-			});
-
-			watch(selectedEnchantement, (after) => {
-				if (after) {
-					for (const i in enchantementList.value) {
-						if (enchantementList.value[i].id === after) {
-							id.value = Number(i);
-							return;
-						}
-					}
-				}
-			});
+			}, { deep: true });
 		});
 
 		return {
-			id,
 			selectedEnchantement,
 			enchantementList,
-			enchantements,
+			enchantementsArray,
 
 			addEnchantement,
 			removeEnchantement,

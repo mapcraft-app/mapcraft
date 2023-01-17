@@ -30,15 +30,17 @@ export default defineComponent({
 	name: 'TypeState',
 	props: {
 		modelValue: {
-			type: Object as PropType<state>,
+			type: [Object, null] as PropType<state | null>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
 		const states = ref<stateInterface[]>([]);
-		for (const key in props.modelValue)
-			states.value.push({ key, value: props.modelValue[key] });
+		if (props.modelValue) {
+			for (const key in props.modelValue)
+				states.value.push({ key, value: props.modelValue[key] });
+		}
 
 		const addState = () => states.value.push({ key: '', value: '' });
 

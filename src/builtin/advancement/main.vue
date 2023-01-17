@@ -20,23 +20,29 @@
 				</div>
 			</div>
 			<div class="bottom">
+				{{ item }}
 			</div>
 		</div>
 	</div>
-	<div>
+	<div class="q-pa-md">
+		<interface-item v-model="item" />
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import InterfaceItem from './components/interface/item.vue';
+import { item } from './model';
 
 export default defineComponent({
 	name: 'Advancement',
 	components: {
+		InterfaceItem
 	},
 	setup () {
 		return {
-			name: ref<string | null>(null)
+			name: ref<string | null>(null),
+			item: ref<item | null>(null)
 		};
 	}
 });

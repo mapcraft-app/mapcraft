@@ -3,7 +3,7 @@
 		v-model="select"
 		use-input
 		input-debounce="250"
-		:dense="$props.dense ?? true"
+		:dense="$props.dense"
 		:options="list"
 		:label="$props.label"
 		@filter="filter"
@@ -17,7 +17,7 @@ import { mapStore } from 'app/src/store/map';
 import { block, items } from 'mapcraft-api/dist/types/src/minecraft/interface';
 
 export default defineComponent({
-	name: 'SelectItemBlock',
+	name: 'SelectBlockItem',
 	props: {
 		modelValue: {
 			type: [String, null] as PropType<string | null>,

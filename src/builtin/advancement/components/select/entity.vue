@@ -3,7 +3,7 @@
 		v-model="select"
 		use-input
 		input-debounce="250"
-		:dense="$props.dense ?? true"
+		:dense="$props.dense"
 		:options="list"
 		:label="$props.label"
 		@filter="filter"

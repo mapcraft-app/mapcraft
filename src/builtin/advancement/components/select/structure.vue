@@ -1,10 +1,10 @@
 <template>
 	<q-select
-		v-model="color"
+		v-model="structure"
 		use-input
 		input-debounce="250"
 		:dense="$props.dense"
-		:options="optionsList"
+		:options="optionsList.map((e) => e.name)"
 		:label="$props.label"
 		@filter="filter"
 	/>
@@ -12,19 +12,21 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, onBeforeMount, watch } from 'vue';
-import { dimensionType } from '../../model';
+import { minecraft } from 'mapcraft-api/frontend';
+import { mapStore } from 'app/src/store/map';
+import { structures } from 'mapcraft-api/dist/types/src/minecraft/interface';
 
 export default defineComponent({
-	name: 'SelectDimension',
+	name: 'SelectStructure',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<dimensionType | null>,
+			type: [String, null] as PropType<string | null>,
 			required: true
 		},
 		label: {
 			type: String,
 			required: false,
-			default: 'Dimension'
+			default: 'Structure'
 		},
 		dense: {
 			type: Boolean,
@@ -34,9 +36,11 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const options = ['the_end', 'overworld', 'the_nether'];
-		const optionsList = ref<string[]>(options);
-		const color = ref<dimensionType | null>(props.modelValue ?? null);
+		const store = mapStore();
+
+		const options = minecraft.get(store.minecraftVersion, 'structure') as structures[];
+		const optionsList = ref<structures[]>(options);
+		const structure = ref<string | null>(props.modelValue ?? null);
 
 		const filter = (val: string, update: any) => {
 			if (val === '') {
@@ -46,13 +50,13 @@ export default defineComponent({
 			} else {
 				update(() => {
 					const needle = val.toLowerCase();
-					optionsList.value = options.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+					optionsList.value = options.filter((v) => v.name.toLowerCase().indexOf(needle) > -1);
 				});
 			}
 		};
 
 		onBeforeMount(() => {
-			watch(color, (after) => {
+			watch(structure, (after) => {
 				if (after)
 					emit('update:modelValue', after);
 			});
@@ -60,7 +64,7 @@ export default defineComponent({
 
 		return {
 			optionsList,
-			color,
+			structure,
 			filter
 		};
 	}

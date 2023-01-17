@@ -6,6 +6,7 @@
 			outlined
 			style="max-width: 40%"
 			class="q-pr-md"
+			:dense="$props.dense"
 			:min="$props.min"
 			:max="$props.max"
 		/>
@@ -15,12 +16,15 @@
 			outlined
 			class="q-pr-md"
 			:disable="!toggle"
+			:dense="$props.dense"
 			:min="$props.min"
 			:max="$props.max"
+			:rules="[v => toggle && minVal <= maxVal]"
 		/>
 		<q-toggle
 			v-model="toggle"
 			label="Set range"
+			:dense="$props.dense"
 		/>
 	</div>
 </template>
@@ -28,11 +32,16 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from 'vue';
 
+interface range {
+	min: number,
+	max?: number
+}
+
 export default defineComponent({
 	name: 'NumberRange',
 	props: {
 		modelValue: {
-			type: [Object, Number] as PropType<{ min: number, max?: number } | number>,
+			type: [Object, Number, null] as PropType<range | number | null>,
 			required: true
 		},
 		min: {
@@ -44,21 +53,27 @@ export default defineComponent({
 			type: Number,
 			required: false,
 			default: 64
+		},
+		dense: {
+			type: Boolean,
+			required: false,
+			default: false
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
 		const toggle = ref<boolean>(false);
-		const minVal = ref<number>(
-			(typeof props.modelValue === 'number')
-				? props.modelValue ?? 0
-				: props.modelValue.min ?? 0
-		);
-		const maxVal = ref<number>(
-			(typeof props.modelValue === 'number')
-				? props.modelValue ?? 0
-				: props.modelValue.max ?? 0
-		);
+		const getData = (el: range | number | null, min = true) => {
+			if (el === null)
+				return 0;
+			if (typeof el === 'number')
+				return el ?? 0;
+			return (min)
+				? el.min
+				: el.max ?? 0;
+		};
+		const minVal = ref<number>(getData(props.modelValue, true));
+		const maxVal = ref<number>(getData(props.modelValue, false));
 		
 		onMounted(() => {
 			watch(toggle, (after, before) => {
@@ -76,6 +91,7 @@ export default defineComponent({
 					});
 				}
 			});
+
 			watch(maxVal, (after) => {
 				if (after) {
 					emit('update:modelValue', {
