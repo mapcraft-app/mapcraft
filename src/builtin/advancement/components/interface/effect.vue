@@ -21,9 +21,9 @@
 					class="q-pa-sm"
 				/>
 				<span class="text-h6">Amplifier</span>
-				<number-range v-model="el.amplifier" class="q-pa-sm" />
+				<type-number-range v-model="el.amplifier" class="q-pa-sm" />
 				<span class="text-h6">Duration</span>
-				<number-range v-model="el.duration" class="q-pa-sm" />
+				<type-number-range v-model="el.duration" class="q-pa-sm" />
 			</q-card-section>
 		</q-card>
 		<q-card style="width: 100%; max-width: 250px">
@@ -42,8 +42,12 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api';
 import { mapStore } from 'app/src/store/map';
-import { effect as effectMinecraft } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import TypeNumberRange from '../type/numberRange.vue';
 import { effect, numberRange } from '../../model';
+
+interface effectMinecraft {
+	name: string;
+}
 
 interface effectElement {
 	id: string, 
@@ -53,9 +57,12 @@ interface effectElement {
 
 export default defineComponent({
 	name: 'InterfaceEffect',
+	components: {
+		TypeNumberRange
+	},
 	props: {
 		modelValue: {
-			type: Object as PropType<effect>,
+			type: [Object, null] as PropType<effect | null>,
 			required: true
 		}
 	},

@@ -24,12 +24,12 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: 'Color'
+			default: 'Potion'
 		},
 		dense: {
 			type: Boolean,
 			required: false,
-			default: true
+			default: false
 		}
 	},
 	emits: ['update:modelValue'],

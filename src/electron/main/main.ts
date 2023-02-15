@@ -67,7 +67,7 @@ app.whenReady().then(async () => {
 	});
 
 	import('src/electron/ipc/main'); // Set IpcMain listeners
-
+	
 	mainWindow.on('ready-to-show', () => {
 		log.info('Main window ready to show');
 		isLoading = false;

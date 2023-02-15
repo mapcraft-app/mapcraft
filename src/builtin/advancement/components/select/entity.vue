@@ -14,7 +14,10 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'app/src/store/map';
-import { entities } from 'mapcraft-api/dist/types/src/minecraft/interface';
+
+interface entities {
+	name: string;
+}
 
 export default defineComponent({
 	name: 'SelectEntity',
@@ -31,7 +34,7 @@ export default defineComponent({
 		dense: {
 			type: Boolean,
 			required: false,
-			default: true
+			default: false
 		}
 	},
 	emits: ['update:modelValue'],

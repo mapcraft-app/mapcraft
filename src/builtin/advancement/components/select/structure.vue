@@ -14,7 +14,10 @@
 import { defineComponent, PropType, ref, onBeforeMount, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'app/src/store/map';
-import { structures } from 'mapcraft-api/dist/types/src/minecraft/interface';
+
+interface structures {
+	name: string;
+}
 
 export default defineComponent({
 	name: 'SelectStructure',
@@ -31,7 +34,7 @@ export default defineComponent({
 		dense: {
 			type: Boolean,
 			required: false,
-			default: true
+			default: false
 		}
 	},
 	emits: ['update:modelValue'],

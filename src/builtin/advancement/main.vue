@@ -25,24 +25,24 @@
 		</div>
 	</div>
 	<div class="q-pa-md">
-		<interface-item v-model="item" />
+		<interface-entity v-model="item" />
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import InterfaceItem from './components/interface/item.vue';
-import { item } from './model';
+import InterfaceEntity from './components/interface/entity.vue';
+import { entity } from './model';
 
 export default defineComponent({
 	name: 'Advancement',
 	components: {
-		InterfaceItem
+		InterfaceEntity
 	},
 	setup () {
 		return {
 			name: ref<string | null>(null),
-			item: ref<item | null>(null)
+			item: ref<entity | null>(null)
 		};
 	}
 });

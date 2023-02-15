@@ -17,8 +17,12 @@ export default function generateEnv(app: Electron.App): void {
 	};
 	const tempGame = game();
 
-	process.env.DEV = import.meta.env.DEV;
-	process.env.PACKAGED = app.isPackaged,
+	process.env.DEV = (import.meta.env.DEV)
+		? 'true'
+		: 'false';
+	process.env.PACKAGED = (app.isPackaged)
+		? 'true'
+		: 'false';
 	process.env.APP = app.getAppPath();
 	process.env.APP_DATA = resolve(app.getPath('userData'), 'appdata');
 	const configFile = resolve(process.env.APP_DATA, 'config');

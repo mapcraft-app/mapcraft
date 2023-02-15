@@ -1,11 +1,12 @@
 <template>
-	<div class="row">
+	<div class="row inline">
 		<q-input
 			v-model.number="minVal"
 			type="number"
 			outlined
 			style="max-width: 40%"
 			class="q-pr-md"
+			:bottom-slots="false"
 			:dense="$props.dense"
 			:min="$props.min"
 			:max="$props.max"
@@ -15,11 +16,11 @@
 			type="number"
 			outlined
 			class="q-pr-md"
+			:bottom-slots="false"
 			:disable="!toggle"
 			:dense="$props.dense"
-			:min="$props.min"
+			:min="minVal ?? $props.min"
 			:max="$props.max"
-			:rules="[v => toggle && minVal <= maxVal]"
 		/>
 		<q-toggle
 			v-model="toggle"
@@ -78,7 +79,7 @@ export default defineComponent({
 		onMounted(() => {
 			watch(toggle, (after, before) => {
 				if (!after && before)
-					maxVal.value = 0;
+					maxVal.value = minVal.value ?? props.min;
 			});
 
 			watch(minVal, (after) => {

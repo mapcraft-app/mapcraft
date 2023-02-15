@@ -12,10 +12,14 @@ import { version, repository } from './package.json';
 
 const bundle = async (server: ViteDevServer) => {
 	const address = server.httpServer.address() as AddressInfo;
-	const host = (address.address === '127.0.0.1')
-		? 'localhost'
-		: address.address;
-	const appUrl = `http://${host}:${address.port}`;
+	const host = () => {
+		if (address.family === 'IPv6')
+			return `[${address.address}]`;
+		if (address.address === '127.0.0.1')
+			return 'localhost';
+		return address.address;
+	};
+	const appUrl = `http://${host()}:${address.port}`;
 
 	let child: ChildProcess | undefined;
 	const watcher: any = await build({
@@ -25,7 +29,7 @@ const bundle = async (server: ViteDevServer) => {
 			'import.meta.env.APP_VERSION': JSON.stringify(version),
 			'import.meta.env.APP_GIT_URL': JSON.stringify(repository.url),
 			'import.meta.env.ELECTRON_APP_URL': JSON.stringify(appUrl),
-			'import.meta.env.ELECTRON_LOAD_URL': JSON.stringify(appUrl + '/load.html')
+			'import.meta.env.ELECTRON_LOAD_URL': JSON.stringify(`${appUrl}/load.html`),
 		},
 		build: {
 			watch: {}

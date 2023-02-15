@@ -3,6 +3,7 @@ export type frameType = 'challenge' | 'goal' | 'task';
 export type potionType = 'empty' | 'mundane' | 'thick' | 'awkward' | 'night vision' | 'long night vision' | 'invisibility' | 'long invisibility' | 'leaping' | 'long leaping' | 'strong leaping' | 'fire resistance' | 'long fire resistance' | 'swiftness' | 'long swiftness' | 'strong swiftness' | 'slowness' | 'long slowness' | 'strong slowness' | 'turtle master' | 'long turtle master' | 'strong turtle master';
 export type gamemodeType = 'adventure' | 'creative' | 'spectator' | 'survival';
 export type dimensionType = 'overworld' | 'the_end' | 'the_nether';
+export type statsType = 'minecraft:broken' | 'minecraft:crafted' | 'minecraft:custom' | 'minecraft:dropped' | 'minecraft:killed' | 'minecraft:killed_by' | 'minecraft:mined' | 'minecraft:picked_up' | 'minecraft:used';
 
 //#region Display
 export interface titleModel {
@@ -46,12 +47,18 @@ export interface numberRange {
 	max: number
 }
 
+export interface recipe {
+	[name: string]: boolean
+}
+
 export interface state {
 	[name: string]: string
 }
 
-export interface recipe {
-	[name: string]: boolean
+export interface stats {
+	type: statsType | null,
+	stat: string | null,
+	value: number | numberRange | null
 }
 //#endregion Type
 
@@ -108,13 +115,13 @@ export interface enchantement {
 
 export interface entity {
 	type: string,
-	nbt?: string,
-	distance?: distance,
-	effects?: effect,
-	location: biome,
-	equipement: equipement,
-	passenger: entity,
-	player: player,
+	nbt: string | null,
+	distance: distance | null,
+	effects: effect | null,
+	location: biome | null,
+	equipement: equipement | null,
+	passenger: entity | null,
+	player: player | null,
 	flags: {
 		is_baby: boolean,
 		is_on_fire: boolean,
@@ -122,19 +129,19 @@ export interface entity {
 		is_sprinting: boolean,
 		is_swimming: boolean
 	},
-	lightning_bolt?: {
-		blocks_set_on_fire?: number,
-		entity_struck?: entity
+	lightning_bolt: {
+		blocks_set_on_fire?: number | null,
+		entity_struck?: entity | null
 	}
 }
 
 export interface equipement {
-	head: item,
-	chest: item,
-	legs: item,
-	feet: item,
-	mainhand: item,
-	offhand: item
+	head: item | null,
+	chest: item | null,
+	legs: item | null,
+	feet: item | null,
+	mainhand: item | null,
+	offhand: item | null
 }
 
 export interface fluid {
@@ -160,14 +167,15 @@ export interface light {
 
 export interface player {
 	gamemode: gamemodeType,
-	team?: string,
-	level?: number | numberRange,
-	recipes?: recipe,
-	advancements?: state,
-	targeted_entity?: entity,
-	looking_at?: entity,
-	vehicle?: entity,
-	stepping_on?: biome
+	team: string | null,
+	level: number | numberRange | null,
+	recipes: recipe | null,
+	advancements: state | null,
+	stats: stats[] | null,
+	targeted_entity: entity | null,
+	looking_at: entity | null,
+	vehicle: entity | null,
+	stepping_on: biome | null
 }
 
 export interface type {

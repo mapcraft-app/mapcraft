@@ -1,22 +1,22 @@
 <template>
 	<div class="row inline">
-		<span class="text-h6">Absolution</span>
+		<span class="text-h6 q-pr-md">Absolution</span>
 		<type-number-range v-model="data.absolute" />
 	</div>
 	<div class="row inline">
-		<span class="text-h6">Horizontal</span>
+		<span class="text-h6 q-pr-md">Horizontal</span>
 		<type-number-range v-model="data.horizontal" />
 	</div>
 	<div class="row inline">
-		<span class="text-h6">X</span>
+		<span class="text-h6 q-pr-md">X</span>
 		<type-number-range v-model="data.x" />
 	</div>
 	<div class="row inline">
-		<span class="text-h6">Y</span>
+		<span class="text-h6 q-pr-md">Y</span>
 		<type-number-range v-model="data.y" />
 	</div>
 	<div class="row inline">
-		<span class="text-h6">Z</span>
+		<span class="text-h6 q-pr-md">Z</span>
 		<type-number-range v-model="data.z" />
 	</div>
 </template>

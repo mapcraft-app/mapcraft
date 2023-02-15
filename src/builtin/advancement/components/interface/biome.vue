@@ -1,6 +1,5 @@
 <template>
 	<div class="column q-gutter-sm">
-		<span class="text-h6">Biome</span>
 		<q-select
 			v-model="data.biome"
 			use-input
@@ -37,7 +36,9 @@
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column align-center">
 			<span class="text-center">Light</span>
-			<light v-model="data.light" />
+			<div class="row justify-center q-pt-sm">
+				<light v-model="data.light" />
+			</div>
 		</q-card>
 		
 	</div>
@@ -47,7 +48,6 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'app/src/store/map';
-import { biome } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { biome as biomeInterface } from '../../model';
 
 import block from './block.vue';
@@ -56,6 +56,11 @@ import light from './light.vue';
 import structure from '../select/structure.vue';
 import dimension from '../select/dimension.vue';
 import numberRange from '../type/numberRange.vue';
+
+interface biome {
+	id: string;
+	type: string;
+}
 
 export default defineComponent({
 	name: 'InterfaceBiome',

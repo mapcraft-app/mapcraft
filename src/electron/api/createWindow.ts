@@ -27,7 +27,7 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 		icon: iconLoad(),
 		webPreferences: {
 			contextIsolation: true,
-			devTools: true,//import.meta.env.DEV,
+			devTools: true, // import.meta.env.DEV,
 			defaultEncoding: 'utf-8',
 			enableWebSQL: false,
 			nodeIntegration: args.nodeIntegration ?? false,
@@ -39,7 +39,6 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 	if (!window)
 		throw new WindowError('Failed to create app window, close app');
 	process.env.WINDOW_ID = String(window.id);
-
 	if (import.meta.env.DEV) {
 		window.loadURL(import.meta.env.ELECTRON_APP_URL);
 		window.webContents.openDevTools();
@@ -69,7 +68,6 @@ export function loaderWindows(): BrowserWindow {
 	});
 	if (!window)
 		throw new WindowError('Failed to create loader window, close app');
-
 	if (import.meta.env.DEV)
 		window.loadURL(import.meta.env.ELECTRON_LOAD_URL);
 	else

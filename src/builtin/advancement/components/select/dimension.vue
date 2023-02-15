@@ -29,7 +29,7 @@ export default defineComponent({
 		dense: {
 			type: Boolean,
 			required: false,
-			default: true
+			default: false
 		}
 	},
 	emits: ['update:modelValue'],

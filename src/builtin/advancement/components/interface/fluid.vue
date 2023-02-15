@@ -1,7 +1,7 @@
 <template>
-	<div>
-		<q-input v-model="data.id" label="Id" />
-		<q-input v-model="data.tag" label="Tag" />
+	<q-input v-model="data.id" label="Id" />
+	<q-input v-model="data.tag" label="Tag" />
+	<div class="row justify-center q-pt-sm">
 		<type-state v-model="data.state" />
 	</div>
 </template>

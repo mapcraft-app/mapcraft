@@ -2,7 +2,9 @@
 	<block-item v-model="data.block" :item="false" label="Block"/>
 	<q-input v-model="data.tag" label="Tag" />
 	<q-input v-model="data.nbt" label="Nbt" />
-	<state v-model="data.state" />
+	<div class="row justify-center q-pt-sm">
+		<state v-model="data.state" />
+	</div>
 </template>
 
 <script lang="ts">
