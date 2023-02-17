@@ -20,29 +20,21 @@
 				</div>
 			</div>
 			<div class="bottom">
-				{{ item }}
 			</div>
 		</div>
 	</div>
 	<div class="q-pa-md">
-		<interface-entity v-model="item" />
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import InterfaceEntity from './components/interface/entity.vue';
-import { entity } from './model';
 
 export default defineComponent({
 	name: 'Advancement',
-	components: {
-		InterfaceEntity
-	},
 	setup () {
 		return {
 			name: ref<string | null>(null),
-			item: ref<entity | null>(null)
 		};
 	}
 });

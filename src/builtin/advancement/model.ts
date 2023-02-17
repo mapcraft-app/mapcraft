@@ -178,6 +178,12 @@ export interface player {
 	stepping_on: biome | null
 }
 
+export interface slot {
+	empty: number | numberRange,
+	full: number | numberRange,
+	occupied: number | numberRange
+}
+
 export interface type {
 	direct_entity?: entity,
 	source_entity?: entity,
@@ -189,11 +195,5 @@ export interface type {
 	is_magic?: boolean,
 	is_projectile?: boolean,
 	is_lightning?: boolean
-}
-
-export interface slot {
-	empty: number | numberRange,
-	full: number | numberRange,
-	occupied: number | numberRange
 }
 //#endregion Interface
