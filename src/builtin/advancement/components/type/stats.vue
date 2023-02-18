@@ -11,7 +11,7 @@
 			class="row inline"
 		>
 			<select-stats v-model="el.type" />
-			<q-input v-model="el.stat" dense label="Stat" class="q-pr-sm" />
+			<q-input v-model="el.stat" dense :label="$capitalize($t('builtin.advancement.type.stat'))" class="q-pr-sm" />
 			<type-number-range v-model="el.value" />
 			<q-btn flat color="red" icon="delete" @click="removeStats(i)"/>
 		</div>

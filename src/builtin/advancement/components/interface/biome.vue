@@ -5,42 +5,41 @@
 			use-input
 			input-debounce="250"
 			:options="biomesList.map((e) => e.id)"
-			label="Biome"
+			:label="$capitalize($t('builtin.advancement.interface.common.biome'))"
 			@filter="filterBiome"
 		/>
 		<q-card bordered square flat class="q-pa-sm column align-center">
-			<span class="text-center">Block</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.block')) }}</span>
 			<block v-model="data.block" />
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column align-center">
-			<span class="text-center">Fluid</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.fluid')) }}</span>
 			<fluid v-model="data.fluid" />
 		</q-card>
 		<dimension v-model="data.dimension" />
-		<structure v-model="data.feature" label="Feature" />
-		<q-toggle v-model="data.smokey" color="primary" label="Smokey" />
+		<structure v-model="data.feature" :label="$capitalize($t('builtin.advancement.interface.biome.feature'))" />
+		<q-toggle v-model="data.smokey" color="primary" :label="$capitalize($t('builtin.advancement.interface.biome.smokey'))" />
 		<q-card bordered square flat class="q-pa-sm q-gutter-sm column align-center">
-			<span class="text-center">Position</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.position')) }}</span>
 			<div class="row inline justify-center items-center">
-				<span class="text-h6 q-pr-md">X</span>
+				<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.x')) }}</span>
 				<number-range v-model="data.position.x" />
 			</div>
 			<div class="row inline justify-center items-center">
-				<span class="text-h6 q-pr-md">Y</span>
+				<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.y')) }}</span>
 				<number-range v-model="data.position.y" />
 			</div>
 			<div class="row inline justify-center items-center">
-				<span class="text-h6 q-pr-md">Z</span>
+				<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.z')) }}</span>
 				<number-range v-model="data.position.z" />
 			</div>
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column align-center">
-			<span class="text-center">Light</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.light')) }}</span>
 			<div class="row justify-center q-pt-sm">
 				<light v-model="data.light" />
 			</div>
 		</q-card>
-		
 	</div>
 </template>
 

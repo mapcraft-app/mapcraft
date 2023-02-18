@@ -17,7 +17,7 @@
 				<q-select
 					v-model="el.enchantment"
 					:options="enchantementList.map((e) => e.id)"
-					label="Enchantement"
+					:label="$capitalize($t('builtin.advancement.interface.common.enchantement'))"
 					class="q-pa-sm"
 				/>
 				<number-range

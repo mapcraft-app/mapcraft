@@ -12,6 +12,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, onBeforeMount, watch } from 'vue';
+import { capitalize } from 'app/src/vue/plugins/app';
+import { useI18n } from 'vue-i18n';
 import { textColor } from '../../model';
 
 export default defineComponent({
@@ -24,7 +26,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: 'Color'
+			default: capitalize(useI18n().t('builtin.advancement.select.color'))
 		},
 		dense: {
 			type: Boolean,

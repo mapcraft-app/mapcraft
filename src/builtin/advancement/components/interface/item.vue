@@ -1,26 +1,26 @@
 <template>
 	<div class="column q-gutter-sm">
-		<block-item v-model="data.item" :block="false" label="Item" />
-		<q-input v-model="data.nbt" label="Nbt" />
-		<q-input v-model="data.tag" label="Tag" />
+		<block-item v-model="data.item" :block="false" :label="$capitalize($t('builtin.advancement.interface.item.item'))" />
+		<q-input v-model="data.nbt" :label="$capitalize($t('builtin.advancement.interface.common.nbt'))" />
+		<q-input v-model="data.tag" :label="$capitalize($t('builtin.advancement.interface.common.tag'))" />
 		<div>
-			<span>Count</span>
+			<span>{{ $capitalize($t('builtin.advancement.interface.item.count')) }}</span>
 			<number-range v-model="data.count" />
 		</div>
 		<div>
-			<span>Durability</span>
+			<span>{{ $capitalize($t('builtin.advancement.interface.item.durability')) }}</span>
 			<number-range v-model="data.durability" />
 		</div>
 		<div>
-			<span>Potion</span>
+			<span>{{ $capitalize($t('builtin.advancement.interface.item.potion')) }}</span>
 			<potion v-model="data.potion" />
 		</div>
 		<q-card bordered square flat class="q-pa-sm column align-center">
-			<span class="text-center">Enchantements</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.item.enchantements')) }}</span>
 			<enchantement v-model="data.enchantements" />
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column align-center">
-			<span class="text-center">Stored enchantements</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.item.storedEnchantements')) }}</span>
 			<enchantement v-model="data.stored_enchantements" />
 		</q-card>
 	</div>

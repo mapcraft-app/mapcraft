@@ -24,7 +24,7 @@
 		/>
 		<q-toggle
 			v-model="toggle"
-			label="Set range"
+			:label="$capitalize($t('builtin.advancement.type.range'))"
 			:dense="$props.dense"
 		/>
 	</div>

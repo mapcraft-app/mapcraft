@@ -10,7 +10,7 @@
 			:key="i"
 			class="row inline"
 		>
-			<q-input v-model="el.key" dense label="Recipe" class="q-pr-sm"/>
+			<q-input v-model="el.key" dense :label="$capitalize($t('builtin.advancement.type.recipe'))" class="q-pr-sm"/>
 			<q-toggle v-model="el.value" class="q-pr-sm" />
 			<q-btn flat color="red" icon="delete" @click="removeRecipe(i)"/>
 		</div>

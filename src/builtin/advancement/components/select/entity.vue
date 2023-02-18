@@ -12,6 +12,8 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
+import { capitalize } from 'app/src/vue/plugins/app';
+import { useI18n } from 'vue-i18n';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'app/src/store/map';
 
@@ -29,7 +31,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: 'Entity'
+			default: capitalize(useI18n().t('builtin.advancement.select.entity'))
 		},
 		dense: {
 			type: Boolean,

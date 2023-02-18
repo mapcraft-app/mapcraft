@@ -2,7 +2,7 @@
 	<q-list bordered class="q-mt-sm">
 		<q-expansion-item
 			expand-separator
-			label="Direct entity"
+			:label="$capitalize($t('builtin.advancement.interface.type.directEntity'))"
 		>
 			<div class="q-pa-sm">
 				<interface-entity-player v-model="data.direct_entity" />
@@ -10,7 +10,7 @@
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			label="Source entity"
+			:label="$capitalize($t('builtin.advancement.interface.type.sourceEntity'))"
 		>
 			<div class="q-pa-sm">
 				<interface-entity-player v-model="data.source_entity" />
@@ -18,47 +18,47 @@
 		</q-expansion-item>
 	</q-list>
 	<q-card bordered square flat class="q-pa-sm column align-center q-mt-sm q-mb-sm">
-		<div class="text-center">Flags</div>
+		<div class="text-center">{{ $capitalize($t('builtin.advancement.interface.common.flags')) }}</div>
 		<div class="row justify-evenly">
 			<q-checkbox
 				v-model="data.bypasses_armor"
 				left-label
-				label="Bypass armor"
+				:label="$capitalize($t('builtin.advancement.interface.type.bypassArmor'))"
 			/>
 			<q-checkbox
 				v-model="data.bypasses_invulnerability"
 				left-label
-				label="Bypass invulnerability"
+				:label="$capitalize($t('builtin.advancement.interface.type.bypassInvulnerability'))"
 			/>
 			<q-checkbox
 				v-model="data.bypasses_magic"
 				left-label
-				label="Bypass magic"
+				:label="$capitalize($t('builtin.advancement.interface.type.bypassMagic'))"
 			/>
 			<q-checkbox
 				v-model="data.is_explosion"
 				left-label
-				label="Is explosion"
+				:label="$capitalize($t('builtin.advancement.interface.type.isExplosion'))"
 			/>
 			<q-checkbox
 				v-model="data.is_fire"
 				left-label
-				label="Is fire"
+				:label="$capitalize($t('builtin.advancement.interface.type.isFire'))"
 			/>
 			<q-checkbox
 				v-model="data.is_magic"
 				left-label
-				label="Is magic"
+				:label="$capitalize($t('builtin.advancement.interface.type.isMagic'))"
 			/>
 			<q-checkbox
 				v-model="data.is_projectile"
 				left-label
-				label="Is projectile"
+				:label="$capitalize($t('builtin.advancement.interface.type.isProjectile'))"
 			/>
 			<q-checkbox
 				v-model="data.is_lightning"
 				left-label
-				label="Is lightning"
+				:label="$capitalize($t('builtin.advancement.interface.type.isLightning'))"
 			/>
 		</div>
 	</q-card>

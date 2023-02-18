@@ -1,43 +1,43 @@
 <!-- This component is complex because of the concept of infinite objects related to the advancement format -->
 <template>
 	<template v-if="!isPlayer">
-		<select-entity v-model="data.type" label="Type" />
-		<q-input v-model="data.nbt" label="Nbt" />
+		<select-entity v-model="data.type" :label="$capitalize($t('builtin.advancement.interface.entityPlayer.type'))" />
+		<q-input v-model="data.nbt" :label="$capitalize($t('builtin.advancement.interface.common.nbt'))" />
 		<q-card bordered square flat class="q-pa-sm column align-center q-mt-sm q-mb-sm">
-			<span class="text-center">Flags</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.common.flags')) }}</span>
 			<div class="row justify-evenly">
 				<q-checkbox
 					v-model="data.flags.is_baby"
 					left-label
-					label="Is baby ?"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.isBaby'))"
 				/>
 				<q-separator horizontal />
 				<q-checkbox
 					v-model="data.flags.is_on_fire"
 					left-label
-					label="Is on fire ?"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.isFire'))"
 				/>
 				<q-checkbox
 					v-model="data.flags.is_sneaking"
 					left-label
-					label="Is sneaking ?"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.isSneaking'))"
 				/>
 				<q-checkbox
 					v-model="data.flags.is_sprinting"
 					left-label
-					label="Is sprinting ?"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.isSprinting'))"
 				/>
 				<q-checkbox
 					v-model="data.flags.is_swimming"
 					left-label
-					label="Is swimming ?"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.isSwimming'))"
 				/>
 			</div>
 		</q-card>
 		<q-list bordered class="q-mt-sm">
 			<q-expansion-item
 				expand-separator
-				label="Distance"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.distance'))"
 			>
 				<div class="column items-center q-pa-sm">
 					<interface-distance v-model="data.distance" />
@@ -45,7 +45,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Effect"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.effect'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-effect v-model="data.effects" />
@@ -53,7 +53,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Location"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.location'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-biome v-model="data.location" />
@@ -61,7 +61,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Equipement"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.equipement'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-equipement v-model="data.equipement" />
@@ -69,7 +69,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Passenger"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.passenger'))"
 				@click="createEntity('passenger')"
 			>
 				<div class="q-pa-sm">
@@ -81,7 +81,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Player"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.player'))"
 				@click="createPlayer()"
 			>
 				<div class="q-pa-sm">
@@ -94,15 +94,15 @@
 			</q-expansion-item>
 		</q-list>
 		<q-card bordered square flat class="q-pa-sm column align-center q-mt-sm">
-			<span class="text-center">Lightning Bolt</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.lightningBolt')) }}</span>
 			<q-input
 				v-model.number="data.lightning_bolt.blocks_set_on_fire"
 				type="number"
-				label="Blocks Set On Fire"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.blocksSetOnFire'))"
 			/>
 			<q-list class="q-mt-sm">
 				<q-expansion-item
-					label="Entity Struck"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.entityStruck'))"
 					@click="createEntity('struck')"
 				>
 					<div class="q-pa-sm">
@@ -117,27 +117,27 @@
 	</template>
 	<template v-else>
 		<select-gamemode v-model="data.gamemode" />
-		<q-input v-model="data.team" label="Team" />
+		<q-input v-model="data.team" :label="$capitalize($t('builtin.advancement.interface.entityPlayer.team'))" />
 		<div class="column items-center">
-			<span class="text-body2 q-pt-sm">Level</span>
+			<span class="text-body2 q-pt-sm">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.level')) }}</span>
 			<type-number-range v-model="data.level" />
 		</div>
 		<q-card bordered square flat class="q-pa-sm column justify-center items-center q-mt-sm q-mb-sm">
-			<span class="text-center">Recipes</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.recipes')) }}</span>
 			<type-recipe v-model="data.recipes" />
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column justify-center items-center q-mt-sm q-mb-sm">
-			<span class="text-center">Advancements</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.advancements')) }}</span>
 			<type-state v-model="data.advancements" />
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column justify-center items-center q-mt-sm q-mb-sm">
-			<span class="text-center">Stats</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.stats')) }}</span>
 			<type-stats v-model="data.stats" />
 		</q-card>
 		<q-list bordered class="q-mt-sm">
 			<q-expansion-item
 				expand-separator
-				label="Targeted Entity"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.targetedEntity'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-entity v-model="data.targeted_entity" />
@@ -145,7 +145,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Looking At"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.lookingAt'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-entity v-model="data.looking_at" />
@@ -153,7 +153,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Vehicle"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.vehicle'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-entity v-model="data.vehicle" />
@@ -161,7 +161,7 @@
 			</q-expansion-item>
 			<q-expansion-item
 				expand-separator
-				label="Stepping On"
+				:label="$capitalize($t('builtin.advancement.interface.entityPlayer.steppingOn'))"
 			>
 				<div class="column q-pa-sm">
 					<interface-biome v-model="data.stepping_on" />

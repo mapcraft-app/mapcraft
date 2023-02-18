@@ -1,25 +1,29 @@
 <template>
 	<div class="row inline">
-		<span class="text-h6">Dealt</span>
+		<span class="text-h6">{{ $capitalize($t('builtin.advancement.interface.damage.dealt')) }}</span>
 		<type-number-range v-model="data.dealt" />
 	</div>
 	<div class="row inline">
-		<span class="text-h6">Taken</span>
+		<span class="text-h6">{{ $capitalize($t('builtin.advancement.interface.damage.taken')) }}</span>
 		<type-number-range v-model="data.taken" />
 	</div>
 	<q-toggle v-model="data.blocked" />
-	type
-	entity
+	<interface-type v-model="data.type" />
+	<interface-entity-player v-model="data.source_entity" />
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, onBeforeMount, ref, watch } from 'vue';
+import InterfaceEntityPlayer from './entityPlayer.vue';
+import InterfaceType from './type.vue';
 import TypeNumberRange from '../type/numberRange.vue';
 import { damage } from '../../model';
 
 export default defineComponent({
 	name: 'InterfaceDamage',
 	components: {
+		InterfaceEntityPlayer,
+		InterfaceType,
 		TypeNumberRange
 	},
 	props: {

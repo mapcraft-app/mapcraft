@@ -20,37 +20,37 @@
 			>
 				<q-tab-panel name="head">
 					<div class="row justify-center">
-						<span class="text-h6 text-center">Head</span>
+						<span class="text-h6 text-center">{{ $capitalize($t('builtin.advancement.interface.equipement.head')) }}</span>
 					</div>
 					<item v-model="data.head" />
 				</q-tab-panel>
 				<q-tab-panel name="chest">
 					<div class="row justify-center">
-						<span class="text-h6 text-center">Chest</span>
+						<span class="text-h6 text-center">{{ $capitalize($t('builtin.advancement.interface.equipement.chest')) }}</span>
 					</div>
 					<item v-model="data.chest" />
 				</q-tab-panel>
 				<q-tab-panel name="legs">
 					<div class="row justify-center">
-						<span class="text-h6 text-center">Legs</span>
+						<span class="text-h6 text-center">{{ $capitalize($t('builtin.advancement.interface.equipement.legs')) }}</span>
 					</div>
 					<item v-model="data.legs" />
 				</q-tab-panel>
 				<q-tab-panel name="feet">
 					<div class="row justify-center">
-						<span class="text-h6 text-center">Feet</span>
+						<span class="text-h6 text-center">{{ $capitalize($t('builtin.advancement.interface.equipement.feet')) }}</span>
 					</div>
 					<item v-model="data.feet" />
 				</q-tab-panel>
 				<q-tab-panel name="mainhand">
 					<div class="row justify-center">
-						<span class="text-h6 text-center">Mainhand</span>
+						<span class="text-h6 text-center">{{ $capitalize($t('builtin.advancement.interface.equipement.mainhand')) }}</span>
 					</div>
 					<item v-model="data.mainhand" />
 				</q-tab-panel>
 				<q-tab-panel name="offhand">
 					<div class="row justify-center">
-						<span class="text-h6 text-center">Offhand</span>
+						<span class="text-h6 text-center">{{ $capitalize($t('builtin.advancement.interface.equipement.offhand')) }}</span>
 					</div>
 					<item v-model="data.offhand" />
 				</q-tab-panel>

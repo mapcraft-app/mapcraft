@@ -17,12 +17,12 @@
 				<q-select
 					v-model="el.id"
 					:options="effectsList"
-					label="Enchantement"
+					:label="$capitalize($t('builtin.advancement.interface.common.enchantement'))"
 					class="q-pa-sm"
 				/>
-				<span class="text-h6">Amplifier</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.advancement.interface.effect.amplifier')) }}</span>
 				<type-number-range v-model="el.amplifier" class="q-pa-sm" />
-				<span class="text-h6">Duration</span>
+				<span class="text-h6">{{ $capitalize($t('builtin.advancement.interface.effect.duration')) }}</span>
 				<type-number-range v-model="el.duration" class="q-pa-sm" />
 			</q-card-section>
 		</q-card>

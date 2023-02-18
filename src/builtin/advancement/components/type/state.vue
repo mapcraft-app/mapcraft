@@ -10,8 +10,8 @@
 			:key="i"
 			class="row inline"
 		>
-			<q-input v-model="el.key" dense label="Key" class="q-pr-sm"/>
-			<q-input v-model="el.value" dense label="Value" class="q-pr-sm" />
+			<q-input v-model="el.key" dense :label="$capitalize($t('builtin.advancement.type.key'))" class="q-pr-sm"/>
+			<q-input v-model="el.value" dense :label="$capitalize($t('builtin.advancement.type.value'))" class="q-pr-sm" />
 			<q-btn flat color="red" icon="delete" @click="removeState(i)"/>
 		</div>
 	</div>

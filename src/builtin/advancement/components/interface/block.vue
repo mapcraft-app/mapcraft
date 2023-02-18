@@ -1,7 +1,7 @@
 <template>
-	<block-item v-model="data.block" :item="false" label="Block"/>
-	<q-input v-model="data.tag" label="Tag" />
-	<q-input v-model="data.nbt" label="Nbt" />
+	<block-item v-model="data.block" :item="false" :label="$capitalize($t('builtin.advancement.interface.common.block'))"/>
+	<q-input v-model="data.tag" :label="$capitalize($t('builtin.advancement.interface.common.tag'))" />
+	<q-input v-model="data.nbt" :label="$capitalize($t('builtin.advancement.interface.common.nbt'))" />
 	<div class="row justify-center q-pt-sm">
 		<state v-model="data.state" />
 	</div>
