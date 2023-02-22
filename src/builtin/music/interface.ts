@@ -2,14 +2,6 @@ export type category = 'none' | 'ambient' | 'block' | 'hostile' | 'master' | 'mu
 
 export type type = 'event' | 'sound';
 
-export interface envInterface {
-	datapack: {
-		base: string;
-		default: string;
-	},
-	resourcepack: string;
-}
-
 export interface sounds {
 	attenuation_distance?: number,
 	name: string,

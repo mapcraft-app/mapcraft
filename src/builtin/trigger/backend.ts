@@ -6,7 +6,8 @@ import { access, mkdir, rm } from 'fs/promises';
 import { fs } from 'mapcraft-api/backend';
 import database, { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
 import { resolve } from 'path';
-import { createTrigger, envInterface, triggerInterface } from './interface';
+import { createTrigger, triggerInterface } from './interface';
+import { envInterface } from '../interface';
 
 class trigger {
 	private env: envInterface;
@@ -70,7 +71,7 @@ class trigger {
 			name: data.name,
 			x1: data.x1, y1: data.y1, z1: data.z1,
 			x2: data.x2, y2: data.y2, z2: data.z2
-		};
+		} as triggerInterface;
 		this.generateTrigger(format);
 		return format;
 	}

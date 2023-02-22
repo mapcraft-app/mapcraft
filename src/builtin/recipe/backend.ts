@@ -21,6 +21,7 @@ import {
 	stonecutterTable,
 	smithingTable
 } from './interface';
+import { envInterface } from '../interface';
 import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import random from './components/random';
 
@@ -28,14 +29,6 @@ interface list {
 	id: string,
 	name: string,
 	path: string | undefined
-}
-
-export interface envInterface {
-	datapack: {
-		base: string;
-		default: string;
-	},
-	resourcepack: string;
 }
 
 class recipe {

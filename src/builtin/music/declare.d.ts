@@ -1,4 +1,5 @@
-import { envInterface, sound, sounds } from "./interface";
+import { sound, sounds } from './interface';
+import { envInterface } from '../interface';
 
 export declare global {
 	interface Window {

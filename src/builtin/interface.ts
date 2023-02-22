@@ -32,3 +32,11 @@ export interface lang {
 	pluginName: string,
 	data: Record<string, any>
 }
+
+export interface envInterface {
+	datapack: {
+		base: string;
+		default: string;
+	},
+	resourcepack: string;
+}

@@ -1,6 +1,7 @@
 import { Statement, RunResult } from 'better-sqlite3';
 import { tableInterface } from 'mapcraft-api/dist/types/src/sql';
-import { envInterface, cutsceneInterface, cutscenePointInterface } from './backend';
+import { cutsceneInterface, cutscenePointInterface } from './backend';
+import { envInterface } from '../interface';
 
 export declare global {
 	interface Window {

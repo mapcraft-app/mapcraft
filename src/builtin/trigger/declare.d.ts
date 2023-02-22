@@ -1,4 +1,5 @@
-import { createTrigger, envInterface, triggerInterface } from "./interface"
+import { createTrigger, triggerInterface } from './interface';
+import { envInterface } from '../interface';
 
 export declare global {
 	interface Window {

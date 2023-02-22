@@ -3,7 +3,8 @@ import { existsSync, readFileSync } from 'fs';
 import { cp, mkdir, rm, writeFile } from 'fs/promises';
 import { basename, resolve } from 'path';
 import { fs } from 'mapcraft-api/backend';
-import { envInterface, sounds, sound, category } from './interface';
+import { sounds, sound, category } from './interface';
+import { envInterface } from '../interface';
 
 class music {
 	private env: envInterface;

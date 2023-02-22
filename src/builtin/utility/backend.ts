@@ -2,19 +2,12 @@ import { resolve } from 'path';
 import { minecraft } from 'mapcraft-api';
 import { exposeInMainWorld } from 'app/src/api/plugins/backend';
 import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import { envInterface } from '../interface';
 
 interface list {
 	id: string,
 	name: string,
 	path: string | undefined
-}
-
-interface envInterface {
-	datapack: {
-		base: string;
-		default: string;
-	},
-	resourcepack: string;
 }
 
 class utility {

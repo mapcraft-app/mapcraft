@@ -1,3 +1,5 @@
+import { envInterface } from '../interface';
+
 export declare global {
 	interface Window {
 		utility: {

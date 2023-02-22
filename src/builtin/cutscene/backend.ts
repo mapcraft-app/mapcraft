@@ -2,8 +2,8 @@
  * tags: cutscene, cutscene_{id}
  * debug: debug, debugCutscene
  */
-
 import bezierEasing from 'bezier-easing';
+import { existsSync, writeFileSync } from 'fs';
 import { writeFile, mkdir, access, rm } from 'fs/promises';
 import { resolve } from 'path';
 import ipc from 'electron/ipc/render';
@@ -12,15 +12,8 @@ import database, { tableInterface } from 'mapcraft-api/dist/types/src/backend/sq
 
 import { mapEngineInstance } from 'electron/preload/engine';
 import { exposeInMainWorld } from 'api/plugins/backend';
-import { existsSync, writeFileSync } from 'fs';
 
-export interface envInterface {
-	datapack: {
-		base: string;
-		default: string;
-	},
-	resourcepack: string;
-}
+import { envInterface } from '../interface';
 
 export interface bezier {
 	transition: 'ease' | 'ease-in' | 'ease-in-out' | 'ease-out' | 'linear',

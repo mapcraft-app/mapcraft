@@ -1,11 +1,3 @@
-export interface envInterface {
-	datapack: {
-		base: string;
-		default: string;
-	},
-	resourcepack: string;
-}
-
 export interface triggerInterface {
 	id: number;
 	name: string;

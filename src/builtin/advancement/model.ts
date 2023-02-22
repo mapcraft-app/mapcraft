@@ -27,17 +27,15 @@ export interface display {
 	show_toast: boolean,
 	announce_to_chat: boolean,
 	hidden: boolean,
-	background: string | 'minecraft:textures/gui/advancements/backgrounds/stone.png'
+	namespace: {
+		text: 'mapcraft-data' | string
+	},
+	background:'minecraft:textures/gui/advancements/backgrounds/stone.png' | string 
 }
 
 export interface trigger {
 	trigger: string,
 	conditions: Record<string, any>
-}
-
-export interface base {
-	display?: display,
-	criteria: Record<string, trigger>
 }
 //#endregion Display
 
@@ -197,3 +195,36 @@ export interface type {
 	is_lightning?: boolean
 }
 //#endregion Interface
+
+//#region Json
+export interface advancementList {
+	id: string;
+	name: string;
+	path: string;
+	data: main
+}
+
+export interface advancement {
+	id: string;
+	data: {
+		display: display;
+		criteria: Record<string, trigger>,
+		requirements: string[][],
+		rewards: {
+			recipes?: string[],
+			loot?: string[],
+			experience?: number,
+			function?: string
+		}
+	},
+	children?: advancement[];
+}
+
+export interface main {
+	id: string;
+	name: string;
+	namespace: 'mapcraft-data' | string;
+	background: 'minecraft:textures/gui/advancements/backgrounds/stone.png' | string;
+	data: advancement
+}
+//#endregion Json

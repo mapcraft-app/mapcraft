@@ -11,6 +11,7 @@ import {
 	stonecutterTable,
 	tableGen
 } from './interface';
+import { envInterface } from '../interface';
 
 export declare global {
 	interface Window {
