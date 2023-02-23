@@ -3,7 +3,8 @@
 		<div class="flex justify-center items-center">
 			<q-card
 				v-for="builtin in builtins" :key="builtin.path"
-				class="card" square
+				class="card"
+				square flat bordered
 				@click="handleClick({ name: builtin.name, path: builtin.path })"
 			>
 				<q-icon :name="builtin.icon" color="primary" size="4em"/>

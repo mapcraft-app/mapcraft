@@ -40,23 +40,51 @@
 			</template>
 		</div>
 	</div>
-	<div v-if="indexAdv >= 0" class="q-pa-md">
-		{{ test() }}
-	</div>
+	<template v-if="selectedAdvancement">
+		<q-tabs v-model="tab" class="text-teal q-pa-sm">
+			<q-tab name="root" icon="tag" label="Root" />
+			<q-tab name="title" icon="title" label="Display" />
+			<q-tab name="criteria" icon="list" label="Criteria" />
+			<q-tab name="requirements" icon="checklist" label="Requirements" />
+			<q-tab name="rewards" icon="star" label="Rewards" />
+		</q-tabs>
+		<q-tab-panels
+			v-model="tab"
+			animated
+			transition-prev="fade"
+			transition-next="fade"
+		>
+			<q-tab-panel name="root">
+			</q-tab-panel>
+			<q-tab-panel name="title">
+				<display v-model="selectedAdvancement.data.display" />
+			</q-tab-panel>
+			<q-tab-panel name="criteria">
+			</q-tab-panel>
+			<q-tab-panel name="requirements">
+			</q-tab-panel>
+			<q-tab-panel name="rewards">
+			</q-tab-panel>
+		</q-tab-panels>
+	</template>
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { mapStore } from 'store/map';
+import { getChild } from './lib/getChild';
+import { advancement, main } from './model';
+import { selectedNode, resetStore } from './store';
+
+import Display from './components/display/display.vue';
 import GraphRow from './components/graph/row.vue';
 import GraphTree from './components/graph/tree.vue';
-
-import { main } from './model';
-import { selectedNode, resetStore, expand } from './store';
 
 export default defineComponent({
 	name: 'Advancement',
 	components: {
+		Display,
+
 		GraphRow,
 		GraphTree,
 	},
@@ -65,10 +93,13 @@ export default defineComponent({
 		const idOfRoot = 0;
 		const advancementsList = ref<main[]>([]);
 		const indexAdv = ref<number>(-1);
+		const selectedAdvancement = ref<advancement | null>(null);
+		const tab = ref<'root' | 'title' | 'criteria' | 'requirements' | 'rewards'>('root');
 
 		const selectAdvancement = (index: number) => {
 			resetStore();
 			indexAdv.value = index;
+			selectedAdvancement.value = null;
 		};
 
 		onBeforeMount(() => {
@@ -76,10 +107,9 @@ export default defineComponent({
 			advancementsList.value = window.advancement.getList();
 
 			watch(selectedNode, (node) => {
-				if (node) {
-					console.log('one');
-					console.log('two', node);
-				}
+				if (!node)
+					return;
+				selectedAdvancement.value = getChild(advancementsList.value[indexAdv.value], node);
 			});
 		});
 
@@ -87,13 +117,9 @@ export default defineComponent({
 			idOfRoot,
 			advancementsList,
 			indexAdv,
-			selectAdvancement,
-
-			test: () => {
-				const t = [] as number[];
-				expand.value.forEach((e) => t.push(e));
-				return t;
-			}
+			selectedAdvancement,
+			tab,
+			selectAdvancement
 		};
 	}
 });

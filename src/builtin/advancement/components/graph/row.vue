@@ -119,7 +119,7 @@ export default defineComponent({
 }
 
 .treeElement {
-	padding: .2em;
+	padding: 0.2em 0;
 	width: 250px;
 	height: 80px;
 }
