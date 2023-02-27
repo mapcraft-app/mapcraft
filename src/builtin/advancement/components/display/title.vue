@@ -1,13 +1,15 @@
 <template>
-	<div class="row justify-center bg-grey-2">
+	<div class="row justify-center">
 		<span class="text-h6 text-weight-light">
 			{{ title }}
 		</span>
 	</div>
-	<q-separator />
-	<div class="row justify-center bg-grey-2 q-mb-xs">
-		<span class="text-h6 text-weight-light" :style="`color: #${selectedColor.color}`">
-			{{ strikeText }}
+	<div
+		class="row justify-center q-mb-xs"
+		:style="`min-height: 34px; border: solid 1px ${($q.dark.isActive ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)')}`"
+	>
+		<span class="text-h6 text-weight-light" :style="textFormat">
+			{{ innerText }}
 		</span>
 	</div>
 	<q-input
@@ -57,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, onBeforeMount, onUnmounted, ref, watch } from 'vue';
+import { computed, defineComponent, PropType, onBeforeMount, onUnmounted, reactive, ref, watch } from 'vue';
 import { textColor, titleModel } from '../../model';
 
 interface color {
@@ -99,10 +101,35 @@ export default defineComponent({
 			{ value: 'white', color: 'FFFFFF' }
 		];
 		const selectedColor = ref<color>(hexaColors.find((e) => e.value === props.modelValue.color) ?? hexaColors[hexaColors.length - 1]);
+		const obfuscatedString = reactive<{ str: string, len: number }>({ str: '', len: props.modelValue.text.length });
+		const obfuscatedTime: NodeJS.Timer = setInterval(() => { // eslint-disable-line no-undef
+			let ret = '';
+			const chars = '1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^&*()-=_+{}[]';
+			for (let i = 0; i < obfuscatedString.len; i++)
+				ret += chars.charAt(Math.floor(Math.random() * chars.length));
+			obfuscatedString.str = ret;
+		}, 65);
+
 		const colorsOptions = ref<textColor[]>(colors);
-	
-		const strikeText = ref<string>(props.modelValue.text);
-		let strikeInterval: NodeJS.Timer | undefined; // eslint-disable-line no-undef
+		const textFormat = computed(() => {
+			let styleList: string[] = [`color: #${selectedColor.value.color}`];
+			if (props.modelValue.bold)
+				styleList.push('font-weight: bold');
+			if (props.modelValue.italic)
+				styleList.push('font-style: italic');
+			if (props.modelValue.strikethrough && props.modelValue.underlined)
+				styleList.push('text-decoration: line-through underline');
+			else if (props.modelValue.strikethrough)
+				styleList.push('text-decoration: line-through');
+			else if (props.modelValue.underlined)
+				styleList.push('text-decoration: underline');
+			return styleList.join(';');
+		});
+		const innerText = computed(() => {
+			return props.modelValue.obfuscated
+				? obfuscatedString.str
+				: props.modelValue.text;
+		});
 
 		const filterFn = (val: string, update: any) => {
 			if (val === '') {
@@ -116,52 +143,23 @@ export default defineComponent({
 		};
 
 		onBeforeMount(() => {
-			strikeInterval = setInterval(() => {
-				console.log(props.modelValue.strikethrough);
-				if (props.modelValue.strikethrough) {
-					let res = '';
-					const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#!@';
-					for (let i = 0; i < props.modelValue.text.length; i++)
-						res += chars.charAt(Math.floor(Math.random() * chars.length));
-					strikeText.value = res;
-				} else
-					strikeText.value = props.modelValue.text;
-			}, 1000);
 			watch(props.modelValue, (val) => {
 				if (val.color)
 					selectedColor.value = hexaColors.find((e) => e.value === val.color) ?? hexaColors[hexaColors.length - 1];
+				obfuscatedString.len = val.text.length;
 				emit('update:modelValue', val);
 			}, { deep: true });
 		});
 
-		onUnmounted(() => {
-			clearInterval(strikeInterval);
-		});
+		onUnmounted(() => clearInterval(obfuscatedTime));
 
 		return {
 			colorsOptions,
-			selectedColor,
-			
-			strikeText,
-			strikeInterval,
-			
-			filterFn,
+			textFormat,
+			innerText,
+
+			filterFn
 		};
 	}
 });
 </script>
-
-<style scoped>
-.bold {
-	font-weight: bold;
-}
-.italic {
-	font-style: italic;
-}
-.strikethrough {
-	text-decoration: line-through;
-}
-.underlined {
-	text-underline-position: under;
-}
-</style>
