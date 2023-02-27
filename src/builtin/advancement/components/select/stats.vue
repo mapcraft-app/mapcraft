@@ -5,7 +5,7 @@
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="optionsList"
-		:label="$props.label"
+		:label="stringLabel"
 		@filter="filter"
 	/>
 </template>
@@ -26,7 +26,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: capitalize(useI18n().t('builtin.advancement.select.stats'))
+			default: undefined
 		},
 		dense: {
 			type: Boolean,
@@ -36,6 +36,8 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
+		const { t } = useI18n();
+		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.stats')));
 		const options = ['minecraft:broken', 'minecraft:crafted', 'minecraft:custom', 'minecraft:dropped', 'minecraft:killed', 'minecraft:killed_by', 'minecraft:mined', 'minecraft:picked_up', 'minecraft:used'];
 		const optionsList = ref<string[]>(options);
 		const stats = ref<statsType | null>(props.modelValue ?? null);
@@ -61,6 +63,7 @@ export default defineComponent({
 		});
 
 		return {
+			stringLabel,
 			optionsList,
 			stats,
 			filter

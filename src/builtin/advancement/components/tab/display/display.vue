@@ -17,17 +17,50 @@
 			</q-card-section>
 		</q-card>
 	</div>
+	<block-item
+		v-model="$props.modelValue.icon.item"
+		:block="true"
+		:item="true"
+		label="Icon item"
+	/>
+	<q-input
+		v-model="$props.modelValue.icon.nbt"
+		label="Nbt"
+	/>
+	<select-frame
+		v-model="$props.modelValue.frame"
+		label="Frame"
+	/>
+	<div class="row no-wrap justify-around">
+		<q-toggle
+			v-model="$props.modelValue.show_toast"
+			label="Show toast ?"
+		/>
+		<q-toggle
+			v-model="$props.modelValue.announce_to_chat"
+			label="Announce to chat ?"
+		/>
+		<q-toggle
+			v-model="$props.modelValue.hidden"
+			label="Hidden ?"
+		/>
+
+	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, onBeforeMount, watch } from 'vue';
 import DisplayTitle from './title.vue';
-import { display } from '../../model';
+import BlockItem from '../../select/blockItem.vue';
+import SelectFrame from '../../select/frame.vue';
+import { display } from '../../../model';
 
 export default defineComponent({
 	name: 'DisplayMain',
 	components: {
-		DisplayTitle
+		DisplayTitle,
+		BlockItem,
+		SelectFrame
 	},
 	props: {
 		modelValue: {
@@ -37,7 +70,7 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-
+		
 		onBeforeMount(() => {
 			watch(props.modelValue, (val) => emit('update:modelValue', val), { deep: true });
 		});

@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, onBeforeMount, onUnmounted, reactive, ref, watch } from 'vue';
-import { textColor, titleModel } from '../../model';
+import { textColor, titleModel } from '../../../model';
 
 interface color {
 	value: textColor;

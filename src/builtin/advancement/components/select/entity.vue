@@ -5,7 +5,7 @@
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="list"
-		:label="$props.label"
+		:label="stringLabel"
 		@filter="filter"
 	/>
 </template>
@@ -31,7 +31,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: capitalize(useI18n().t('builtin.advancement.select.entity'))
+			default: undefined
 		},
 		dense: {
 			type: Boolean,
@@ -41,6 +41,8 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
+		const { t } = useI18n();
+		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.entity')));
 		const store = mapStore();
 		const select = ref<string | null>(props.modelValue ?? null);
 		const elementsList = ref<string[]>([]);
@@ -71,6 +73,7 @@ export default defineComponent({
 		});
 
 		return {
+			stringLabel,
 			select,
 			elementsList,
 			list,

@@ -5,7 +5,7 @@
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="optionsList"
-		:label="$props.label"
+		:label="stringLabel"
 		@filter="filter"
 	/>
 </template>
@@ -26,7 +26,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: capitalize(useI18n().t('builtin.advancement.select.potion'))
+			default: undefined
 		},
 		dense: {
 			type: Boolean,
@@ -36,6 +36,8 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
+		const { t } = useI18n();
+		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.potion')));
 		const options = ['empty', 'mundane', 'thick', 'awkward', 'night vision', 'long night vision', 'invisibility', 'long invisibility', 'Leaping', 'Long Leaping', 'Strong Leaping', 'Fire Resistance', 'Long Fire Resistance', 'Swiftness', 'Long Swiftness', 'Strong Swiftness', 'long invisibility', 'Slowness', 'Long Slowness', 'Strong Slowness', 'Turtle Master', 'Long Turtle Master', 'Strong Turtle Master', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness'];
 		const optionsList = ref<string[]>(options);
 		const color = ref<potionType | null>(props.modelValue ?? null);
@@ -61,6 +63,7 @@ export default defineComponent({
 		});
 
 		return {
+			stringLabel,
 			optionsList,
 			color,
 			filter

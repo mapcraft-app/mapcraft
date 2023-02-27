@@ -5,7 +5,7 @@
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="optionsList"
-		:label="$props.label"
+		:label="stringLabel"
 		@filter="filter"
 	/>
 </template>
@@ -26,7 +26,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: capitalize(useI18n().t('builtin.advancement.select.color'))
+			default: undefined
 		},
 		dense: {
 			type: Boolean,
@@ -36,7 +36,10 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const options = ['black' ,'dark_blue' ,'dark_green' ,'dark_aqua' ,'dark_red' ,'dark_purple' ,'gold' ,'gray' ,'dark_gray' ,'blue' ,'green' ,'aqua' ,'red' ,'light_purple' ,'yellow' ,'white'];
+		const { t } = useI18n();
+		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.color')));
+
+		const options = ['black' ,'dark_blue' ,'dark_green' ,'dark_aqua' ,'dark_red' ,'dark_purpl;e' ,'gold' ,'gray' ,'dark_gray' ,'blue' ,'green' ,'aqua' ,'red' ,'light_purple' ,'yellow' ,'white'];
 		const optionsList = ref<string[]>(options);
 		const color = ref<textColor | null>(props.modelValue ?? null);
 
@@ -63,6 +66,7 @@ export default defineComponent({
 		return {
 			optionsList,
 			color,
+			stringLabel,
 			filter
 		};
 	}

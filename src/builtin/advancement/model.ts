@@ -204,18 +204,20 @@ export interface advancementList {
 	data: main
 }
 
+export interface rewards {
+	recipes?: string[],
+	loot?: string[],
+	experience?: number,
+	function?: string
+}
+
 export interface advancement {
 	id: string;
 	data: {
 		display: display;
 		criteria: Record<string, trigger>,
 		requirements: string[][],
-		rewards: {
-			recipes?: string[],
-			loot?: string[],
-			experience?: number,
-			function?: string
-		}
+		rewards: rewards
 	},
 	children?: advancement[];
 }

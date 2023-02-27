@@ -5,7 +5,7 @@
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="optionsList.map((e) => e.name)"
-		:label="$props.label"
+		:label="stringLabel"
 		@filter="filter"
 	/>
 </template>
@@ -31,7 +31,7 @@ export default defineComponent({
 		label: {
 			type: String,
 			required: false,
-			default: capitalize(useI18n().t('builtin.advancement.select.structure'))
+			default: undefined
 		},
 		dense: {
 			type: Boolean,
@@ -41,8 +41,9 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
+		const { t } = useI18n();
+		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.structure')));
 		const store = mapStore();
-
 		const options = minecraft.get(store.minecraftVersion, 'structure') as structures[];
 		const optionsList = ref<structures[]>(options);
 		const structure = ref<string | null>(props.modelValue ?? null);
@@ -68,6 +69,7 @@ export default defineComponent({
 		});
 
 		return {
+			stringLabel,
 			optionsList,
 			structure,
 			filter
