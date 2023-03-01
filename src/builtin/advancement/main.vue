@@ -3,6 +3,7 @@
 		v-model="splitter" horizontal
 		separator-style="background-color: rgba(0,0,0,0)"
 		style="height:100%"
+		:limits="[20, 90]"
 	>
 		<template v-slot:before>
 			<div class="main">
@@ -56,11 +57,13 @@
 					<q-tab name="requirements" icon="checklist" label="Requirements" />
 					<q-tab name="rewards" icon="star" label="Rewards" />
 				</q-tabs>
+				<q-separator />
 				<q-tab-panels
 					v-model="tab"
 					animated
 					transition-prev="fade"
 					transition-next="fade"
+					style="background-color: rgba(0,0,0,0);"
 				>
 					<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
 						<q-input
@@ -72,8 +75,12 @@
 						<tab-display v-model="selectedAdvancement.child.data.display" />
 					</q-tab-panel>
 					<q-tab-panel name="criteria">
+						<tab-criteria v-model="selectedAdvancement.child.data.criteria" />
 					</q-tab-panel>
 					<q-tab-panel name="requirements">
+						<tab-requirements
+							v-model="selectedAdvancement.child.data.requirements" :advancements="selectedAdvancement.child"
+						/>
 					</q-tab-panel>
 					<q-tab-panel name="rewards">
 						<tab-rewards v-model="selectedAdvancement.child.data.rewards" />
@@ -95,6 +102,8 @@ import GraphRow from './components/graph/row.vue';
 import GraphTree from './components/graph/tree.vue';
 
 import TabDisplay from './components/tab/display/display.vue';
+import TabCriteria from './components/tab/criteria/main.vue';
+import TabRequirements from './components/tab/requirements.vue';
 import TabRewards from './components/tab/rewards.vue';
 
 export default defineComponent({
@@ -103,6 +112,8 @@ export default defineComponent({
 		GraphRow,
 		GraphTree,
 		TabDisplay,
+		TabCriteria,
+		TabRequirements,
 		TabRewards
 	},
 	setup () {

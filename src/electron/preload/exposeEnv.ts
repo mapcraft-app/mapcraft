@@ -9,6 +9,7 @@ export interface userStorage {
 
 const generateEnv = {
 	directory: {
+		os: process.env.OS,
 		app: process.env.APP,
 		appData: process.env.APP_DATA,
 		game: process.env.GAME,

@@ -1,5 +1,10 @@
 export default {
 	build: {
+		article: {
+			1: 'Vous avez fini votre carte ? Il est donc temps de lancer la construction de celle-ci',
+			2: 'Via cette fonction, toute votre carte sera générée, optimisée et archivée dans un seul fichier',
+			3: 'Cette étape peut prendre quelques minutes et peu faire geler la fenêtre de l\'application. Néanmoins ne vous inquiétez pas et prenez votre mal en patience',
+		},
 		1: 'création d\'un répertoire temporaire',
 		2: 'copie dans le répertoire temporaire',
 		3: 'création d\'un répertoire datapack dans le répertoire temporaire',

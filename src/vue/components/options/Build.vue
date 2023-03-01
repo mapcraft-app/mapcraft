@@ -1,8 +1,8 @@
 <template>
 	<article>
-		<p>Vous avez fini votre carte ? Il est donc temps de lancer la construction de votre carte</p>
-		<p>Via cette fonction, toute votre carte sera générée, optimisée et archivée dans un seul fichier</p>
-		<p>Cette étape peut prendre quelques minutes et peu faire geler la fenêtre de l'application. Néanmoins ne vous inquiétez pas et prenez votre mal en patience</p>
+		<p>{{ $t('components.options.build.article.1') }}</p>
+		<p>{{ $t('components.options.build.article.2') }}</p>
+		<p>{{ $t('components.options.build.article.3') }}</p>
 	</article>
 	<div class="row justify-center align-center">
 		<q-btn

@@ -32,7 +32,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Array, null] as PropType<stats[] | null>,
+			type: Array as PropType<stats[] | null>,
 			required: true
 		}
 	},

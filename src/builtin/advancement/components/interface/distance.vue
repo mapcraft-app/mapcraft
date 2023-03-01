@@ -33,7 +33,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<distance | null>,
+			type: Object as PropType<distance | null>,
 			required: true
 		}
 	},

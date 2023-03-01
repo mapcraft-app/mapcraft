@@ -20,7 +20,7 @@ export default defineComponent({
 	name: 'SelectDimension',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<dimensionType | null>,
+			type: String as PropType<dimensionType | null>,
 			required: true
 		},
 		label: {

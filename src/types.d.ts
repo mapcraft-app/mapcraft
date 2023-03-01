@@ -10,6 +10,7 @@ import type { dataEngineInterface, mapEngine, mapEngineInstance } from 'electron
 export declare global {
 	namespace NodeJS {
 		interface ProcessEnv {
+			OS: string,
 			DEV: string,
 			PACKAGED: string,
 			APP: string,
@@ -26,6 +27,7 @@ export declare global {
 	interface Window {
 		env: {
 			directory: {
+				os: 'aix' | 'darwin' | 'freebsd' | 'linux' | 'openbsd' | 'sunos' | 'win32',
 				app: string,
 				appData: string,
 				game: string,

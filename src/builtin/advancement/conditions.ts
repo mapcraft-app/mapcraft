@@ -13,25 +13,28 @@ import {
 	entity,
 	item,
 	numberRange,
+	potionType,
 	slot,
 	state,
 	type
 } from './model';
 
+export type criteria = 'bee_nest_destroyed' | 'bred_animals' | 'brewed_potion' | 'changed_dimension' | 'channeled_lightning' | 'construct_beacon' | 'consume_item' | 'cured_zombie_villager' | 'effects_changed' | 'enchanted_item' | 'enter_block' | 'entity_hurt_player' | 'entity_killed_player' | 'filled_bucket' | 'fishing_rod_hooked' | 'hero_of_the_village' | 'impossible' | 'inventory_changed' | 'item_durability_changed' | 'item_used_on_block' | 'killed_by_crossbow' | 'levitation' | 'location' | 'nether_travel' | 'placed_block' | 'player_generates_container_loot' | 'player_hurt_entity' | 'player_interacted_with_entity' | 'player_killed_entity' | 'recipe_unlocked' | 'safely_harvest_honey' | 'shot_crossbow' | 'slept_in_bed' | 'slide_down_block' | 'summoned_entity' | 'tame_animal' | 'target_hit' | 'thrown_item_picked_up_by_entity' | 'tick' | 'used_ender_eye' | 'used_totem' | 'villager_trade' | 'voluntary_exile';
+
 export interface bee_nest_destroyed {
-	block?: string,
-	item?: item,
+	block: string | null,
+	item: item | null,
 	num_bees_inside: number
 }
 
 export interface bred_animals {
 	child: entity,
 	parent: entity,
-	partner?: entity
+	partner: entity | null
 }
 
 export interface brewed_potion {
-	potion: string
+	potion: potionType
 }
 
 export interface changed_dimension {

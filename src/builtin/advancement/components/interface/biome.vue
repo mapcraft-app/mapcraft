@@ -73,7 +73,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<biomeInterface | null>,
+			type: Object as PropType<biomeInterface | null>,
 			required: true
 		}
 	},

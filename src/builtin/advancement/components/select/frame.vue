@@ -20,7 +20,7 @@ export default defineComponent({
 	name: 'SelectFrame',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<frameType | null>,
+			type: String as PropType<frameType | null>,
 			required: true
 		},
 		label: {

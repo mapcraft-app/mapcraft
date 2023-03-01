@@ -1,5 +1,10 @@
 export default {
 	build: {
+		article: {
+			1: 'Finished with your map? It\'s time to start building it',
+			2: 'Via this function, your entire map will be generated, optimized and archived in a single file',
+			3: 'This step may take a few minutes and may cause the application window to freeze. However, don\'t worry and be patient',
+		},
 		1: 'create temp directory',
 		2: 'copy to temp directory',
 		3: 'create datapack directory in temp directory',

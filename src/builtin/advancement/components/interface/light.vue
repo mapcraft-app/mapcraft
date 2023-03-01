@@ -14,7 +14,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<light | null>,
+			type: Object as PropType<light | null>,
 			required: true
 		},
 		dense: {

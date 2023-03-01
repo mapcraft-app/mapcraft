@@ -1,3 +1,5 @@
+import { criteria } from './conditions';
+
 export type textColor = 'black' | 'dark_blue' | 'dark_green' | 'dark_aqua' | 'dark_red' | 'dark_purple' | 'gold' | 'gray' | 'dark_gray' | 'blue' | 'green' | 'aqua' | 'red' | 'light_purple' | 'yellow' | 'white';
 export type frameType = 'challenge' | 'goal' | 'task';
 export type potionType = 'empty' | 'mundane' | 'thick' | 'awkward' | 'night vision' | 'long night vision' | 'invisibility' | 'long invisibility' | 'leaping' | 'long leaping' | 'strong leaping' | 'fire resistance' | 'long fire resistance' | 'swiftness' | 'long swiftness' | 'strong swiftness' | 'slowness' | 'long slowness' | 'strong slowness' | 'turtle master' | 'long turtle master' | 'strong turtle master';
@@ -34,8 +36,8 @@ export interface display {
 }
 
 export interface trigger {
-	trigger: string,
-	conditions: Record<string, any>
+	trigger: criteria,
+	conditions: any
 }
 //#endregion Display
 
@@ -128,8 +130,8 @@ export interface entity {
 		is_swimming: boolean
 	},
 	lightning_bolt: {
-		blocks_set_on_fire?: number | null,
-		entity_struck?: entity | null
+		blocks_set_on_fire: number | null,
+		entity_struck: entity | null
 	}
 }
 
@@ -155,8 +157,8 @@ export interface item {
 	nbt: string | null,
 	tag: string | null,
 	potion: potionType | null,
-	enchantements: enchantement[] | null,
-	stored_enchantements: enchantement[] | null,
+	enchantements: enchantement[],
+	stored_enchantements: enchantement[],
 }
 
 export interface light {
@@ -169,7 +171,7 @@ export interface player {
 	level: number | numberRange | null,
 	recipes: recipe | null,
 	advancements: state | null,
-	stats: stats[] | null,
+	stats: stats[],
 	targeted_entity: entity | null,
 	looking_at: entity | null,
 	vehicle: entity | null,
@@ -183,16 +185,16 @@ export interface slot {
 }
 
 export interface type {
-	direct_entity?: entity,
-	source_entity?: entity,
-	bypasses_armor?: boolean,
-	bypasses_invulnerability?: boolean,
-	is_explosion?: boolean,
-	bypasses_magic?: boolean,
-	is_fire?: boolean,
-	is_magic?: boolean,
-	is_projectile?: boolean,
-	is_lightning?: boolean
+	direct_entity: entity | null,
+	source_entity: entity | null,
+	bypasses_armor: boolean | null,
+	bypasses_invulnerability: boolean | null,
+	is_explosion: boolean | null,
+	bypasses_magic: boolean | null,
+	is_fire: boolean | null,
+	is_magic: boolean | null,
+	is_projectile: boolean | null,
+	is_lightning: boolean | null
 }
 //#endregion Interface
 

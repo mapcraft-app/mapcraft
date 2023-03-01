@@ -21,7 +21,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<block | null>,
+			type: Object as PropType<block | null>,
 			required: true
 		},
 		dense: {

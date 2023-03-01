@@ -18,7 +18,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<fluid | null>,
+			type: Object as PropType<fluid | null>,
 			required: true
 		}
 	},

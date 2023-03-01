@@ -20,7 +20,7 @@ export default defineComponent({
 	name: 'SelectStats',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<statsType | null>,
+			type: String as PropType<statsType | null>,
 			required: true
 		},
 		label: {

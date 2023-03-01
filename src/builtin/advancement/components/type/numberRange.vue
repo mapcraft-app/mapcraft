@@ -42,7 +42,7 @@ export default defineComponent({
 	name: 'NumberRange',
 	props: {
 		modelValue: {
-			type: [Object, Number, null] as PropType<range | number | null>,
+			type: [Object, Number] as PropType<range | number | null>,
 			required: true
 		},
 		min: {

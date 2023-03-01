@@ -73,7 +73,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<equipement | null>,
+			type: Object as PropType<equipement | null>,
 			required: true
 		}
 	},

@@ -62,7 +62,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<effect | null>,
+			type: Object as PropType<effect | null>,
 			required: true
 		}
 	},

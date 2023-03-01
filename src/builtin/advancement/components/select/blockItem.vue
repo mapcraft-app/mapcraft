@@ -29,7 +29,7 @@ export default defineComponent({
 	name: 'SelectBlockItem',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<string | null>,
+			type: String as PropType<string | null>,
 			required: true
 		},
 		item: {

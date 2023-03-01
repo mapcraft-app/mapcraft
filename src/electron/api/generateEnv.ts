@@ -17,6 +17,7 @@ export default function generateEnv(app: Electron.App): void {
 	};
 	const tempGame = game();
 
+	process.env.OS = platform();
 	process.env.DEV = (import.meta.env.DEV)
 		? 'true'
 		: 'false';

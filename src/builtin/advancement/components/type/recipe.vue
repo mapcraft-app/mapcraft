@@ -30,7 +30,7 @@ export default defineComponent({
 	name: 'TypeRecipe',
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<recipe | null>,
+			type: Object as PropType<recipe | null>,
 			required: true
 		}
 	},

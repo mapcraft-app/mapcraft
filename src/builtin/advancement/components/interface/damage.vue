@@ -28,7 +28,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<damage | null>,
+			type: Object as PropType<damage | null>,
 			required: true
 		}
 	},

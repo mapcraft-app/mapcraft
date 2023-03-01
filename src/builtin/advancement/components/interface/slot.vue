@@ -16,7 +16,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<slot | null>,
+			type: Object as PropType<slot | null>,
 			required: true
 		}
 	},

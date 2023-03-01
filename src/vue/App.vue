@@ -1,27 +1,7 @@
 <template>
 	<div class="titlebar">
-		<div class="titlebar-title">
-			<img src="imgs/app/icon_small.png" />
-			<span>{{ $t('app.title') }}</span>
-		</div>
-		<div class="titlebar-buttons">
-			<div v-if="isDev" :title="$t('app.dev')" @click="click('construction')">
-				<span class="material-icons" aria-hidden="true">construction</span>
-			</div>
-			<div :title="$t('app.fullscreen')" @click="click('fullscreen')">
-				<span class="material-icons" aria-hidden="true">{{ (!isFullscreen) ? 'fullscreen' : 'fullscreen_exit' }}</span>
-			</div>
-			<i></i>
-			<div :title="$t('app.minimize')" @click="click('minimize')">
-				<span class="material-icons" aria-hidden="true">remove</span>
-			</div>
-			<div :title="$t('app.maximize')" @click="click('maximize')">
-				<span class="material-icons min-max" aria-hidden="true">{{ (!isMaximize) ? 'filter_none' : 'check_box_outline_blank' }}</span>
-			</div>
-			<div class="close-button" :title="$t('app.close')" @click="click('close')">
-				<span class="material-icons" aria-hidden="true">close</span>
-			</div>
-		</div>
+		<bar-mac v-if="os === 'darwin'" />
+		<bar-windows v-else />
 	</div>
 	<div class="titlebar-page">
 		<router-view />
@@ -32,46 +12,29 @@
 import { defineComponent, onBeforeMount, onBeforeUnmount, provide, ref } from 'vue';
 import { QSpinnerPuff, useMeta, useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
+
+import BarWindows from './components/bar/windows.vue';
+import BarMac from './components/bar/mac.vue';
+
 import { generateMeta } from 'src/meta';
 import router from 'src/router';
 import type { QNotifyUpdateOptions } from 'quasar';
 
 export default defineComponent({
 	name: 'App',
+	components: {
+		BarWindows,
+		BarMac
+	},
 	setup () {
 		const $q = useQuasar();
 		const { t } = useI18n();
-		const isDev = ref(import.meta.env.DEV);
-		const isMaximize = ref(false);
-		const isFullscreen = ref(false);
+		const os = window.env.directory.os;
 		let interval: NodeJS.Timer, statusInterval: NodeJS.Timer; // eslint-disable-line no-undef
 		let notif: any = undefined;
 
 		useMeta(generateMeta());
 
-		const click = (type: string) => {
-			switch (type) {
-			case 'construction':
-				window.ipc.send('window::dev');
-				break;
-			case 'close':
-				window.ipc.send('window::close');
-				break;
-			case 'fullscreen':
-				window.ipc.send('window::fullscreen');
-				isFullscreen.value = !isFullscreen.value;
-				break;
-			case 'maximize':
-				window.ipc.send('window::maximize');
-				isMaximize.value = !isMaximize.value;
-				break;
-			case 'minimize':
-			default:
-				window.ipc.send('window::minimize');
-			}
-		};
-
-		//#region Build map
 		const build = ref<boolean>(false);
 		const buildStatus = ref<number>(0);
 		const buildPath = ref<string | null>(null);
@@ -127,7 +90,6 @@ export default defineComponent({
 					console.log(e);
 				});
 		};
-		//#endregion Build map
 
 		onBeforeMount(() => {
 			window.log.info('Application finish to mounted');
@@ -152,10 +114,7 @@ export default defineComponent({
 		onBeforeUnmount(() => clearInterval(interval));
 
 		return {
-			isDev,
-			isMaximize,
-			isFullscreen,
-			click
+			os
 		};
 	}
 });

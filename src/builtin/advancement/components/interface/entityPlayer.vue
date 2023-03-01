@@ -201,7 +201,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<entity | player | any>,
+			type: Object as PropType<entity | player | any>,
 			required: true
 		},
 		isPlayer: {
@@ -256,7 +256,7 @@ export default defineComponent({
 				level: props.modelValue?.level ?? null,
 				recipes: props.modelValue?.recipes ?? null,
 				advancements: props.modelValue?.advancements ?? null,
-				stats: props.modelValue?.stats ?? null,
+				stats: props.modelValue?.stats ?? [],
 				targeted_entity: props.modelValue?.targeted_entity ?? null,
 				looking_at: props.modelValue?.looking_at ?? null,
 				vehicle: props.modelValue?.vehicle ?? null,

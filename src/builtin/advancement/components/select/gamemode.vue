@@ -20,7 +20,7 @@ export default defineComponent({
 	name: 'SelectGamemode',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<gamemodeType | null>,
+			type: String as PropType<gamemodeType | null>,
 			required: true
 		},
 		label: {

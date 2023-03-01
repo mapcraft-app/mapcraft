@@ -25,7 +25,7 @@ export default defineComponent({
 	name: 'SelectStructure',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<string | null>,
+			type: String as PropType<string | null>,
 			required: true
 		},
 		label: {

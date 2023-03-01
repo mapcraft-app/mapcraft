@@ -20,7 +20,7 @@ export default defineComponent({
 	name: 'SelectColor',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<textColor | null>,
+			type: String as PropType<textColor | null>,
 			required: true
 		},
 		label: {

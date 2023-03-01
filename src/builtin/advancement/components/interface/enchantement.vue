@@ -60,7 +60,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Array, null] as PropType<enchantement[] | null>,
+			type: Array as PropType<enchantement[] | null>,
 			required: true
 		}
 	},

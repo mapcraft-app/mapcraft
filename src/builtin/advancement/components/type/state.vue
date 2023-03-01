@@ -30,7 +30,7 @@ export default defineComponent({
 	name: 'TypeState',
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<state | null>,
+			type: Object as PropType<state | null>,
 			required: true
 		}
 	},

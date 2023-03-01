@@ -20,7 +20,7 @@ export default defineComponent({
 	name: 'SelectFrame',
 	props: {
 		modelValue: {
-			type: [String, null] as PropType<potionType | null>,
+			type: String as PropType<potionType | null>,
 			required: true
 		},
 		label: {

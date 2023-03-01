@@ -57,15 +57,12 @@ export default defineComponent({
 			nbt: props.modelValue?.nbt ?? null,
 			tag: props.modelValue?.tag ?? null,
 			potion: props.modelValue?.potion ?? null,
-			enchantements: props.modelValue?.enchantements ?? null,
-			stored_enchantements: props.modelValue?.stored_enchantements ?? null
+			enchantements: props.modelValue?.enchantements ?? [],
+			stored_enchantements: props.modelValue?.stored_enchantements ?? []
 		} as item);
 		
 		onBeforeMount(() => {
-			watch(data, (after) => {
-				if (after)
-					emit('update:modelValue', after);
-			}, { deep: true });
+			watch(data, (val) => emit('update:modelValue', val), { deep: true });
 		});
 
 		return {
