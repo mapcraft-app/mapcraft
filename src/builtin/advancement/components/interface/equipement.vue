@@ -74,7 +74,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<equipement | null>,
-			required: true
+			required: false,
+			default: {} as equipement
 		}
 	},
 	emits: ['update:modelValue'],

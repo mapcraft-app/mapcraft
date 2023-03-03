@@ -30,7 +30,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: String as PropType<string | null>,
-			required: true
+			required: false,
+			default: null
 		},
 		item: {
 			type: Boolean,

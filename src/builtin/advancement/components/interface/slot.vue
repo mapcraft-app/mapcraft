@@ -1,7 +1,9 @@
 <template>
-	<number-range-type v-model="data.empty" />
-	<number-range-type v-model="data.full" />
-	<number-range-type v-model="data.occupied" />
+	<div class="column items-center">
+		<number-range-type v-model="data.empty" :label="$capitalize($t('builtin.advancement.interface.slot.empty'))" />
+		<number-range-type v-model="data.full" :label="$capitalize($t('builtin.advancement.interface.slot.full'))" />
+		<number-range-type v-model="data.occupied" :label="$capitalize($t('builtin.advancement.interface.slot.occupied'))" />
+	</div>
 </template>
 
 <script lang="ts">
@@ -17,7 +19,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<slot | null>,
-			required: true
+			required: false,
+			default: {} as slot
 		}
 	},
 	emits: ['update:modelValue'],

@@ -21,7 +21,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: String as PropType<textColor | null>,
-			required: true
+			required: false,
+			default: null
 		},
 		label: {
 			type: String,

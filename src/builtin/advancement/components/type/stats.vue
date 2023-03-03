@@ -12,7 +12,7 @@
 		>
 			<select-stats v-model="el.type" />
 			<q-input v-model="el.stat" dense :label="$capitalize($t('builtin.advancement.type.stat'))" class="q-pr-sm" />
-			<type-number-range v-model="el.value" />
+			<type-number-range v-model="el.value" :label="$capitalize($t('builtin.advancement.interface.type.value'))" />
 			<q-btn flat color="red" icon="delete" @click="removeStats(i)"/>
 		</div>
 	</div>
@@ -33,12 +33,13 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Array as PropType<stats[] | null>,
-			required: true
+			required: false,
+			default: null
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const stats = ref<stats[]>([]);
+		const stats = ref<stats[]>([ ...props.modelValue ?? [] ]);
 
 		const addStats = () => stats.value.push({ type: null, stat: null, value: null });
 

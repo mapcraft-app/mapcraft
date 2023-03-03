@@ -2,27 +2,19 @@
 	<q-list bordered class="q-mt-sm">
 		<q-expansion-item
 			expand-separator
-			icon="supervisor_account"
-			label="Child"
-			class="q-ma-xs"
+			icon="person"
+			label="Villager"
+			class="q-pa-xs"
 		>
-			<interface-entity v-model="data.child" />
+			<interface-entity v-model="data.villager" />
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			label="Parent"
-			class="q-ma-xs"
+			label="Zombie"
+			class="q-pa-xs"
 		>
-			<interface-entity v-model="data.parent" />
-		</q-expansion-item>
-		<q-expansion-item
-			expand-separator
-			icon="group"
-			label="Partner"
-			class="q-ma-xs"
-		>
-			<interface-entity v-model="data.partner" />
+			<interface-entity v-model="data.zombie" />
 		</q-expansion-item>
 	</q-list>
 </template>
@@ -30,27 +22,26 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEntity from '../../interface/entityPlayer.vue';
-import { bred_animals } from '../../../conditions';
+import { cured_zombie_villager } from '../../../conditions';
 import { entity } from '../../../model';
 
 export default defineComponent({
-	name: 'TabBredAnimals',
+	name: 'TabCuredZombieVillager',
 	components: {
 		InterfaceEntity
 	},
 	props: {
 		modelValue: {
-			type: Object as PropType<bred_animals>,
+			type: Object as PropType<cured_zombie_villager>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const data = ref<bred_animals>({
-			child: props.modelValue.child ?? {} as entity,
-			parent: props.modelValue.parent ?? {} as entity,
-			partner: props.modelValue.partner ?? {} as entity
-		} as bred_animals);
+		const data = ref<cured_zombie_villager>({
+			villager: props.modelValue.villager ?? {} as entity,
+			zombie: props.modelValue.zombie ?? {} as entity
+		} as cured_zombie_villager);
 
 		onBeforeMount(() => {
 			watch(data, (val) => emit('update:modelValue', val), { deep: true });

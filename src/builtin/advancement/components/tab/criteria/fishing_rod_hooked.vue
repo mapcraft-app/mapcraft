@@ -2,27 +2,27 @@
 	<q-list bordered class="q-mt-sm">
 		<q-expansion-item
 			expand-separator
-			icon="supervisor_account"
-			label="Child"
-			class="q-ma-xs"
-		>
-			<interface-entity v-model="data.child" />
-		</q-expansion-item>
-		<q-expansion-item
-			expand-separator
 			icon="person"
-			label="Parent"
+			label="Entity"
 			class="q-ma-xs"
 		>
-			<interface-entity v-model="data.parent" />
+			<interface-entity v-model="data.entity" />
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			icon="group"
-			label="Partner"
+			icon="category"
+			label="Item"
 			class="q-ma-xs"
 		>
-			<interface-entity v-model="data.partner" />
+			<interface-item v-model="data.item" />
+		</q-expansion-item>
+		<q-expansion-item
+			expand-separator
+			icon="phishing"
+			label="Rod"
+			class="q-ma-xs"
+		>
+			<interface-item v-model="data.rod" />
 		</q-expansion-item>
 	</q-list>
 </template>
@@ -30,27 +30,29 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEntity from '../../interface/entityPlayer.vue';
-import { bred_animals } from '../../../conditions';
-import { entity } from '../../../model';
+import InterfaceItem from '../../interface/item.vue';
+import { fishing_rod_hooked } from '../../../conditions';
+import { entity, item } from '../../../model';
 
 export default defineComponent({
-	name: 'TabBredAnimals',
+	name: 'TabFishingRodHooked',
 	components: {
-		InterfaceEntity
+		InterfaceEntity,
+		InterfaceItem
 	},
 	props: {
 		modelValue: {
-			type: Object as PropType<bred_animals>,
+			type: Object as PropType<fishing_rod_hooked>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const data = ref<bred_animals>({
-			child: props.modelValue.child ?? {} as entity,
-			parent: props.modelValue.parent ?? {} as entity,
-			partner: props.modelValue.partner ?? {} as entity
-		} as bred_animals);
+		const data = ref<fishing_rod_hooked>({
+			entity: props.modelValue.entity ?? {} as entity,
+			item: props.modelValue.item ?? {} as item,
+			rod: props.modelValue.rod ?? {} as item
+		} as fishing_rod_hooked);
 
 		onBeforeMount(() => {
 			watch(data, (val) => emit('update:modelValue', val), { deep: true });

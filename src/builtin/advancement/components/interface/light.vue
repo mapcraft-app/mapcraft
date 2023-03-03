@@ -1,5 +1,5 @@
 <template>
-	<number-range-type v-model="data" />
+	<number-range-type v-model="data" :label="$capitalize($t('builtin.advancement.interface.biome.light'))" />
 </template>
 
 <script lang="ts">
@@ -15,7 +15,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<light | null>,
-			required: true
+			required: false,
+			default: {} as light
 		},
 		dense: {
 			type: Boolean,

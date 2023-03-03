@@ -1,5 +1,6 @@
 <template>
-	<div class="row inline">
+	<div class="row inline items-center q-ma-xs">
+		<span v-if="label" class="q-mr-sm">{{ label }}</span>
 		<q-input
 			v-model.number="minVal"
 			type="number"
@@ -43,7 +44,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: [Object, Number] as PropType<range | number | null>,
-			required: true
+			required: false,
+			default: 0
 		},
 		min: {
 			type: Number,
@@ -59,6 +61,11 @@ export default defineComponent({
 			type: Boolean,
 			required: false,
 			default: false
+		},
+		label: {
+			type: String,
+			required: false,
+			default: null
 		}
 	},
 	emits: ['update:modelValue'],

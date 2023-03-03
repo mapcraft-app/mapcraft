@@ -1,54 +1,49 @@
 <template>
-	<select-block-item
-		v-model="data.block"
-		:item="false"
-		:block="true"
-		label="Block"
-	/>
-	<q-input
-		v-model.number="data.num_bees_inside"
-		type="number"
-		min="0"
-		label="Number of bee inside"
-	/>
 	<q-list bordered class="q-mt-sm">
 		<q-expansion-item
 			expand-separator
 			icon="category"
-			label="Item"
+			:label="$capitalize($t('builtin.advancement.interface.item.item'))"
 			class="q-ma-xs"
 		>
 			<interface-item v-model="data.item" />
+		</q-expansion-item>
+		<q-expansion-item
+			expand-separator
+			icon="location_on"
+			:label="$capitalize($t('builtin.advancement.trigger.location'))"
+			class="q-ma-xs"
+		>
+			<interface-biome v-model="data.location" />
 		</q-expansion-item>
 	</q-list>
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import SelectBlockItem from '../../select/blockItem.vue';
+import InterfaceBiome from '../../interface/biome.vue';
 import InterfaceItem from '../../interface/item.vue';
-import { bee_nest_destroyed } from '../../../conditions';
-import { item } from '../../../model';
+import { item_used_on_block } from '../../../conditions';
+import { biome, item } from '../../../model';
 
 export default defineComponent({
-	name: 'TabBeeNestDestroyed',
+	name: 'TabItemUsedOnBlock',
 	components: {
-		SelectBlockItem,
+		InterfaceBiome,
 		InterfaceItem
 	},
 	props: {
 		modelValue: {
-			type: Object as PropType<bee_nest_destroyed>,
+			type: Object as PropType<item_used_on_block>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const data = ref<bee_nest_destroyed>({
-			block: props.modelValue.block ?? '',
+		const data = ref<item_used_on_block>({
 			item: props.modelValue.item ?? {} as item,
-			num_bees_inside: props.modelValue.num_bees_inside ?? null
-		} as bee_nest_destroyed);
+			location: props.modelValue.location ?? {} as biome
+		} as item_used_on_block);
 
 		onBeforeMount(() => {
 			watch(data, (val) => emit('update:modelValue', val), { deep: true });

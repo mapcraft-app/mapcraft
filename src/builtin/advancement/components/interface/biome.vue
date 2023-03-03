@@ -5,11 +5,11 @@
 			use-input
 			input-debounce="250"
 			:options="biomesList.map((e) => e.id)"
-			:label="$capitalize($t('builtin.advancement.interface.common.biome'))"
+			:label="$capitalize($t('builtin.advancement.interface.biome.biome'))"
 			@filter="filterBiome"
 		/>
 		<q-card bordered square flat class="q-pa-sm column align-center">
-			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.block')) }}</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.common.block')) }}</span>
 			<block v-model="data.block" />
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column align-center">
@@ -21,18 +21,9 @@
 		<q-toggle v-model="data.smokey" color="primary" :label="$capitalize($t('builtin.advancement.interface.biome.smokey'))" />
 		<q-card bordered square flat class="q-pa-sm q-gutter-sm column align-center">
 			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.position')) }}</span>
-			<div class="row inline justify-center items-center">
-				<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.x')) }}</span>
-				<number-range v-model="data.position.x" />
-			</div>
-			<div class="row inline justify-center items-center">
-				<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.y')) }}</span>
-				<number-range v-model="data.position.y" />
-			</div>
-			<div class="row inline justify-center items-center">
-				<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.z')) }}</span>
-				<number-range v-model="data.position.z" />
-			</div>
+			<number-range v-model="data.position.x" :label="$capitalize($t('builtin.advancement.interface.common.x'))"/>
+			<number-range v-model="data.position.y" :label="$capitalize($t('builtin.advancement.interface.common.y'))"/>
+			<number-range v-model="data.position.z" :label="$capitalize($t('builtin.advancement.interface.common.z'))"/>
 		</q-card>
 		<q-card bordered square flat class="q-pa-sm column align-center">
 			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.biome.light')) }}</span>
@@ -74,7 +65,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<biomeInterface | null>,
-			required: true
+			required: false,
+			default: {} as biomeInterface
 		}
 	},
 	emits: ['update:modelValue'],

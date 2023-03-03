@@ -19,7 +19,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<fluid | null>,
-			required: true
+			required: false,
+			default: {} as fluid
 		}
 	},
 	emits: ['update:modelValue'],

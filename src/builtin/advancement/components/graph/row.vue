@@ -29,7 +29,7 @@
 					{{ $props.modelValue.data.display.title.text }}
 				</span>
 				<div class="block">
-					<img src="https://documentation.mapcraft.app/srcs/img/logo.png" />
+					<img :src="$toPublic(`/imgs/minecraft/block/${getTexture($props.modelValue.data.display.icon.item).id}.webp`)" />
 				</div>
 			</div>
 		</div>
@@ -88,6 +88,7 @@ export default defineComponent({
 			}
 			isExpand.value = true;
 		};
+		const getTexture = (name: string) => window.advancement.getTexture(name);
 
 		onBeforeMount(() => {
 			calcExpand(expand.value);
@@ -103,7 +104,8 @@ export default defineComponent({
 			isExpand,
 			isSelected,
 			expandSelected,
-			calcExpand
+			calcExpand,
+			getTexture
 		};
 	}
 });

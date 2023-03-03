@@ -4,7 +4,7 @@
 		<select-entity v-model="data.type" :label="$capitalize($t('builtin.advancement.interface.entityPlayer.type'))" />
 		<q-input v-model="data.nbt" :label="$capitalize($t('builtin.advancement.interface.common.nbt'))" />
 		<q-card bordered square flat class="q-pa-sm column align-center q-mt-sm q-mb-sm">
-			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.common.flags')) }}</span>
+			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.fluid.flags')) }}</span>
 			<div class="row justify-evenly">
 				<q-checkbox
 					v-model="data.flags.is_baby"
@@ -118,10 +118,7 @@
 	<template v-else>
 		<select-gamemode v-model="data.gamemode" />
 		<q-input v-model="data.team" :label="$capitalize($t('builtin.advancement.interface.entityPlayer.team'))" />
-		<div class="column items-center">
-			<span class="text-body2 q-pt-sm">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.level')) }}</span>
-			<type-number-range v-model="data.level" />
-		</div>
+		<type-number-range v-model="data.level" :label="$capitalize($t('builtin.advancement.interface.entityPlayer.level'))" />
 		<q-card bordered square flat class="q-pa-sm column justify-center items-center q-mt-sm q-mb-sm">
 			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.entityPlayer.recipes')) }}</span>
 			<type-recipe v-model="data.recipes" />
@@ -202,7 +199,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<entity | player | any>,
-			required: true
+			required: false,
+			default: {} as unknown
 		},
 		isPlayer: {
 			type: Boolean as PropType<boolean>,

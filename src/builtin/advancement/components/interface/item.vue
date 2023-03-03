@@ -3,14 +3,8 @@
 		<block-item v-model="data.item" :block="false" :label="$capitalize($t('builtin.advancement.interface.item.item'))" />
 		<q-input v-model="data.nbt" :label="$capitalize($t('builtin.advancement.interface.common.nbt'))" />
 		<q-input v-model="data.tag" :label="$capitalize($t('builtin.advancement.interface.common.tag'))" />
-		<div>
-			<span>{{ $capitalize($t('builtin.advancement.interface.item.count')) }}</span>
-			<number-range v-model="data.count" />
-		</div>
-		<div>
-			<span>{{ $capitalize($t('builtin.advancement.interface.item.durability')) }}</span>
-			<number-range v-model="data.durability" />
-		</div>
+		<number-range v-model="data.count" :label="$capitalize($t('builtin.advancement.interface.item.count'))" />
+		<number-range v-model="data.durability" :label="$capitalize($t('builtin.advancement.interface.item.durability'))" />
 		<div>
 			<span>{{ $capitalize($t('builtin.advancement.interface.item.potion')) }}</span>
 			<potion v-model="data.potion" />
@@ -44,8 +38,9 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: [Object, null] as PropType<item | null>,
-			required: true
+			type: Object as PropType<item | null>,
+			required: false,
+			default: {} as item
 		}
 	},
 	emits: ['update:modelValue'],

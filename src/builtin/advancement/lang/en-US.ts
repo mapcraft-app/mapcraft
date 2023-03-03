@@ -13,6 +13,7 @@ export default {
 			enchantement: 'enchantement',
 			nbt: 'nbt',
 			tag: 'tag',
+			state: 'state',
 			x: 'x',
 			y: 'y',
 			z: 'z'
@@ -28,6 +29,7 @@ export default {
 		damage: {
 			dealt: 'dealt',
 			taken: 'taken',
+			blocked: 'blocked',
 			type: 'type',
 			source: 'source entity'
 		},
@@ -79,11 +81,19 @@ export default {
 		},
 		item: {
 			item: 'item',
+			items: 'items',
 			count: 'count',
+			delta: 'delta',
 			durability: 'durability',
 			potion: 'potion',
 			enchantements: 'enchantements',
 			storedEnchantements: 'stored enchantements'
+		},
+		slot: {
+			slot: 'slot',
+			empty: 'empty',
+			full: 'full',
+			occupied: 'occupied'
 		},
 		type: {
 			directEntity: 'Direct entity',
@@ -96,6 +106,13 @@ export default {
 			isMagic: 'is magic',
 			isProjectile: 'is projectile',
 			isLightning: 'is lightning'
+		}
+	},
+
+	tab: {
+		killedBy: {
+			unique: 'unique entity types',
+			victims: 'victims'
 		}
 	},
 
@@ -118,5 +135,51 @@ export default {
 		key: 'key',
 		value: 'value',
 		stat: 'stat'
+	},
+
+	trigger: {
+		beeNestDestroyed: 'Bee nest destroyed',
+		bredAnimals: 'Bred animals',
+		brewedPotion: 'Brewed potion',
+		changedDimension: 'Changed dimension',
+		channeledLightning: 'Channeled lightning',
+		constructBeacon: 'Construct beacon',
+		consumeItem: 'Consume item',
+		curedZombieVillager: 'Cured zombie villager',
+		effectsChanged: 'Effects changed',
+		enchantedItem: 'Enchanted item',
+		enterBlock: 'Enter block',
+		entityHurtPlayer: 'Entity hurt player',
+		entityKilledPlayer: 'Entity killed player',
+		filledBucket: 'Filled bucket',
+		fishingRodHooked: 'Fishing rod hooked',
+		heroOfTheVillage: 'Hero of the village',
+		impossible: 'Impossible',
+		inventoryChanged: 'Inventory changed',
+		itemDurabilityChanged: 'Item durability changed',
+		itemUsedOnBlock: 'Item used on block',
+		killedByCrossbow: 'Killed by crossbow',
+		levitation: 'Levitation',
+		location: 'Location',
+		netherTravel: 'Nether travel',
+		placedBlock: 'Placed block',
+		playerGeneratesContainerLoot: 'Player generates container loot',
+		playerHurtEntity: 'Player hurt entity',
+		playerInteractedWithEntity: 'Player interacted with entity',
+		playerKilledEntity: 'Player killed entity',
+		recipeUnlocked: 'Recipe unlocked',
+		safelyHarvestHoney: 'Safely harvest honey',
+		shotCrossbow: 'Shot crossbow',
+		sleptInBed: 'Slept in bed',
+		slideDownBlock: 'Slide down block',
+		summonedEntity: 'Summoned entity',
+		tameAnimal: 'Tame animal',
+		targetHit: 'Target hit',
+		thrownItemPickedUpByEntity: 'Thrown item picked up by entity',
+		tick: 'Tick',
+		usedEnderEye: 'Used ender eye',
+		usedTotem: 'Used totem',
+		villagerTrade: 'Villager trade',
+		voluntaryExile: 'Voluntary exile'
 	}
 };

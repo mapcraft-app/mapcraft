@@ -1,24 +1,9 @@
 <template>
-	<div class="row inline">
-		<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.distance.absolute')) }}</span>
-		<type-number-range v-model="data.absolute" />
-	</div>
-	<div class="row inline">
-		<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.distance.horizontal')) }}</span>
-		<type-number-range v-model="data.horizontal" />
-	</div>
-	<div class="row inline">
-		<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.x')) }}</span>
-		<type-number-range v-model="data.x" />
-	</div>
-	<div class="row inline">
-		<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.y')) }}</span>
-		<type-number-range v-model="data.y" />
-	</div>
-	<div class="row inline">
-		<span class="text-h6 q-pr-md">{{ $capitalize($t('builtin.advancement.interface.common.z')) }}</span>
-		<type-number-range v-model="data.z" />
-	</div>
+	<type-number-range v-model="data.absolute" :label="$capitalize($t('builtin.advancement.interface.distance.absolute'))" />
+	<type-number-range v-model="data.horizontal" :label="$capitalize($t('builtin.advancement.interface.distance.horizontal'))" />
+	<type-number-range v-model="data.x" :label="$capitalize($t('builtin.advancement.interface.common.x'))" />
+	<type-number-range v-model="data.y" :label="$capitalize($t('builtin.advancement.interface.common.y'))" />
+	<type-number-range v-model="data.z" :label="$capitalize($t('builtin.advancement.interface.common.z'))" />
 </template>
 
 <script lang="ts">
@@ -34,7 +19,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<distance | null>,
-			required: true
+			required: false,
+			default: {} as distance
 		}
 	},
 	emits: ['update:modelValue'],

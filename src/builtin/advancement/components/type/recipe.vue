@@ -31,7 +31,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<recipe | null>,
-			required: true
+			required: false,
+			default: null
 		}
 	},
 	emits: ['update:modelValue'],

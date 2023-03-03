@@ -24,6 +24,7 @@
 					v-model="el.levels"
 					:min="getVal(el.enchantment)"
 					:max="getVal(el.enchantment, false)"
+					:label="$capitalize($t('builtin.advancement.interface.entityPlayer.level'))"
 					class="q-pa-sm"
 				/>
 			</q-card-section>
@@ -61,7 +62,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Array as PropType<enchantement[] | null>,
-			required: true
+			required: false,
+			default: [] as enchantement[]
 		}
 	},
 	emits: ['update:modelValue'],

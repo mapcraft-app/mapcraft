@@ -21,7 +21,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: String as PropType<potionType | null>,
-			required: true
+			required: false,
+			default: null
 		},
 		label: {
 			type: String,
@@ -38,7 +39,7 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const { t } = useI18n();
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.potion')));
-		const options = ['empty', 'mundane', 'thick', 'awkward', 'night vision', 'long night vision', 'invisibility', 'long invisibility', 'Leaping', 'Long Leaping', 'Strong Leaping', 'Fire Resistance', 'Long Fire Resistance', 'Swiftness', 'Long Swiftness', 'Strong Swiftness', 'long invisibility', 'Slowness', 'Long Slowness', 'Strong Slowness', 'Turtle Master', 'Long Turtle Master', 'Strong Turtle Master', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness', 'Slowness'];
+		const options = ['empty', 'mundane', 'thick', 'awkward', 'night vision', 'long night vision', 'invisibility', 'long invisibility', 'Leaping', 'Long Leaping', 'Strong Leaping', 'Fire Resistance', 'Long Fire Resistance', 'Swiftness', 'Long Swiftness', 'Strong Swiftness', 'long invisibility', 'Slowness', 'Long Slowness', 'Strong Slowness', 'Turtle Master', 'Long Turtle Master', 'Strong Turtle Master', 'Slowness'];
 		const optionsList = ref<string[]>(options);
 		const color = ref<potionType | null>(props.modelValue ?? null);
 

@@ -18,7 +18,7 @@
 		</q-expansion-item>
 	</q-list>
 	<q-card bordered square flat class="q-pa-sm column align-center q-mt-sm q-mb-sm">
-		<div class="text-center">{{ $capitalize($t('builtin.advancement.interface.common.flags')) }}</div>
+		<div class="text-center">{{ $capitalize($t('builtin.advancement.interface.fluid.flags')) }}</div>
 		<div class="row justify-evenly">
 			<q-checkbox
 				v-model="data.bypasses_armor"
@@ -77,7 +77,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<type | null>,
-			required: true
+			required: false,
+			default: {} as type
 		}
 	},
 	emits: ['update:modelValue'],
@@ -93,7 +94,7 @@ export default defineComponent({
 			is_magic: props.modelValue?.is_magic ?? false,
 			is_projectile: props.modelValue?.is_projectile ?? false,
 			is_lightning: props.modelValue?.is_lightning ?? false,
-		});
+		} as type);
 
 		onBeforeMount(() => {
 			watch(data, (after) => {

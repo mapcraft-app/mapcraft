@@ -49,43 +49,50 @@
 			</div>
 		</template>
 		<template v-slot:after>
-			<div v-if="selectedAdvancement" class="def">
-				<q-tabs v-model="tab" class="text-teal q-pa-sm">
-					<q-tab v-if="selectedAdvancement.isRoot" name="root" icon="tag" label="Root" />
-					<q-tab name="title" icon="title" label="Display" />
-					<q-tab name="criteria" icon="list" label="Criteria" />
-					<q-tab name="requirements" icon="checklist" label="Requirements" />
-					<q-tab name="rewards" icon="star" label="Rewards" />
-				</q-tabs>
-				<q-separator />
-				<q-tab-panels
-					v-model="tab"
-					animated
-					transition-prev="fade"
-					transition-next="fade"
-					style="background-color: rgba(0,0,0,0);"
-				>
-					<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
-						<q-input
-							v-model="advancementsList[indexAdv].background"
-							label="Background image"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="title">
-						<tab-display v-model="selectedAdvancement.child.data.display" />
-					</q-tab-panel>
-					<q-tab-panel name="criteria">
-						<tab-criteria v-model="selectedAdvancement.child.data.criteria" />
-					</q-tab-panel>
-					<q-tab-panel name="requirements">
-						<tab-requirements
-							v-model="selectedAdvancement.child.data.requirements" :advancements="selectedAdvancement.child"
-						/>
-					</q-tab-panel>
-					<q-tab-panel name="rewards">
-						<tab-rewards v-model="selectedAdvancement.child.data.rewards" />
-					</q-tab-panel>
-				</q-tab-panels>
+			<div v-if="selectedAdvancement" class="edit">
+				<div class="left-menu">
+					<q-tabs
+						v-model="tab"
+						class="text-teal q-pa-sm"
+						vertical
+					>
+						<q-tab v-if="selectedAdvancement.isRoot" name="root" icon="tag" label="Root" />
+						<q-tab name="title" icon="title" label="Display" />
+						<q-tab name="criteria" icon="list" label="Criteria" />
+						<q-tab name="requirements" icon="checklist" label="Requirements" />
+						<q-tab name="rewards" icon="star" label="Rewards" />
+					</q-tabs>
+				</div>
+				<div v-if="selectedAdvancement" class="def">
+					<q-tab-panels
+						v-model="tab"
+						animated
+						transition-prev="fade"
+						transition-next="fade"
+						style="background-color: rgba(0,0,0,0);"
+					>
+						<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
+							<q-input
+								v-model="advancementsList[indexAdv].background"
+								label="Background image"
+							/>
+						</q-tab-panel>
+						<q-tab-panel name="title">
+							<tab-display v-model="selectedAdvancement.child.data.display" />
+						</q-tab-panel>
+						<q-tab-panel name="criteria">
+							<tab-criteria v-model="selectedAdvancement.child.data.criteria" />
+						</q-tab-panel>
+						<q-tab-panel name="requirements">
+							<tab-requirements
+								v-model="selectedAdvancement.child.data.requirements" :advancements="selectedAdvancement.child"
+							/>
+						</q-tab-panel>
+						<q-tab-panel name="rewards">
+							<tab-rewards v-model="selectedAdvancement.child.data.rewards" />
+						</q-tab-panel>
+					</q-tab-panels>
+				</div>
 			</div>
 		</template>
 	</q-splitter>
@@ -131,7 +138,7 @@ export default defineComponent({
 		};
 
 		onBeforeMount(() => {
-			window.advancement.init(store.getMapPath());
+			window.advancement.init(store.getMapPath(), store.minecraftVersion);
 			advancementsList.value = window.advancement.getList();
 
 			watch(selectedNode, (node) => {
@@ -162,8 +169,19 @@ export default defineComponent({
 	display: flex;
   height: 100%;
 }
+.edit {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+}
+.edit div.left-menu {
+	width: fit-content;
+	position: sticky;
+	top: 0;
+	height: fit-content;
+}
 .def {
-	overflow-y: auto;
+	width: -webkit-fill-available;
 }
 .list {
 	width: 20vw;

@@ -1,13 +1,7 @@
 <template>
-	<div class="row inline">
-		<span class="text-h6">{{ $capitalize($t('builtin.advancement.interface.damage.dealt')) }}</span>
-		<type-number-range v-model="data.dealt" />
-	</div>
-	<div class="row inline">
-		<span class="text-h6">{{ $capitalize($t('builtin.advancement.interface.damage.taken')) }}</span>
-		<type-number-range v-model="data.taken" />
-	</div>
-	<q-toggle v-model="data.blocked" />
+	<type-number-range v-model="data.dealt" :label="$capitalize($t('builtin.advancement.interface.damage.dealt'))" />
+	<type-number-range v-model="data.taken" :label="$capitalize($t('builtin.advancement.interface.damage.taken'))" />
+	<q-toggle v-model="data.blocked" :label="$capitalize($t('builtin.advancement.interface.damage.blocked'))" />
 	<interface-type v-model="data.type" />
 	<interface-entity-player v-model="data.source_entity" />
 </template>
@@ -29,7 +23,8 @@ export default defineComponent({
 	props: {
 		modelValue: {
 			type: Object as PropType<damage | null>,
-			required: true
+			required: false,
+			default: {} as damage
 		}
 	},
 	emits: ['update:modelValue'],
