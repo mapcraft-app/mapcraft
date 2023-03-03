@@ -1,6 +1,8 @@
 <template>
-	<type-number-range v-model="data.dealt" :label="$capitalize($t('builtin.advancement.interface.damage.dealt'))" />
-	<type-number-range v-model="data.taken" :label="$capitalize($t('builtin.advancement.interface.damage.taken'))" />
+	<div class="row justify-around">
+		<type-number-range v-model="data.dealt" :label="$capitalize($t('builtin.advancement.interface.damage.dealt'))" />
+		<type-number-range v-model="data.taken" :label="$capitalize($t('builtin.advancement.interface.damage.taken'))" />
+	</div>
 	<q-toggle v-model="data.blocked" :label="$capitalize($t('builtin.advancement.interface.damage.blocked'))" />
 	<interface-type v-model="data.type" />
 	<interface-entity-player v-model="data.source_entity" />

@@ -97,6 +97,93 @@
 			v-else-if="criteria.trigger === 'killed_by_crossbow'"
 			v-model="$props.modelValue[i].conditions"
 		/>
+		<levitation
+			v-else-if="criteria.trigger === 'levitation'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<location
+			v-else-if="criteria.trigger === 'location'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<nether-travel
+			v-else-if="criteria.trigger === 'nether_travel'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<placed-block
+			v-else-if="criteria.trigger === 'placed_block'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<player-generates-container-loot
+			v-else-if="criteria.trigger === 'player_generates_container_loot'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<player-hurt-entity
+			v-else-if="criteria.trigger === 'player_hurt_entity'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<player-interacted-with-entity
+			v-else-if="criteria.trigger === 'player_interacted_with_entity'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<player-killed-entity
+			v-else-if="criteria.trigger === 'player_killed_entity'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<recipe-unlocked
+			v-else-if="criteria.trigger === 'recipe_unlocked'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<safely-harvest-honey
+			v-else-if="criteria.trigger === 'safely_harvest_honey'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<shot-crossbow
+			v-else-if="criteria.trigger === 'shot_crossbow'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<slept-in-bed
+			v-else-if="criteria.trigger === 'slept_in_bed'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<slide-down-block
+			v-else-if="criteria.trigger === 'slide_down_block'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<summoned-entity
+			v-else-if="criteria.trigger === 'summoned_entity'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<tame-animal
+			v-else-if="criteria.trigger === 'tame_animal'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<target-hit
+			v-else-if="criteria.trigger === 'target_hit'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<thrown-item-picked-up-by-entity
+			v-else-if="criteria.trigger === 'thrown_item_picked_up_by_entity'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<div v-else-if="criteria.trigger === 'tick'">
+			tick
+		</div>
+		<used-ender-eye
+			v-else-if="criteria.trigger === 'used_ender_eye'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<used-totem
+			v-else-if="criteria.trigger === 'used_totem'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<villager-trade
+			v-else-if="criteria.trigger === 'villager_trade'"
+			v-model="$props.modelValue[i].conditions"
+		/>
+		<voluntary-exile
+			v-else-if="criteria.trigger === 'voluntary_exile'"
+			v-model="$props.modelValue[i].conditions"
+		/>
 		<template v-else>
 			<span>Not found</span>
 		</template>
@@ -128,6 +215,27 @@ import InventoryChanged from './inventory_changed.vue';
 import ItemDurabilityChanged from './item_durability_changed.vue';
 import ItemUsedOnBlock from './item_used_on_block.vue';
 import KilledByCrossbow from './killed_by_crossbow.vue';
+import Levitation from './levitation.vue';
+import Location from './location.vue';
+import NetherTravel from './nether_travel.vue';
+import PlacedBlock from './placed_block.vue';
+import PlayerGeneratesContainerLoot from './player_generates_container_loot.vue';
+import PlayerHurtEntity from './player_hurt_entity.vue';
+import PlayerInteractedWithEntity from './player_interacted_with_entity.vue';
+import PlayerKilledEntity from './player_killed_entity.vue';
+import RecipeUnlocked from './recipe_unlocked.vue';
+import SafelyHarvestHoney from './safely_harvest_honey.vue';
+import ShotCrossbow from './shot_crossbow.vue';
+import SleptInBed from './slept_in_bed.vue';
+import SlideDownBlock from './slide_down_block.vue';
+import SummonedEntity from './summoned_entity.vue';
+import TameAnimal from './tame_animal.vue';
+import TargetHit from './target_hit.vue';
+import ThrownItemPickedUpByEntity from './thrown_item_picked_up_by_entity.vue';
+import UsedEnderEye from './used_ender_eye.vue';
+import UsedTotem from './used_totem.vue';
+import VillagerTrade from './villager_trade.vue';
+import VoluntaryExile from './voluntary_exile.vue';
 
 export default defineComponent({
 	name: 'TabCriteria',
@@ -151,7 +259,28 @@ export default defineComponent({
 		InventoryChanged,
 		ItemDurabilityChanged,
 		ItemUsedOnBlock,
-		KilledByCrossbow
+		KilledByCrossbow,
+		Levitation,
+		Location,
+		NetherTravel,
+		PlacedBlock,
+		PlayerGeneratesContainerLoot,
+		PlayerHurtEntity,
+		PlayerInteractedWithEntity,
+		PlayerKilledEntity,
+		RecipeUnlocked,
+		SafelyHarvestHoney,
+		ShotCrossbow,
+		SleptInBed,
+		SlideDownBlock,
+		SummonedEntity,
+		TameAnimal,
+		TargetHit,
+		ThrownItemPickedUpByEntity,
+		UsedEnderEye,
+		UsedTotem,
+		VillagerTrade,
+		VoluntaryExile
 	},
 	props: {
 		modelValue: {

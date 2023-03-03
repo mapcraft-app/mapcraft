@@ -27,6 +27,7 @@ export default {
 			light: 'lumière'
 		},
 		damage: {
+			damage: 'dommage',
 			dealt: 'traité',
 			taken: 'pris',
 			blocked: 'bloqué',
@@ -96,6 +97,7 @@ export default {
 			occupied: 'Occupé'
 		},
 		type: {
+			type: 'type',
 			directEntity: 'Entité directe',
 			sourceEntity: 'Entité source',
 			bypassArmor: 'contourner l\'armure',
@@ -113,6 +115,12 @@ export default {
 		killedBy: {
 			unique: 'types d\'entités uniques',
 			victims: 'victimes'
+		},
+		targetHit: {
+			strength: 'force du signal'
+		},
+		villagerTrade: {
+			villager: 'villageois'
 		}
 	},
 
@@ -126,7 +134,9 @@ export default {
 		gamemode: 'mode de jeu',
 		potion: 'potion',
 		stats: 'statistique',
-		structure: 'structure'
+		structure: 'structure',
+		loot: 'butin',
+		killingBlow: 'coup fatal'
 	},
 
 	type: {

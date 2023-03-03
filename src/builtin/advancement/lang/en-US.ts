@@ -27,6 +27,7 @@ export default {
 			light: 'light'
 		},
 		damage: {
+			damage: 'damage',
 			dealt: 'dealt',
 			taken: 'taken',
 			blocked: 'blocked',
@@ -96,6 +97,7 @@ export default {
 			occupied: 'occupied'
 		},
 		type: {
+			type: 'type',
 			directEntity: 'Direct entity',
 			sourceEntity: 'Source entity',
 			bypassArmor: 'bypass armor',
@@ -113,6 +115,12 @@ export default {
 		killedBy: {
 			unique: 'unique entity types',
 			victims: 'victims'
+		},
+		targetHit: {
+			strength: 'signal strength'
+		},
+		villagerTrade: {
+			villager: 'villager'
 		}
 	},
 
@@ -126,7 +134,9 @@ export default {
 		gamemode: 'gamemode',
 		potion: 'potion',
 		stats: 'stats',
-		structure: 'structure'
+		structure: 'structure',
+		loot: 'loot',
+		killingBlow: 'killing blow'
 	},
 
 	type: {
