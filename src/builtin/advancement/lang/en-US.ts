@@ -112,6 +112,18 @@ export default {
 	},
 
 	tab: {
+		bredAnimals: {
+			child: 'child',
+			parent: 'parent',
+			partner: 'partner'
+		},
+		changedDimension: {
+			from: 'from',
+			to: 'to'
+		},
+		channeledLightning: {
+			victim: 'victim {x}'
+		},
 		killedBy: {
 			unique: 'unique entity types',
 			victims: 'victims'

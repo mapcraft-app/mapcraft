@@ -11,7 +11,7 @@
 				:key="index"
 				expand-separator
 				icon="man_4"
-				:label="`Victim ${index}`"
+				:label="$capitalize($t('builtin.advancement.tab.channeledLightning.victim', { x: index }))"
 				class="q-ma-xs"
 			>
 				<q-btn

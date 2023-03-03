@@ -13,7 +13,7 @@
 			:key="index"
 			expand-separator
 			icon="category"
-			:label="`Item ${index + 1}`"
+			:label="$capitalize($t('builtin.advancement.tab.inventoryChanged.item', { x: index + 1 }))"
 			class="q-ma-xs"
 		>
 			<q-btn

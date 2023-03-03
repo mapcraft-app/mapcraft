@@ -1,6 +1,6 @@
 <template>
-	<select-dimension v-model="data.from" label="From" />
-	<select-dimension v-model="data.to" label="To" />
+	<select-dimension v-model="data.from" :label="$capitalize($t('builtin.advancement.tab.changedDimension.from'))" />
+	<select-dimension v-model="data.to" :label="$capitalize($t('builtin.advancement.tab.changedDimension.to'))" />
 </template>
 
 <script lang="ts">

@@ -3,7 +3,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			label="Entity"
+			:label="$capitalize($t('builtin.advancement.select.entity'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.entity" />
@@ -11,7 +11,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="category"
-			label="Item"
+			:label="$capitalize($t('builtin.advancement.select.item'))"
 			class="q-ma-xs"
 		>
 			<interface-item v-model="data.item" />
@@ -19,7 +19,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="phishing"
-			label="Rod"
+			:label="$capitalize($t('builtin.advancement.tab.fishingRodHooked.rod'))"
 			class="q-ma-xs"
 		>
 			<interface-item v-model="data.rod" />

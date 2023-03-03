@@ -3,7 +3,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="supervisor_account"
-			label="Child"
+			:label="$capitalize($t('builtin.advancement.tab.bredAnimals.child'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.child" />
@@ -11,7 +11,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			label="Parent"
+			:label="$capitalize($t('builtin.advancement.tab.bredAnimals.parent'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.parent" />
@@ -19,7 +19,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="group"
-			label="Partner"
+			:label="$capitalize($t('builtin.advancement.tab.bredAnimals.partner'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.partner" />

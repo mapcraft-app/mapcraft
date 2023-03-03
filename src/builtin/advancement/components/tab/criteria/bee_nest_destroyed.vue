@@ -3,7 +3,7 @@
 		v-model="data.block"
 		:item="false"
 		:block="true"
-		label="Block"
+		:label="$capitalize($t('builtin.advancement.select.block'))"
 	/>
 	<q-input
 		v-model.number="data.num_bees_inside"
@@ -15,7 +15,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="category"
-			label="Item"
+			:label="$capitalize($t('builtin.advancement.select.item'))"
 			class="q-ma-xs"
 		>
 			<interface-item v-model="data.item" />

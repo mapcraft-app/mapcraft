@@ -112,6 +112,27 @@ export default {
 	},
 
 	tab: {
+		bredAnimals: {
+			child: 'enfant',
+			parent: 'parent',
+			partner: 'partenaire'
+		},
+		changedDimension: {
+			from: 'de',
+			to: 'à'
+		},
+		channeledLightning: {
+			victim: 'victime {x}'
+		},
+		curedZombieVillager: {
+			zombie: 'zombie'
+		},
+		fishingRodHooked: {
+			rod: 'canne à pêche'
+		},
+		inventoryChanged: {
+			item: 'élément {x}'
+		},
 		killedBy: {
 			unique: 'types d\'entités uniques',
 			victims: 'victimes'

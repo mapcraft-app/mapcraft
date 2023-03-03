@@ -3,7 +3,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			label="Villager"
+			:label="$capitalize($t('builtin.advancement.tab.villagerTrade.villager'))"
 			class="q-pa-xs"
 		>
 			<interface-entity v-model="data.villager" />
@@ -11,7 +11,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			label="Zombie"
+			:label="$capitalize($t('builtin.advancement.tab.curedZombieVillager.zombie'))"
 			class="q-pa-xs"
 		>
 			<interface-entity v-model="data.zombie" />
