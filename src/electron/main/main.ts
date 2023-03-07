@@ -16,7 +16,7 @@ let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;
 let log: Log;
 
-const SecurityPolicy: string[] = [
+const SecurityPolicy: string = [
 	'default-src',
 	'mediastream:', 'blob:', 'filesystem:',
 	'\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\'',
@@ -25,7 +25,7 @@ const SecurityPolicy: string[] = [
 	'https://raw.githubusercontent.com', 'https://github.com',
 	'https://gitlab.com',
 	'http://cravatar.eu', 'http://localhost:3000'
-];
+].join(' ');
 
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { bypassCSP: true }}
@@ -36,7 +36,7 @@ app.whenReady().then(async () => {
 		callback({
 			responseHeaders: {
 				...details.responseHeaders,
-				'Content-Security-Policy': SecurityPolicy.join(' ')
+				'Content-Security-Policy': SecurityPolicy
 			}
 		});
 	});

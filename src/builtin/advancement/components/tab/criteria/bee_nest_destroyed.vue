@@ -9,7 +9,7 @@
 		v-model.number="data.num_bees_inside"
 		type="number"
 		min="0"
-		label="Number of bee inside"
+		:label="$capitalize($t('builtin.advancement.tab.beeNestDestroyed.number'))"
 	/>
 	<q-list bordered class="q-mt-sm">
 		<q-expansion-item

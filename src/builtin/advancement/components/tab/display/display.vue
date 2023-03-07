@@ -3,57 +3,57 @@
 		<q-card flat square bordered class="full-width q-mt-xs q-mb-xs">
 			<q-card-section>
 				<display-title
-					v-model="$props.modelValue.title"
-					title="Title"
+					v-model="selectedAdvancement.child.data.display.title"
+					:title="$capitalize($t('builtin.advancement.tab.display.title'))"
+					@update:model-value="isUpdate()"
 				/>
 			</q-card-section>
 		</q-card>
 		<q-card flat square bordered class="full-width q-mt-xs q-mb-xs">
 			<q-card-section>
 				<display-title
-					v-model="$props.modelValue.description"
-					title="Description"
+					v-model="selectedAdvancement.child.data.display.description"
+					:title="$capitalize($t('builtin.advancement.tab.display.description'))"
 				/>
 			</q-card-section>
 		</q-card>
 	</div>
 	<block-item
-		v-model="$props.modelValue.icon.item"
+		v-model="selectedAdvancement.child.data.display.icon.item"
 		:block="true"
 		:item="true"
-		label="Icon item"
+		:label="$capitalize($t('builtin.advancement.tab.display.iconItem'))"
 	/>
 	<q-input
-		v-model="$props.modelValue.icon.nbt"
-		label="Nbt"
+		v-model="selectedAdvancement.child.data.display.icon.nbt"
+		:label="$capitalize($t('builtin.advancement.tab.display.nbt'))"
 	/>
 	<select-frame
-		v-model="$props.modelValue.frame"
-		label="Frame"
+		v-model="selectedAdvancement.child.data.display.frame"
+		:label="$capitalize($t('builtin.advancement.tab.display.frame'))"
 	/>
 	<div class="row no-wrap justify-around">
 		<q-toggle
-			v-model="$props.modelValue.show_toast"
-			label="Show toast ?"
+			v-model="selectedAdvancement.child.data.display.show_toast"
+			:label="$capitalize($t('builtin.advancement.tab.display.toast'))"
 		/>
 		<q-toggle
-			v-model="$props.modelValue.announce_to_chat"
-			label="Announce to chat ?"
+			v-model="selectedAdvancement.child.data.display.announce_to_chat"
+			:label="$capitalize($t('builtin.advancement.tab.display.chat'))"
 		/>
 		<q-toggle
-			v-model="$props.modelValue.hidden"
-			label="Hidden ?"
+			v-model="selectedAdvancement.child.data.display.hidden"
+			:label="$capitalize($t('builtin.advancement.tab.display.hidden'))"
 		/>
-
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, onBeforeMount, watch } from 'vue';
+import { defineComponent } from 'vue';
 import DisplayTitle from './title.vue';
+import { selectedAdvancement } from '../../../lib/getChild';
 import BlockItem from '../../select/blockItem.vue';
 import SelectFrame from '../../select/frame.vue';
-import { display } from '../../../model';
 
 export default defineComponent({
 	name: 'DisplayMain',
@@ -62,18 +62,12 @@ export default defineComponent({
 		BlockItem,
 		SelectFrame
 	},
-	props: {
-		modelValue: {
-			type: Object as PropType<display>,
-			required: true
-		}
-	},
-	emits: ['update:modelValue'],
-	setup (props, { emit }) {
-		
-		onBeforeMount(() => {
-			watch(props.modelValue, (val) => emit('update:modelValue', val), { deep: true });
-		});
+	emits: ['update'],
+	setup (_props, { emit }) {
+		return {
+			selectedAdvancement,
+			isUpdate: () => emit('update')
+		};
 	}
 });
 </script>

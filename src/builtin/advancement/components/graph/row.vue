@@ -1,8 +1,7 @@
 <template>
 	<div
 		v-if="isExpand"
-		class="treeRow"
-		:data-parent="id"
+		:class="backgroundSelected"
 	>
 		<template v-if="$props.root">
 			<graph-line
@@ -21,7 +20,7 @@
 			/>
 		</template>
 		<div
-			:class="(!$q.dark.isActive) ? 'treeElement ' : 'treeElement dark-mode'"
+			:class="treeElement"
 			@click="isSelected"
 		>
 			<div>
@@ -37,11 +36,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch, onBeforeMount } from 'vue';
+import { computed, defineComponent, PropType, ref, watch, onBeforeMount } from 'vue';
+import { useQuasar } from 'quasar';
 import GraphLine from './line.vue';
 import { advancement } from '../../model';
 import { line } from './interface';
-import { expand, selectedNode } from '../../store';
+import { idOfRow, expand, selectedNode, selectedNodeId } from '../../store';
 
 export default defineComponent({
 	name: 'GraphRow',
@@ -70,9 +70,14 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue', 'selected'],
 	setup (props) {
+		const $q = useQuasar();
+		const rowId = ref<number>(0);
 		const isExpand = ref<boolean>(true);
 
-		const isSelected = () => selectedNode.value = props.modelValue.id;
+		const isSelected = () => {
+			selectedNode.value = props.modelValue.id;
+			selectedNodeId.value = rowId.value;
+		};
 		const expandSelected = () => {
 			if (expand.value.has(props.id))
 				expand.value.delete(props.id);
@@ -90,7 +95,23 @@ export default defineComponent({
 		};
 		const getTexture = (name: string) => window.advancement.getTexture(name);
 
+		const backgroundSelected = computed(() => {
+			if (selectedNodeId.value === rowId.value) {
+				return `treeRow ${($q.dark.isActive)
+					? 'selected-dark'
+					: 'selected-light'}`;
+			}
+			return 'treeRow';
+		});
+
+		const treeElement = computed(() => {
+			if ($q.dark.isActive)
+				return 'treeElement dark-mode';
+			return 'treeElement';
+		});
+
 		onBeforeMount(() => {
+			rowId.value = idOfRow.value++;
 			calcExpand(expand.value);
 			watch(expand.value, (value) => {
 				if (value)
@@ -99,13 +120,16 @@ export default defineComponent({
 		});
 
 		return {
+			rowId,
 			expand,
 
 			isExpand,
 			isSelected,
 			expandSelected,
 			calcExpand,
-			getTexture
+			getTexture,
+			backgroundSelected,
+			treeElement
 		};
 	}
 });
@@ -118,6 +142,12 @@ export default defineComponent({
 	flex-wrap: nowrap;
 	height: 80px;
 	width: 100%;
+}
+.treeRow.selected-dark {
+	background-color: rgba(255,255,255,.1);
+}
+.treeRow.selected-light {
+	background-color: rgba(0,0,0,.1);
 }
 
 .treeElement {

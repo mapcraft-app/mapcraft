@@ -22,29 +22,22 @@
 					inline
 				/>
 			</div>
-			<q-badge v-if="rewards.length - 1 > i" color="purple">AND</q-badge>
+			<q-badge v-if="rewards.length - 1 > i" color="purple">
+				{{ $t('builtin.advancement.tab.requirements.and').toUpperCase() }}
+			</q-badge>
 		</template>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import { advancement, trigger } from '../../model';
+import { defineComponent, onBeforeMount, ref, watch } from 'vue';
+import { selectedAdvancement } from '../../lib/getChild';
+import { triggers } from '../../model';
+import deepClone from 'api/deepClone';
 
 export default defineComponent({
 	name: 'TabRequirements',
-	props: {
-		advancements: {
-			type: Object as PropType<advancement>,
-			required: true
-		},
-		modelValue: {
-			type: Array as PropType<string[][]>,
-			required: true
-		}
-	},
-	emits: ['update:modelValue'],
-	setup (props, { emit }) {
+	setup () {
 		const rewards = ref<string[][]>([]);
 		const rewardsOptions = ref<{ label: string, value: string }[]>([]);
 		
@@ -57,9 +50,9 @@ export default defineComponent({
 			}
 		};
 
-		const setRewardsOptions = (list: Record<string, trigger>) => {
-			for (const name in list)
-				rewardsOptions.value.push({ label: name, value: name });
+		const setRewardsOptions = (list: triggers[]) => {
+			for (const trigger of list)
+				rewardsOptions.value.push({ label: trigger.name, value: trigger.name });
 		};
 
 		const addReward = () => rewards.value.push([]);
@@ -67,9 +60,9 @@ export default defineComponent({
 		const deleteReward = (i: number) => rewards.value.splice(i, 1);
 
 		onBeforeMount(() => {
-			setRewardsOptions(props.advancements.data.criteria);
-			setRewards(props.modelValue);
-			watch(rewards, (val) => emit('update:modelValue', val));
+			setRewardsOptions(selectedAdvancement.value.child.data.criteria);
+			setRewards(selectedAdvancement.value.child.data.requirements);
+			watch(rewards, (val) => selectedAdvancement.value.child.data.requirements = deepClone(val), { deep: true });
 		});
 
 		return {

@@ -1,8 +1,9 @@
 import { appMapGet } from 'electron/preload/mapSelection';
 import { userStorage } from 'electron/preload/exposeEnv';
 import { builtinFormat } from 'app/src/builtin/front';
-import type { download } from 'mapcraft-api';
+import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 
+import type { download } from 'mapcraft-api';
 import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
 import type { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
 import type { dataEngineInterface, mapEngine, mapEngineInstance } from 'electron/preload/engine';
@@ -97,7 +98,8 @@ export declare global {
 			module: {
 				path: {
 					join: (...paths: string[]) => string,
-					resolve: (...paths: string[]) => string
+					resolve: (...paths: string[]) => string,
+					normalize: (path: string) => string
 				}
 			},
 			clipboard: {
@@ -114,7 +116,7 @@ export declare global {
 			download: download,
 			engine: {
 				newInstance: (env: envInterface, name: string) => mapEngine,
-				init: (version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3') => void,
+				init: (version: minecraftVersion) => void,
 				database: () => database,
 				instance: () => mapEngine,
 				build: () => Promise<string>,

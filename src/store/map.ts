@@ -1,5 +1,6 @@
 import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { defineStore } from 'pinia';
+import deepClone from 'api/deepClone';
 import { reactive, ref } from 'vue';
 
 export const mapStore = defineStore('map', () => {
@@ -38,7 +39,7 @@ export const mapStore = defineStore('map', () => {
 	}
 
 	function getMapPath() {
-		return JSON.parse(JSON.stringify(path));
+		return deepClone(path);
 	}
 
 	return {

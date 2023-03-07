@@ -1,6 +1,6 @@
 import { contextBridge, clipboard } from 'electron';
 import { writeFile } from 'fs';
-import { resolve, join } from 'path';
+import { resolve, join, normalize } from 'path';
 import { download } from 'mapcraft-api/backend';
 
 import './exposeEnv';
@@ -40,7 +40,7 @@ contextBridge.exposeInMainWorld('log', {
 
 contextBridge.exposeInMainWorld('mapcraft', {
 	module: {
-		path: { resolve, join }
+		path: { resolve, join, normalize }
 	},
 	download,
 	clipboard: {

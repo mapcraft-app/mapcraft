@@ -63,33 +63,30 @@
 						<q-tab name="rewards" icon="star" label="Rewards" />
 					</q-tabs>
 				</div>
-				<div v-if="selectedAdvancement" class="def">
+				<div v-if="Object.keys(selectedAdvancement).length" class="def">
 					<q-tab-panels
+						:key="selectedAdvancement.child.id"
 						v-model="tab"
 						animated
 						transition-prev="fade"
 						transition-next="fade"
 						style="background-color: rgba(0,0,0,0);"
+						
 					>
 						<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
-							<q-input
-								v-model="advancementsList[indexAdv].background"
-								label="Background image"
-							/>
+							<tab-root v-model="advancementsList[indexAdv].background" />
 						</q-tab-panel>
 						<q-tab-panel name="title">
-							<tab-display v-model="selectedAdvancement.child.data.display" />
+							<tab-display @update="titleSave()" />
 						</q-tab-panel>
 						<q-tab-panel name="criteria">
-							<tab-criteria v-model="selectedAdvancement.child.data.criteria" />
+							<tab-criteria />
 						</q-tab-panel>
 						<q-tab-panel name="requirements">
-							<tab-requirements
-								v-model="selectedAdvancement.child.data.requirements" :advancements="selectedAdvancement.child"
-							/>
+							<tab-requirements />
 						</q-tab-panel>
 						<q-tab-panel name="rewards">
-							<tab-rewards v-model="selectedAdvancement.child.data.rewards" />
+							<tab-rewards />
 						</q-tab-panel>
 					</q-tab-panels>
 				</div>
@@ -99,15 +96,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref, watch } from 'vue';
+import { defineComponent, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { capitalize } from 'vue/plugins/app';
 import { mapStore } from 'store/map';
-import { adv, getChild } from './lib/getChild';
+import { getChild, saveChild, selectedAdvancement } from './lib/getChild';
 import { main } from './model';
-import { selectedNode, resetStore } from './store';
+import { selectedNode, selectedNodeId, resetStore } from './store';
 
 import GraphRow from './components/graph/row.vue';
 import GraphTree from './components/graph/tree.vue';
-
+import TabRoot from './components/tab/root.vue';
 import TabDisplay from './components/tab/display/display.vue';
 import TabCriteria from './components/tab/criteria/main.vue';
 import TabRequirements from './components/tab/requirements.vue';
@@ -118,46 +118,80 @@ export default defineComponent({
 	components: {
 		GraphRow,
 		GraphTree,
+		TabRoot,
 		TabDisplay,
 		TabCriteria,
 		TabRequirements,
 		TabRewards
 	},
 	setup () {
+		const $q = useQuasar();
+		const { t } = useI18n();
 		const store = mapStore();
 		const idOfRoot = 0;
 		const advancementsList = ref<main[]>([]);
 		const indexAdv = ref<number>(-1);
-		const selectedAdvancement = ref<adv | null>(null);
 		const tab = ref<'root' | 'title' | 'criteria' | 'requirements' | 'rewards'>('root');
+		let autosaveInterval: NodeJS.Timer; // eslint-disable-line no-undef
 
 		const selectAdvancement = (index: number) => {
-			resetStore();
 			indexAdv.value = index;
-			selectedAdvancement.value = null;
+			selectedNodeId.value = -1;
 		};
 
+		//#region Save
+		const save = async (autosave = false, notif = true) => {
+			if (selectedAdvancement.value.child.id !== '__DEFINE__') {
+				saveChild(advancementsList.value[indexAdv.value]);
+				if (notif) {
+					$q.notify({
+						group: false,
+						timeout: 2500,
+						spinner: false,
+						position: 'top-right',
+						icon: 'task_alt',
+						color: 'green-7',
+						message: autosave
+							? capitalize(t('builtin.advancement.main.autosave.end'))
+							: capitalize(t('builtin.advancement.main.save.end'))
+					});
+				}
+			}
+		};
+		const titleSave = () => save(false, false);
+		//#endregion Save
+
 		onBeforeMount(() => {
+			resetStore();
 			window.advancement.init(store.getMapPath(), store.minecraftVersion);
 			advancementsList.value = window.advancement.getList();
+			autosaveInterval = setInterval(() => save(true), 300000 /* 5min */);
 
 			watch(selectedNode, (node) => {
 				if (!node)
 					return;
-				selectedAdvancement.value = getChild(advancementsList.value[indexAdv.value], node);
+				if (Object.keys(selectedAdvancement.value).length)
+					save();
+				getChild(advancementsList.value[indexAdv.value], node);
 				if (!selectedAdvancement.value.isRoot && tab.value === 'root')
 					tab.value = 'title';
 			});
 		});
 
+		onBeforeUnmount(() => {
+			clearInterval(autosaveInterval);
+			save(true);
+		});
+
 		return {
 			splitter: ref(50),
-
 			idOfRoot,
 			advancementsList,
 			indexAdv,
 			selectedAdvancement,
 			tab,
+
+			titleSave,
 			selectAdvancement
 		};
 	}

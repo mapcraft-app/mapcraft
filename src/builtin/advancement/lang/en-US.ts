@@ -4,7 +4,17 @@ export default {
 	},
 
 	main: {
-		name: 'Name'
+		name: 'Name',
+		save: {
+			start: 'save advancement',
+			end: 'save advancement success',
+			fail: 'save advancement failed',
+		},
+		autosave: {
+			start: 'autosave advancement',
+			end: 'autosave advancement success',
+			fail: 'autosave advancement failed',
+		},
 	},
 
 	interface: {
@@ -112,6 +122,40 @@ export default {
 	},
 
 	tab: {
+		background: 'background image',
+		display: {
+			title: 'title',
+			description: 'description',
+			iconItem: 'icon item',
+			nbt: 'nbt',
+			frame: 'frame',
+			toast: 'show toast ?',
+			chat: 'announce to chat ?',
+			hidden: 'hidden ?',
+
+			text: 'text',
+			color: 'color',
+			noResult: 'no results',
+			bold: 'bold',
+			italic: 'italic',
+			obfuscated: 'obfuscated',
+			strikethrough: 'strikethrough',
+			underlined: 'underlined',
+			colorList: ['black', 'dark blue', 'dark green', 'dark aqua', 'dark red', 'dark purple', 'gold', 'gray', 'dark gray', 'blue', 'green', 'aqua', 'red', 'light purple', 'yellow', 'white']
+		},
+		requirements: {
+			and: 'and'
+		},
+		rewards: {
+			experience: 'experience',
+			recipes: 'recipes',
+			loot: 'loot tables',
+			function: 'function'
+		},
+
+		beeNestDestroyed: {
+			number: 'number of bee inside'
+		},
 		bredAnimals: {
 			child: 'child',
 			parent: 'parent',
@@ -123,6 +167,15 @@ export default {
 		},
 		channeledLightning: {
 			victim: 'victim {x}'
+		},
+		curedZombieVillager: {
+			zombie: 'zombie'
+		},
+		fishingRodHooked: {
+			rod: 'rod'
+		},
+		inventoryChanged: {
+			item: 'Item {x}'
 		},
 		killedBy: {
 			unique: 'unique entity types',
@@ -202,6 +255,7 @@ export default {
 		usedEnderEye: 'Used ender eye',
 		usedTotem: 'Used totem',
 		villagerTrade: 'Villager trade',
-		voluntaryExile: 'Voluntary exile'
+		voluntaryExile: 'Voluntary exile',
+		notFound: 'This criteria does not exist'
 	}
 };

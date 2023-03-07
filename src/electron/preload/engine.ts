@@ -6,6 +6,7 @@ import type resource from 'mapcraft-api/dist/types/src/backend/engine/resourcepa
 import database, { tableInterface} from 'mapcraft-api/dist/types/src/backend/sql';
 import type { envInterface } from 'mapcraft-api/dist/types/src/backend/engine/interface';
 import { RunResult } from 'better-sqlite3';
+import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 
 export interface mapEngineInstanceInterface {
 	build: buildMap,
@@ -21,7 +22,7 @@ export interface mapEngineInfoTable {
 export class mapEngine {
 	private __env: envInterface;
 	private __name: string;
-	private __version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3';
+	private __version: minecraftVersion;
 
 	public instance: mapEngineInstanceInterface;
 	public database: database;
@@ -43,7 +44,7 @@ export class mapEngine {
 		this.eventStatus = '';
 	}
 
-	public init(version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3'): void {
+	public init(version: minecraftVersion): void {
 		this.__version = version;
 		this.instance = {} as mapEngineInstanceInterface;
 		this.instance.datapack = new engine.data(this.__env, this.__name, version);
@@ -105,7 +106,7 @@ export default {
 		mapEngineInstance = new mapEngine(env, name);
 		return mapEngineInstance;
 	},
-	init: (version: '1.17' | '1.17.1' | '1.17.2' | '1.18' | '1.18.1' | '1.18.2' | '1.19' | '1.19.1' | '1.19.2' | '1.19.3'): void => {
+	init: (version: minecraftVersion): void => {
 		mapEngineInstance.init(version);
 	},
 	database: (): database => mapEngineInstance.database,

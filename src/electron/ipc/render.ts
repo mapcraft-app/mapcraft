@@ -63,30 +63,30 @@ const checkIpc = (channel: string): boolean => {
 	return false;
 };
 
+const ipcErrorMessage = (channel: string) => {
+	if (checkIpc(channel))
+		throw new Error(`Channel ${channel} doesn't exist`);
+};
+
 const ipc = {
 	invoke: (channel: string, ...args: any[]): Promise<any> => {
-		if (checkIpc(channel))
-			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcErrorMessage(channel);
 		return ipcRenderer.invoke(channel, ...args);
 	},
 	send: (channel: string, ...args: any[]): void => {
-		if (checkIpc(channel))
-			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcErrorMessage(channel);
 		ipcRenderer.send(channel, ...args);
 	},
 	receive: (channel: string, fn: (...args: any[]) => void): void => {
-		if (checkIpc(channel))
-			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcErrorMessage(channel);
 		ipcRenderer.once(channel, (_event, ...args) => fn(...args));
 	},
 	receiveAll: (channel: string, fn: (...args: any[]) => void): void => {
-		if (checkIpc(channel))
-			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcErrorMessage(channel);
 		ipcRenderer.on(channel, (_event, ...args) => fn(...args));
 	},
 	remove: (channel: string, fn: (...args: any[]) => void): void => {
-		if (checkIpc(channel))
-			throw new Error(`Channel ${channel} doesn't exist`);
+		ipcErrorMessage(channel);
 		ipcRenderer.removeListener(channel, (_event, ...args) => fn(...args));
 	},
 	removeAll: (channel: string): void => {

@@ -1,199 +1,227 @@
 <template>
-	<template
-		v-for="(criteria, i) of $props.modelValue"
+	<q-btn
+		oulined color="green"
+		icon="add" class="full-width"
+		@click="addCriteria()"
+	/>
+
+	<q-card
+		v-for="(criteria, i) of selectedAdvancement.child.data.criteria"
 		:key="i"
+		class="q-mt-sm"
+		flat bordered square
 	>
-		<div class="full-width flex justify-between no-wrap q-mb-xs">
-			<div></div>
-			<span class="text-h6 text-weight-light">
-				{{ $t(`builtin.advancement.trigger.${getTrad(criteria.trigger)}`) }}
-			</span>
+		<div
+			class="row full-width no-wrap justify-between q-pa-xs"
+			style="background-color: rgba(0, 0, 0, .05);"
+		>
+			<div class="row main-select ">
+				<q-input
+					v-model="selectedAdvancement.child.data.criteria[i].name"
+					label="Criteria name"
+					class="select"
+				/>
+				<q-select
+					v-model="selectedAdvancement.child.data.criteria[i].trigger"
+					:options="criterias"
+					class="select"
+					outlined square
+					emit-value
+					map-options
+					@update:model-value="changeTrigger(i)"
+				/>
+			</div>
 			<q-btn
 				color="red" unelevated square
 				outline icon="delete"
+				@click="deleteCriteria(i)"
 			/>
 		</div>
-		<q-separator class="q-mb-sm" />
-		<bee-nest-destroyed
-			v-if="criteria.trigger === 'bee_nest_destroyed'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<bred-animals
-			v-else-if="criteria.trigger === 'bred_animals'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<brewed-potion
-			v-else-if="criteria.trigger === 'brewed_potion'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<changed-dimension
-			v-else-if="criteria.trigger === 'changed_dimension'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<channeled-lightning
-			v-else-if="criteria.trigger === 'channeled_lightning'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<construct-beacon
-			v-else-if="criteria.trigger === 'construct_beacon'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<consume-item
-			v-else-if="criteria.trigger === 'consume_item'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<cured-zombie-villager
-			v-else-if="criteria.trigger === 'cured_zombie_villager'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<effects-changed
-			v-else-if="criteria.trigger === 'effects_changed'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<enchanted-item
-			v-else-if="criteria.trigger === 'enchanted_item'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<enter-block
-			v-else-if="criteria.trigger === 'enter_block'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<entity-hurt-player
-			v-else-if="criteria.trigger === 'entity_hurt_player'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<entity-killed-player
-			v-else-if="criteria.trigger === 'entity_killed_player'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<filled-bucket
-			v-else-if="criteria.trigger === 'filled_bucket'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<fishing-rod-hooked 
-			v-else-if="criteria.trigger === 'fishing_rod_hooked'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<hero-of-the-village
-			v-else-if="criteria.trigger === 'hero_of_the_village'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<div v-else-if="criteria.trigger === 'impossible'">
-			impossible
+		<div class="q-pa-xs">
+			<bee-nest-destroyed
+				v-if="criteria.trigger === 'bee_nest_destroyed'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<bred-animals
+				v-else-if="criteria.trigger === 'bred_animals'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<brewed-potion
+				v-else-if="criteria.trigger === 'brewed_potion'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<changed-dimension
+				v-else-if="criteria.trigger === 'changed_dimension'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<channeled-lightning
+				v-else-if="criteria.trigger === 'channeled_lightning'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<construct-beacon
+				v-else-if="criteria.trigger === 'construct_beacon'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<consume-item
+				v-else-if="criteria.trigger === 'consume_item'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<cured-zombie-villager
+				v-else-if="criteria.trigger === 'cured_zombie_villager'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<effects-changed
+				v-else-if="criteria.trigger === 'effects_changed'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<enchanted-item
+				v-else-if="criteria.trigger === 'enchanted_item'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<enter-block
+				v-else-if="criteria.trigger === 'enter_block'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<entity-hurt-player
+				v-else-if="criteria.trigger === 'entity_hurt_player'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<entity-killed-player
+				v-else-if="criteria.trigger === 'entity_killed_player'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<filled-bucket
+				v-else-if="criteria.trigger === 'filled_bucket'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<fishing-rod-hooked 
+				v-else-if="criteria.trigger === 'fishing_rod_hooked'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<hero-of-the-village
+				v-else-if="criteria.trigger === 'hero_of_the_village'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<div v-else-if="criteria.trigger === 'impossible'">
+				impossible
+			</div>
+			<inventory-changed
+				v-else-if="criteria.trigger === 'inventory_changed'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<item-durability-changed
+				v-else-if="criteria.trigger === 'item_durability_changed'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<item-used-on-block
+				v-else-if="criteria.trigger === 'item_used_on_block'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<killed-by-crossbow
+				v-else-if="criteria.trigger === 'killed_by_crossbow'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<levitation
+				v-else-if="criteria.trigger === 'levitation'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<location
+				v-else-if="criteria.trigger === 'location'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<nether-travel
+				v-else-if="criteria.trigger === 'nether_travel'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<placed-block
+				v-else-if="criteria.trigger === 'placed_block'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<player-generates-container-loot
+				v-else-if="criteria.trigger === 'player_generates_container_loot'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<player-hurt-entity
+				v-else-if="criteria.trigger === 'player_hurt_entity'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<player-interacted-with-entity
+				v-else-if="criteria.trigger === 'player_interacted_with_entity'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<player-killed-entity
+				v-else-if="criteria.trigger === 'player_killed_entity'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<recipe-unlocked
+				v-else-if="criteria.trigger === 'recipe_unlocked'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<safely-harvest-honey
+				v-else-if="criteria.trigger === 'safely_harvest_honey'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<shot-crossbow
+				v-else-if="criteria.trigger === 'shot_crossbow'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<slept-in-bed
+				v-else-if="criteria.trigger === 'slept_in_bed'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<slide-down-block
+				v-else-if="criteria.trigger === 'slide_down_block'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<summoned-entity
+				v-else-if="criteria.trigger === 'summoned_entity'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<tame-animal
+				v-else-if="criteria.trigger === 'tame_animal'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<target-hit
+				v-else-if="criteria.trigger === 'target_hit'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<thrown-item-picked-up-by-entity
+				v-else-if="criteria.trigger === 'thrown_item_picked_up_by_entity'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<div v-else-if="criteria.trigger === 'tick'">
+				tick
+			</div>
+			<used-ender-eye
+				v-else-if="criteria.trigger === 'used_ender_eye'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<used-totem
+				v-else-if="criteria.trigger === 'used_totem'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<villager-trade
+				v-else-if="criteria.trigger === 'villager_trade'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<voluntary-exile
+				v-else-if="criteria.trigger === 'voluntary_exile'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<template v-else>
+				{{ $t('builtin.advancement.trigger.notFound') }}
+			</template>
 		</div>
-		<inventory-changed
-			v-else-if="criteria.trigger === 'inventory_changed'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<item-durability-changed
-			v-else-if="criteria.trigger === 'item_durability_changed'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<item-used-on-block
-			v-else-if="criteria.trigger === 'item_used_on_block'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<killed-by-crossbow
-			v-else-if="criteria.trigger === 'killed_by_crossbow'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<levitation
-			v-else-if="criteria.trigger === 'levitation'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<location
-			v-else-if="criteria.trigger === 'location'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<nether-travel
-			v-else-if="criteria.trigger === 'nether_travel'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<placed-block
-			v-else-if="criteria.trigger === 'placed_block'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<player-generates-container-loot
-			v-else-if="criteria.trigger === 'player_generates_container_loot'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<player-hurt-entity
-			v-else-if="criteria.trigger === 'player_hurt_entity'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<player-interacted-with-entity
-			v-else-if="criteria.trigger === 'player_interacted_with_entity'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<player-killed-entity
-			v-else-if="criteria.trigger === 'player_killed_entity'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<recipe-unlocked
-			v-else-if="criteria.trigger === 'recipe_unlocked'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<safely-harvest-honey
-			v-else-if="criteria.trigger === 'safely_harvest_honey'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<shot-crossbow
-			v-else-if="criteria.trigger === 'shot_crossbow'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<slept-in-bed
-			v-else-if="criteria.trigger === 'slept_in_bed'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<slide-down-block
-			v-else-if="criteria.trigger === 'slide_down_block'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<summoned-entity
-			v-else-if="criteria.trigger === 'summoned_entity'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<tame-animal
-			v-else-if="criteria.trigger === 'tame_animal'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<target-hit
-			v-else-if="criteria.trigger === 'target_hit'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<thrown-item-picked-up-by-entity
-			v-else-if="criteria.trigger === 'thrown_item_picked_up_by_entity'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<div v-else-if="criteria.trigger === 'tick'">
-			tick
-		</div>
-		<used-ender-eye
-			v-else-if="criteria.trigger === 'used_ender_eye'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<used-totem
-			v-else-if="criteria.trigger === 'used_totem'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<villager-trade
-			v-else-if="criteria.trigger === 'villager_trade'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<voluntary-exile
-			v-else-if="criteria.trigger === 'voluntary_exile'"
-			v-model="$props.modelValue[i].conditions"
-		/>
-		<template v-else>
-			<span>Not found</span>
-		</template>
-	</template>
+	</q-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, PropType, watch } from 'vue';
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { capitalize } from 'src/vue/plugins/app';
+import { selectedAdvancement } from '../../../lib/getChild';
 import { criteria } from '../../../conditions';
-import { trigger } from '../../../model';
+import { triggers } from '../../../model';
 
 import BeeNestDestroyed from './bee_nest_destroyed.vue';
 import BredAnimals from './bred_animals.vue';
@@ -282,31 +310,101 @@ export default defineComponent({
 		VillagerTrade,
 		VoluntaryExile
 	},
-	props: {
-		modelValue: {
-			type: Object as PropType<Record<criteria, trigger>>,
-			required: true
-		}
-	},
-	emits: ['update:modelValue'],
-	setup (props, { emit }) {
+	setup () {
+		const { t } = useI18n();
+		const criterias: { value: string, label: string }[] = [
+			{ value: 'bee_nest_destroyed', label: capitalize(t('builtin.advancement.trigger.beeNestDestroyed')) },
+			{ value: 'bred_animals', label: capitalize(t('builtin.advancement.trigger.bredAnimals')) },
+			{ value: 'brewed_potion', label: capitalize(t('builtin.advancement.trigger.brewedPotion')) },
+			{ value: 'changed_dimension', label: capitalize(t('builtin.advancement.trigger.changedDimension')) },
+			{ value: 'channeled_lightning', label: capitalize(t('builtin.advancement.trigger.channeledLightning')) },
+			{ value: 'construct_beacon', label: capitalize(t('builtin.advancement.trigger.constructBeacon')) },
+			{ value: 'consume_item', label: capitalize(t('builtin.advancement.trigger.consumeItem')) },
+			{ value: 'cured_zombie_villager', label: capitalize(t('builtin.advancement.trigger.curedZombieVillager')) },
+			{ value: 'effects_changed', label: capitalize(t('builtin.advancement.trigger.effectsChanged')) },
+			{ value: 'enchanted_item', label: capitalize(t('builtin.advancement.trigger.enchantedItem')) },
+			{ value: 'enter_block', label: capitalize(t('builtin.advancement.trigger.enterBlock')) },
+			{ value: 'entity_hurt_player', label: capitalize(t('builtin.advancement.trigger.entityHurtPlayer')) },
+			{ value: 'entity_killed_player', label: capitalize(t('builtin.advancement.trigger.entityKilledPlayer')) },
+			{ value: 'filled_bucket', label: capitalize(t('builtin.advancement.trigger.filledBucket')) },
+			{ value: 'fishing_rod_hooked', label: capitalize(t('builtin.advancement.trigger.fishingRodHooked')) },
+			{ value: 'hero_of_the_village', label: capitalize(t('builtin.advancement.trigger.heroOfTheVillage')) },
+			{ value: 'impossible', label: capitalize(t('builtin.advancement.trigger.impossible')) },
+			{ value: 'inventory_changed', label: capitalize(t('builtin.advancement.trigger.inventoryChanged')) },
+			{ value: 'item_durability_changed', label: capitalize(t('builtin.advancement.trigger.itemDurabilityChanged')) },
+			{ value: 'item_used_on_block', label: capitalize(t('builtin.advancement.trigger.itemUsedOnBlock')) },
+			{ value: 'killed_by_crossbow', label: capitalize(t('builtin.advancement.trigger.killedByCrossbow')) },
+			{ value: 'levitation', label: capitalize(t('builtin.advancement.trigger.levitation')) },
+			{ value: 'location', label: capitalize(t('builtin.advancement.trigger.location')) },
+			{ value: 'nether_travel', label: capitalize(t('builtin.advancement.trigger.netherTravel')) },
+			{ value: 'placed_block', label: capitalize(t('builtin.advancement.trigger.placedBlock')) },
+			{ value: 'player_generates_container_loot', label: capitalize(t('builtin.advancement.trigger.playerGeneratesContainerLoot')) },
+			{ value: 'player_hurt_entity', label: capitalize(t('builtin.advancement.trigger.playerHurtEntity')) },
+			{ value: 'player_interacted_with_entity', label: capitalize(t('builtin.advancement.trigger.playerInteractedWithEntity')) },
+			{ value: 'player_killed_entity', label: capitalize(t('builtin.advancement.trigger.playerKilledEntity')) },
+			{ value: 'recipe_unlocked', label: capitalize(t('builtin.advancement.trigger.recipeUnlocked')) },
+			{ value: 'safely_harvest_honey', label: capitalize(t('builtin.advancement.trigger.safelyHarvestHoney')) },
+			{ value: 'shot_crossbow', label: capitalize(t('builtin.advancement.trigger.shotCrossbow')) },
+			{ value: 'slept_in_bed', label: capitalize(t('builtin.advancement.trigger.sleptInBed')) },
+			{ value: 'slide_down_block', label: capitalize(t('builtin.advancement.trigger.slideDownBlock')) },
+			{ value: 'summoned_entity', label: capitalize(t('builtin.advancement.trigger.summonedEntity')) },
+			{ value: 'tame_animal', label: capitalize(t('builtin.advancement.trigger.tameAnimal')) },
+			{ value: 'target_hit', label: capitalize(t('builtin.advancement.trigger.targetHit')) },
+			{ value: 'thrown_item_picked_up_by_entity', label: capitalize(t('builtin.advancement.trigger.thrownItemPickedUpByEntity')) },
+			{ value: 'tick', label: capitalize(t('builtin.advancement.trigger.tick')) },
+			{ value: 'used_ender_eye', label: capitalize(t('builtin.advancement.trigger.usedEnderEye')) },
+			{ value: 'used_totem', label: capitalize(t('builtin.advancement.trigger.usedTotem')) },
+			{ value: 'villager_trade', label: capitalize(t('builtin.advancement.trigger.villagerTrade')) },
+			{ value: 'voluntary_exile', label: capitalize(t('builtin.advancement.trigger.voluntaryExile'))
+			}
+		];
+
 		const getTrad = (c: criteria) => c.toLowerCase().replace(/([-_][a-z])/g, group =>
 			group
 				.toUpperCase()
 				.replace('-', '')
 				.replace('_', '')
 		);
+		const generateRandomName = () => {
+			return `default_${[ ...crypto.getRandomValues(new Uint8Array(8)) ]
+				.map((e) =>('0' + e.toString(16)).slice(-2))
+				.join('')}`;
+		};
 
-		onBeforeMount(() => {
-			watch(props.modelValue, (val) => emit('update:modelValue', val));
-		});
+		const addCriteria = () => {
+			selectedAdvancement.value.child.data.criteria.push({
+				name: generateRandomName(),
+				trigger: null,
+				conditions: null,
+			} as triggers);
+		};
+		const changeTrigger = (index: number) => {
+			selectedAdvancement.value.child.data.criteria[index].conditions = {} as unknown;
+		};
+		const deleteCriteria = (index: number) => {
+			selectedAdvancement.value.child.data.criteria.splice(index, 1);
+		};
 
 		return {
-			getTrad
+			selectedAdvancement,
+			criterias,
+
+			getTrad,
+			generateRandomName,
+
+			addCriteria,
+			changeTrigger,
+			deleteCriteria
 		};
 	}
 });
 </script>
 
 <style scoped>
+.main-select {
+	width: 70%;
+}
+.select {
+	width: 50%;
+}
 </style>

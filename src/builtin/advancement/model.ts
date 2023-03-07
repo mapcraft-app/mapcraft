@@ -34,11 +34,6 @@ export interface display {
 	},
 	background:'minecraft:textures/gui/advancements/backgrounds/stone.png' | string 
 }
-
-export interface trigger {
-	trigger: criteria,
-	conditions: any
-}
 //#endregion Display
 
 //#region Type
@@ -213,11 +208,17 @@ export interface rewards {
 	function?: string
 }
 
+export interface triggers {
+	name: string;
+	trigger: criteria | null;
+	conditions: any
+}
+
 export interface advancement {
 	id: string;
 	data: {
 		display: display;
-		criteria: Record<string, trigger>,
+		criteria: triggers[],
 		requirements: string[][],
 		rewards: rewards
 	},

@@ -1,57 +1,46 @@
 <template>
 	<div class="column">
 		<q-input
-			v-model.number="$props.modelValue.experience"
+			v-model.number="selectedAdvancement.child.data.rewards.experience"
 			class="q-pa-sm"
 			type="number"
 			min="0"
-			label="Experience"
+			:label="$capitalize($t('builtin.advancement.tab.rewards.experience'))"
 		/>
 		<q-card square flat bordered class="q-pa-sm q-mb-sm">
 			<div class="row justify-center q-mb-sm">
-				<span class="text-h6 text-weight-regular">Recipes</span>
+				<span class="text-h6 text-weight-regular">{{ $capitalize($t('builtin.advancement.tab.rewards.recipes')) }}</span>
 			</div>
-			<string-array v-model="$props.modelValue.recipes" />
+			<string-array v-model="selectedAdvancement.child.data.rewards.recipes" />
 		</q-card>
 		<q-card square flat bordered class="q-pa-sm">
 			<div class="row justify-center q-mb-sm">
-				<span class="text-h6 text-weight-regular">Loot tables</span>
+				<span class="text-h6 text-weight-regular">{{ $capitalize($t('builtin.advancement.tab.rewards.loot')) }}</span>
 			</div>
-			<string-array v-model="$props.modelValue.loot" />
+			<string-array v-model="selectedAdvancement.child.data.rewards.loot" />
 		</q-card>
 		<q-input
-			v-model="$props.modelValue.function"
+			v-model="selectedAdvancement.child.data.rewards.function"
 			class="q-pa-sm"
-			label="Function"
+			:label="$capitalize($t('builtin.advancement.tab.rewards.function'))"
 		/>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, onBeforeMount, watch } from 'vue';
+import { defineComponent } from 'vue';
+import { selectedAdvancement } from '../../lib/getChild';
 import StringArray from './stringArray.vue';
-import { rewards } from '../../model';
 
 export default defineComponent({
 	name: 'Rewards',
 	components: {
 		StringArray
 	},
-	props: {
-		modelValue: {
-			type: Object as PropType<rewards>,
-			required: true
-		}
-	},
-	emits: ['update:modelValue'],
-	setup (props, { emit }) {
-		onBeforeMount(() => {
-			watch(props.modelValue, (val) => emit('update:modelValue', val), { deep: true });
-		});
+	setup () {
+		return {
+			selectedAdvancement
+		};
 	}
 });
 </script>
-
-<style scoped>
-
-</style>

@@ -4,7 +4,17 @@ export default {
 	},
 
 	main: {
-		name: 'Nom'
+		name: 'Nom',
+		save: {
+			start: 'sauvegarde des progrès',
+			end: 'sauvegarde des progrès réussi',
+			fail: 'sauvegarde des progrès échoué',
+		},
+		autosave: {
+			start: 'auto-sauvegarde des progrès',
+			end: 'auto-sauvegarde des progrès réussi',
+			fail: 'auto-sauvegarde des progrès échoué',
+		},
 	},
 
 	interface: {
@@ -112,6 +122,40 @@ export default {
 	},
 
 	tab: {
+		background: 'image d\'arrière-plan',
+		display: {
+			title: 'titre',
+			description: 'description',
+			iconItem: 'icône de l\'élément',
+			nbt: 'nbt',
+			frame: 'cadre',
+			toast: 'montrer le toast ?',
+			chat: 'annoncer dans le chat ?',
+			hidden: 'caché ?',
+
+			text: 'texte',
+			color: 'couleur',
+			noResult: 'aucun résultat',
+			bold: 'gras',
+			italic: 'italique',
+			obfuscated: 'obfusqué',
+			strikethrough: 'barré',
+			underlined: 'souligné',
+			colorList: ['noir', 'bleu foncé', 'vert foncé', 'bleu eau foncé', 'rouge foncé', 'violet foncé', 'or', 'gris', 'gris foncé', 'bleu', 'vert', 'bleu eau', 'rouge', 'violet clair', 'jaune', 'blanc']
+		},
+		requirements: {
+			and: 'et'
+		},
+		rewards: {
+			experience: 'expérience',
+			recipes: 'recettes',
+			loot: 'tables de butin',
+			function: 'fonction'
+		},
+		
+		beeNestDestroyed: {
+			number: 'nombre d\'abeilles à l\'intérieur'
+		},
 		bredAnimals: {
 			child: 'enfant',
 			parent: 'parent',
@@ -211,6 +255,7 @@ export default {
 		usedEnderEye: 'Œil d\'ender utilisé',
 		usedTotem: 'Totem utilisé',
 		villagerTrade: 'Commerce de villageois',
-		voluntaryExile: 'L\'exil volontaire'
+		voluntaryExile: 'L\'exil volontaire',
+		notFound: 'Ce critère n\'existe pas'
 	}
 };

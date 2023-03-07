@@ -7,28 +7,28 @@ import { ipcFunctions } from 'electron/ipc/ipcType';
 const ipcWindow = <BrowserWindow>BrowserWindow.fromId(Number(process.env.WINDOW_ID));
 
 export default [
-	(event: Electron.IpcMainEvent): void => {
+	(_event: Electron.IpcMainEvent): void => {
 		if (!ipcWindow.webContents.isDevToolsOpened())
 			ipcWindow.webContents.openDevTools();
 		else
 			ipcWindow.webContents.closeDevTools();
 	},
-	(event: Electron.IpcMainEvent): void => {
+	(_event: Electron.IpcMainEvent): void => {
 		ipcWindow.close();
 	},
-	(event: Electron.IpcMainEvent): void => {
+	(_event: Electron.IpcMainEvent): void => {
 		ipcWindow.setFullScreen(!ipcWindow.isFullScreen());
 	},
-	(event: Electron.IpcMainEvent): void => {
+	(_event: Electron.IpcMainEvent): void => {
 		if (!ipcWindow.isMaximized())
 			ipcWindow.maximize();
 		else
 			ipcWindow.unmaximize();
 	},
-	(event: Electron.IpcMainEvent): void => {
+	(_event: Electron.IpcMainEvent): void => {
 		ipcWindow.minimize();
 	},
-	(event: Electron.IpcMainEvent, error: string): void => {
+	(_event: Electron.IpcMainEvent, error: string): void => {
 		throw new Error(error);
 	}
 ] as ipcFunctions;
