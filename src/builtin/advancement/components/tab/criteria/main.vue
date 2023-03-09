@@ -216,9 +216,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { capitalize } from 'src/vue/plugins/app';
+import { capitalize } from 'vue/plugins/app';
+
 import { selectedAdvancement } from '../../../lib/getChild';
 import { criteria } from '../../../conditions';
 import { triggers } from '../../../model';
@@ -311,53 +312,57 @@ export default defineComponent({
 		VoluntaryExile
 	},
 	setup () {
-		const { t } = useI18n();
-		const criterias: { value: string, label: string }[] = [
-			{ value: 'bee_nest_destroyed', label: capitalize(t('builtin.advancement.trigger.beeNestDestroyed')) },
-			{ value: 'bred_animals', label: capitalize(t('builtin.advancement.trigger.bredAnimals')) },
-			{ value: 'brewed_potion', label: capitalize(t('builtin.advancement.trigger.brewedPotion')) },
-			{ value: 'changed_dimension', label: capitalize(t('builtin.advancement.trigger.changedDimension')) },
-			{ value: 'channeled_lightning', label: capitalize(t('builtin.advancement.trigger.channeledLightning')) },
-			{ value: 'construct_beacon', label: capitalize(t('builtin.advancement.trigger.constructBeacon')) },
-			{ value: 'consume_item', label: capitalize(t('builtin.advancement.trigger.consumeItem')) },
-			{ value: 'cured_zombie_villager', label: capitalize(t('builtin.advancement.trigger.curedZombieVillager')) },
-			{ value: 'effects_changed', label: capitalize(t('builtin.advancement.trigger.effectsChanged')) },
-			{ value: 'enchanted_item', label: capitalize(t('builtin.advancement.trigger.enchantedItem')) },
-			{ value: 'enter_block', label: capitalize(t('builtin.advancement.trigger.enterBlock')) },
-			{ value: 'entity_hurt_player', label: capitalize(t('builtin.advancement.trigger.entityHurtPlayer')) },
-			{ value: 'entity_killed_player', label: capitalize(t('builtin.advancement.trigger.entityKilledPlayer')) },
-			{ value: 'filled_bucket', label: capitalize(t('builtin.advancement.trigger.filledBucket')) },
-			{ value: 'fishing_rod_hooked', label: capitalize(t('builtin.advancement.trigger.fishingRodHooked')) },
-			{ value: 'hero_of_the_village', label: capitalize(t('builtin.advancement.trigger.heroOfTheVillage')) },
-			{ value: 'impossible', label: capitalize(t('builtin.advancement.trigger.impossible')) },
-			{ value: 'inventory_changed', label: capitalize(t('builtin.advancement.trigger.inventoryChanged')) },
-			{ value: 'item_durability_changed', label: capitalize(t('builtin.advancement.trigger.itemDurabilityChanged')) },
-			{ value: 'item_used_on_block', label: capitalize(t('builtin.advancement.trigger.itemUsedOnBlock')) },
-			{ value: 'killed_by_crossbow', label: capitalize(t('builtin.advancement.trigger.killedByCrossbow')) },
-			{ value: 'levitation', label: capitalize(t('builtin.advancement.trigger.levitation')) },
-			{ value: 'location', label: capitalize(t('builtin.advancement.trigger.location')) },
-			{ value: 'nether_travel', label: capitalize(t('builtin.advancement.trigger.netherTravel')) },
-			{ value: 'placed_block', label: capitalize(t('builtin.advancement.trigger.placedBlock')) },
-			{ value: 'player_generates_container_loot', label: capitalize(t('builtin.advancement.trigger.playerGeneratesContainerLoot')) },
-			{ value: 'player_hurt_entity', label: capitalize(t('builtin.advancement.trigger.playerHurtEntity')) },
-			{ value: 'player_interacted_with_entity', label: capitalize(t('builtin.advancement.trigger.playerInteractedWithEntity')) },
-			{ value: 'player_killed_entity', label: capitalize(t('builtin.advancement.trigger.playerKilledEntity')) },
-			{ value: 'recipe_unlocked', label: capitalize(t('builtin.advancement.trigger.recipeUnlocked')) },
-			{ value: 'safely_harvest_honey', label: capitalize(t('builtin.advancement.trigger.safelyHarvestHoney')) },
-			{ value: 'shot_crossbow', label: capitalize(t('builtin.advancement.trigger.shotCrossbow')) },
-			{ value: 'slept_in_bed', label: capitalize(t('builtin.advancement.trigger.sleptInBed')) },
-			{ value: 'slide_down_block', label: capitalize(t('builtin.advancement.trigger.slideDownBlock')) },
-			{ value: 'summoned_entity', label: capitalize(t('builtin.advancement.trigger.summonedEntity')) },
-			{ value: 'tame_animal', label: capitalize(t('builtin.advancement.trigger.tameAnimal')) },
-			{ value: 'target_hit', label: capitalize(t('builtin.advancement.trigger.targetHit')) },
-			{ value: 'thrown_item_picked_up_by_entity', label: capitalize(t('builtin.advancement.trigger.thrownItemPickedUpByEntity')) },
-			{ value: 'tick', label: capitalize(t('builtin.advancement.trigger.tick')) },
-			{ value: 'used_ender_eye', label: capitalize(t('builtin.advancement.trigger.usedEnderEye')) },
-			{ value: 'used_totem', label: capitalize(t('builtin.advancement.trigger.usedTotem')) },
-			{ value: 'villager_trade', label: capitalize(t('builtin.advancement.trigger.villagerTrade')) },
-			{ value: 'voluntary_exile', label: capitalize(t('builtin.advancement.trigger.voluntaryExile'))
-			}
-		];
+		const { t, locale } = useI18n();
+		const criterias = ref<{ value: string, label: string }[]>([]);
+
+		const generateCriteriaList = () => {
+			criterias.value = [
+				{ value: 'bee_nest_destroyed', label: capitalize(t('builtin.advancement.trigger.beeNestDestroyed')) },
+				{ value: 'bred_animals', label: capitalize(t('builtin.advancement.trigger.bredAnimals')) },
+				{ value: 'brewed_potion', label: capitalize(t('builtin.advancement.trigger.brewedPotion')) },
+				{ value: 'changed_dimension', label: capitalize(t('builtin.advancement.trigger.changedDimension')) },
+				{ value: 'channeled_lightning', label: capitalize(t('builtin.advancement.trigger.channeledLightning')) },
+				{ value: 'construct_beacon', label: capitalize(t('builtin.advancement.trigger.constructBeacon')) },
+				{ value: 'consume_item', label: capitalize(t('builtin.advancement.trigger.consumeItem')) },
+				{ value: 'cured_zombie_villager', label: capitalize(t('builtin.advancement.trigger.curedZombieVillager')) },
+				{ value: 'effects_changed', label: capitalize(t('builtin.advancement.trigger.effectsChanged')) },
+				{ value: 'enchanted_item', label: capitalize(t('builtin.advancement.trigger.enchantedItem')) },
+				{ value: 'enter_block', label: capitalize(t('builtin.advancement.trigger.enterBlock')) },
+				{ value: 'entity_hurt_player', label: capitalize(t('builtin.advancement.trigger.entityHurtPlayer')) },
+				{ value: 'entity_killed_player', label: capitalize(t('builtin.advancement.trigger.entityKilledPlayer')) },
+				{ value: 'filled_bucket', label: capitalize(t('builtin.advancement.trigger.filledBucket')) },
+				{ value: 'fishing_rod_hooked', label: capitalize(t('builtin.advancement.trigger.fishingRodHooked')) },
+				{ value: 'hero_of_the_village', label: capitalize(t('builtin.advancement.trigger.heroOfTheVillage')) },
+				{ value: 'impossible', label: capitalize(t('builtin.advancement.trigger.impossible')) },
+				{ value: 'inventory_changed', label: capitalize(t('builtin.advancement.trigger.inventoryChanged')) },
+				{ value: 'item_durability_changed', label: capitalize(t('builtin.advancement.trigger.itemDurabilityChanged')) },
+				{ value: 'item_used_on_block', label: capitalize(t('builtin.advancement.trigger.itemUsedOnBlock')) },
+				{ value: 'killed_by_crossbow', label: capitalize(t('builtin.advancement.trigger.killedByCrossbow')) },
+				{ value: 'levitation', label: capitalize(t('builtin.advancement.trigger.levitation')) },
+				{ value: 'location', label: capitalize(t('builtin.advancement.trigger.location')) },
+				{ value: 'nether_travel', label: capitalize(t('builtin.advancement.trigger.netherTravel')) },
+				{ value: 'placed_block', label: capitalize(t('builtin.advancement.trigger.placedBlock')) },
+				{ value: 'player_generates_container_loot', label: capitalize(t('builtin.advancement.trigger.playerGeneratesContainerLoot')) },
+				{ value: 'player_hurt_entity', label: capitalize(t('builtin.advancement.trigger.playerHurtEntity')) },
+				{ value: 'player_interacted_with_entity', label: capitalize(t('builtin.advancement.trigger.playerInteractedWithEntity')) },
+				{ value: 'player_killed_entity', label: capitalize(t('builtin.advancement.trigger.playerKilledEntity')) },
+				{ value: 'recipe_unlocked', label: capitalize(t('builtin.advancement.trigger.recipeUnlocked')) },
+				{ value: 'safely_harvest_honey', label: capitalize(t('builtin.advancement.trigger.safelyHarvestHoney')) },
+				{ value: 'shot_crossbow', label: capitalize(t('builtin.advancement.trigger.shotCrossbow')) },
+				{ value: 'slept_in_bed', label: capitalize(t('builtin.advancement.trigger.sleptInBed')) },
+				{ value: 'slide_down_block', label: capitalize(t('builtin.advancement.trigger.slideDownBlock')) },
+				{ value: 'summoned_entity', label: capitalize(t('builtin.advancement.trigger.summonedEntity')) },
+				{ value: 'tame_animal', label: capitalize(t('builtin.advancement.trigger.tameAnimal')) },
+				{ value: 'target_hit', label: capitalize(t('builtin.advancement.trigger.targetHit')) },
+				{ value: 'thrown_item_picked_up_by_entity', label: capitalize(t('builtin.advancement.trigger.thrownItemPickedUpByEntity')) },
+				{ value: 'tick', label: capitalize(t('builtin.advancement.trigger.tick')) },
+				{ value: 'used_ender_eye', label: capitalize(t('builtin.advancement.trigger.usedEnderEye')) },
+				{ value: 'used_totem', label: capitalize(t('builtin.advancement.trigger.usedTotem')) },
+				{ value: 'villager_trade', label: capitalize(t('builtin.advancement.trigger.villagerTrade')) },
+				{ value: 'voluntary_exile', label: capitalize(t('builtin.advancement.trigger.voluntaryExile'))
+				}
+			];
+		};
 
 		const getTrad = (c: criteria) => c.toLowerCase().replace(/([-_][a-z])/g, group =>
 			group
@@ -384,6 +389,16 @@ export default defineComponent({
 		const deleteCriteria = (index: number) => {
 			selectedAdvancement.value.child.data.criteria.splice(index, 1);
 		};
+
+		onBeforeMount(() => {
+			generateCriteriaList();
+			for (let i = 0; i < selectedAdvancement.value.child.data.criteria.length; i++) {
+				if (!Object.prototype.hasOwnProperty.call(selectedAdvancement.value.child.data.criteria[i], 'conditions'))
+					selectedAdvancement.value.child.data.criteria[i].conditions = {} as any;
+			}
+
+			watch(locale, () => generateCriteriaList());
+		});
 
 		return {
 			selectedAdvancement,

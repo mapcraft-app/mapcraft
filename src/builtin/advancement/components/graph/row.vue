@@ -32,6 +32,19 @@
 				</div>
 			</div>
 		</div>
+		<div class="column no-wrap justify-evenly q-pl-sm">
+			<q-btn
+				square unelevated
+				color="orange"
+				icon="subdirectory_arrow_right" 
+			/>
+			<q-btn
+				square unelevated
+				icon="delete" color="red"
+				@click="deleteRow()"
+			/>
+		</div>
+		
 	</div>
 </template>
 
@@ -95,6 +108,10 @@ export default defineComponent({
 		};
 		const getTexture = (name: string) => window.advancement.getTexture(name);
 
+		const deleteRow = () => {
+			console.log('delete');
+		};
+
 		const backgroundSelected = computed(() => {
 			if (selectedNodeId.value === rowId.value) {
 				return `treeRow ${($q.dark.isActive)
@@ -122,12 +139,14 @@ export default defineComponent({
 		return {
 			rowId,
 			expand,
-
 			isExpand,
+
 			isSelected,
 			expandSelected,
 			calcExpand,
 			getTexture,
+			deleteRow,
+
 			backgroundSelected,
 			treeElement
 		};

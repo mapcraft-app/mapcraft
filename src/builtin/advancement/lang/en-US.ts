@@ -15,6 +15,13 @@ export default {
 			end: 'autosave advancement success',
 			fail: 'autosave advancement failed',
 		},
+		delete: {
+			start: 'delete advancement',
+			end: 'delete advancement success',
+			fail: 'delete advancement failed',
+		},
+		fsError: 'an error while writing the file has occurred',
+		rmError: 'an error while deleting the file has occurred'
 	},
 
 	interface: {

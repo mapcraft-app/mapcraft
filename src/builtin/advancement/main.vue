@@ -8,41 +8,44 @@
 		<template v-slot:before>
 			<div class="main">
 				<div class="list">
+					<q-btn
+						color="green" outline
+						square icon="add"
+						class="button-add-adv"
+						@click="addAdvancement()"
+					/>
 					<q-list separator>
 						<q-item
 							v-for="(adv, index) of advancementsList"
-							:key="adv.id"
+							:key="adv.data.id"
 							v-ripple
 							clickable
 							:class="(index === indexAdv) ? 'select-adv': ''"
 							@click="selectAdvancement(index)"
 						>
-							<q-item-section>{{ adv.name }}</q-item-section>
+							<q-item-section>{{ adv.data.name }}</q-item-section>
 						</q-item>
 					</q-list>
 				</div>
 				<div class="tree">
 					<template v-if="indexAdv >= 0">
 						<div class="top">
-							<q-input v-model="advancementsList[indexAdv].name" label="Name" class="input" />
+							<q-input v-model="advancementsList[indexAdv].data.name" label="Name" class="input" />
 							<div>
-								<q-btn square color="green" icon="save" unelevated />
-								<q-btn square color="orange" icon="settings" unelevated />
-								<q-btn square color="red" icon="delete" unelevated />
+								<q-btn
+									square color="green"
+									icon="save" unelevated
+									@click="saveAll()"
+								/>
+								<q-btn
+									square color="red"
+									icon="delete" unelevated
+									@click="deleteFile()"
+								/>
 							</div>
 						</div>
-						<div class="bottom column">
-							<graph-row
-								:id="idOfRoot"
-								v-model="advancementsList[indexAdv].data"
-								root
-							/>
-							<graph-tree
-								v-if="advancementsList[indexAdv].data.children?.length"
-								:id="idOfRoot"
-								v-model="advancementsList[indexAdv].data.children"
-								:line="['empty']"
-							/>
+						<div v-if="advancementsList[indexAdv].data" class="bottom column">
+							<graph-main />
 						</div>
 					</template>
 				</div>
@@ -74,10 +77,10 @@
 						
 					>
 						<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
-							<tab-root v-model="advancementsList[indexAdv].background" />
+							<tab-root v-model="advancementsList[indexAdv].data.background" />
 						</q-tab-panel>
 						<q-tab-panel name="title">
-							<tab-display @update="titleSave()" />
+							<tab-display @update="saveAdvancement()" />
 						</q-tab-panel>
 						<q-tab-panel name="criteria">
 							<tab-criteria />
@@ -98,15 +101,15 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
+import { useQuasar, QSpinnerPuff } from 'quasar';
 import { capitalize } from 'vue/plugins/app';
 import { mapStore } from 'store/map';
-import { getChild, saveChild, selectedAdvancement } from './lib/getChild';
+import { adv, getChild, saveChild, selectedAdvancement } from './lib/getChild';
+import reduceJson from './lib/reduceJson';
 import { main } from './model';
-import { selectedNode, selectedNodeId, resetStore } from './store';
+import { advancementsList, indexAdv, selectedNode, selectedNodeId, resetStore } from './store';
 
-import GraphRow from './components/graph/row.vue';
-import GraphTree from './components/graph/tree.vue';
+import GraphMain from './components/graph/main.vue';
 import TabRoot from './components/tab/root.vue';
 import TabDisplay from './components/tab/display/display.vue';
 import TabCriteria from './components/tab/criteria/main.vue';
@@ -116,8 +119,7 @@ import TabRewards from './components/tab/rewards.vue';
 export default defineComponent({
 	name: 'Advancement',
 	components: {
-		GraphRow,
-		GraphTree,
+		GraphMain,
 		TabRoot,
 		TabDisplay,
 		TabCriteria,
@@ -129,50 +131,152 @@ export default defineComponent({
 		const { t } = useI18n();
 		const store = mapStore();
 		const idOfRoot = 0;
-		const advancementsList = ref<main[]>([]);
-		const indexAdv = ref<number>(-1);
 		const tab = ref<'root' | 'title' | 'criteria' | 'requirements' | 'rewards'>('root');
 		let autosaveInterval: NodeJS.Timer; // eslint-disable-line no-undef
 
 		const selectAdvancement = (index: number) => {
+			if (indexAdv.value !== -1)
+				saveFile();
 			indexAdv.value = index;
+			selectedAdvancement.value = {} as adv;
 			selectedNodeId.value = -1;
 		};
-
-		//#region Save
-		const save = async (autosave = false, notif = true) => {
-			if (selectedAdvancement.value.child.id !== '__DEFINE__') {
-				saveChild(advancementsList.value[indexAdv.value]);
-				if (notif) {
+		const addAdvancement = () => {
+			window.advancement.create()
+				.then((d) => advancementsList.value.push(d))
+				.catch((e) => {
+					console.error(e);
 					$q.notify({
 						group: false,
 						timeout: 2500,
-						spinner: false,
+						icon: 'error',
 						position: 'top-right',
-						icon: 'task_alt',
+						color: 'red-7',
+						message: capitalize(t('builtin.advancement.main.fsError'))
+					});
+				});
+		};
+
+		const saveFile = async (autosave = false) => {
+			if (indexAdv.value === -1)
+				return;
+			const notif = $q.notify({
+				group: false,
+				timeout: 0,
+				position: 'top-right',
+				spinner: QSpinnerPuff,
+				color: 'orange-7',
+				message: autosave
+					? capitalize(t('builtin.advancement.main.autosave.start'))
+					: capitalize(t('builtin.advancement.main.save.start'))
+			});
+			window.advancement.save(
+				JSON.stringify({
+					path: advancementsList.value[indexAdv.value].path,
+					data: reduceJson(advancementsList.value[indexAdv.value].data) as main
+				})
+			)
+				.then(() => {
+					notif({
 						color: 'green-7',
+						spinner: false,
+						icon: 'task_alt',
+						timeout: 2500,
 						message: autosave
 							? capitalize(t('builtin.advancement.main.autosave.end'))
 							: capitalize(t('builtin.advancement.main.save.end'))
 					});
-				}
-			}
+				})
+				.catch((e) => {
+					window.log.error(e);
+					if (e.code) {
+						notif({
+							color: 'red-7',
+							spinner: false,
+							icon: 'error',
+							timeout: 2500,
+							message: capitalize(t('builtin.advancement.main.fsError'))
+						});
+					} else {
+						notif({
+							color: 'red-7',
+							spinner: false,
+							icon: 'error',
+							timeout: 2500,
+							message: autosave
+								? capitalize(t('builtin.advancement.main.autosave.fail'))
+								: capitalize(t('builtin.advancement.main.save.fail'))
+						});
+					}
+				});
 		};
-		const titleSave = () => save(false, false);
-		//#endregion Save
+		const deleteFile = () => {
+			const notif = $q.notify({
+				group: false,
+				timeout: 0,
+				position: 'top-right',
+				spinner: QSpinnerPuff,
+				color: 'orange-7',
+				message: capitalize(t('builtin.advancement.main.delete.start'))
+			});
+			window.advancement.delete(JSON.stringify(advancementsList.value[indexAdv.value]))
+				.then(() => {
+					advancementsList.value.splice(indexAdv.value, 1);
+					notif({
+						color: 'green-7',
+						spinner: false,
+						icon: 'task_alt',
+						timeout: 2500,
+						message: capitalize(t('builtin.advancement.main.delete.end'))
+					});
+				})
+				.catch((e) => {
+					window.log.error(e);
+					if (e.code) {
+						notif({
+							color: 'red-7',
+							spinner: false,
+							icon: 'error',
+							timeout: 2500,
+							message: capitalize(t('builtin.advancement.main.rmError'))
+						});
+					} else {
+						notif({
+							color: 'red-7',
+							spinner: false,
+							icon: 'error',
+							timeout: 2500,
+							message: capitalize(t('builtin.advancement.main.delete.fail'))
+						});
+					}
+				});
+		};
+
+		const saveAdvancement = () => {
+			if (Object.keys(selectedAdvancement.value).length > 0
+				&& 'child' in selectedAdvancement.value
+				&& 'id' in selectedAdvancement.value.child
+				&& selectedAdvancement.value.child.id !== '__DEFINE__'
+			)
+				saveChild(advancementsList.value[indexAdv.value].data);
+		};
+		const saveAll = (autosave = false) => {
+			saveAdvancement();
+			saveFile(autosave);
+		};
 
 		onBeforeMount(() => {
-			resetStore();
+			resetStore(true);
 			window.advancement.init(store.getMapPath(), store.minecraftVersion);
-			advancementsList.value = window.advancement.getList();
-			autosaveInterval = setInterval(() => save(true), 300000 /* 5min */);
+			advancementsList.value = window.advancement.gets();
+			autosaveInterval = setInterval(() => saveAll(true), 300000 /* 5min */);
 
 			watch(selectedNode, (node) => {
 				if (!node)
 					return;
 				if (Object.keys(selectedAdvancement.value).length)
-					save();
-				getChild(advancementsList.value[indexAdv.value], node);
+					saveAdvancement();
+				getChild(advancementsList.value[indexAdv.value].data, node);
 				if (!selectedAdvancement.value.isRoot && tab.value === 'root')
 					tab.value = 'title';
 			});
@@ -180,19 +284,26 @@ export default defineComponent({
 
 		onBeforeUnmount(() => {
 			clearInterval(autosaveInterval);
-			save(true);
+			saveAll();
+			resetStore(true);
 		});
 
 		return {
 			splitter: ref(50),
 			idOfRoot,
+			selectedNodeId,
 			advancementsList,
 			indexAdv,
 			selectedAdvancement,
 			tab,
 
-			titleSave,
-			selectAdvancement
+			selectAdvancement,
+			addAdvancement,
+
+			saveFile,
+			deleteFile,
+			saveAdvancement,
+			saveAll
 		};
 	}
 });
@@ -245,7 +356,10 @@ export default defineComponent({
 	overflow: auto;
 	flex-wrap: nowrap;
 }
-
+.button-add-adv {
+	margin: 0.2em;
+	width: calc(100% - 0.4em);
+}
 .select-adv {
 	background-color: rgba(0,0,0,0.2);
 }

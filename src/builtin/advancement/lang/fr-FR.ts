@@ -15,6 +15,13 @@ export default {
 			end: 'auto-sauvegarde des progrès réussi',
 			fail: 'auto-sauvegarde des progrès échoué',
 		},
+		delete: {
+			start: 'suppression du progrès',
+			end: 'suppression du progrès réussi',
+			fail: 'suppression du progrès échoué',
+		},
+		fsError: 'une erreur s\'est produite lors de l\'écriture du fichier',
+		rmError: 'une erreur s\'est produite lors de la suppression du fichier'
 	},
 
 	interface: {

@@ -29,7 +29,7 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: {
-			type: Array as PropType<advancement[]>,
+			type: Array as PropType<advancement[] | any>,
 			required: true
 		},
 		id: {
@@ -54,11 +54,10 @@ export default defineComponent({
 				return [ ...props.line, (next)
 					? 'empty'
 					: 'lastCollapse' ];
-			} else {
-				if (index < props.modelValue.length - 1)
-					return [ ...props.line, 'children' ];
-				return [ ...props.line, 'angle' ];
 			}
+			if (index < props.modelValue.length - 1)
+				return [ ...props.line, 'children' ];
+			return [ ...props.line, 'angle' ];
 		};
 
 		onBeforeMount(() => {

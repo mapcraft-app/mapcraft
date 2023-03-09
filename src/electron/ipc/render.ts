@@ -52,7 +52,7 @@ if (import.meta.env.DEV) {
 		if (el.reply)
 			ret.reply = el.reply;
 		return ret;
-	}));
+	}).sort((a, b) => a.name.localeCompare(b.name)));
 }
 
 const checkIpc = (channel: string): boolean => {

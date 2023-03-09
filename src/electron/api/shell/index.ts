@@ -44,7 +44,7 @@ export class Shell {
 			}
 		});
 		if (import.meta.env.DEV)
-			console.log('SHELL:', this.commands);
+			console.log('SHELL:', this.commands.sort((a, b) => a.name.localeCompare(b.name)));
 	}
 
 	private isExist(name: string) {

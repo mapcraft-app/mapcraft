@@ -17,8 +17,8 @@
 		<template v-else-if="type !== 'empty'">
 			<q-icon
 				tag="span"
-				:class="($q.dark.isActive) ? 'dark-mode ' : ''"
-				:name="($props.expanded) ? 'expand_less' : 'expand_more'"
+				:class="isDarkMode"
+				:name="isExpanded"
 				@click="expandToggle"
 			/>
 			<svg v-if="type === 'collapse'" viewBox="0 0 50 94">
@@ -37,7 +37,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
+import { useQuasar } from 'quasar';
 import { line } from './interface';
 
 export default defineComponent({
@@ -54,11 +55,25 @@ export default defineComponent({
 		}
 	},
 	emits: ['selected'],
-	setup (_props, { emit }) {
+	setup (props, { emit }) {
+		const $q = useQuasar();
+		
 		const expandToggle = () => emit('selected');
+		const isDarkMode = computed(() => {
+			if ($q.dark.isActive)
+				return 'dark-mode';
+			return '';
+		});
+		const isExpanded = computed(() => {
+			if (props.expanded)
+				return 'expand_less';
+			return 'expand_more';
+		});
 
 		return {
-			expandToggle
+			expandToggle,
+			isDarkMode,
+			isExpanded
 		};
 	}
 });

@@ -66,6 +66,10 @@ export default defineConfig((env) => ({
 	clearScreen: false,
 	publicDir: './src/public',
 	logLevel: 'error',
+	define: {
+		__VUE_I18N_FULL_INSTALL__: true,
+    __VUE_I18N_LEGACY_API__: false,
+	},
 	build: {
 		emptyOutDir: true,
 		target: ['esnext', 'chrome100'],
