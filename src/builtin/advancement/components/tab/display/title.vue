@@ -6,7 +6,7 @@
 	</div>
 	<div
 		class="row justify-center q-mb-xs"
-		:style="`min-height: 34px; border: solid 1px ${($q.dark.isActive ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)')}`"
+		:class="darkTitle"
 	>
 		<span class="text-h6 text-weight-light" :style="textFormat">
 			{{ innerText }}
@@ -60,6 +60,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, onBeforeMount, onUnmounted, reactive, ref, watch } from 'vue';
+import { useQuasar } from 'quasar';
 import { textColor, titleModel } from '../../../model';
 import { capitalize } from 'src/vue/plugins/app';
 import { useI18n } from 'vue-i18n';
@@ -84,6 +85,7 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
+		const $q = useQuasar();
 		const { t } = useI18n();
 
 		const data = ref<titleModel>(props.modelValue);
@@ -147,6 +149,11 @@ export default defineComponent({
 				colorsOptions.value = hexaColors.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
 			});
 		};
+		const darkTitle = computed(() => {
+			if ($q.dark.isActive)
+				return 'dark';
+			return 'white';
+		});
 
 		onBeforeMount(() => {
 			watch(selectedColor, (val) => {
@@ -176,8 +183,23 @@ export default defineComponent({
 
 			textFormat,
 			innerText,
-			filterFn
+			filterFn,
+
+			darkTitle
 		};
 	}
 });
 </script>
+
+<style scoped>
+.white {
+	border: solid 1px rgba(255, 255, 255, 0.4);
+	background-color: rgba(0, 0, 0, .5);
+	min-height: 34px;
+}
+.dark {
+	border: solid 1px rgba(0, 0, 0, 0.4);
+	background-color: rgba(255, 255, 255, .5);
+	min-height: 34px;
+}
+</style>

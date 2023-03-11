@@ -8,6 +8,7 @@ export interface adv {
 }
 
 export const selectedAdvancement = ref<adv>({} as adv);
+export const numberOfChild = ref<number>(-1);
 
 export const getChild = (json: main, id: string): adv => {
 	let child: advancement | undefined = undefined;
@@ -20,10 +21,10 @@ export const getChild = (json: main, id: string): adv => {
 					delete child.children;
 				return;
 			}
-			if (c.children)
-				recursive(c.children);
 			if (child)
 				return;
+			if (c.children)
+				recursive(c.children);
 		}
 	};
 
@@ -39,14 +40,106 @@ export const getChild = (json: main, id: string): adv => {
 	return selectedAdvancement.value;
 };
 
-export const saveChild = (json: main, child?: advancement): void => {
+const newChild = (json: main) => {
+	if (numberOfChild.value === -1) {
+		const recursive = (children: advancement[]): void => {
+			for (const i in children) {
+				const temp = Number(children[i].id);
+				if (temp > numberOfChild.value)
+					numberOfChild.value = temp;
+				if (children[i].children)
+					recursive(children[i].children ?? []);
+			}
+		};
+		numberOfChild.value = Number(json.data.id);
+		recursive(json.data.children ?? []);
+	}
+	numberOfChild.value = numberOfChild.value + 1;
+	
+	return {
+		id: String(numberOfChild.value),
+		data: {
+			display: {
+				icon: {
+					item: 'minecraft:stone',
+					nbt: ''
+				},
+				announce_to_chat: false,
+				frame: 'task',
+				hidden: false,
+				show_toast: false,
+				namespace: {
+					text: 'mapcraft-data'
+				},
+				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
+				title: {
+        	text: 'New child',
+        	color: 'white',
+					bold: false,
+					italic: false,
+					underlined: false,
+					strikethrough: false,
+					obfuscated: false
+				},
+				description: {
+					text: 'New child description',
+					color: 'white',
+					bold: false,
+					italic: false,
+					underlined: false,
+					strikethrough: false,
+					obfuscated: false
+				}
+			},
+			criteria: [],
+			requirements: [],
+			rewards: {},
+			children: []
+		}
+	} as advancement;
+};
+
+export const addChildren = (json: main, id: string): void => {
+	let isAdd = false;
+
 	const recursive = (children: advancement[]): void => {
 		for (const i in children) {
-			if (child && children[i].id === child.id)
+			if (isAdd)
+				return;
+			if (Number(children[i].id) === Number(id)) {
+				if (!children[i].children?.length)
+					children[i].children = [];
+				children[i].children?.push(newChild(json));
+				isAdd = true;
+				return;
+			}
+			if (children[i].children)
+				recursive(children[i].children ?? []);
+		}
+	};
+
+	if (json.data.id === id)
+		json.data.children?.push(newChild(json));
+	else
+		recursive(json.data.children ?? []);
+};
+
+export const saveChild = (json: main, child?: advancement): void => {
+	let isSave = false;
+
+	const recursive = (children: advancement[]): void => {
+		for (const i in children) {
+			if (child && children[i].id === child.id) {
 				children[i].data = deepClone(child.data);
-			else if (children[i].id === selectedAdvancement.value.child.id)
+				isSave = true;
+			} else if (children[i].id === selectedAdvancement.value.child.id) {
 				children[i].data = deepClone(selectedAdvancement.value.child.data);
-			return;
+				isSave = true;
+			}
+			if (isSave)
+				return;
+			if (children[i].children)
+				recursive(children[i].children ?? []);
 		}
 	};
 

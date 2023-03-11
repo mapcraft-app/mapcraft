@@ -45,7 +45,13 @@
 							</div>
 						</div>
 						<div v-if="advancementsList[indexAdv].data" class="bottom column">
-							<graph-main />
+							<!-- <graph-main /> -->
+							<graph-tree
+								:key="calcChildNumber(advancementsList[indexAdv].data.data)"
+								:advancement="advancementsList[indexAdv].data.data"
+								:last-line="['root']"
+								:root="true"
+							/>
 						</div>
 					</template>
 				</div>
@@ -104,12 +110,14 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { capitalize } from 'vue/plugins/app';
 import { mapStore } from 'store/map';
-import { adv, getChild, saveChild, selectedAdvancement } from './lib/getChild';
+import { adv, getChild, saveChild, selectedAdvancement, numberOfChild } from './lib/getChild';
 import reduceJson from './lib/reduceJson';
-import { main } from './model';
-import { advancementsList, indexAdv, selectedNode, selectedNodeId, resetStore } from './store';
+import { main, advancement } from './model';
+import { advancementsList, indexAdv, selectedNode, resetStore } from './store';
 
-import GraphMain from './components/graph/main.vue';
+// import GraphMain from './components/graph/main.vue';
+import GraphTree from './components/graph/tree.vue';
+
 import TabRoot from './components/tab/root.vue';
 import TabDisplay from './components/tab/display/display.vue';
 import TabCriteria from './components/tab/criteria/main.vue';
@@ -119,7 +127,8 @@ import TabRewards from './components/tab/rewards.vue';
 export default defineComponent({
 	name: 'Advancement',
 	components: {
-		GraphMain,
+		//GraphMain,
+		GraphTree,
 		TabRoot,
 		TabDisplay,
 		TabCriteria,
@@ -139,8 +148,11 @@ export default defineComponent({
 				saveFile();
 			indexAdv.value = index;
 			selectedAdvancement.value = {} as adv;
-			selectedNodeId.value = -1;
+			numberOfChild.value = -1;
 		};
+		const calcChildNumber = (node: advancement) => (node.children)
+			? node.children.length
+			: 0;
 		const addAdvancement = () => {
 			window.advancement.create()
 				.then((d) => advancementsList.value.push(d))
@@ -160,7 +172,7 @@ export default defineComponent({
 		const saveFile = async (autosave = false) => {
 			if (indexAdv.value === -1)
 				return;
-			const notif = $q.notify({
+			/*const notif = $q.notify({
 				group: false,
 				timeout: 0,
 				position: 'top-right',
@@ -208,10 +220,10 @@ export default defineComponent({
 								: capitalize(t('builtin.advancement.main.save.fail'))
 						});
 					}
-				});
+				});*/
 		};
 		const deleteFile = () => {
-			const notif = $q.notify({
+			/*const notif = $q.notify({
 				group: false,
 				timeout: 0,
 				position: 'top-right',
@@ -249,7 +261,7 @@ export default defineComponent({
 							message: capitalize(t('builtin.advancement.main.delete.fail'))
 						});
 					}
-				});
+				});*/
 		};
 
 		const saveAdvancement = () => {
@@ -291,7 +303,6 @@ export default defineComponent({
 		return {
 			splitter: ref(50),
 			idOfRoot,
-			selectedNodeId,
 			advancementsList,
 			indexAdv,
 			selectedAdvancement,
@@ -299,6 +310,7 @@ export default defineComponent({
 
 			selectAdvancement,
 			addAdvancement,
+			calcChildNumber,
 
 			saveFile,
 			deleteFile,

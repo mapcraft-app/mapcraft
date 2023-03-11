@@ -65,7 +65,7 @@ export default defineComponent({
 			return '';
 		});
 		const isExpanded = computed(() => {
-			if (props.expanded)
+			if (!props.expanded)
 				return 'expand_less';
 			return 'expand_more';
 		});
