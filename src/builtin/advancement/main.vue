@@ -149,11 +149,8 @@ export default defineComponent({
 			indexAdv.value = index;
 			selectedAdvancement.value = {} as adv;
 			numberOfChild.value = -1;
-			if (!Object.prototype.hasOwnProperty.call(advancementsList.value[indexAdv.value].data, 'data')) {
+			if (!Object.prototype.hasOwnProperty.call(advancementsList.value[indexAdv.value].data, 'data'))
 				initChild(advancementsList.value[indexAdv.value].data);
-				console.log('hello');
-			}
-				
 		};
 		const calcChildNumber = (main: main) => (main.data && main.data.children)
 			? main.data.children.length
@@ -228,6 +225,8 @@ export default defineComponent({
 				});
 		};
 		const deleteFile = () => {
+			if (indexAdv.value === -1)
+				return;
 			const notif = $q.notify({
 				group: false,
 				timeout: 0,
@@ -239,6 +238,7 @@ export default defineComponent({
 			window.advancement.delete(JSON.stringify(advancementsList.value[indexAdv.value]))
 				.then(() => {
 					advancementsList.value.splice(indexAdv.value, 1);
+					indexAdv.value = -1;
 					notif({
 						color: 'green-7',
 						spinner: false,

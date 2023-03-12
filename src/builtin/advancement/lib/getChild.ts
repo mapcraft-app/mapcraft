@@ -23,9 +23,6 @@ const setChild = (): advancement => {
 				frame: 'task',
 				hidden: false,
 				show_toast: false,
-				namespace: {
-					text: 'mapcraft-data'
-				},
 				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
 				title: {
         	text: 'New child',

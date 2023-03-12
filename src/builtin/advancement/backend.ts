@@ -1,4 +1,5 @@
 import { exposeInMainWorld } from 'app/src/api/plugins/backend';
+import { randomBytes } from 'crypto';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { mkdir, rm, writeFile } from 'fs/promises';
 import { extname, resolve } from 'path';
@@ -7,8 +8,7 @@ import { minecraft } from 'mapcraft-api';
 import iso from 'api/isoDate';
 import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { envInterface } from '../interface';
-import { main, advancement as advancementModel } from './model';
-import { randomBytes } from 'crypto';
+import { main } from './model';
 
 interface advancementList {
 	path: string;
@@ -92,9 +92,7 @@ class advancement {
 			const data = {
 				id,
 				name: 'new advancement',
-				namespace: 'mapcraft-data',
 				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
-				data: {} as advancementModel
 			} as main;
 			writeFile(
 				path,

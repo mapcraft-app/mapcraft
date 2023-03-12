@@ -7,7 +7,7 @@
 			<q-toolbar class="bg-grey-3 flex justify-evenly">
 				<q-btn color="secondary" :label="$t('layouts.main.main.options')" @click="option?.show()"/>
 				<q-dialog ref="option">
-					<q-card class="layout-map-option-dialog">
+					<q-card class="layout-map-option-dialog" flat>
 						<q-card-section class="row items-center q-pb-none">
 							<div class="text-h6">{{ $t('layouts.main.main.options') }}</div>
 							<q-space />

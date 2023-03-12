@@ -14,7 +14,6 @@
 		<q-drawer
 			v-model="leftDrawerOpen"
 			show-if-above
-			bordered
 			overlay
 			side="left"
 			:class="!$q.dark.isActive ? 'main-layout-bg-drawer' : ''"

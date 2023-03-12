@@ -29,9 +29,6 @@ export interface display {
 	show_toast: boolean,
 	announce_to_chat: boolean,
 	hidden: boolean,
-	namespace: {
-		text: 'mapcraft-data' | string
-	},
 	background:'minecraft:textures/gui/advancements/backgrounds/stone.png' | string 
 }
 //#endregion Display
@@ -228,7 +225,6 @@ export interface advancement {
 export interface main {
 	id: string;
 	name: string;
-	namespace: 'mapcraft-data' | string;
 	background: 'minecraft:textures/gui/advancements/backgrounds/stone.png' | string;
 	data: advancement
 }
