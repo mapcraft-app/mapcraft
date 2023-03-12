@@ -1,8 +1,8 @@
 <template>
 	<div class="column items-center">
 		<q-btn
-			color="green-7" outline icon="add"
-			style="width:40%"
+			color="green" outline icon="add"
+			class="full-width"
 			@click="() => addReward()"
 		/>
 		<template

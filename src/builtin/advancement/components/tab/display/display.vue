@@ -23,6 +23,7 @@
 		:block="true"
 		:item="true"
 		:label="$capitalize($t('builtin.advancement.tab.display.iconItem'))"
+		@update:model-value="isUpdate()"
 	/>
 	<q-input
 		v-model="selectedAdvancement.child.data.display.icon.nbt"

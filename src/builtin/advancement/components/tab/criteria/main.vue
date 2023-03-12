@@ -1,6 +1,6 @@
 <template>
 	<q-btn
-		oulined color="green"
+		outline color="green"
 		icon="add" class="full-width"
 		@click="addCriteria()"
 	/>

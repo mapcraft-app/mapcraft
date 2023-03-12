@@ -45,9 +45,8 @@
 							</div>
 						</div>
 						<div v-if="advancementsList[indexAdv].data" class="bottom column">
-							<!-- <graph-main /> -->
 							<graph-tree
-								:key="calcChildNumber(advancementsList[indexAdv].data.data)"
+								:key="calcChildNumber(advancementsList[indexAdv].data)"
 								:advancement="advancementsList[indexAdv].data.data"
 								:last-line="['root']"
 								:root="true"
@@ -62,25 +61,29 @@
 				<div class="left-menu">
 					<q-tabs
 						v-model="tab"
-						class="text-teal q-pa-sm"
 						vertical
+						class="text-teal q-pa-sm"
 					>
-						<q-tab v-if="selectedAdvancement.isRoot" name="root" icon="tag" label="Root" />
+						<q-tab
+							v-if="selectedAdvancement.isRoot"
+							name="root"
+							icon="tag"
+							label="Root"
+						/>
 						<q-tab name="title" icon="title" label="Display" />
 						<q-tab name="criteria" icon="list" label="Criteria" />
 						<q-tab name="requirements" icon="checklist" label="Requirements" />
 						<q-tab name="rewards" icon="star" label="Rewards" />
 					</q-tabs>
 				</div>
-				<div v-if="Object.keys(selectedAdvancement).length" class="def">
+				<div v-if="isEdit" class="def">
 					<q-tab-panels
 						:key="selectedAdvancement.child.id"
 						v-model="tab"
 						animated
 						transition-prev="fade"
 						transition-next="fade"
-						style="background-color: rgba(0,0,0,0);"
-						
+						class="invisible-back"
 					>
 						<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
 							<tab-root v-model="advancementsList[indexAdv].data.background" />
@@ -105,19 +108,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, defineComponent, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { capitalize } from 'vue/plugins/app';
 import { mapStore } from 'store/map';
-import { adv, getChild, saveChild, selectedAdvancement, numberOfChild } from './lib/getChild';
+import { adv, getChild, saveChild, selectedAdvancement, numberOfChild, initChild } from './lib/getChild';
 import reduceJson from './lib/reduceJson';
-import { main, advancement } from './model';
+import { main } from './model';
 import { advancementsList, indexAdv, selectedNode, resetStore } from './store';
 
-// import GraphMain from './components/graph/main.vue';
 import GraphTree from './components/graph/tree.vue';
-
 import TabRoot from './components/tab/root.vue';
 import TabDisplay from './components/tab/display/display.vue';
 import TabCriteria from './components/tab/criteria/main.vue';
@@ -127,7 +128,6 @@ import TabRewards from './components/tab/rewards.vue';
 export default defineComponent({
 	name: 'Advancement',
 	components: {
-		//GraphMain,
 		GraphTree,
 		TabRoot,
 		TabDisplay,
@@ -149,9 +149,14 @@ export default defineComponent({
 			indexAdv.value = index;
 			selectedAdvancement.value = {} as adv;
 			numberOfChild.value = -1;
+			if (!Object.prototype.hasOwnProperty.call(advancementsList.value[indexAdv.value].data, 'data')) {
+				initChild(advancementsList.value[indexAdv.value].data);
+				console.log('hello');
+			}
+				
 		};
-		const calcChildNumber = (node: advancement) => (node.children)
-			? node.children.length
+		const calcChildNumber = (main: main) => (main.data && main.data.children)
+			? main.data.children.length
 			: 0;
 		const addAdvancement = () => {
 			window.advancement.create()
@@ -172,7 +177,7 @@ export default defineComponent({
 		const saveFile = async (autosave = false) => {
 			if (indexAdv.value === -1)
 				return;
-			/*const notif = $q.notify({
+			const notif = $q.notify({
 				group: false,
 				timeout: 0,
 				position: 'top-right',
@@ -220,10 +225,10 @@ export default defineComponent({
 								: capitalize(t('builtin.advancement.main.save.fail'))
 						});
 					}
-				});*/
+				});
 		};
 		const deleteFile = () => {
-			/*const notif = $q.notify({
+			const notif = $q.notify({
 				group: false,
 				timeout: 0,
 				position: 'top-right',
@@ -261,11 +266,12 @@ export default defineComponent({
 							message: capitalize(t('builtin.advancement.main.delete.fail'))
 						});
 					}
-				});*/
+				});
 		};
 
 		const saveAdvancement = () => {
-			if (Object.keys(selectedAdvancement.value).length > 0
+			if (indexAdv.value >= 0
+				&& Object.keys(selectedAdvancement.value).length > 0
 				&& 'child' in selectedAdvancement.value
 				&& 'id' in selectedAdvancement.value.child
 				&& selectedAdvancement.value.child.id !== '__DEFINE__'
@@ -276,6 +282,8 @@ export default defineComponent({
 			saveAdvancement();
 			saveFile(autosave);
 		};
+
+		const isEdit = computed(() => advancementsList.value.length > 0 && indexAdv.value >= 0 && Object.keys(selectedAdvancement.value).length > 0);
 
 		onBeforeMount(() => {
 			resetStore(true);
@@ -315,7 +323,8 @@ export default defineComponent({
 			saveFile,
 			deleteFile,
 			saveAdvancement,
-			saveAll
+			saveAll,
+			isEdit
 		};
 	}
 });
@@ -374,5 +383,8 @@ export default defineComponent({
 }
 .select-adv {
 	background-color: rgba(0,0,0,0.2);
+}
+.invisible-back {
+	background-color: rgba(0,0,0,0);
 }
 </style>

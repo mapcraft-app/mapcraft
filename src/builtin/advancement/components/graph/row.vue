@@ -25,7 +25,7 @@
 					{{ $props.advancement.data.display.title.text }}
 				</span>
 				<div class="block">
-					<img :src="$toPublic(`/imgs/minecraft/block/${getTexture($props.advancement.data.display.icon.item).id}.webp`)" />
+					<img :src="getTexture" />
 				</div>
 			</div>
 		</div>
@@ -37,6 +37,7 @@
 				@click="addChild()"
 			/>
 			<q-btn
+				:disable="root"
 				square unelevated
 				icon="delete" color="red"
 				@click="deleteChild()"
@@ -51,10 +52,11 @@ import { computed, defineComponent, PropType } from 'vue';
 import { useQuasar } from 'quasar';
 import GraphLine from './line.vue';
 
-import { advancement } from '../../model';
 import { line } from './interface';
-import { addChildren } from '../../lib/getChild';
-import { advancementsList, indexAdv, selectedNode } from '../../store';
+import { advancement } from '../../model';
+import { addChildren, adv, removeChildren, selectedAdvancement } from '../../lib/getChild';
+import { advancementsList, indexAdv, resetStore, selectedNode } from '../../store';
+import { toPublic } from 'vue/plugins/app';
 
 export default defineComponent({
 	name: 'GraphRow',
@@ -86,13 +88,14 @@ export default defineComponent({
 		const $q = useQuasar();
 
 		const toggleSelected = () => emit('toggle');
-		const getTexture = (name: string) => window.advancement.getTexture(name);
 		const isSelected = () => selectedNode.value = props.advancement.id;
-		const addChild = () => {
-			addChildren(advancementsList.value[indexAdv.value].data, props.advancement.id);
-		};
+		const addChild = () => addChildren(advancementsList.value[indexAdv.value].data, props.advancement.id);
 		const deleteChild = () => {
-			console.log('delete child');
+			if (selectedNode.value === props.advancement.id) {
+				selectedAdvancement.value = {} as adv;
+				resetStore();
+			}
+			removeChildren(advancementsList.value[indexAdv.value].data, props.advancement.id);
 		};
 
 		const backgroundSelected = computed(() => {
@@ -103,22 +106,23 @@ export default defineComponent({
 			}
 			return 'treeRow';
 		});
-
 		const treeElement = computed(() => {
 			if ($q.dark.isActive)
 				return 'treeElement dark-mode';
 			return 'treeElement';
 		});
+		const getTexture = computed(() => toPublic(`/imgs/minecraft/block/${window.advancement.getTexture(props.advancement.data.display.icon.item).id}.webp`));
 
 		return {
+			
 			toggleSelected,
-			getTexture,
 			isSelected,
 			addChild,
 			deleteChild,
 
 			backgroundSelected,
-			treeElement
+			treeElement,
+			getTexture,
 		};
 	}
 });

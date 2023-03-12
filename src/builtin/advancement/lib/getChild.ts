@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import deepClone from 'api/deepClone';
-import { advancement, main } from '../model';
+import { advancement, main, rewards, triggers } from '../model';
 
 export interface adv {
 	isRoot: boolean;
@@ -9,6 +9,50 @@ export interface adv {
 
 export const selectedAdvancement = ref<adv>({} as adv);
 export const numberOfChild = ref<number>(-1);
+
+const setChild = (): advancement => {
+	return {
+		id: String(numberOfChild.value++),
+		data: {
+			display: {
+				icon: {
+					item: 'minecraft:stone',
+					nbt: ''
+				},
+				announce_to_chat: false,
+				frame: 'task',
+				hidden: false,
+				show_toast: false,
+				namespace: {
+					text: 'mapcraft-data'
+				},
+				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
+				title: {
+        	text: 'New child',
+        	color: 'white',
+					bold: false,
+					italic: false,
+					underlined: false,
+					strikethrough: false,
+					obfuscated: false
+				},
+				description: {
+					text: 'New child description',
+					color: 'white',
+					bold: false,
+					italic: false,
+					underlined: false,
+					strikethrough: false,
+					obfuscated: false
+				}
+			},
+			criteria: [] as triggers[],
+			requirements: [] as string[][],
+			rewards: {} as rewards,
+		},
+		children: undefined
+	} as advancement;
+};
 
 export const getChild = (json: main, id: string): adv => {
 	let child: advancement | undefined = undefined;
@@ -54,63 +98,30 @@ const newChild = (json: main) => {
 		numberOfChild.value = Number(json.data.id);
 		recursive(json.data.children ?? []);
 	}
-	numberOfChild.value = numberOfChild.value + 1;
 	
-	return {
-		id: String(numberOfChild.value),
-		data: {
-			display: {
-				icon: {
-					item: 'minecraft:stone',
-					nbt: ''
-				},
-				announce_to_chat: false,
-				frame: 'task',
-				hidden: false,
-				show_toast: false,
-				namespace: {
-					text: 'mapcraft-data'
-				},
-				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
-				title: {
-        	text: 'New child',
-        	color: 'white',
-					bold: false,
-					italic: false,
-					underlined: false,
-					strikethrough: false,
-					obfuscated: false
-				},
-				description: {
-					text: 'New child description',
-					color: 'white',
-					bold: false,
-					italic: false,
-					underlined: false,
-					strikethrough: false,
-					obfuscated: false
-				}
-			},
-			criteria: [],
-			requirements: [],
-			rewards: {},
-			children: []
-		}
-	} as advancement;
+	return setChild();
 };
 
-export const addChildren = (json: main, id: string): void => {
-	let isAdd = false;
+export const initChild = (data: main): void => {
+	numberOfChild.value = 0;
+	data.data = setChild();
+};
+
+const manage = (json: main, id: string, add = true) => {
+	let isMade = false;
 
 	const recursive = (children: advancement[]): void => {
 		for (const i in children) {
-			if (isAdd)
+			if (isMade)
 				return;
 			if (Number(children[i].id) === Number(id)) {
-				if (!children[i].children?.length)
-					children[i].children = [];
-				children[i].children?.push(newChild(json));
-				isAdd = true;
+				if (add) {
+					if (!Object.prototype.hasOwnProperty.call(children[i], 'children') || !children[i].children)
+						children[i].children = [];
+					children[i].children?.push(newChild(json));
+				} else
+					children.splice(Number(i), 1);
+				isMade = true;
 				return;
 			}
 			if (children[i].children)
@@ -118,11 +129,18 @@ export const addChildren = (json: main, id: string): void => {
 		}
 	};
 
-	if (json.data.id === id)
-		json.data.children?.push(newChild(json));
-	else
+	if (json.data.id === id) {
+		if (add) {
+			if (!Object.prototype.hasOwnProperty.call(json.data, 'children') || !json.data.children)
+				json.data.children = [];
+			json.data.children?.push(newChild(json));
+		} else
+			delete json.data.children;
+	} else
 		recursive(json.data.children ?? []);
 };
+export const addChildren = (json: main, id: string): void => manage(json, id, true);
+export const removeChildren = (json: main, id: string): void => manage(json, id, false);
 
 export const saveChild = (json: main, child?: advancement): void => {
 	let isSave = false;
