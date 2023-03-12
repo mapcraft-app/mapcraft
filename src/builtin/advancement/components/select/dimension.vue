@@ -1,11 +1,13 @@
 <template>
 	<q-select
-		v-model="color"
+		v-model="dimension"
 		use-input
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="optionsList"
 		:label="stringLabel"
+		emit-value
+		map-options
 		@filter="filter"
 	/>
 </template>
@@ -39,9 +41,13 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const { t } = useI18n();
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.dimension')));
-		const options = ['the_end', 'overworld', 'the_nether'];
-		const optionsList = ref<string[]>(options);
-		const color = ref<dimensionType | null>(props.modelValue ?? null);
+		const options: { label: string, value: string }[] = [
+			{ label: capitalize(t('builtin.advancement.select.theEnd')), value: 'the_end' },
+			{ label: capitalize(t('builtin.advancement.select.overworld')), value: 'overworld' },
+			{ label: capitalize(t('builtin.advancement.select.theNether')), value: 'the_nether' },
+		];
+		const optionsList = ref<{ label: string, value: string }[]>(options);
+		const dimension = ref<dimensionType | null>(props.modelValue ?? null);
 
 		const filter = (val: string, update: any) => {
 			if (val === '') {
@@ -51,13 +57,13 @@ export default defineComponent({
 			} else {
 				update(() => {
 					const needle = val.toLowerCase();
-					optionsList.value = options.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+					optionsList.value = options.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
 				});
 			}
 		};
 
 		onBeforeMount(() => {
-			watch(color, (after) => {
+			watch(dimension, (after) => {
 				if (after)
 					emit('update:modelValue', after);
 			});
@@ -66,7 +72,7 @@ export default defineComponent({
 		return {
 			stringLabel,
 			optionsList,
-			color,
+			dimension,
 			filter
 		};
 	}

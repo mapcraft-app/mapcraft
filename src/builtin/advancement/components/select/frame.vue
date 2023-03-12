@@ -39,7 +39,7 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const { t } = useI18n();
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.frame')));
-		const options = ['challenge', 'task', 'goal'];
+		const options = ['challenge', 'goal', 'task'];
 		const optionsList = ref<string[]>(options);
 		const color = ref<frameType | null>(props.modelValue ?? null);
 

@@ -211,14 +211,16 @@ export interface triggers {
 	conditions: any
 }
 
+export interface insideAdvancement {
+	display: display;
+	criteria: triggers[],
+	requirements: string[][],
+	rewards: rewards
+}
+
 export interface advancement {
 	id: string;
-	data: {
-		display: display;
-		criteria: triggers[],
-		requirements: string[][],
-		rewards: rewards
-	},
+	data: insideAdvancement,
 	children?: advancement[];
 }
 

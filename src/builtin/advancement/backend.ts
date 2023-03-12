@@ -1,18 +1,32 @@
 import { exposeInMainWorld } from 'app/src/api/plugins/backend';
 import { randomBytes } from 'crypto';
-import { existsSync, readdirSync, readFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, rmSync } from 'fs';
 import { mkdir, rm, writeFile } from 'fs/promises';
 import { extname, resolve } from 'path';
 import { minecraft } from 'mapcraft-api';
 
 import iso from 'api/isoDate';
+import deepClone from 'api/deepClone';
 import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { envInterface } from '../interface';
-import { main } from './model';
+import { main, advancement as advance, insideAdvancement, display, rewards } from './model';
 
 interface advancementList {
 	path: string;
 	data: main;
+}
+
+interface criteria {
+	trigger: string;
+	conditions: Record<any, unknown>;
+}
+
+interface realCriteria {
+	display: display;
+	criteria: Record<string, criteria>,
+	requirements: string[][],
+	rewards: rewards,
+	parent?: string
 }
 
 class advancement {
@@ -73,7 +87,6 @@ class advancement {
 		return temp;
 	}
 
-	//#region advancements
 	public getAdvancements() {
 		return this.list;
 	}
@@ -87,8 +100,8 @@ class advancement {
 
 	public createAdvancement(): Promise<advancementList> {
 		return new Promise((res, rej) => {
-			const id = `${randomBytes(6).toString('hex')}_${iso.now().iso.replaceAll(':', '_')}.json`;
-			const path = resolve(this.path.data, id);
+			const id = randomBytes(8).toString('hex');
+			const path = resolve(this.path.data, `${id}_${iso.now().iso.replaceAll(':', '_')}.json`);
 			const data = {
 				id,
 				name: 'new advancement',
@@ -146,7 +159,51 @@ class advancement {
 			rej('not_found');
 		});
 	}
-	//#endregion advancements
+
+	public async generateFiles(path: string): Promise<void> {
+		const adv = this.getAdvancement(path);
+		if (!adv)
+			return;
+
+		const write = (name: string, json: insideAdvancement, parent?: string): string => {
+			const criterias = {} as Record<string, criteria>;
+			for (const adv of json.criteria) {
+				criterias[adv.name] = {
+					trigger: `minecraft:${adv.trigger}`,
+					conditions: deepClone(adv.conditions)
+				} as criteria;
+			}
+			const temp = {
+				display: json.display,
+				criteria: criterias,
+				requirements: json.requirements,
+				rewards: json.rewards
+			} as realCriteria;
+			if (parent)
+				temp.parent = `mapcraft-data:${parent}`;
+			writeFile(
+				resolve(this.path.base, `${adv.data.id}_${name}.json`),
+				JSON.stringify(temp, null, 2),
+				{ flag: 'w', encoding: 'utf-8' }
+			);
+			return `${adv.data.id}_${name}.json`;
+		};
+
+		const recursive = (adv: advance, parent: string) => {
+			if (adv.children && adv.children.length) {
+				for (const child of adv.children) {
+					const retName = write(child.id, child.data, parent);
+					if (child.children && child.children.length)
+						recursive(child, retName);
+				}
+			}
+		};
+		// delete old advancement file(s)
+		readdirSync(this.path.base, { withFileTypes: true }).filter((dir) => dir.isFile() && dir.name.includes(adv.data.id)).forEach((e) => rmSync(resolve(this.path.base, e.name)));
+		// init with root and move to tree
+		const rootName = write('root', adv.data.data.data);
+		recursive(adv.data.data, rootName);
+	}
 }
 
 let __instance__: advancement;
@@ -162,5 +219,6 @@ exposeInMainWorld('advancement', {
 	get: (path: string) => __instance__.getAdvancement(path),
 	create: () => __instance__.createAdvancement(),
 	save: (data: string) => __instance__.saveAdvancement(data),
-	delete: (data: string) => __instance__.deleteAdvancement(data)
+	delete: (data: string) => __instance__.deleteAdvancement(data),
+	generate: (path: string) => __instance__.generateFiles(path)
 });

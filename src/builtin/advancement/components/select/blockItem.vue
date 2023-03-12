@@ -6,6 +6,8 @@
 		:dense="$props.dense"
 		:options="list"
 		:label="label ?? item ? $capitalize($t('builtin.advancement.select.item')) : $capitalize($t('builtin.advancement.select.block'))"
+		emit-value
+		map-options
 		@filter="filter"
 	/>
 </template>
@@ -14,6 +16,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'app/src/store/map';
+import { getter, setter } from '../../lib/regMinecraft';
 
 export default defineComponent({
 	name: 'SelectBlockItem',
@@ -47,34 +50,38 @@ export default defineComponent({
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
 		const store = mapStore();
-		const select = ref<string | null>(props.modelValue ?? null);
-		const elementsList = ref<string[]>([]);
-		const list = ref<string[]>([]);
+		const select = ref<string | null>(setter(props.modelValue));
+		const elementsList: { label: string, value: string }[] = [];
+		const list = ref<{ label: string, value: string }[]>([]);
 
 		const filter = (val: string, update: any) => {
 			if (val === '') {
 				update(() => {
-					list.value = elementsList.value;
+					list.value = elementsList;
 				});
 			} else {
 				update(() => {
 					const needle = val.toLowerCase();
-					list.value = elementsList.value.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+					list.value = elementsList.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
 				});
 			}
 		};
 
 		onBeforeMount(() => {
-			const retBlock = minecraft.get(store.minecraftVersion, 'block') as { name: string }[];
-			const retItem = minecraft.get(store.minecraftVersion, 'item') as { name: string }[];
-			if (retBlock && props.block)
-				elementsList.value = [ ...elementsList.value, ...retBlock.map((e) => e.name) ];
-			if (retItem && props.item)
-				elementsList.value = [ ...elementsList.value, ...retItem.map((e) => e.name) ];
-			list.value = elementsList.value;
+			if (props.block) {
+				(minecraft.get(store.minecraftVersion, 'block') as { name: string }[]).forEach((e) => {
+					elementsList.push({ label: e.name.replaceAll('_', ' '), value: e.name });
+				});
+			}
+			if (props.item) {
+				(minecraft.get(store.minecraftVersion, 'item') as { name: string }[]).forEach((e) => {
+					elementsList.push({ label: e.name.replaceAll('_', ' '), value: e.name });
+				});
+			}
+			list.value = elementsList;
 			watch(select, (after) => {
 				if (after)
-					emit('update:modelValue', after);
+					emit('update:modelValue', getter(after));
 			});
 		});
 

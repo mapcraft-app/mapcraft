@@ -6,6 +6,8 @@
 		:dense="$props.dense"
 		:options="optionsList"
 		:label="stringLabel"
+		emit-value
+		map-options
 		@filter="filter"
 	/>
 </template>
@@ -39,8 +41,13 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const { t } = useI18n();
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.gamemode')));
-		const options = ['adventure', 'creative', 'spectator', 'survival'];
-		const optionsList = ref<string[]>(options);
+		const options: { label: string, value: string }[] = [
+			{ label: capitalize(t('builtin.advancement.select.gamemodes[0]')), value: 'adventure' },
+			{ label: capitalize(t('builtin.advancement.select.gamemodes[1]')), value: 'creative' },
+			{ label: capitalize(t('builtin.advancement.select.gamemodes[2]')), value: 'spectator' },
+			{ label: capitalize(t('builtin.advancement.select.gamemodes[3]')), value: 'survival' },
+		];
+		const optionsList = ref<{ label: string, value: string }[]>(options);
 		const color = ref<gamemodeType | null>(props.modelValue ?? null);
 
 		const filter = (val: string, update: any) => {
@@ -51,7 +58,7 @@ export default defineComponent({
 			} else {
 				update(() => {
 					const needle = val.toLowerCase();
-					optionsList.value = options.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+					optionsList.value = options.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
 				});
 			}
 		};

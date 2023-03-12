@@ -38,6 +38,11 @@
 									@click="saveAll()"
 								/>
 								<q-btn
+									square color="teal"
+									icon="construction" unelevated
+									@click="generateAdvancement()"
+								/>
+								<q-btn
 									square color="red"
 									icon="delete" unelevated
 									@click="deleteFile()"
@@ -283,6 +288,38 @@ export default defineComponent({
 			saveFile(autosave);
 		};
 
+		const generateAdvancement = () => {
+			if (indexAdv.value < 0)
+				return;
+			const notif = $q.notify({
+				group: false,
+				timeout: 0,
+				position: 'top-right',
+				spinner: QSpinnerPuff,
+				color: 'teal',
+				message: capitalize(t('builtin.advancement.main.generate.start'))
+			});
+			window.advancement.generate(advancementsList.value[indexAdv.value].path)
+				.then(() => {
+					notif({
+						color: 'green-7',
+						spinner: false,
+						icon: 'task_alt',
+						timeout: 2500,
+						message: capitalize(t('builtin.advancement.main.generate.end'))
+					});
+				})
+				.catch(() => {
+					notif({
+						color: 'red-7',
+						spinner: false,
+						icon: 'error',
+						timeout: 2500,
+						message: capitalize(t('builtin.advancement.main.generate.fail'))
+					});
+				});
+		};
+
 		const isEdit = computed(() => advancementsList.value.length > 0 && indexAdv.value >= 0 && Object.keys(selectedAdvancement.value).length > 0);
 
 		onBeforeMount(() => {
@@ -324,6 +361,7 @@ export default defineComponent({
 			deleteFile,
 			saveAdvancement,
 			saveAll,
+			generateAdvancement,
 			isEdit
 		};
 	}

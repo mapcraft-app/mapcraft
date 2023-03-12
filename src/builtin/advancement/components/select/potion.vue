@@ -1,11 +1,13 @@
 <template>
 	<q-select
-		v-model="color"
+		v-model="potion"
 		use-input
 		input-debounce="250"
 		:dense="$props.dense"
 		:options="optionsList"
 		:label="stringLabel"
+		emit-value
+		map-options
 		@filter="filter"
 	/>
 </template>
@@ -14,7 +16,11 @@
 import { defineComponent, PropType, ref, onBeforeMount, watch } from 'vue';
 import { capitalize } from 'app/src/vue/plugins/app';
 import { useI18n } from 'vue-i18n';
+import { minecraft } from 'mapcraft-api/frontend';
+import { mapStore } from 'store/map';
 import { potionType } from '../../model';
+import { potions } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import { getter, setter } from '../../lib/regMinecraft';
 
 export default defineComponent({
 	name: 'SelectFrame',
@@ -37,11 +43,20 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
+		const store = mapStore();
 		const { t } = useI18n();
+
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.potion')));
-		const options = ['empty', 'mundane', 'thick', 'awkward', 'night vision', 'long night vision', 'invisibility', 'long invisibility', 'Leaping', 'Long Leaping', 'Strong Leaping', 'Fire Resistance', 'Long Fire Resistance', 'Swiftness', 'Long Swiftness', 'Strong Swiftness', 'long invisibility', 'Slowness', 'Long Slowness', 'Strong Slowness', 'Turtle Master', 'Long Turtle Master', 'Strong Turtle Master', 'Slowness'];
-		const optionsList = ref<string[]>(options);
-		const color = ref<potionType | null>(props.modelValue ?? null);
+		const options: { value: string, label: string }[] = [];
+		(minecraft.get(store.minecraftVersion, 'potion') as potions[]).map((e) => {
+			options.push({ value: e.name, label: e.name.replaceAll('_', ' ') });
+			if (e.long)
+				options.push({ value: e.long, label: e.long.replaceAll('_', ' ') });
+			if (e.strong)
+				options.push({ value: e.strong, label: e.strong.replaceAll('_', ' ') });
+		});
+		const optionsList = ref<{ value: string, label: string }[]>(options);
+		const potion = ref<potionType | null>(setter(props.modelValue) as potionType |null);
 
 		const filter = (val: string, update: any) => {
 			if (val === '') {
@@ -51,22 +66,22 @@ export default defineComponent({
 			} else {
 				update(() => {
 					const needle = val.toLowerCase();
-					optionsList.value = options.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+					optionsList.value = options.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
 				});
 			}
 		};
 
 		onBeforeMount(() => {
-			watch(color, (after) => {
+			watch(potion, (after) => {
 				if (after)
-					emit('update:modelValue', after);
+					emit('update:modelValue', getter(after));
 			});
 		});
 
 		return {
 			stringLabel,
 			optionsList,
-			color,
+			potion,
 			filter
 		};
 	}

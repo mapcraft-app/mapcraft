@@ -16,6 +16,7 @@ import { capitalize } from 'app/src/vue/plugins/app';
 import { useI18n } from 'vue-i18n';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'app/src/store/map';
+import { getter, setter } from '../../lib/regMinecraft';
 
 interface entities {
 	name: string;
@@ -45,7 +46,7 @@ export default defineComponent({
 		const { t } = useI18n();
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.entity')));
 		const store = mapStore();
-		const select = ref<string | null>(props.modelValue ?? null);
+		const select = ref<string | null>(setter(props.modelValue));
 		const elementsList = ref<string[]>([]);
 		const list = ref<string[]>([]);
 
@@ -69,7 +70,7 @@ export default defineComponent({
 			list.value = elementsList.value;
 			watch(select, (after) => {
 				if (after)
-					emit('update:modelValue', after);
+					emit('update:modelValue', getter(after));
 			});
 		});
 

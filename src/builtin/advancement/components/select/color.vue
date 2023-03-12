@@ -6,6 +6,8 @@
 		:dense="$props.dense"
 		:options="optionsList"
 		:label="stringLabel"
+		emit-value
+		map-options
 		@filter="filter"
 	/>
 </template>
@@ -39,9 +41,25 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const { t } = useI18n();
 		const stringLabel = ref<string>(props.label ?? capitalize(t('builtin.advancement.select.color')));
-
-		const options = ['black' ,'dark_blue' ,'dark_green' ,'dark_aqua' ,'dark_red' ,'dark_purpl;e' ,'gold' ,'gray' ,'dark_gray' ,'blue' ,'green' ,'aqua' ,'red' ,'light_purple' ,'yellow' ,'white'];
-		const optionsList = ref<string[]>(options);
+		const options: { value: string, label: string }[] = [
+			{ value: 'black', label: capitalize(t('builtin.advancement.tab.display.colorList[0]')) },
+			{ value: 'dark_blue', label: capitalize(t('builtin.advancement.tab.display.colorList[1]')) },
+			{ value: 'dark_green', label: capitalize(t('builtin.advancement.tab.display.colorList[2]')) },
+			{ value: 'dark_aqua', label: capitalize(t('builtin.advancement.tab.display.colorList[3]')) },
+			{ value: 'dark_red', label: capitalize(t('builtin.advancement.tab.display.colorList[4]'))} ,
+			{ value: 'dark_purple', label: capitalize(t('builtin.advancement.tab.display.colorList[5]')) },
+			{ value: 'gold', label: capitalize(t('builtin.advancement.tab.display.colorList[6]')) },
+			{ value: 'gray', label: capitalize(t('builtin.advancement.tab.display.colorList[7]')) },
+			{ value: 'dark_gray', label: capitalize(t('builtin.advancement.tab.display.colorList[8]')) },
+			{ value: 'blue', label: capitalize(t('builtin.advancement.tab.display.colorList[9]')) },
+			{ value: 'green', label: capitalize(t('builtin.advancement.tab.display.colorList[10]')) },
+			{ value: 'aqua', label: capitalize(t('builtin.advancement.tab.display.colorList[11]')) },
+			{ value: 'red', label: capitalize(t('builtin.advancement.tab.display.colorList[12]')) },
+			{ value: 'light_purple', label: capitalize(t('builtin.advancement.tab.display.colorList[13]')) },
+			{ value: 'yellow', label: capitalize(t('builtin.advancement.tab.display.colorList[14]')) },
+			{ value: 'white', label: capitalize(t('builtin.advancement.tab.display.colorList[15]')) }
+		];
+		const optionsList = ref<{ value: string, label: string }[]>(options);
 		const color = ref<textColor | null>(props.modelValue ?? null);
 
 		const filter = (val: string, update: any) => {
@@ -52,7 +70,7 @@ export default defineComponent({
 			} else {
 				update(() => {
 					const needle = val.toLowerCase();
-					optionsList.value = options.filter((v) => v.toLowerCase().indexOf(needle) > -1);
+					optionsList.value = options.filter((v) => v.label.toLowerCase().indexOf(needle) > -1);
 				});
 			}
 		};

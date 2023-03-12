@@ -20,6 +20,11 @@ export default {
 			end: 'delete advancement success',
 			fail: 'delete advancement failed',
 		},
+		generate: {
+			start: 'generate advancement',
+			end: 'generate advancement success',
+			fail: 'generate advancement failed',
+		},
 		fsError: 'an error while writing the file has occurred',
 		rmError: 'an error while deleting the file has occurred'
 	},
@@ -204,11 +209,15 @@ export default {
 		entity: 'entity',
 		frame: 'frame',
 		gamemode: 'gamemode',
+		gamemodes: ['adventure', 'creative', 'spectator', 'survival'],
 		potion: 'potion',
 		stats: 'stats',
 		structure: 'structure',
 		loot: 'loot',
-		killingBlow: 'killing blow'
+		killingBlow: 'killing blow',
+		theEnd: 'the end',
+		overworld: 'overworld',
+		theNether: 'the nether'
 	},
 
 	type: {

@@ -13,7 +13,8 @@ export declare global {
 			get: (path: string) => { path: string; data: main } | undefined,
 			create: () => Promise<{ path: string; data: main }>,
 			save: (data: string) => Promise<void>,
-			delete: (data: string) => Promise<void>
+			delete: (data: string) => Promise<void>,
+			generate: (path: string) => Promise<void>
 		}
 	}
 }

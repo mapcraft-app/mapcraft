@@ -20,6 +20,11 @@ export default {
 			end: 'suppression du progrès réussi',
 			fail: 'suppression du progrès échoué',
 		},
+		generate: {
+			start: 'génération du progrès',
+			end: 'génération du progrès réussi',
+			fail: 'génération du progrès échoué',
+		},
 		fsError: 'une erreur s\'est produite lors de l\'écriture du fichier',
 		rmError: 'une erreur s\'est produite lors de la suppression du fichier'
 	},
@@ -204,11 +209,15 @@ export default {
 		entity: 'entité',
 		frame: 'cadre',
 		gamemode: 'mode de jeu',
+		gamemodes: ['aventure', 'créatif', 'spectateur', 'survie'],
 		potion: 'potion',
 		stats: 'statistique',
 		structure: 'structure',
 		loot: 'butin',
-		killingBlow: 'coup fatal'
+		killingBlow: 'coup fatal',
+		theEnd: 'l\'end',
+		overworld: 'le monde normal',
+		theNether: 'le nether'
 	},
 
 	type: {
