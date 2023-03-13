@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { selectedAdvancement } from '../../lib/getChild';
+import { selectedAdvancement } from '../../lib/handleAdv';
 import StringArray from './stringArray.vue';
 
 export default defineComponent({

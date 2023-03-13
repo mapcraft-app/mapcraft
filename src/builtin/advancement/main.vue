@@ -118,7 +118,14 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { capitalize } from 'vue/plugins/app';
 import { mapStore } from 'store/map';
-import { adv, getChild, saveChild, selectedAdvancement, numberOfChild, initChild } from './lib/getChild';
+import {
+	adv,
+	getChild,
+	saveChild,
+	selectedAdvancement,
+	calcNumberOfChild,
+	initChild
+} from './lib/handleAdv';
 import reduceJson from './lib/reduceJson';
 import { main } from './model';
 import { advancementsList, indexAdv, selectedNode, resetStore } from './store';
@@ -152,10 +159,12 @@ export default defineComponent({
 			if (indexAdv.value !== -1)
 				saveFile();
 			indexAdv.value = index;
+			selectedNode.value = null;
 			selectedAdvancement.value = {} as adv;
-			numberOfChild.value = -1;
 			if (!Object.prototype.hasOwnProperty.call(advancementsList.value[indexAdv.value].data, 'data'))
 				initChild(advancementsList.value[indexAdv.value].data);
+			else
+				calcNumberOfChild(advancementsList.value[indexAdv.value].data);
 		};
 		const calcChildNumber = (main: main) => (main.data && main.data.children)
 			? main.data.children.length
@@ -254,6 +263,7 @@ export default defineComponent({
 				})
 				.catch((e) => {
 					window.log.error(e);
+					console.error(e);
 					if (e.code) {
 						notif({
 							color: 'red-7',

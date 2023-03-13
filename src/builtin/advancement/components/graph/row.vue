@@ -22,7 +22,14 @@
 		>
 			<div>
 				<span class="q-pl-sm q-pr-sm">
-					{{ $props.advancement.data.display.title.text }}
+					<template v-if="$props.advancement.data.utility === true">
+						<q-badge color="red text-subtitle2">
+							{{ $capitalize($t('builtin.advancement.tab.display.utility[0]')) }}
+						</q-badge>
+					</template>
+					<template v-else>
+						{{ $props.advancement.data.display.title.text }}
+					</template>
 				</span>
 				<div class="block">
 					<img :src="getTexture" />
@@ -54,7 +61,7 @@ import GraphLine from './line.vue';
 
 import { line } from './interface';
 import { advancement } from '../../model';
-import { addChildren, adv, removeChildren, selectedAdvancement } from '../../lib/getChild';
+import { addChildren, adv, removeChildren, selectedAdvancement } from '../../lib/handleAdv';
 import { advancementsList, indexAdv, resetStore, selectedNode } from '../../store';
 import { toPublic } from 'vue/plugins/app';
 
@@ -111,10 +118,14 @@ export default defineComponent({
 				return 'treeElement dark-mode';
 			return 'treeElement';
 		});
-		const getTexture = computed(() => toPublic(`/imgs/minecraft/block/${window.advancement.getTexture(props.advancement.data.display.icon.item).id}.webp`));
+		const getTexture = computed(() => {
+			if (Object.prototype.hasOwnProperty.call(props.advancement.data.display, 'icon')
+				&& Object.prototype.hasOwnProperty.call(props.advancement.data.display.icon, 'item'))
+				return toPublic(`/imgs/minecraft/block/${window.advancement.getTexture(props.advancement.data.display.icon.item).id}.webp`);
+			return toPublic('/imgs/minecraft/no_data.png');
+		});
 
 		return {
-			
 			toggleSelected,
 			isSelected,
 			addChild,

@@ -8,6 +8,7 @@
 		:label="label ?? item ? $capitalize($t('builtin.advancement.select.item')) : $capitalize($t('builtin.advancement.select.block'))"
 		emit-value
 		map-options
+		:error="$props.error"
 		@filter="filter"
 	/>
 </template>
@@ -42,6 +43,11 @@ export default defineComponent({
 			default: undefined
 		},
 		dense: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
+		error: {
 			type: Boolean,
 			required: false,
 			default: false

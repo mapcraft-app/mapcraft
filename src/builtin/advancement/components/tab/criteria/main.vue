@@ -103,7 +103,7 @@
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<div v-else-if="criteria.trigger === 'impossible'">
-				impossible
+				{{ $capitalize($t('builtin.advancement.trigger.impossible')) }}
 			</div>
 			<inventory-changed
 				v-else-if="criteria.trigger === 'inventory_changed'"
@@ -190,7 +190,7 @@
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<div v-else-if="criteria.trigger === 'tick'">
-				tick
+				{{ $capitalize($t('builtin.advancement.trigger.tick')) }}
 			</div>
 			<used-ender-eye
 				v-else-if="criteria.trigger === 'used_ender_eye'"
@@ -220,7 +220,7 @@ import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { capitalize } from 'vue/plugins/app';
 
-import { selectedAdvancement } from '../../../lib/getChild';
+import { selectedAdvancement } from '../../../lib/handleAdv';
 import { criteria } from '../../../conditions';
 import { triggers } from '../../../model';
 

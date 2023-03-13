@@ -87,8 +87,17 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const $q = useQuasar();
 		const { t } = useI18n();
+		
+		const data = ref<titleModel>({
+			text: props.modelValue.text,
+			color: props.modelValue.color ?? 'white',
+			bold: props.modelValue.bold ?? false,
+			italic: props.modelValue.italic ?? false,
+			obfuscated: props.modelValue.obfuscated ?? false,
+			strikethrough: props.modelValue.strikethrough ?? false,
+			underlined: props.modelValue.underlined ?? false
+		} as titleModel);
 
-		const data = ref<titleModel>(props.modelValue);
 
 		const hexaColors: color[] = [
 			{ value: 'black', label: capitalize(t('builtin.advancement.tab.display.colorList[0]')), color: '000000' },
@@ -111,7 +120,9 @@ export default defineComponent({
 		const colorsOptions = ref<color[]>(hexaColors);
 		const selectedColor = ref<color>(hexaColors.find((e) => e.value === data.value.color) ?? hexaColors[hexaColors.length - 1]);
 		
-		const obfuscatedString = reactive<{ str: string, len: number }>({ str: '', len: data.value.text.length });
+		const obfuscatedString = reactive<{ str: string, len: number }>({ str: '', len: (data.value.text)
+			? data.value.text.length
+			: 0 });
 		const obfuscatedTime: NodeJS.Timer = setInterval(() => { // eslint-disable-line no-undef
 			let ret = '';
 			const chars = '1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^&*()-=_+{}[]';
@@ -162,9 +173,13 @@ export default defineComponent({
 			}, { deep: true });
 
 			watch(data, (val) => {
-				val.color = data.value.color;
-				obfuscatedString.len = val.text.length;
-				emit('update:modelValue', val);
+				if ((!val.text || val.text.length <= 0) && val.color === 'white')
+					emit('update:modelValue', {});
+				else {
+					val.color = data.value.color;
+					obfuscatedString.len = val.text.length;
+					emit('update:modelValue', val);
+				}
 			}, { deep: true });
 
 			watch(props.modelValue, (val) => data.value = val);

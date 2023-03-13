@@ -1,13 +1,6 @@
 <template>
 	<div class="column q-gutter-sm">
-		<q-select
-			v-model="data.biome"
-			use-input
-			input-debounce="250"
-			:options="biomesList.map((e) => e.id)"
-			:label="$capitalize($t('builtin.advancement.interface.biome.biome'))"
-			@filter="filterBiome"
-		/>
+		<biome v-model="data.biome" />
 		<q-card bordered square flat class="q-pa-sm column align-center">
 			<span class="text-center">{{ $capitalize($t('builtin.advancement.interface.common.block')) }}</span>
 			<block v-model="data.block" />
@@ -36,25 +29,20 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import { minecraft } from 'mapcraft-api/frontend';
-import { mapStore } from 'app/src/store/map';
 import { biome as biomeInterface } from '../../model';
 
 import block from './block.vue';
 import fluid from './fluid.vue';
 import light from './light.vue';
+import biome from '../select/biome.vue';
 import structure from '../select/structure.vue';
 import dimension from '../select/dimension.vue';
 import numberRange from '../type/numberRange.vue';
 
-interface biome {
-	id: string;
-	type: string;
-}
-
 export default defineComponent({
 	name: 'InterfaceBiome',
 	components: {
+		biome,
 		block,
 		fluid,
 		light,
@@ -71,9 +59,6 @@ export default defineComponent({
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const store = mapStore();
-		const biomes = minecraft.get(store.minecraftVersion, 'biome') as biome[];
-
 		const data = ref<biomeInterface>({
 			biome: props.modelValue?.biome ?? null,
 			block: props.modelValue?.block ?? null,
@@ -88,20 +73,6 @@ export default defineComponent({
 			},
 			light: props.modelValue?.light ?? null
 		} as biomeInterface);
-		const biomesList = ref<biome[]>(biomes);
-
-		const filterBiome = (val: string, update: any) => {
-			if (val === '') {
-				update(() => {
-					biomesList.value = biomes;
-				});
-			} else {
-				update(() => {
-					const needle = val.toLowerCase();
-					biomesList.value = biomes.filter((v) => v.id.toLowerCase().indexOf(needle) > -1);
-				});
-			}
-		};
 
 		onBeforeMount(() => {
 			watch(data, (after) => {
@@ -111,10 +82,7 @@ export default defineComponent({
 		});
 
 		return {
-			data,
-			biomesList,
-
-			filterBiome
+			data
 		};
 	}
 });

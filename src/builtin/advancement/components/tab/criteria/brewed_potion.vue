@@ -22,10 +22,10 @@ export default defineComponent({
 	setup (props, { emit }) {
 		const data = ref<brewed_potion>({
 			potion: props.modelValue.potion ?? 'empty'
-		} as brewed_potion);
+		});
 
 		onBeforeMount(() => {
-			watch(data, (val) => emit('update:modelValue', val));
+			watch(data, (val) => emit('update:modelValue', val), { deep: true });
 		});
 
 		return {

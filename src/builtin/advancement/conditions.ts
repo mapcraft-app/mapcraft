@@ -128,7 +128,7 @@ export interface levitation {
 }
 
 export interface location {
-	__at__root__: true,
+	__at_root__: true,
 	biome: biome
 }
 
@@ -175,7 +175,7 @@ export interface shot_crossbow {
 }
 
 export interface slept_in_bed {
-	__at__root__: true,
+	__at_root__: true,
 	biome: biome
 }
 
@@ -220,6 +220,6 @@ export interface villager_trade {
 }
 
 export interface voluntary_exile {
-	__at__root__: true,
+	__at_root__: true,
 	biome: biome
 }

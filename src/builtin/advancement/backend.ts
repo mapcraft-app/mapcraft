@@ -167,23 +167,45 @@ class advancement {
 
 		const write = (name: string, json: insideAdvancement, parent?: string): string => {
 			const criterias = {} as Record<string, criteria>;
+
 			for (const adv of json.criteria) {
-				criterias[adv.name] = {
-					trigger: `minecraft:${adv.trigger}`,
-					conditions: deepClone(adv.conditions)
-				} as criteria;
+				if (Object.prototype.hasOwnProperty.call(adv, 'conditions')) {
+					if (Object.prototype.hasOwnProperty.call(adv.conditions, '__at_root__')) {
+						const temp = {} as Record<any, any>;
+						for (const key in adv.conditions) {
+							if (key === '__at_root__')
+								continue;
+							if (Object.keys(adv.conditions[key]).length) {
+								for (const subKey in adv.conditions[key])
+									temp[subKey] = deepClone(adv.conditions[key][subKey]);
+							}
+						}
+						criterias[adv.name] = {
+							trigger: `minecraft:${adv.trigger}`,
+							conditions: temp
+						} as criteria;
+					} else {
+						criterias[adv.name] = {
+							trigger: `minecraft:${adv.trigger}`,
+							conditions: deepClone(adv.conditions)
+						} as criteria;
+					}
+				}
 			}
 			const temp = {
-				display: json.display,
 				criteria: criterias,
 				requirements: json.requirements,
 				rewards: json.rewards
 			} as realCriteria;
+			if (!Object.prototype.hasOwnProperty.call(json, 'utility') || json.utility === false)
+				temp.display = json.display;
 			if (parent)
 				temp.parent = `mapcraft-data:${parent}`;
+			else
+				temp.display.background = adv.data.background ?? 'minecraft:textures/gui/advancements/backgrounds/stone.png';
 			writeFile(
 				resolve(this.path.base, `${adv.data.id}_${name}.json`),
-				JSON.stringify(temp, null, 2),
+				JSON.stringify(temp),
 				{ flag: 'w', encoding: 'utf-8' }
 			);
 			return `${adv.data.id}_${name}.json`;
@@ -198,11 +220,10 @@ class advancement {
 				}
 			}
 		};
-		// delete old advancement file(s)
-		readdirSync(this.path.base, { withFileTypes: true }).filter((dir) => dir.isFile() && dir.name.includes(adv.data.id)).forEach((e) => rmSync(resolve(this.path.base, e.name)));
-		// init with root and move to tree
-		const rootName = write('root', adv.data.data.data);
-		recursive(adv.data.data, rootName);
+		readdirSync(this.path.base, { withFileTypes: true })
+			.filter((dir) => dir.isFile() && dir.name.includes(adv.data.id))
+			.forEach((e) => rmSync(resolve(this.path.base, e.name)));
+		recursive(adv.data.data, write('root', adv.data.data.data));
 	}
 }
 

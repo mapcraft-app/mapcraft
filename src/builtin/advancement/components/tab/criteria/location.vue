@@ -22,7 +22,7 @@ export default defineComponent({
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
 		const data = ref<location>({
-			__at__root__: true,
+			__at_root__: true,
 			biome: props.modelValue.biome ?? {} as biome
 		} as location);
 

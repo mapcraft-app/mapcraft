@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, watch } from 'vue';
-import { selectedAdvancement } from '../../lib/getChild';
+import { selectedAdvancement } from '../../lib/handleAdv';
 import { triggers } from '../../model';
 import deepClone from 'api/deepClone';
 

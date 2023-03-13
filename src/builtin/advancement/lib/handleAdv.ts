@@ -12,7 +12,7 @@ export const numberOfChild = ref<number>(-1);
 
 const setChild = (): advancement => {
 	return {
-		id: String(numberOfChild.value++),
+		id: String(++numberOfChild.value),
 		data: {
 			display: {
 				icon: {
@@ -23,7 +23,6 @@ const setChild = (): advancement => {
 				frame: 'task',
 				hidden: false,
 				show_toast: false,
-				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
 				title: {
         	text: 'New child',
         	color: 'white',
@@ -81,21 +80,23 @@ export const getChild = (json: main, id: string): adv => {
 	return selectedAdvancement.value;
 };
 
+export const calcNumberOfChild = (json: main): void => {
+	const recursive = (children: advancement[]): void => {
+		for (const i in children) {
+			const temp = Number(children[i].id);
+			if (temp > numberOfChild.value)
+				numberOfChild.value = temp;
+			if (children[i].children)
+				recursive(children[i].children ?? []);
+		}
+	};
+	numberOfChild.value = Number(json.data.id);
+	recursive(json.data.children ?? []);
+};
+
 const newChild = (json: main) => {
-	if (numberOfChild.value === -1) {
-		const recursive = (children: advancement[]): void => {
-			for (const i in children) {
-				const temp = Number(children[i].id);
-				if (temp > numberOfChild.value)
-					numberOfChild.value = temp;
-				if (children[i].children)
-					recursive(children[i].children ?? []);
-			}
-		};
-		numberOfChild.value = Number(json.data.id);
-		recursive(json.data.children ?? []);
-	}
-	
+	if (numberOfChild.value === -1)
+		calcNumberOfChild(json);
 	return setChild();
 };
 

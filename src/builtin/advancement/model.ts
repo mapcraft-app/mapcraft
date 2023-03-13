@@ -29,7 +29,7 @@ export interface display {
 	show_toast: boolean,
 	announce_to_chat: boolean,
 	hidden: boolean,
-	background:'minecraft:textures/gui/advancements/backgrounds/stone.png' | string 
+	background?: string
 }
 //#endregion Display
 
@@ -212,6 +212,7 @@ export interface triggers {
 }
 
 export interface insideAdvancement {
+	utility?: boolean,
 	display: display;
 	criteria: triggers[],
 	requirements: string[][],
