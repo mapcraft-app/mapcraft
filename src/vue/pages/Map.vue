@@ -201,7 +201,7 @@ export default defineComponent({
 						router.push('/user').finally(() => $q.loading.hide());
 				})
 				.catch((err) => {
-					console.error('plip', err);
+					console.error(err);
 				});
 		};
 

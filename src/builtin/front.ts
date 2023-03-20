@@ -25,6 +25,10 @@ export const builtinList: list[] = [];
 export const builtinLang: lang[] = [];
 export const normName = (str: string): string => str.toLowerCase().normalize().replace(/[_*.\s]+/, '_');
 export const addBuiltin = (d: info, lang: Record<string, any>, sh: shellModel | shellModel[] | undefined = undefined): void => {
+	if (Array.isArray(sh))
+		sh.forEach((e) => e.plugin = d.name);
+	else if (sh)
+		sh.plugin = d.name;
 	builtinList.push({
 		name: d.name,
 		path: normName(d.name),
@@ -38,6 +42,13 @@ export const addBuiltin = (d: info, lang: Record<string, any>, sh: shellModel | 
 		pluginName: normName(d.name),
 		data: lang
 	});
+};
+
+export const getBuiltin = (name: string): list | undefined => {
+	const i = builtinList.findIndex((v) => v.name === name);
+	if (i !== -1)
+		return builtinList[i];
+	return undefined;
 };
 
 addBuiltin(advancementPack, advancementLang);

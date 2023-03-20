@@ -5,7 +5,17 @@ export interface commandRet {
 	data: Record<string, any> | null
 }
 
+export interface ipcCommand {
+	plugin: string;
+	text: {
+		title: string;
+		description: string;
+	};
+	ret: commandRet
+}
+
 export interface shellModel {
+	plugin: string;
 	name: string;
 	builtin?: boolean;
 	fn: (args: string[]) => commandRet // eslint-disable-line no-unused-vars

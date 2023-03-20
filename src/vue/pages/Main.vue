@@ -2,14 +2,14 @@
 	<q-page>
 		<div class="flex justify-center items-center">
 			<q-card
-				v-for="builtin in builtins" :key="builtin.path"
+				v-for="plugin in plugins" :key="plugin.path"
 				class="card"
 				square flat bordered
-				@click="handleClick({ name: builtin.name, path: builtin.path })"
+				@click="handleClick({ name: plugin.name, path: plugin.path })"
 			>
-				<q-icon :name="builtin.icon" color="primary" size="4em"/>
+				<q-icon :name="plugin.icon" color="primary" size="4em"/>
 				<span class="text-h6">
-					{{ $capitalize($t(`builtin.${builtin.path}.menu.name`)) }}
+					{{ $capitalize($t(`builtin.${plugin.path}.menu.name`)) }}
 				</span>
 			</q-card>
 		</div>
@@ -19,31 +19,26 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { defineComponent } from 'vue';
-import { builtinList } from 'app/src/builtin/front';
 import router from 'src/router';
-import { globalStore } from 'store/global';
+import path from 'src/router/path';
+import { builtinList } from 'src/builtin/front';
 
 export default defineComponent({
 	name: 'MainPage',
 	setup () {
 		const $q = useQuasar();
-		const store = globalStore();
-
+		const plugins = [ ...builtinList ];
+		
 		const handleClick = (data: { name: string, path: string } | null = null) => {
-			const route = (data)
-				? `/${data.path}`
-				: '/';
-			store.plugin = data;
+			const route = path(data);
 			$q.loading.show();
-			window.log.info(`[PLUGIN] ${data
-				? data.name
-				: '/'} is selected`
-			);
-			router.push({ path: route }).finally(() => $q.loading.hide());
+			router
+				.push({ path: route })
+				.finally(() => $q.loading.hide());
 		};
 
 		return {
-			builtins: builtinList,
+			plugins,
 			handleClick
 		};
 	}

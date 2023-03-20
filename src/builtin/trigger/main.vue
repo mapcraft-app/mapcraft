@@ -46,7 +46,7 @@ import { defineComponent, onBeforeMount, onUnmounted, ref, toRaw } from 'vue';
 import { mapStore } from 'store/map';
 import { createTrigger, triggerInterface } from './interface';
 import rowVue from './components/row.vue';
-import type { commandRet } from 'electron/api/shell/interface';
+import type { ipcCommand } from 'electron/api/shell/interface';
 import shell from './shell';
 
 export default defineComponent({
@@ -102,15 +102,15 @@ export default defineComponent({
 				.catch((e) => errorNotif(e));
 		};
 
-		const newCommand = (d: commandRet) => {
-			if (d.command === shell.name && d.data) {
+		const newCommand = (d: ipcCommand) => {
+			if (d.ret.command === shell.name && d.ret.data) {
 				createTrigger({
-					x1: d.data.coordinates.p1[0],
-					y1: d.data.coordinates.p1[1],
-					z1: d.data.coordinates.p1[2],
-					x2: d.data.coordinates.p2[0],
-					y2: d.data.coordinates.p2[1],
-					z2: d.data.coordinates.p2[2]
+					x1: d.ret.data.coordinates.p1[0],
+					y1: d.ret.data.coordinates.p1[1],
+					z1: d.ret.data.coordinates.p1[2],
+					x2: d.ret.data.coordinates.p2[0],
+					y2: d.ret.data.coordinates.p2[1],
+					z2: d.ret.data.coordinates.p2[2]
 				});
 			}
 		};

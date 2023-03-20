@@ -13,12 +13,17 @@ import { defineComponent, onBeforeMount, onBeforeUnmount, provide, ref } from 'v
 import { QSpinnerPuff, useMeta, useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
+import router from 'src/router';
+import path from 'src/router/path';
+import { generateMeta } from 'src/meta';
+import { getBuiltin } from 'src/builtin/front';
+import { mapStore } from '../store/map';
+import { userStore } from '../store/user';
+import { ipcCommand } from '../electron/api/shell/interface';
+import type { QNotifyUpdateOptions } from 'quasar';
+
 import BarWindows from './components/bar/windows.vue';
 import BarMac from './components/bar/mac.vue';
-
-import { generateMeta } from 'src/meta';
-import router from 'src/router';
-import type { QNotifyUpdateOptions } from 'quasar';
 
 export default defineComponent({
 	name: 'App',
@@ -29,6 +34,8 @@ export default defineComponent({
 	setup () {
 		const $q = useQuasar();
 		const { t } = useI18n();
+		const storeMap = mapStore();
+		const storeUser = userStore();
 		const os = window.env.directory.os;
 		let interval: NodeJS.Timer, statusInterval: NodeJS.Timer; // eslint-disable-line no-undef
 		let notif: any = undefined;
@@ -91,6 +98,21 @@ export default defineComponent({
 				});
 		};
 
+		const notification = (command: ipcCommand) => {
+			if (!storeMap.info.path || !storeUser.username)
+				return;
+			const route = path(getBuiltin(command.plugin));
+			if (router.currentRoute.value.fullPath !== route) {
+				$q.loading.show();
+				router
+					.push({ path: route })
+					.finally(() => {
+						$q.loading.hide();
+						window.ipc.send('shell::new-command', command);
+					});
+			}
+		};
+
 		onBeforeMount(() => {
 			window.log.info('Application finish to mounted');
 			router.push('/map');
@@ -109,9 +131,14 @@ export default defineComponent({
 					notif = undefined;
 				}
 			}, 2500);
+			// Handle notifications
+			window.ipc.receiveAll('notification::selected', notification);
 		});
 
-		onBeforeUnmount(() => clearInterval(interval));
+		onBeforeUnmount(() => {
+			clearInterval(interval);
+			window.ipc.remove('notification::selected', notification);
+		});
 
 		return {
 			os

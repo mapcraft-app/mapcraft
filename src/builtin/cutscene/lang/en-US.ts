@@ -1,4 +1,5 @@
 export default {
+	notification: 'A cutscene has been modified',
 	menu: {
 		name: 'cutscene',
 	},

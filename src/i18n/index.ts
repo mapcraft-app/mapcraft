@@ -5,7 +5,7 @@ import { builtinLang } from 'app/src/builtin/front';
 const lang = {
 	'en-US': en,
 	'fr-FR': fr
-};
+} as Record<string, any>;
 
 for (const plugin of builtinLang) {
 	if (Object.prototype.hasOwnProperty.call(plugin.data, 'en-US'))

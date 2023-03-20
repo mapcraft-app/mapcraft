@@ -16,6 +16,7 @@ export default {
 		busy: 'La base de données est utilisée par un autre processus'
 	},
 	builtin: {} as Record<string, any>,
+	plugin: {} as Record<string, any>,
 	components,
 	layouts,
 	pages

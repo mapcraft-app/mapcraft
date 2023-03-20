@@ -1,6 +1,7 @@
 export default {
+	notification: 'une nouvelle zone a été créée',
 	menu: {
-		name: 'trigger'
+		name: 'zone de détection'
 	},
 	main: {
 		create: 'créer une nouvelle zone',

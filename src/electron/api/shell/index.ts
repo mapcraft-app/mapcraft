@@ -4,7 +4,8 @@ import { access } from 'fs/promises';
 import { resolve } from 'path';
 import { IpcError } from 'electron/api/error';
 import ipc from 'electron/ipc/render';
-import { commandRet, shellModel } from './interface';
+import lang from 'i18n/index';
+import { commandRet, ipcCommand, shellModel } from './interface';
 
 import { builtinList } from 'app/src/builtin/front';
 import { ipcRenderer } from 'electron';
@@ -98,7 +99,8 @@ export class Shell {
 	 * @param input Line of user input
 	 * @returns return of executed command, or null if command is undefined
 	 */
-	exec(input: string | string[]): (commandRet | null)[] | commandRet | null {
+	exec(input: string | string[]): (ipcCommand | null)[] | ipcCommand | null {
+		const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 		const ret = (data: string) => {
 			const check = data.indexOf(this.COMMAND);
 			if (check !== -1) {
@@ -107,14 +109,30 @@ export class Shell {
 				for (const command of this.commands) {
 					if (command.name.toLowerCase() === name) {
 						this.command = command.fn(args);
-						return this.command;
+						const reg = /^__q_strn\|(.*)$/m.exec(window.localStorage.getItem('lang') ?? '');
+						const type = (command.builtin)
+							? 'builtin'
+							: 'plugin';
+						return {
+							plugin: command.plugin,
+							text: {
+								title: capitalize((reg)
+									? lang[reg[1]][type][command.plugin.toLowerCase()].menu.name
+									: command.plugin),
+								description: capitalize((reg)
+									? lang[reg[1]][type][command.plugin.toLowerCase()].notification
+									: '')
+							},
+							ret: this.command
+						} as ipcCommand;
 					}
 				}
 			}
 			return null;
 		};
+
 		if (Array.isArray(input)) {
-			const __ret: (commandRet | null)[]  = [];
+			const __ret: (ipcCommand | null)[]  = [];
 			input.forEach((e) => __ret.push(ret(e)));
 			return __ret;
 		} else
@@ -170,12 +188,18 @@ export class Shell {
 						);
 						if (commands && Array.isArray(commands)) {
 							commands.forEach((e) => {
-								if (e)
+								if (e) {
+									if (e.ret.notification === undefined || e.ret.notification === true)
+										ipc.send('notification::push', e);
 									ipc.send('shell::new-command', e);
+								}
 							});
 						} else if (commands) {
-							if (commands)
+							if (commands) {
+								if (commands.ret.notification === undefined || commands.ret.notification === true)
+									ipc.send('notification::push', commands);
 								ipc.send('shell::new-command', commands);
+							}
 						}
 					})
 					.catch((e) => {

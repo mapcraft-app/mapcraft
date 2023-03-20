@@ -1,4 +1,5 @@
 export default {
+	notification: 'a new trigger has been created',
 	menu: {
 		name: 'trigger'
 	},

@@ -32,6 +32,7 @@
 import { useQuasar } from 'quasar';
 import router from 'src/router';
 import { defineComponent, ref } from 'vue';
+import { userStore } from 'store/user';
 
 import selectionVue from 'components/User/selection.vue';
 import accountConnectionVue from 'components/User/accountConnection.vue';
@@ -47,13 +48,22 @@ export default defineComponent({
 	},
 	setup () {
 		const $q = useQuasar();
+		const store = userStore();
 		const mapcraftAccountSelected = ref<boolean>(false);
 		const mapcraftAccountCreation = ref<boolean>(false);
 		const isServerMode = ref<boolean>(false);
 
 		const offlineConnection = () => {
-			$q.loading.show();
 			const temp = $q.localStorage.getItem('user') as userStorage;
+			$q.loading.show();
+			store.setUsername((temp && temp.username)
+				? temp.username
+				: 'Steve');
+			store.setMinecraftUsername((temp && temp.minecraftUsername)
+				? temp.minecraftUsername
+				: 'Steve');
+			store.setOffline(true);
+			store.setOffline(false);
 			$q.localStorage.set('user', {
 				username: (temp && temp.username)
 					? temp.username

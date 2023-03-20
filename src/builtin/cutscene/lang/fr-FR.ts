@@ -1,4 +1,5 @@
 export default {
+	notification: 'Une cinématique a reçu une modification',
 	menu: {
 		name: 'cinématique',
 	},

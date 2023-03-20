@@ -336,8 +336,7 @@ export default defineComponent({
 			resetStore(true);
 			window.advancement.init(store.getMapPath(), store.minecraftVersion);
 			advancementsList.value = window.advancement.gets();
-			autosaveInterval = setInterval(() => saveAll(true), 300000 /* 5min */);
-
+			autosaveInterval = setInterval(() => saveAll(true), 300000); // 5min
 			watch(selectedNode, (node) => {
 				if (!node)
 					return;
