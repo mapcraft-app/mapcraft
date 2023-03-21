@@ -1,15 +1,14 @@
-import { constants } from 'fs';
-import { access, open } from 'fs/promises';
+import { constants, accessSync, createReadStream } from 'fs';
 import { createInterface } from 'readline';
-import type { FileHandle } from 'fs/promises';
+import type { ReadStream } from 'fs';
 
 export interface line {
 	n: number,
-	line: unknown
+	line: string
 }
 
 interface config {
-	file: FileHandle | undefined,
+	file: ReadStream | null,
 	maxLines: number,
 	memory: line[],
 	oldEndNumber: number,
@@ -19,68 +18,88 @@ interface config {
 export default class {
 	private config: config;
 
-	constructor(path: string, maxLines = Infinity) {
+	constructor(path: string, nLines = Infinity) {
 		this.config = {} as config;
-		this.config.file = undefined;
-		this.config.maxLines = maxLines;
-		this.config.memory = [];
+		this.config.file = null;
+		this.config.maxLines = nLines;
+		this.config.memory = new Array(0);
 		this.config.oldEndNumber = 0;
 		this.config.path = path;
-		
-		access(this.config.path, constants.R_OK)
-			.catch(() => {
-				throw new Error(`File not exist ${this.config.path}`);
-			});
+
+		if (nLines <= 0 || nLines >= Infinity)
+			throw new Error(`The number of lines read must be between 1 and Infinity, current ${nLines}`);
+		try {
+			accessSync(this.config.path, constants.R_OK);
+		} catch (e) {
+			throw new Error(`File not exist ${this.config.path}`);
+		}
 	}
 
+	/**
+	 * Get array of lines with index
+	 */
 	get lines(): line[] {
-		return this.config.memory;
+		return [ ...this.config.memory ];
 	}
 
-	private push(n: number, line: unknown) {
-		this.config.memory.push({ n, line });
-		if (this.config.memory.length > this.config.maxLines)
-			this.config.memory.shift();
-	}
-
-	private async rl(): Promise<void> {
+	/**
+	 * Read the file and retrieve its last lines
+	 * @returns Array of lines with index
+	 */
+	read(diff = false): Promise<line[]> {
 		return new Promise((res, rej) => {
-			let i = 0;
-
-			if (!this.config.file)
-				rej();
-			else {
-				const rl = createInterface({
-					input: this.config.file.createReadStream({ encoding: 'utf-8' }),
-					crlfDelay: Infinity
+			let nLine = 0;
+			const push = (line: string) => {
+				if (nLine === 0) {
+					this.config.oldEndNumber = (this.config.memory.length > 0)
+						? this.config.memory[this.config.memory.length - 1].n
+						: 0;
+					this.config.memory.length = 0;
+				}
+				this.config.memory.push({
+					n: ++nLine,
+					line
 				});
-				rl.on('line', (line) => this.push(i++, line));
-				rl.on('error', rej);
-				rl.on('close', res);
+				if (this.config.memory.length >= this.config.maxLines)
+					this.config.memory.shift();
+			};
+
+			if (!this.config.file) {
+				this.config.file = createReadStream(
+					this.config.path,
+					{
+						flags: 'r',
+						encoding: 'utf-8',
+						start: 0
+					}
+				);
 			}
+			createInterface({ input: this.config.file })
+				.on('line', (line) => push(line))
+				.on('error', (e) => {
+					this.config.file?.destroy();
+					this.config.file = null;
+					return rej(e);
+				})
+				.on('close', () => {
+					this.config.file?.destroy();
+					this.config.file = null;
+					if (diff)
+						return res(this.diff());
+					return res(this.config.memory);
+				});
 		});
 	}
 
-	async read(diff = false): Promise<line[]> {
-		try {
-			this.config.oldEndNumber = this.config.memory.length
-				? this.config.memory[this.config.memory.length - 1].n
-				: 0;
-			this.config.file = await open(this.config.path, 'r', 0o666);
-			await this.rl();
-		} catch (e: any) {
-			throw new Error(e);
-		} finally {
-			await this.config.file?.close();
-		}
-		if (this.config.oldEndNumber >= this.config.memory[this.config.memory.length - 1].n || !diff)
-			return [ ...this.config.memory ];
-		else
-			return this.diff();
-	}
-
+	/**
+	 * Get the difference between the lines of the old request and the new ones
+	 * @returns Array of lines with index
+	 */
 	diff(): line[] {
-		if (this.config.memory[this.config.memory.length - 1].n > this.config.oldEndNumber) {
+		if (
+			this.config.memory.length > 0
+			&& this.config.memory[this.config.memory.length - 1].n > this.config.oldEndNumber
+		) {
 			for (const x in this.config.memory) {
 				if (this.config.memory[x].n > this.config.oldEndNumber)
 					return this.config.memory.slice(Number(x));

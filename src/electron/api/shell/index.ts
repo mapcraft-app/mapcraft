@@ -19,6 +19,8 @@ export class Shell {
 	oldData: string;
 	watch: FSWatcher | undefined;
 	rll: readLastLines;
+	isRead: boolean;
+	oldLines: line[];
 	
 	constructor(logPath: string | undefined = undefined) {
 		this.COMMAND = '/mapcraft';
@@ -26,15 +28,11 @@ export class Shell {
 		this.command = {} as commandRet;
 		this.logPath = logPath ?? resolve(process.env.GAME, 'logs', 'latest.log');
 		this.oldData = '';
+
 		this.watch = undefined;
 		this.rll = new readLastLines(this.logPath, 25);
-
-		// Test is watch is available throw plateform
-		try {
-			watch(process.env.APP_DATA).close();
-		} catch (err) {
-			ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
-		}
+		this.isRead = false;
+		this.oldLines = [];
 
 		builtinList.forEach((el) => {
 			if (el.shell !== undefined) {
@@ -44,8 +42,20 @@ export class Shell {
 					this.commands.push(el.shell);
 			}
 		});
-		if (import.meta.env.DEV)
-			console.log('SHELL:', this.commands.sort((a, b) => a.name.localeCompare(b.name)));
+
+		try {
+			watch(process.env.APP_DATA).close();
+			this.isRead = true;
+			this.rll.read()
+				.then((d) => {
+					this.oldLines = d;
+					if (import.meta.env.DEV)
+						console.log('SHELL:', this.commands.sort((a, b) => a.name.localeCompare(b.name)));
+				})
+				.finally(() => this.isRead = false);
+		} catch (err) {
+			ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
+		}
 	}
 
 	private isExist(name: string) {
@@ -164,48 +174,51 @@ export class Shell {
 	 * Watch log game file
 	 */
 	watchLog(): void {
-		let isReading = false;
-		let oldData: line[] = [];
+		const isSame = (cur: line[]) => {
+			if (!this.oldLines.length)
+				return false;
+			for (const x in this.oldLines) {
+				if (this.oldLines[x].n !== cur[x].n || this.oldLines[x].line.localeCompare(cur[x].line) !== 0)
+					return false;
+			}
+			return true;
+		};
 
 		try {
-			this.watch = watch(this.logPath, { persistent: true }, (eventType) => {
-				if (eventType !== 'change' || isReading)
-					return;
-				isReading = true;
-				this.rll.read()
-					.then((data) => {
-						if (
-							oldData.length
-							&& data.every((el, i) => el.line === oldData[i].line && el.n === oldData[i].n)
-						)
-							return;
-						oldData = data;
-						const lines = this.rll.diff();
-						const commands = this.exec(
-							(lines.length <= 1)
-								? lines.at(0)?.line as string
-								: lines.map((e) => e.line) as string[]
-						);
-						if (commands && Array.isArray(commands)) {
-							commands.forEach((e) => {
-								if (e) {
-									if (e.ret.notification === undefined || e.ret.notification === true)
-										ipc.send('notification::push', e);
-									ipc.send('shell::new-command', e);
+			this.watch = watch(this.logPath, { encoding: 'utf-8' }, async (eventType) => {
+				if (!this.isRead && eventType === 'change') {
+					this.isRead = true;
+					await this.rll.read(true)
+						.then((lines) => {
+							if (!isSame(lines)) {
+								this.oldLines = lines;
+								const commands = this.exec(
+									(lines.length <= 1)
+										? lines.at(0)?.line as string
+										: lines.map((e) => e.line) as string[]
+								);
+								if (commands) {
+									if (Array.isArray(commands)) {
+										commands.forEach((e) => {
+											if (e) {
+												if (e.ret.notification === undefined || e.ret.notification === true)
+													ipc.send('notification::push', e);
+												ipc.send('shell::new-command', e);
+											}
+										});
+										return;
+									}
+									if (commands.ret.notification === undefined || commands.ret.notification === true)
+										ipc.send('notification::push', commands);
+									ipc.send('shell::new-command', commands);
 								}
-							});
-						} else if (commands) {
-							if (commands) {
-								if (commands.ret.notification === undefined || commands.ret.notification === true)
-									ipc.send('notification::push', commands);
-								ipc.send('shell::new-command', commands);
 							}
-						}
-					})
-					.catch((e) => {
-						throw new IpcError(`Read log file failed: ${e}`);
-					})
-					.finally(() => isReading = false);
+						})
+						.catch((e) => {
+							throw new IpcError(`Read log file failed | ${e}`);
+						})
+						.finally(() => this.isRead = false);
+				}
 			});
 		} catch (e) {
 			ipc.send('window::crash', 'NodeJs.fs.watch crash', e);
