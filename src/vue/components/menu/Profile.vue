@@ -26,7 +26,6 @@ import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 
 import router from 'src/router';
 import { userStore } from 'store/user';
-import { toPublic } from '../../plugins/app';
 
 export default defineComponent({
 	setup() {

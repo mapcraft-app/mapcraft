@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { userStore } from 'store/user';
 import { userStorage } from 'app/src/electron/preload/exposeEnv';
 
@@ -30,14 +30,15 @@ export default defineComponent({
 		const store = userStore();
 		const username = ref<string | null>(store.minecraftUsername);
 
-		watch(username, (after) => {
-			if (after) {
-				console.log('hello', after);
-				const temp = quasar.localStorage.getItem('user') as userStorage;
-				store.minecraftUsername = after;
-				temp.minecraftUsername = after;
-				quasar.localStorage.set('user', temp);
-			}
+		onBeforeMount(() => {
+			watch(username, (after) => {
+				if (after) {
+					const temp = quasar.localStorage.getItem('user') as userStorage;
+					store.minecraftUsername = after;
+					temp.minecraftUsername = after;
+					quasar.localStorage.set('user', temp);
+				}
+			});
 		});
 
 		return {

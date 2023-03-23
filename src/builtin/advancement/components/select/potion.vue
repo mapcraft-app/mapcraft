@@ -19,8 +19,13 @@ import { useI18n } from 'vue-i18n';
 import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'store/map';
 import { potionType } from '../../model';
-import { potions } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import { getter, setter } from '../../lib/regMinecraft';
+
+interface potions {
+	name: string;
+	strong?: string;
+	long?: string;
+}
 
 export default defineComponent({
 	name: 'SelectFrame',

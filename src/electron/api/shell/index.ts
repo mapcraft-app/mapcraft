@@ -18,7 +18,7 @@ export class Shell {
 	logPath: string;
 	oldData: string;
 	watch: FSWatcher | undefined;
-	rll: readLastLines;
+	rll: readLastLines | undefined;
 	isRead: boolean;
 	oldLines: line[];
 	
@@ -30,7 +30,7 @@ export class Shell {
 		this.oldData = '';
 
 		this.watch = undefined;
-		this.rll = new readLastLines(this.logPath, 25);
+		this.rll = undefined;
 		this.isRead = false;
 		this.oldLines = [];
 
@@ -45,17 +45,12 @@ export class Shell {
 
 		try {
 			watch(process.env.APP_DATA).close();
-			this.isRead = true;
-			this.rll.read()
-				.then((d) => {
-					this.oldLines = d;
-					if (import.meta.env.DEV)
-						console.log('SHELL:', this.commands.sort((a, b) => a.name.localeCompare(b.name)));
-				})
-				.finally(() => this.isRead = false);
 		} catch (err) {
 			ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
 		}
+
+		if (import.meta.env.DEV)
+			console.log('SHELL:', this.commands.sort((a, b) => a.name.localeCompare(b.name)));
 	}
 
 	private isExist(name: string) {
@@ -155,10 +150,16 @@ export class Shell {
 	async check(): Promise<void> {
 		return new Promise((res, rej) => {
 			access(this.logPath, constants.F_OK | constants.R_OK)
-				.then(() => {
+				.then(async () => {
+					if (this.watch === undefined) {
+						this.isRead = true;
+						this.rll = new readLastLines(this.logPath, 25);
+						await this.rll.read()
+							.then((d) => this.oldLines = d)
+							.finally(() => this.isRead = false);
+					}
 					res();
-					if (this.watch === undefined)
-						this.watchLog();
+					this.watchLog();
 				})
 				.catch(() => {
 					rej();
@@ -195,7 +196,7 @@ export class Shell {
 				if (!this.isRead && eventType === 'change') {
 					const user = getUser();
 					this.isRead = true;
-					await this.rll.read(true)
+					await this.rll?.read(true)
 						.then((lines) => {
 							if (!isSame(lines)) {
 								this.oldLines = lines;

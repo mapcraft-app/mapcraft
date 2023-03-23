@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.15.9",
+    "@types/markdown-it": "^12.2.3",
     "better-sqlite3": "8.0.1",
     "bezier-easing": "2.1.0",
     "mapcraft-api": "file:../api",

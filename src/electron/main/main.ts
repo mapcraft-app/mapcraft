@@ -20,7 +20,7 @@ const SecurityPolicy: string = [
 	'default-src',
 	'mediastream:', 'blob:', 'filesystem:',
 	'\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\'',
-	'file:///*', 'app:///*',
+	'file://*', 'app://*',
 	'https://mapcraft.app', 'https://*.mapcraft.app',
 	'https://raw.githubusercontent.com', 'https://github.com',
 	'https://gitlab.com',
@@ -71,10 +71,14 @@ app.whenReady().then(async () => {
 	mainWindow.on('ready-to-show', () => {
 		log.info('Main window ready to show');
 		isLoading = false;
-		mainWindow?.show();
-		mainWindow?.focus();
-		loader?.hide();
-		loader?.destroy();
+		if (mainWindow) {
+			mainWindow.show();
+			mainWindow.focus();
+		}
+		if (loader) {
+			loader.hide();
+			loader.destroy();
+		}
 	});
 
 	app.on('activate', () => {
@@ -83,8 +87,10 @@ app.whenReady().then(async () => {
 	});
 }).catch((err) => {
 	log.error(err);
-	loader?.destroy();
-	mainWindow?.destroy();
+	if (loader)
+		loader.destroy();
+	if (mainWindow)
+		mainWindow.destroy();
 	errorDialog(err);
 });
 

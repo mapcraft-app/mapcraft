@@ -17,7 +17,7 @@ export default [
 	},
 	{
 		path: getNormName('cutscene'),
-		component: () => import('app/src/builtin/cutscene/main.vue')
+		component: () => import('builtin/cutscene/main.vue')
 	},
 	{
 		path: getNormName('music'),
