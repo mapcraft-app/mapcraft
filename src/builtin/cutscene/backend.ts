@@ -14,32 +14,7 @@ import { mapEngineInstance } from 'electron/preload/engine';
 import { exposeInMainWorld } from 'api/plugins/backend';
 
 import { envInterface } from '../interface';
-
-export interface bezier {
-	transition: 'ease' | 'ease-in' | 'ease-in-out' | 'ease-out' | 'linear',
-	points: number[]
-}
-
-export interface cutsceneInterface {
-	id: number;
-	name: string;
-	tag: string;
-	duration: number;
-	description: string;
-	position: string;
-}
-
-export interface cutscenePointInterface {
-	cutsceneId: number;
-	point: number;
-	x: number;
-	y: number;
-	z: number;
-	rx: number;
-	ry: number;
-	duration: number;
-	transition: 'ease' | 'ease-in' | 'ease-in-out' | 'ease-out' | 'linear'
-}
+import { cutsceneInterface, cutscenePointInterface, bezier, transition } from './interface';
 
 class cutscene {
 	private env: envInterface;
@@ -131,7 +106,7 @@ class cutscene {
 		const ret: cutsceneInterface = await this.db.get('SELECT * FROM cutscene WHERE name = ?', name);
 		await this.db.update('UPDATE cutscene SET tag = ? WHERE id = ?', `cutscene_${ret.id}`, ret.id);
 		await Promise.all([
-			fs.addLine(this._path.main, `execute positioned 0 0 0 rotated 0 0 if entity @s[tag=cutscene,tag=cutscene_${ret.id}] run function mapcraft-data:cutscene/${ret.id}/cutscene`),
+			fs.addLine(this._path.main, `execute positioned 0 0 0 rotated 0 0 if entity @s[tag=cutscene,tag=cutscene_${ret.id}] run function mapcraft-data:cutscene/${ret.id}/cutscene\n`),
 			mkdir(resolve(this._path.dir, ret.id.toString()))
 		]);
 		return {
@@ -191,7 +166,7 @@ class cutscene {
 		}
 	}
 
-	private bezierCurve(distance: number, time: number, transition: 'ease' | 'ease-in' | 'ease-in-out' | 'ease-out' | 'linear' = 'linear'): bezier {
+	private bezierCurve(distance: number, time: number, transition: transition = 'linear'): bezier {
 		const duration = time * 20;
 		const bezier = this.bezierCurverGetCurve(transition);
 		let total = 0.0;
@@ -253,11 +228,15 @@ class cutscene {
 				8: () => {
 					if (parse[0] === 'origin') {
 						return [
-							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveX run data get entity @s Pos[0]',
-							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveY run data get entity @s Pos[1]',
-							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveZ run data get entity @s Pos[2]',
-							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveRx run data get entity @s Rotation[0]',
-							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] run store result score @s MC_CutsceneSaveRy run data get entity @s Rotation[1]'
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] store result score @s MC_CutsceneSaveX run data get entity @s Pos[0]',
+							'\n',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] store result score @s MC_CutsceneSaveY run data get entity @s Pos[1]',
+							'\n',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] store result score @s MC_CutsceneSaveZ run data get entity @s Pos[2]',
+							'\n',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] store result score @s MC_CutsceneSaveRx run data get entity @s Rotation[0]',
+							'\n',
+							'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!debug] store result score @s MC_CutsceneSaveRy run data get entity @s Rotation[1]'
 						];
 					}
 					return undefined;
@@ -304,12 +283,18 @@ class cutscene {
 						// put the entity at the last point of the cutscene
 						return undefined;
 					} else if (parse[0] === 'origin') {
+						// put the entity at the start point of the cutscene
 						return [
 							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerX = @s MC_CutsceneSaveX',
+							'\n',
 							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerY = @s MC_CutsceneSaveY',
+							'\n',
 							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerZ = @s MC_CutsceneSaveZ',
+							'\n',
 							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerRx = @s MC_CutsceneSaveRx',
+							'\n',
 							'execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!debug] run scoreboard players operation @s MC_PlayerRy = @s MC_CutsceneSaveRy',
+							'\n',
 							'function mapcraft:built_in/instant_tp/main'
 						];
 					}

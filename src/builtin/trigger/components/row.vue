@@ -96,7 +96,6 @@ export default defineComponent({
 		
 		onMounted(() => {
 			watch(trigger, (after) => {
-				console.log('hello');
 				if (after)
 					emit('update', after);
 			}, { deep: true });

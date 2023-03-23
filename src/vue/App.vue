@@ -102,7 +102,7 @@ export default defineComponent({
 			if (!storeMap.info.path || !storeUser.username)
 				return;
 			const route = path(getBuiltin(command.plugin));
-			if (router.currentRoute.value.fullPath !== route) {
+			if (router.currentRoute.value.fullPath.localeCompare(route) !== 0) {
 				$q.loading.show();
 				router
 					.push({ path: route })

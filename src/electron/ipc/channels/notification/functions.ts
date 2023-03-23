@@ -1,9 +1,9 @@
 import { Notification } from 'electron';
 import { ipcFunctions } from 'electron/ipc/ipcType';
 import { ipcCommand } from 'electron/api/shell/interface';
+import { resolve } from 'path';
 import { builder } from 'package.json';
 import type Electron from 'electron';
-import { resolve } from 'path';
 
 const toPublic = (url: string): string => {
 	if (import.meta.env.DEV)

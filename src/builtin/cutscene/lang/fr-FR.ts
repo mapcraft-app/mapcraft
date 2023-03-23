@@ -59,6 +59,7 @@ export default {
 			transition: 'transition'
 		},
 		table: {
+			s: 's',
 			error: {
 				noData: 'la valeur est obligatoire',
 				noNeg: 'ne peut être négatif'

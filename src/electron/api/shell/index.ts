@@ -111,6 +111,7 @@ export class Shell {
 	 */
 	exec(input: string | string[]): (ipcCommand | null)[] | ipcCommand | null {
 		const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
+		const reg = /^__q_strn\|(.*)$/m.exec(window.localStorage.getItem('lang') ?? '');
 		const ret = (data: string) => {
 			const check = data.indexOf(this.COMMAND);
 			if (check !== -1) {
@@ -119,7 +120,6 @@ export class Shell {
 				for (const command of this.commands) {
 					if (command.name.toLowerCase() === name) {
 						this.command = command.fn(args);
-						const reg = /^__q_strn\|(.*)$/m.exec(window.localStorage.getItem('lang') ?? '');
 						const type = (command.builtin)
 							? 'builtin'
 							: 'plugin';
@@ -174,6 +174,12 @@ export class Shell {
 	 * Watch log game file
 	 */
 	watchLog(): void {
+		const getUser = () => {
+			const userTemp = /^__q_objt\|(.*)$/m.exec(window.localStorage.getItem('user') ?? '');
+			return JSON.parse((userTemp)
+				? userTemp[1]
+				: '');
+		};
 		const isSame = (cur: line[]) => {
 			if (!this.oldLines.length)
 				return false;
@@ -187,6 +193,7 @@ export class Shell {
 		try {
 			this.watch = watch(this.logPath, { encoding: 'utf-8' }, async (eventType) => {
 				if (!this.isRead && eventType === 'change') {
+					const user = getUser();
 					this.isRead = true;
 					await this.rll.read(true)
 						.then((lines) => {
@@ -200,7 +207,7 @@ export class Shell {
 								if (commands) {
 									if (Array.isArray(commands)) {
 										commands.forEach((e) => {
-											if (e) {
+											if (e && e.ret.player === user.minecraftUsername) {
 												if (e.ret.notification === undefined || e.ret.notification === true)
 													ipc.send('notification::push', e);
 												ipc.send('shell::new-command', e);
@@ -208,9 +215,11 @@ export class Shell {
 										});
 										return;
 									}
-									if (commands.ret.notification === undefined || commands.ret.notification === true)
-										ipc.send('notification::push', commands);
-									ipc.send('shell::new-command', commands);
+									if (commands.ret.player === user.minecraftUsername) {
+										if (commands.ret.notification === undefined || commands.ret.notification === true)
+											ipc.send('notification::push', commands);
+										ipc.send('shell::new-command', commands);
+									}
 								}
 							}
 						})
