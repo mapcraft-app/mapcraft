@@ -56,6 +56,7 @@ if (import.meta.env.DEV) {
 		return ret;
 	}).sort((a, b) => a.name.localeCompare(b.name)));
 }
+ipcRenderer.setMaxListeners(Infinity);
 
 const checkIpc = (channel: string): boolean => {
 	if (!ipcRenderer || channel === undefined)

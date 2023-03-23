@@ -20,7 +20,7 @@
 				:disable="cutsceneSelected.points[cutsceneSelected.points.length - 1].point === point.point"
 				@delete="removePoint"
 			/>
-			<div class="add-point" @click="addPoint">
+			<div class="add-point" @click="addPoint()">
 				<q-icon name="add" size="2em" />
 			</div>
 		</template>
@@ -82,7 +82,7 @@ export default defineComponent({
 			if (x === -1)
 				return;
 			cutsceneList.value.splice(x, 1);
-			// await window.cutscene.delete(id);
+			await window.cutscene.delete(id);
 			if (cutsceneSelected.value?.cutscene.id === id)
 				cutsceneSelected.value = null;
 		};
@@ -173,7 +173,7 @@ export default defineComponent({
 		//#endregion Cutscene
 
 		//#region Point
-		const addPoint = () => {
+		const addPoint = (data?: { point: number[], rotation: number[] }) => {
 			if (!cutsceneSelected.value)
 				return;
 			let lastPoint: cutscenePointInterface | null = null;
@@ -186,11 +186,21 @@ export default defineComponent({
 				point: (lastPoint !== null)
 					? lastPoint.point + 1
 					: 0,
-				x: 0,
-				y: 0,
-				z: 0,
-				rx: 0,
-				ry: 0,
+				x: (data)
+					? data.point[0]
+					: '0',
+				y: (data)
+					? data.point[1]
+					: '0',
+				z: (data)
+					? data.point[2]
+					: '0',
+				rx: (data)
+					? data.rotation[0]
+					: '0',
+				ry: (data)
+					? data.rotation[1]
+					: '0',
 				duration: 0,
 				transition: 'linear'
 			} as cutscenePointInterface);
@@ -283,12 +293,11 @@ export default defineComponent({
 			if (command.ret.command === shell.name
 				&& command.ret.data
 				&& cutsceneSelected.value) {
-				if (command.ret.data.type === 'add-point') {
-					console.log('add');
-					console.log('');
-				} else if (command.ret.data.type === 'delete-point') {
+				if (command.ret.data.type === 'add-point')
+					addPoint(command.ret.data.coordinates);
+				else if (command.ret.data.type === 'delete-point') {
 					console.log('delete');
-					console.log('');
+					console.log(command.ret.data);
 				}
 			}
 		};
