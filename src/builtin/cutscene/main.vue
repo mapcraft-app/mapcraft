@@ -101,23 +101,24 @@ export default defineComponent({
 				const parse = cutsceneList.value[index].position.split(';');
 				cutsceneSelected.value.option.end = parse[0] as end;
 				if (parse.length > 1) {
+					const reg = /^[a-z]{1,2}:(.*)$/m;
 					const data = {
-						x: /x:([0-9]+)/g.exec(parse[1]),
-						y: /y:([0-9]+)/g.exec(parse[2]),
-						z: /z:([0-9]+)/g.exec(parse[3]),
-						rx: /rx:([0-9]+)/g.exec(parse[4]),
-						ry: /ry:([0-9]+)/g.exec(parse[5])
+						x: reg.exec(parse[1]),
+						y: reg.exec(parse[2]),
+						z: reg.exec(parse[3]),
+						rx: reg.exec(parse[4]),
+						ry: reg.exec(parse[5])
 					};
 					if (data.x)
 						cutsceneSelected.value.option.point.x = Number(data.x[1]);
 					if (data.y)
 						cutsceneSelected.value.option.point.y = Number(data.y[1]);
 					if (data.z)
-						cutsceneSelected.value.option.point.y = Number(data.z[1]);
+						cutsceneSelected.value.option.point.z = Number(data.z[1]);
 					if (data.rx)
-						cutsceneSelected.value.option.point.y = Number(data.rx[1]);
+						cutsceneSelected.value.option.point.rx = Number(data.rx[1]);
 					if (data.ry)
-						cutsceneSelected.value.option.point.y = Number(data.ry[1]);
+						cutsceneSelected.value.option.point.ry = Number(data.ry[1]);
 				}
 				const points = await window.cutscene.getPoints(cutsceneList.value[index].id);
 				cutsceneSelected.value.points = points;

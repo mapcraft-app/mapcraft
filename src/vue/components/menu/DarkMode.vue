@@ -1,60 +1,74 @@
 <template>
-	<q-toggle
-		v-model="darkMode"
-		checked-icon="dark_mode"
-		unchecked-icon="light_mode"
-		color="grey-4"
-		size="5em"
-		class="dark-toggle"
-	/>
+	<div ref="toggle">
+		<q-toggle
+			v-model="localDarkMode"
+			checked-icon="dark_mode"
+			unchecked-icon="light_mode"
+			color="grey-4"
+			size="5em"
+			class="dark-toggle"
+			aria-label="Toggle dark mode"
+		/>
+	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 import { globalStore } from 'src/store/global';
 
 export default defineComponent({
-	setup() {
-		const store = globalStore();
-		const darkMode = ref<boolean>(false);
-		let backToggle: Element | null;
+	name: 'DarkMode',
+	setup () {
 		const $q = useQuasar();
+		const store = globalStore();
+		const { darkMode } = storeToRefs(store);
 
-		const modifyToggleBackground = () => {
-			if (darkMode.value) {
-				backToggle?.classList.add('toggle-back-night');
-				backToggle?.classList.remove('toggle-back-day');
-			} else {
-				backToggle?.classList.add('toggle-back-day');
-				backToggle?.classList.remove('toggle-back-night');
+		const localDarkMode = ref<boolean>(false);
+		const toggle = ref<HTMLDivElement | null>(null);
+		const backTrackOfToggle = ref<Element | null>(null);
+
+		const toggleBackground = () => {
+			if (backTrackOfToggle.value) {
+				if (localDarkMode.value) {
+					backTrackOfToggle.value.classList.add('toggle-back-night');
+					backTrackOfToggle.value.classList.remove('toggle-back-day');
+				} else {
+					backTrackOfToggle.value.classList.add('toggle-back-day');
+					backTrackOfToggle.value.classList.remove('toggle-back-night');
+				}
 			}
 		};
 
-		watch(darkMode, (val) => {
-			if (val !== null) {
+		onMounted(() => {
+			if (toggle.value) {
+				backTrackOfToggle.value = toggle.value.children[0].querySelector(
+					'div.dark-toggle > div.q-toggle__inner.relative-position.non-selectable > div'
+				);
+			}
+			if (backTrackOfToggle.value)
+				backTrackOfToggle.value.classList.add('toggle-back');
+
+			localDarkMode.value = store.darkMode;
+			$q.dark.set(store.darkMode);
+			toggleBackground();
+
+			watch(darkMode, (newVal) => {
+				localDarkMode.value = newVal;
+			});
+
+			watch(localDarkMode, (val) => {
 				$q.dark.set(val);
 				$q.localStorage.set('darkMode', val);
 				store.setDarkMode(val);
-				modifyToggleBackground();
-			}
-		});
-
-		onMounted(() => {
-			backToggle = document.querySelector(
-				'div.dark-toggle > div.q-toggle__inner.relative-position.non-selectable > div'
-			);
-			backToggle?.classList.add('toggle-back');
-			const ret = $q.localStorage.getItem('darkMode');
-			if (ret) {
-				$q.dark.set(Boolean(ret));
-				darkMode.value = Boolean(ret);
-			}
-			modifyToggleBackground();
+				toggleBackground();
+			});
 		});
 
 		return {
-			darkMode
+			localDarkMode,
+			toggle
 		};
 	}
 });

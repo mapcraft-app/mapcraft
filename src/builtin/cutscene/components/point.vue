@@ -1,15 +1,35 @@
 <template>
 	<div class="table">
 		<span class="five">{{ $props.modelValue.point }}</span>
-		<q-input v-model.number="$props.modelValue.x" type="number" dense :rules="[val => check(val) || '']" />
-		<q-input v-model.number="$props.modelValue.y" type="number" dense :rules="[val => check(val) || '']" />
-		<q-input v-model.number="$props.modelValue.z" type="number" dense :rules="[val => check(val) || '']" />
-		<q-input v-model.number="$props.modelValue.rx" type="number" dense :rules="[val => check(val) || '']" />
-		<q-input v-model.number="$props.modelValue.ry" type="number" dense :rules="[val => check(val) || '']" />
+		<q-input
+			v-model.number="$props.modelValue.x"
+			type="number" step="0.01" dense
+			:rules="[val => check(val) || '']"
+		/>
+		<q-input
+			v-model.number="$props.modelValue.y"
+			type="number" step="0.01" dense
+			:rules="[val => check(val) || '']"
+		/>
+		<q-input
+			v-model.number="$props.modelValue.z"
+			type="number" step="0.01" dense
+			:rules="[val => check(val) || '']"
+		/>
+		<q-input
+			v-model.number="$props.modelValue.rx"
+			type="number" step="0.01" dense
+			:rules="[val => check(val) || '']"
+		/>
+		<q-input
+			v-model.number="$props.modelValue.ry"
+			type="number" step="0.01" dense
+			:rules="[val => check(val) || '']"
+		/>
 		<div class="duration">
 			<q-input
 				v-model.number="$props.modelValue.duration" type="number"
-				step="1" min="0"
+				step="0.1" min="0"
 				:disable="$props.disable"
 				:rules="[val => check(val) && val >= 0 || '']" 
 				dense class="q-mr-xs"

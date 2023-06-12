@@ -65,6 +65,7 @@ module.exports = {
 		quotes: ['error', 'single'],
 		semi: ['error', 'always'],
 
+		'no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
 		'brace-style': ['error', '1tbs', { allowSingleLine: true }],
 		eqeqeq: ['error', 'always'],
 		curly: ['error', 'multi-or-nest'],

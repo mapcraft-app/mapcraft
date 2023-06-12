@@ -13,6 +13,8 @@ import '@quasar/extras/material-icons-outlined/material-icons-outlined.css';
 import '@quasar/extras/animate/fadeIn.css';
 import '@quasar/extras/animate/fadeOut.css';
 import 'quasar/src/css/index.sass';
+import './css.sass';
+
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { createPinia } from 'pinia';

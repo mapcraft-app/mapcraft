@@ -51,13 +51,13 @@
 					<q-btn
 						v-close-popup
 						icon="close"
-						class="bg-red-7"
+						color="red-7"
 						@click="dialogDef = false; mapVersion = ''; mapName = ''"
 					/>
 					<q-btn
 						v-close-popup
 						icon="check"
-						class="bg-teal"
+						color="teal"
 						:disable="(!mapName || !mapName.length || !mapVersion || !mapVersion.length)"
 						@click="dialogDefRegister"
 					/>
@@ -99,7 +99,6 @@ export default defineComponent({
 		const minecraftVersions = ref<string[]>(minecraft.minecraft());
 		const dialogDef = ref<boolean>(false);
 		let instanceInterval: NodeJS.Timer; // eslint-disable-line no-undef
-		let step = 0;
 
 		const getMaps = (dir: string) => {
 			window.mapcraft.getMap(dir)
@@ -132,77 +131,80 @@ export default defineComponent({
 		};
 
 		const startInstall = () => {
-			window.mapcraft.engine.init(mapVersion.value as any);
-			instanceInterval = setInterval(() => {
-				if (step === 0) {
-					if (window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent >= 100) {
-						if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent > 0)
-							step = 1;
-						else {
-							$q.loading.show({
-								message: t('pages.main.install.datapack.install')
-							});
-						}
-					} else {
-						$q.loading.show({
-							message: t('pages.main.install.datapack.download',
-								{
-									percents: window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent
-								}
-							)}
-						);
-					}
-				}
-
-				if (step === 1) {
-					if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent >= 100) {
-						if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent > 0)
-							step = 2;
-						else {
-							$q.loading.show({
-								message: t('pages.main.install.resourcepack.default.install')
-							});
-						}
-					} else {
-						$q.loading.show({
-							message: t('pages.main.install.resourcepack.default.download',
-								{
-									percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.default.stat.percent
-								}
-							)}
-						);
-					}
-				}
-
-				if (step === 2) {
-					if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent >= 100) {
-						step = 3;
-						$q.loading.show({
-							message: t('pages.main.install.resourcepack.map.install')
-						});
-					} else {
-						$q.loading.show({
-							message: t('pages.main.install.resourcepack.map.download',
-								{
-									percents: window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.base.stat.percent
-								}
-							)}
-						);
-					}
-				}
-			}, 100);
-			window.mapcraft.engine.install()
-				.then(() => {
-					clearInterval(instanceInterval);
-					const user = $q.localStorage.getItem('user') as any;
-					if (user !== null && user.remember)
-						router.push('/').finally(() => $q.loading.hide());
-					else
-						router.push('/user').finally(() => $q.loading.hide());
-				})
-				.catch((err) => {
-					console.error(err);
+			const loaderText = (text: string, val?: number) => {
+				$q.loading.show({
+					message: `<span class="text-body1 bg-grey-3 q-pa-sm">${text}${(val !== undefined)
+						? `<span class="text-yellow"> (${val.toFixed(0)}%) </span>`
+						: ''}</span>`,
+					html: true
 				});
+			};
+
+			$q.loading.show();
+			setTimeout(() => {
+				window.mapcraft.engine.init(mapVersion.value as any);
+				let step = 0;
+				instanceInterval = setInterval(() => {
+					if (step === 0) {
+						if (window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent >= 100) {
+							if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.stat.percent > 0)
+								step = 1;
+							else
+								loaderText(t('pages.main.install.datapack.install'));
+						} else {
+							loaderText(
+								t('pages.main.install.datapack.download'),
+								window.mapcraft.engine.instance().instance.datapack.instanceDownload.stat.percent
+							);
+						}
+					}
+
+					if (step === 1) {
+						if (window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.stat.percent >= 100) {
+							if (window.mapcraft.engine.instance().instance.resourcepack.instanceExtract.stat.total > 0)
+								step = 2;
+							else
+								loaderText(t('pages.main.install.resourcepack.default.install'));
+						} else {
+							loaderText(
+								t('pages.main.install.resourcepack.default.download'),
+								window.mapcraft.engine.instance().instance.resourcepack.instanceDownload.stat.percent
+							);
+						}
+					}
+
+					if (step === 2) {
+						if (window.mapcraft.engine.instance().instance.resourcepack.instanceExtract.stat.total >= 100) {
+							loaderText(
+								t('pages.main.install.resourcepack.map.hash'),
+								window.mapcraft.engine.instance().instance.resourcepack.instanceExtract.hashStat.percent
+							);
+						} else {
+							loaderText(
+								t('pages.main.install.resourcepack.map.extraction'),
+								window.mapcraft.engine.instance().instance.resourcepack.instanceExtract.stat.total
+							);
+						}
+					}
+				}, 100);
+				window.mapcraft.engine.install()
+					.then(() => {
+						clearInterval(instanceInterval);
+						const user = $q.localStorage.getItem('user') as any;
+						if (user !== null && user.remember)
+							router.push('/').finally(() => $q.loading.hide());
+						else
+							router.push('/user').finally(() => $q.loading.hide());
+					})
+					.catch((err) => {
+						$q.notify({ color: 'red', message: err });
+					})
+					.finally(() => {
+						if ($q.loading.isActive)
+							$q.loading.hide();
+					});
+			}, 2000);
+			
 		};
 
 		const handleClick = (name: string): void => {
@@ -210,7 +212,6 @@ export default defineComponent({
 				$q.loading.hide();
 				return;
 			}
-			$q.loading.show();
 			for (const el of maps.value) {
 				if (el.name === name) {
 					storeMap.setIcon((el.icon !== false)

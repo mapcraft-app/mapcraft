@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 /**
  * Import this file inside renderer process (usually preload)
  */
@@ -80,15 +78,15 @@ const ipc = {
 		ipcErrorMessage(channel);
 		ipcRenderer.send(channel, ...args);
 	},
-	receive: (channel: string, fn: (...args: any[]) => void): void => {
+	receive: (channel: string, fn: (..._args: any[]) => void): void => {
 		ipcErrorMessage(channel);
 		ipcRenderer.once(channel, (_event, ...args) => fn(...args));
 	},
-	receiveAll: (channel: string, fn: (...args: any[]) => void): void => {
+	receiveAll: (channel: string, fn: (..._args: any[]) => void): void => {
 		ipcErrorMessage(channel);
 		ipcRenderer.on(channel, (_event, ...args) => fn(...args));
 	},
-	remove: (channel: string, fn: (...args: any[]) => void): void => {
+	remove: (channel: string, fn: (..._args: any[]) => void): void => {
 		ipcErrorMessage(channel);
 		ipcRenderer.removeListener(channel, (_event, ...args) => fn(...args));
 	},

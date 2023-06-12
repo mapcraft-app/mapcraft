@@ -3,14 +3,14 @@ import {
 	BrowserWindow,
 	globalShortcut,
 	protocol,
-	session
+	session,
 } from 'electron';
+import { normalize } from 'path';
 
-import type Log from 'api/log';
 import errorDialog from 'electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'electron/api/createWindow';
 import generateEnv from 'electron/api/generateEnv';
-import { normalize } from 'path';
+import type Log from 'api/log';
 
 let loader: BrowserWindow | undefined = undefined;
 let mainWindow: BrowserWindow | undefined = undefined;
@@ -41,6 +41,9 @@ app.whenReady().then(async () => {
 		});
 	});
 
+	/**
+	 * Modify later with new system
+	 */
 	protocol.interceptFileProtocol('app', (req, call) => {
 		const url = decodeURIComponent(req.url.replace('app:///', '').replace('app://', ''));
 		call({ path: normalize(url) });

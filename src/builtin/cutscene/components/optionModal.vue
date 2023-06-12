@@ -43,27 +43,27 @@
 						<div v-if="$props.modelValue.option.end === 'custom'" class="row no-wrap">
 							<q-input
 								v-model.number="$props.modelValue.option.point.x" type="number"
-								class="q-pr-xs"
+								step="0.01" class="q-pr-xs"
 								:label="$t('builtin.cutscene.content.header.x')"
 							/>
 							<q-input
 								v-model.number="$props.modelValue.option.point.y" type="number"
-								class="q-pl-xs q-pr-xs"
+								step="0.01" class="q-pl-xs q-pr-xs"
 								:label="$t('builtin.cutscene.content.header.y')"
 							/>
 							<q-input
 								v-model.number="$props.modelValue.option.point.z" type="number"
-								class="q-pl-xs q-pr-xs"
+								step="0.01" class="q-pl-xs q-pr-xs"
 								:label="$t('builtin.cutscene.content.header.z')"
 							/>
 							<q-input
 								v-model.number="$props.modelValue.option.point.rx" type="number"
-								class="q-pl-xs q-pr-xs"
+								step="0.01" class="q-pl-xs q-pr-xs"
 								:label="$t('builtin.cutscene.content.header.rx')"
 							/>
 							<q-input
 								v-model.number="$props.modelValue.option.point.ry" type="number"
-								class="q-pl-xs"
+								step="0.01" class="q-pl-xs"
 								:label="$t('builtin.cutscene.content.header.ry')"
 							/>
 						</div>

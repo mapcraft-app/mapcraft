@@ -16,7 +16,7 @@ export const mapStore = defineStore('map', () => {
 		},
 		resourcepack: ''
 	});
-	const minecraftVersion = ref<minecraftVersion>('1.19.3');
+	const minecraftVersion = ref<minecraftVersion>('1.19.4');
 
 	function setIcon(str: string) {
 		info.icon = str;

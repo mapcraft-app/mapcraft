@@ -21,7 +21,7 @@ export default function errorDialog(err: Error, exit: boolean = true): void {
 		err.stack
 	].join('\n').toString();
 	
-	dialog.showMessageBox(undefined, {
+	dialog.showMessageBox({
 		type: 'error',
 		message: err.name,
 		title: `Mapcraft - ${err.name}`,

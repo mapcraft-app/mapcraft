@@ -1,0 +1,123 @@
+/* window */
+*
+	font-weight: 400
+html, body
+	min-height: 100%
+	max-height: 100%
+	height: 100%
+body 
+	display: flex
+	flex-direction: column
+	align-items: stretch
+	margin-top: 2em !important
+	height: calc(100vh - 2em) !important
+	min-height: calc(100vh - 2em) !important
+	width: 100vw !important
+	min-width: 100vw !important
+#main-app
+	width: 100vw
+	height: 100vh
+.page
+	height: calc(100vh - 79px)
+
+/* titlebar */
+.titlebar
+	display: flex
+	position: fixed
+	flex-direction: row
+	flex-wrap: nowrap
+	align-items: center
+	justify-content: space-between
+	height: 2em
+	width: 100vw
+	top: 0
+	left: 0
+	z-index: 999999999
+	-webkit-app-region: drag
+	background-color: #2a2a2a
+	color: white !important
+.titlebar-title
+	display: inline-flex
+	justify-content: center
+	align-items: center
+.titlebar-title img
+	height: 1.6em
+	padding: 0 0.5em
+.titlebar-title span
+	cursor: default
+	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+.titlebar-buttons
+	-webkit-app-region: no-drag
+	display: inline-flex
+	flex-wrap: nowrap
+	align-items: center
+.titlebar-buttons i
+	height: 1.3em
+	border: solid 1px #cfcfcf
+	margin: 0.2em
+
+.titlebar-buttons div
+	height: 2em
+	width: 3em
+	background-color: inherit
+	display: inline-flex
+	justify-content: center
+	align-items: center
+	transition: .2s
+	cursor: default
+.titlebar-buttons div:hover
+	background-color: #404040
+.titlebar-buttons div.close-button:hover
+	background-color: #db2b2b
+.titlebar-buttons div > span.material-icons.min-max
+	transform: rotate(90deg) scale(1, -1)
+.titlebar-page
+	height: 100%
+	min-height: 100%
+	min-width: 100%
+	width: 100%
+	overflow: hidden
+
+.titlebar-mac
+	margin-left: 1em
+.titlebar-mac img
+	height: 1.6em
+	padding: 0 0.5em
+.titlebar-mac div
+	width: 1.5em !important
+	cursor: pointer
+.titlebar-mac span
+	width: 8.5px
+
+.titlebar-mac div:hover
+	background-color: rgba(0,0,0,0)
+.titlebar-mac div:hover span.text-red
+	text-shadow: rgba(244,67,51,0.5) 1px 0 10px
+.titlebar-mac div:hover span.text-yellow
+	text-shadow: rgba(255,235,59,0.5) 1px 0 10px
+.titlebar-mac div:hover span.text-green
+	text-shadow: rgba(76,175,80,0.5) 1px 0 10px
+
+/* scrollbar */
+::-webkit-scrollbar
+	width: 10px
+::-webkit-scrollbar-track
+	background: #383838
+::-webkit-scrollbar-thumb
+	background: #939393
+::-webkit-scrollbar-thumb:hover
+	background: #ababab
+
+/* Patch quasar for handle custom window */
+.q-dialog__inner
+	top: 2em !important
+.q-notifications__list
+	margin-top: 2em !important
+.q-menu
+	max-height: 40% !important
+.img-error
+	image-rendering: pixelated
+	image-rendering: -moz-crisp-edges
+	image-rendering: crisp-edges
+.inherit-height
+	height: inherit

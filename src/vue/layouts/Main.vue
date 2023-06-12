@@ -15,6 +15,7 @@
 			v-model="leftDrawerOpen"
 			show-if-above
 			overlay
+			bordered
 			side="left"
 			:class="!$q.dark.isActive ? 'main-layout-bg-drawer' : ''"
 		>
