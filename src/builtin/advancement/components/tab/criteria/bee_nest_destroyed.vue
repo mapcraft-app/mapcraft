@@ -27,7 +27,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import SelectBlockItem from '../../select/blockItem.vue';
 import InterfaceItem from '../../interface/item.vue';
-import { bee_nest_destroyed } from '../../../conditions';
+import { bee_nest_destroyed } from '../../../interfaces/1.17_1.19';
 import { item } from '../../../model';
 
 export default defineComponent({

@@ -2,13 +2,12 @@
  * __at_root__: true // key is in root of condition
  * __empty__: true // condition is empty
  */
-
 import {
 	biome,
-	block,
 	damage,
 	dimensionType,
 	distance,
+	tags,
 	effect,
 	entity,
 	item,
@@ -17,9 +16,72 @@ import {
 	slot,
 	state,
 	type
-} from './model';
+} from '../model';
 
-export type criteria = 'bee_nest_destroyed' | 'bred_animals' | 'brewed_potion' | 'changed_dimension' | 'channeled_lightning' | 'construct_beacon' | 'consume_item' | 'cured_zombie_villager' | 'effects_changed' | 'enchanted_item' | 'enter_block' | 'entity_hurt_player' | 'entity_killed_player' | 'filled_bucket' | 'fishing_rod_hooked' | 'hero_of_the_village' | 'impossible' | 'inventory_changed' | 'item_durability_changed' | 'item_used_on_block' | 'killed_by_crossbow' | 'levitation' | 'location' | 'nether_travel' | 'placed_block' | 'player_generates_container_loot' | 'player_hurt_entity' | 'player_interacted_with_entity' | 'player_killed_entity' | 'recipe_unlocked' | 'safely_harvest_honey' | 'shot_crossbow' | 'slept_in_bed' | 'slide_down_block' | 'summoned_entity' | 'tame_animal' | 'target_hit' | 'thrown_item_picked_up_by_entity' | 'tick' | 'used_ender_eye' | 'used_totem' | 'villager_trade' | 'voluntary_exile';
+export type criteria =
+'allay_drop_item_on_block' |
+'avoid_vibration' |
+'bee_nest_destroyed' |
+'bred_animals' |
+'brewed_potion' |
+'changed_dimension' |
+'channeled_lightning' |
+'construct_beacon' |
+'consume_item' |
+'cured_zombie_villager' |
+'effects_changed' |
+'enchanted_item' |
+'enter_block' |
+'entity_hurt_player' |
+'entity_killed_player' |
+'fall_from_height' |
+'filled_bucket' |
+'fishing_rod_hooked' |
+'hero_of_the_village' |
+'impossible' |
+'inventory_changed' |
+'item_durability_changed' |
+'item_used_on_block' |
+'kill_mob_near_sculk_catalyst' |
+'killed_by_crossbow' |
+'levitation' |
+'lightning_strike' |
+'location' |
+'nether_travel' |
+'placed_block' |
+'player_generates_container_loot' |
+'player_hurt_entity' |
+'player_interacted_with_entity' |
+'player_killed_entity' |
+'recipe_unlocked' |
+'ride_entity_in_lava' |
+'shot_crossbow' |
+'slept_in_bed' |
+'slide_down_block' |
+'started_riding' |
+'summoned_entity' |
+'tame_animal' |
+'target_hit' |
+'tick' |
+'thrown_item_picked_up_by_entity' |
+'thrown_item_picked_up_by_player' |
+'used_ender_eye' |
+'used_totem' |
+'using_item' |
+'villager_trade' |
+'voluntary_exile'
+;
+
+export interface allay_drop_item_on_block {
+	player: entity | null,
+	item: item | null,
+	location: location | null
+}
+
+export interface avoid_vibration {
+	player: entity | null
+}
+
 
 export interface bee_nest_destroyed {
 	block: string | null,
@@ -82,6 +144,12 @@ export interface entity_killed_player {
 	killing_blow: type
 }
 
+export interface fall_from_height {
+	player: entity | null,
+	start_position: location | null,
+	distance: distance | null
+}
+
 export interface filled_bucket {
 	item: item
 }
@@ -117,6 +185,16 @@ export interface item_used_on_block {
 	location: biome
 }
 
+export interface kill_mob_near_sculk_catalyst {
+	player: entity,
+	entity: entity,
+	killing_blow: {
+		tags: tags | null,
+		direct_entity: entity | null,
+		source_entity: entity | null,
+	}
+}
+
 export interface killed_by_crossbow {
 	unique_entity_types: number | numberRange,
 	victims: entity[]
@@ -125,6 +203,12 @@ export interface killed_by_crossbow {
 export interface levitation {
 	distance: distance,
 	duration: number | numberRange
+}
+
+export interface lightning_strike {
+	player: entity | null,
+	lightning: entity | null,
+	bystander: entity | null
 }
 
 export interface location {
@@ -165,9 +249,10 @@ export interface recipe_unlocked {
 	recipe: string
 }
 
-export interface safely_harvest_honey {
-	block: block,
-	item: item
+export interface ride_entity_in_lava {
+	player: entity,
+  start_position: location | null,
+  distance: distance | null
 }
 
 export interface shot_crossbow {
@@ -181,6 +266,10 @@ export interface slept_in_bed {
 
 export interface slide_down_block {
 	block: string
+}
+
+export interface started_riding {
+	player: entity
 }
 
 export interface summoned_entity {
@@ -197,13 +286,19 @@ export interface target_hit {
 	projectile: string
 }
 
+export interface tick {
+	__empty__: true
+}
+
 export interface thrown_item_picked_up_by_entity {
 	entity: entity,
 	item: item
 }
 
-export interface tick {
-	__empty__: true
+export interface thrown_item_picked_up_by_player {
+	player: entity,
+	entity: entity,
+	item: item
 }
 
 export interface used_ender_eye {
@@ -211,6 +306,11 @@ export interface used_ender_eye {
 }
 
 export interface used_totem {
+	item: item
+}
+
+export interface using_item {
+	player: entity
 	item: item
 }
 

@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceDistance from '../../interface/distance.vue';
-import { nether_travel } from '../../../conditions';
+import { nether_travel } from '../../../interfaces/1.17_1.19';
 import { distance } from '../../../model';
 
 export default defineComponent({

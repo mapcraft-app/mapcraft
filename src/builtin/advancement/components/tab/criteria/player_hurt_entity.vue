@@ -23,7 +23,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Entity from '../../interface/entityPlayer.vue';
 import Damage from '../../interface/damage.vue';
-import { player_hurt_entity } from '../../../conditions';
+import { player_hurt_entity } from '../../../interfaces/1.17_1.19';
 import { damage, entity } from '../../../model';
 
 export default defineComponent({

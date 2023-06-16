@@ -2,6 +2,14 @@
 	<q-list bordered class="q-mt-sm">
 		<q-expansion-item
 			expand-separator
+			icon="person"
+			:label="$capitalize($t('builtin.advancement.interface.entityPlayer.player'))"
+			class="q-ma-xs"
+		>
+			<interface-entity v-model="data.player" :is-player="true" />
+		</q-expansion-item>
+		<q-expansion-item
+			expand-separator
 			icon="category"
 			:label="$capitalize($t('builtin.advancement.interface.item.item'))"
 			class="q-ma-xs"
@@ -21,29 +29,33 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import InterfaceBiome from '../../interface/biome.vue';
-import InterfaceItem from '../../interface/item.vue';
-import { item_used_on_block } from '../../../interfaces/1.17_1.19';
-import { biome, item } from '../../../model';
+import interfaceEntity from '../../interface/entityPlayer.vue';
+import interfaceItem from '../../interface/item.vue';
+import interfaceBiome from '../../interface/biome.vue';
+
+import type { biome, item } from '../../../model';
+import type { allay_drop_item_on_block } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'TabItemUsedOnBlock',
+	name: 'Tab',
 	components: {
-		InterfaceBiome,
-		InterfaceItem
+		interfaceEntity,
+		interfaceItem,
+		interfaceBiome
 	},
 	props: {
 		modelValue: {
-			type: Object as PropType<item_used_on_block>,
+			type: Object as PropType<allay_drop_item_on_block>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const data = ref<item_used_on_block>({
+		const data = ref<allay_drop_item_on_block>({
+			player: props.modelValue.player ?? null,
 			item: props.modelValue.item ?? {} as item,
 			location: props.modelValue.location ?? {} as biome
-		} as item_used_on_block);
+		} as allay_drop_item_on_block);
 
 		onBeforeMount(() => {
 			watch(data, (val) => emit('update:modelValue', val), { deep: true });

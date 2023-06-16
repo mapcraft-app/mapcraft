@@ -26,11 +26,13 @@ interface realCriteria {
 	criteria: Record<string, criteria>,
 	requirements: string[][],
 	rewards: rewards,
-	parent?: string
+	parent?: string,
+	sends_telemetry_event?: boolean
 }
 
 class advancement {
 	private env: envInterface;
+	private version: minecraftVersion;
 	public path: {
 		base: string,
 		data: string
@@ -46,6 +48,7 @@ class advancement {
 		};
 		
 		this.env = env;
+		this.version = minecraftVersion;
 		this.path = {
 			base: resolve(env.datapack.base, 'advancements'),
 			data: resolve(env.datapack.base, 'advancements', 'data')
@@ -127,6 +130,8 @@ class advancement {
 			for (const i in this.list) {
 				if (this.list[i].path === json.path) {
 					this.list[i].data = json.data;
+					if (minecraft.semverCompare(this.version, '1.20') < 0)
+						delete json.data.telemetry;
 					writeFile(
 						this.list[i].path,
 						JSON.stringify(json.data, null, 2),
@@ -197,6 +202,9 @@ class advancement {
 				requirements: json.requirements,
 				rewards: json.rewards
 			} as realCriteria;
+
+			if (minecraft.semverCompare(this.version, '1.20') < 0)
+				temp.sends_telemetry_event = adv.data.telemetry ?? false;
 			if (!Object.prototype.hasOwnProperty.call(json, 'utility') || json.utility === false)
 				temp.display = json.display;
 			if (parent)

@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import { player_generates_container_loot } from '../../../conditions';
+import { player_generates_container_loot } from '../../../interfaces/1.17_1.19';
 
 export default defineComponent({
 	name: 'TabPlayerGeneratesContainerLoot',

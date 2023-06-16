@@ -1,4 +1,5 @@
-import { criteria } from './conditions';
+import { criteria as criteria_1_17_1_19 } from './interfaces/1.17_1.19';
+import { criteria as criteria_1_20 } from './interfaces/1.20';
 
 export type textColor = 'black' | 'dark_blue' | 'dark_green' | 'dark_aqua' | 'dark_red' | 'dark_purple' | 'gold' | 'gray' | 'dark_gray' | 'blue' | 'green' | 'aqua' | 'red' | 'light_purple' | 'yellow' | 'white';
 export type frameType = 'challenge' | 'goal' | 'task';
@@ -207,7 +208,7 @@ export interface rewards {
 
 export interface triggers {
 	name: string;
-	trigger: criteria | null;
+	trigger: criteria_1_17_1_19 | criteria_1_20 | null;
 	conditions: any
 }
 
@@ -229,6 +230,7 @@ export interface main {
 	id: string;
 	name: string;
 	background: 'minecraft:textures/gui/advancements/backgrounds/stone.png' | string;
+	telemetry?: boolean;
 	data: advancement
 }
 //#endregion Json

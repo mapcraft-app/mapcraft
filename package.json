@@ -5,7 +5,7 @@
   "description": "Mapcraft is a software that increases the possibilities of mapmakers without any complex installation",
   "homepage": "https://mapcraft.app",
   "license": "GPL-3.0",
-  "version": "0.8.8-alpha",
+  "version": "1.0.0-beta",
   "main": "main.js",
   "author": {
     "name": "Clément Bertrand",

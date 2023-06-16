@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEntity from '../../interface/entityPlayer.vue';
-import { cured_zombie_villager } from '../../../conditions';
+import { cured_zombie_villager } from '../../../interfaces/1.17_1.19';
 import { entity } from '../../../model';
 
 export default defineComponent({

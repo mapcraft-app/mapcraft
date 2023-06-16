@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import BlockItem from '../../select/blockItem.vue';
-import { slide_down_block } from '../../../conditions';
+import { slide_down_block } from '../../../interfaces/1.17_1.19';
 
 export default defineComponent({
 	name: 'TabSlideDownBlock',

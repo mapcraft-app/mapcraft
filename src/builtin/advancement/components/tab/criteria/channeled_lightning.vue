@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEntity from '../../interface/entityPlayer.vue';
-import { channeled_lightning } from '../../../conditions';
+import { channeled_lightning } from '../../../interfaces/1.17_1.19';
 import { entity } from '../../../model';
 
 export default defineComponent({

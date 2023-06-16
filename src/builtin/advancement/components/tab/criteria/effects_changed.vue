@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEffect from '../../interface/effect.vue';
-import { effects_changed } from '../../../conditions';
+import { effects_changed } from '../../../interfaces/1.17_1.19';
 import { effect } from '../../../model';
 
 export default defineComponent({

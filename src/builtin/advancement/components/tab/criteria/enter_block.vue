@@ -15,7 +15,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import SelectBlockItem from '../../select/blockItem.vue';
 import StateType from '../../type/state.vue';
-import { enter_block } from '../../../conditions';
+import { enter_block } from '../../../interfaces/1.17_1.19';
 import { state } from '../../../model';
 
 export default defineComponent({

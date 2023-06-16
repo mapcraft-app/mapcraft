@@ -7,7 +7,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceItem from '../../interface/item.vue';
 import TypeNumberRange from '../../type/numberRange.vue';
-import { enchanted_item } from '../../../conditions';
+import { enchanted_item } from '../../../interfaces/1.17_1.19';
 import { item } from '../../../model';
 
 export default defineComponent({

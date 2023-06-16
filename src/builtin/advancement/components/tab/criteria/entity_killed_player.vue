@@ -7,7 +7,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEntity from '../../interface/entityPlayer.vue';
 import InterfaceType from '../../interface/type.vue';
-import { entity_killed_player } from '../../../conditions';
+import { entity_killed_player } from '../../../interfaces/1.17_1.19';
 import { entity, type } from '../../../model';
 
 export default defineComponent({

@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import NumberRange from '../../type/numberRange.vue';
-import { construct_beacon } from '../../../conditions';
+import { construct_beacon } from '../../../interfaces/1.17_1.19';
 
 export default defineComponent({
 	name: 'TabConstructBeacon',

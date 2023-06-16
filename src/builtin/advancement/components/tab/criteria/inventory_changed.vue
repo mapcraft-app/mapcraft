@@ -35,7 +35,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceSlot from '../../interface/slot.vue';
 import InterfaceItem from '../../interface/item.vue';
-import { inventory_changed } from '../../../conditions';
+import { inventory_changed } from '../../../interfaces/1.17_1.19';
 import { item, slot } from '../../../model';
 
 export default defineComponent({

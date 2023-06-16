@@ -135,6 +135,8 @@ export default {
 
 	tab: {
 		background: 'background image',
+		telemetry: 'sends telemetry event',
+		telemetryExplanation: 'determines whether telemetry data should be collected when this advancement is achieved or not',
 		display: {
 			utility: ['utility', 'disable the display tab, useful for advancements that are meant to run functions, etc...'],
 			title: 'title',
@@ -199,6 +201,24 @@ export default {
 		},
 		villagerTrade: {
 			villager: 'villager'
+		},
+		killingBlow: 'killing blow',
+		tags: {
+			title: 'tags',
+			id: 'id',
+			expected: 'expected'
+		},
+		lightningStrike: {
+			lightning: 'lightning',
+			bystander: 'bystander'
+		},
+		recipe_crafted: {
+			recipeId: 'recipe id',
+			ingredients: 'ingredients',
+			itemTag: 'item tag',
+		},
+		rideEntityInLava: {
+			startPosition: 'start position'
 		}
 	},
 
@@ -230,6 +250,8 @@ export default {
 	},
 
 	trigger: {
+		allayDropItemOnBlock: 'allay drop item on block',
+		avoidVibration: 'avoid vibration',
 		beeNestDestroyed: 'bee nest destroyed',
 		bredAnimals: 'bred animals',
 		brewedPotion: 'brewed potion',
@@ -243,6 +265,7 @@ export default {
 		enterBlock: 'enter block',
 		entityHurtPlayer: 'entity hurt player',
 		entityKilledPlayer: 'entity killed player',
+		fallFromHeight: 'fall from height',
 		filledBucket: 'filled bucket',
 		fishingRodHooked: 'fishing rod hooked',
 		heroOfTheVillage: 'hero of the village',
@@ -250,8 +273,10 @@ export default {
 		inventoryChanged: 'inventory changed',
 		itemDurabilityChanged: 'item durability changed',
 		itemUsedOnBlock: 'item used on block',
+		killMobNearSculkCatalyst: 'kill mob near sculk catalyst',
 		killedByCrossbow: 'killed by crossbow',
 		levitation: 'levitation',
+		lightningStrike: 'lightning strike',
 		location: 'location',
 		netherTravel: 'nether travel',
 		placedBlock: 'placed block',
@@ -259,18 +284,23 @@ export default {
 		playerHurtEntity: 'player hurt entity',
 		playerInteractedWithEntity: 'player interacted with entity',
 		playerKilledEntity: 'player killed entity',
+		recipeCrafted: 'recipe crafted',
 		recipeUnlocked: 'recipe unlocked',
+		rideEntityInLava: 'ride entity in lava',
 		safelyHarvestHoney: 'safely harvest honey',
 		shotCrossbow: 'shot crossbow',
 		sleptInBed: 'slept in bed',
 		slideDownBlock: 'slide down block',
+		startedRinding: 'started rinding',
 		summonedEntity: 'summoned entity',
 		tameAnimal: 'tame animal',
 		targetHit: 'target hit',
 		thrownItemPickedUpByEntity: 'thrown item picked up by entity',
+		thrownItemPickedUpByPlayer: 'thrown item picked up by player',
 		tick: 'tick',
 		usedEnderEye: 'used ender eye',
 		usedTotem: 'used totem',
+		usingItem: 'using item',
 		villagerTrade: 'villager trade',
 		voluntaryExile: 'voluntary exile',
 		notFound: 'this criteria does not exist'

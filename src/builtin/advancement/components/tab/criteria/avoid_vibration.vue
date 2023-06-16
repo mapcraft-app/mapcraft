@@ -1,29 +1,28 @@
 <template>
-	<interface-item v-model="data.item" />
+	<interface-entity v-model="data.player" :is-player="true" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import InterfaceItem from '../../interface/item.vue';
-import { consume_item } from '../../../interfaces/1.17_1.19';
-import { item } from '../../../model';
+import interfaceEntity from '../../interface/entityPlayer.vue';
+import type { avoid_vibration } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'TabConsumeItem',
+	name: 'Tab',
 	components: {
-		InterfaceItem
+		interfaceEntity
 	},
 	props: {
 		modelValue: {
-			type: Object as PropType<consume_item>,
+			type: Object as PropType<avoid_vibration>,
 			required: true
 		}
 	},
 	emits: ['update:modelValue'],
 	setup (props, { emit }) {
-		const data = ref<consume_item>({
-			item: props.modelValue.item ?? {} as item
-		} as consume_item);
+		const data = ref<avoid_vibration>({
+			player: props.modelValue.player ?? null
+		} as avoid_vibration);
 
 		onBeforeMount(() => {
 			watch(data, (val) => emit('update:modelValue', val), { deep: true });

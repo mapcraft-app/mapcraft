@@ -37,7 +37,7 @@ import { userStore } from 'store/user';
 import selectionVue from 'components/User/selection.vue';
 import accountConnectionVue from 'components/User/accountConnection.vue';
 import accountCreationVue from 'components/User/accountCreation.vue';
-import { userStorage } from 'app/src/electron/preload/exposeEnv';
+import type { userStorage } from 'app/src/electron/preload/exposeEnv';
 
 export default defineComponent({
 	name: 'UserPage',

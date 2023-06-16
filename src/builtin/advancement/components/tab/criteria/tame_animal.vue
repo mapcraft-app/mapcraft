@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import EntityPlayer from '../../interface/entityPlayer.vue';
-import { tame_animal } from '../../../conditions';
+import { tame_animal } from '../../../interfaces/1.17_1.19';
 import { entity } from '../../../model';
 
 export default defineComponent({

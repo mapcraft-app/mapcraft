@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Item from '../../interface/item.vue';
-import { used_totem } from '../../../conditions';
+import { used_totem } from '../../../interfaces/1.17_1.19';
 import { item } from '../../../model';
 
 export default defineComponent({

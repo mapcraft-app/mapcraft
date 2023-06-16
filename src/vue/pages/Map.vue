@@ -197,7 +197,8 @@ export default defineComponent({
 							router.push('/user').finally(() => $q.loading.hide());
 					})
 					.catch((err) => {
-						$q.notify({ color: 'red', message: err });
+						console.log('error', err);
+						// $q.notify({ color: 'red', message: err });
 					})
 					.finally(() => {
 						if ($q.loading.isActive)

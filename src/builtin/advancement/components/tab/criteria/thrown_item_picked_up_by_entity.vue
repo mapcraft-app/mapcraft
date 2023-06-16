@@ -23,7 +23,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Entity from '../../interface/entityPlayer.vue';
 import Item from '../../interface/item.vue';
-import { thrown_item_picked_up_by_entity } from '../../../conditions';
+import { thrown_item_picked_up_by_entity } from '../../../interfaces/1.17_1.19';
 import { entity, item } from '../../../model';
 
 export default defineComponent({

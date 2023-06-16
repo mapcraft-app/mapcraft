@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Item from '../../interface/item.vue';
-import { shot_crossbow } from '../../../conditions';
+import { shot_crossbow } from '../../../interfaces/1.17_1.19';
 import { item } from '../../../model';
 
 export default defineComponent({

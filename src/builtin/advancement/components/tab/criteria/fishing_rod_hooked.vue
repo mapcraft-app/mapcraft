@@ -31,7 +31,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceEntity from '../../interface/entityPlayer.vue';
 import InterfaceItem from '../../interface/item.vue';
-import { fishing_rod_hooked } from '../../../conditions';
+import { fishing_rod_hooked } from '../../../interfaces/1.17_1.19';
 import { entity, item } from '../../../model';
 
 export default defineComponent({

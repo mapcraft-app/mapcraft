@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceItem from '../../interface/item.vue';
-import { filled_bucket } from '../../../conditions';
+import { filled_bucket } from '../../../interfaces/1.17_1.19';
 import { item } from '../../../model';
 
 export default defineComponent({

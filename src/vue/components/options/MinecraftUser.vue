@@ -21,7 +21,7 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { userStore } from 'store/user';
-import { userStorage } from 'app/src/electron/preload/exposeEnv';
+import type { userStorage } from 'app/src/electron/preload/exposeEnv';
 
 export default defineComponent({
 	name: 'OptionsMinecraftUser',

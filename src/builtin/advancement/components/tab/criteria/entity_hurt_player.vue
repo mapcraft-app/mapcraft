@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import InterfaceDamage from '../../interface/damage.vue';
-import { entity_hurt_player } from '../../../conditions';
+import { entity_hurt_player } from '../../../interfaces/1.17_1.19';
 import { damage } from '../../../model';
 
 export default defineComponent({

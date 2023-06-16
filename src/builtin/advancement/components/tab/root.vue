@@ -8,24 +8,36 @@
 			<q-btn flat round color="secondary" icon="folder" @click="changePath()" />
 		</template>
 	</q-input>
+	<template v-if="minecraft.semverCompare(store.minecraftVersion, '1.20') >= 0">
+		<q-toggle
+			v-model="telemetry"
+			:label="$capitalize($t('builtin.advancement.tab.telemetry'))"
+		>
+			<q-tooltip class="bg-purple text-body2" :offset="[10, 10]">
+				{{ $capitalize($t('builtin.advancement.tab.telemetryExplanation')) }}
+			</q-tooltip>
+		</q-toggle>
+	</template>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, onBeforeMount, ref, watch } from 'vue';
+import { defineComponent, onBeforeMount, ref, watch } from 'vue';
+import { minecraft } from 'mapcraft-api/frontend';
 import { mapStore } from 'src/store/map';
+import { advancementsList, indexAdv } from '../../store';
 
 export default defineComponent({
-	props: {
-		modelValue: {
-			type: String as PropType<string | null>,
-			required: false,
-			default: null
-		}
-	},
-	emits: ['update:modelValue'],
-	setup (props, { emit }) {
+	setup () {
 		const store = mapStore();
-		const path = ref<string>(props.modelValue ?? 'minecraft:textures/gui/advancements/backgrounds/stone.png');
+
+		const path = ref<string>(
+			advancementsList.value[indexAdv.value].data.background
+			?? 'minecraft:textures/gui/advancements/backgrounds/stone.png'
+		);
+		const telemetry = ref<boolean>(
+			advancementsList.value[indexAdv.value].data.telemetry
+			?? false
+		);
 
 		const changePath = () => {
 			const generatePathToFile = () => {
@@ -44,11 +56,15 @@ export default defineComponent({
 		};
 
 		onBeforeMount(() => {
-			watch(path, (val) => emit('update:modelValue', val));
+			watch(path, (val) => advancementsList.value[indexAdv.value].data.background = val);
+			watch(telemetry, (val) => advancementsList.value[indexAdv.value].data.telemetry = val);
 		});
 
 		return {
+			minecraft,
+			store,
 			path,
+			telemetry,
 			changePath
 		};
 	}

@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 
-import { recipe_unlocked } from '../../../conditions';
+import { recipe_unlocked } from '../../../interfaces/1.17_1.19';
 
 export default defineComponent({
 	name: 'TabRecipeUnlocked',

@@ -91,7 +91,7 @@
 						class="invisible-back"
 					>
 						<q-tab-panel v-if="selectedAdvancement.isRoot" name="root">
-							<tab-root v-model="advancementsList[indexAdv].data.background" />
+							<tab-root v-model="advancementsList[indexAdv].data" />
 						</q-tab-panel>
 						<q-tab-panel name="title">
 							<tab-display @update="saveAdvancement()" />

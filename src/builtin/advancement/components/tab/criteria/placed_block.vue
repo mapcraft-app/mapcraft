@@ -25,7 +25,7 @@ import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Item from '../../interface/item.vue';
 import Biome from '../../interface/biome.vue';
 import Block from '../../select/blockItem.vue';
-import { placed_block } from '../../../conditions';
+import { placed_block } from '../../../interfaces/1.17_1.19';
 import { biome, item } from '../../../model';
 
 export default defineComponent({

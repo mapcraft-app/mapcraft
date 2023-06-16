@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Entity from '../../interface/entityPlayer.vue';
-import { target_hit } from '../../../conditions';
+import { target_hit } from '../../../interfaces/1.17_1.19';
 import { entity } from '../../../model';
 
 export default defineComponent({

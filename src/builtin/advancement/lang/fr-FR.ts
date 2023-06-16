@@ -135,6 +135,8 @@ export default {
 
 	tab: {
 		background: 'image d\'arrière-plan',
+		telemetry: 'envoie un événement de télémétrie',
+		telemetryExplanation: 'détermine si les données télémétriques doivent être collectées lorsque ce progrès est réalisé ou non',
 		display: {
 			utility: ['utilitaire', 'désactiver l\'onglet d\'affichage, utile pour les avancements qui sont destinés à exécuter des fonctions, etc...'],
 			title: 'titre',
@@ -199,6 +201,24 @@ export default {
 		},
 		villagerTrade: {
 			villager: 'villageois'
+		},
+		killingBlow: 'coup mortel',
+		tags: {
+			title: 'étiquettes',
+			id: 'id',
+			expected: 'attendue'
+		},
+		lightningStrike: {
+			lightning: 'foudre',
+			bystander: 'spectateur'
+		},
+		recipe_crafted: {
+			recipeId: 'identité de la recette',
+			ingredients: 'ingrédients',
+			itemTag: 'étiquette de l\'article',
+		},
+		ride_entity_in_lava: {
+			startPosition: 'position de départ'
 		}
 	},
 

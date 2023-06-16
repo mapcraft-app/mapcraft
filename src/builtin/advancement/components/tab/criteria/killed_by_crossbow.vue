@@ -34,7 +34,7 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import NumberRange from '../../type/numberRange.vue';
 import EntityPlayer from '../../interface/entityPlayer.vue';
-import { killed_by_crossbow } from '../../../conditions';
+import { killed_by_crossbow } from '../../../interfaces/1.17_1.19';
 import { entity } from '../../../model';
 
 export default defineComponent({

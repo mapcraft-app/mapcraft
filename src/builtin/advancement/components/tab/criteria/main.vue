@@ -38,8 +38,16 @@
 			/>
 		</div>
 		<div class="q-pa-xs">
+			<allay-drop-item-on-block
+				v-if="criteria.trigger === 'allay_drop_item_on_block'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<avoid-vibration
+				v-else-if="criteria.trigger === 'avoid_vibration'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
 			<bee-nest-destroyed
-				v-if="criteria.trigger === 'bee_nest_destroyed'"
+				v-else-if="criteria.trigger === 'bee_nest_destroyed'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<bred-animals
@@ -90,6 +98,10 @@
 				v-else-if="criteria.trigger === 'entity_killed_player'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
+			<fall-from-height
+				v-else-if="criteria.trigger === 'fall_from_height'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
 			<filled-bucket
 				v-else-if="criteria.trigger === 'filled_bucket'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
@@ -117,12 +129,20 @@
 				v-else-if="criteria.trigger === 'item_used_on_block'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
+			<kill-mob-near-sculk-catalyst
+				v-else-if="criteria.trigger === 'kill_mob_near_sculk_catalyst'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
 			<killed-by-crossbow
 				v-else-if="criteria.trigger === 'killed_by_crossbow'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<levitation
 				v-else-if="criteria.trigger === 'levitation'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<lightning-strike
+				v-else-if="criteria.trigger === 'lightning_strike'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<location
@@ -153,12 +173,16 @@
 				v-else-if="criteria.trigger === 'player_killed_entity'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
+			<recipe-crafted
+				v-else-if="criteria.trigger === 'recipe_crafted'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
 			<recipe-unlocked
 				v-else-if="criteria.trigger === 'recipe_unlocked'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
-			<safely-harvest-honey
-				v-else-if="criteria.trigger === 'safely_harvest_honey'"
+			<ride-entity-in-lava
+				v-else-if="criteria.trigger === 'ride_entity_in_lava'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<shot-crossbow
@@ -171,6 +195,10 @@
 			/>
 			<slide-down-block
 				v-else-if="criteria.trigger === 'slide_down_block'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<started-rinding
+				v-else-if="criteria.trigger === 'started_riding'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<summoned-entity
@@ -189,6 +217,10 @@
 				v-else-if="criteria.trigger === 'thrown_item_picked_up_by_entity'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
+			<thrown-item-picked-up-by-player
+				v-else-if="criteria.trigger === 'thrown_item_picked_up_by_player'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
 			<div v-else-if="criteria.trigger === 'tick'">
 				{{ $capitalize($t('builtin.advancement.trigger.tick')) }}
 			</div>
@@ -198,6 +230,10 @@
 			/>
 			<used-totem
 				v-else-if="criteria.trigger === 'used_totem'"
+				v-model="selectedAdvancement.child.data.criteria[i].conditions"
+			/>
+			<using-item
+				v-else-if="criteria.trigger === 'using_item'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<villager-trade
@@ -221,9 +257,11 @@ import { useI18n } from 'vue-i18n';
 import { capitalize } from 'vue/plugins/app';
 
 import { selectedAdvancement } from '../../../lib/handleAdv';
-import { criteria } from '../../../conditions';
+import { criteria } from '../../../interfaces/1.20';
 import { triggers } from '../../../model';
 
+import AllayDropItemOnBlock from './allay_drop_item_on_block.vue';
+import AvoidVibration from './avoid_vibration.vue';
 import BeeNestDestroyed from './bee_nest_destroyed.vue';
 import BredAnimals from './bred_animals.vue';
 import BrewedPotion from './brewed_potion.vue';
@@ -237,14 +275,17 @@ import EnchantedItem from './enchanted_item.vue';
 import EnterBlock from './enter_block.vue';
 import EntityHurtPlayer from './entity_hurt_player.vue';
 import EntityKilledPlayer from './entity_killed_player.vue';
+import FallFromHeight from './fall_from_height.vue';
 import FilledBucket from './filled_bucket.vue';
 import FishingRodHooked from './fishing_rod_hooked.vue';
 import HeroOfTheVillage from './hero_of_the_village.vue';
 import InventoryChanged from './inventory_changed.vue';
 import ItemDurabilityChanged from './item_durability_changed.vue';
 import ItemUsedOnBlock from './item_used_on_block.vue';
+import KillMobNearSculkCatalyst from './kill_mob_near_sculk_catalyst.vue';
 import KilledByCrossbow from './killed_by_crossbow.vue';
 import Levitation from './levitation.vue';
+import LightningStrike from './lightning_strike.vue';
 import Location from './location.vue';
 import NetherTravel from './nether_travel.vue';
 import PlacedBlock from './placed_block.vue';
@@ -252,23 +293,29 @@ import PlayerGeneratesContainerLoot from './player_generates_container_loot.vue'
 import PlayerHurtEntity from './player_hurt_entity.vue';
 import PlayerInteractedWithEntity from './player_interacted_with_entity.vue';
 import PlayerKilledEntity from './player_killed_entity.vue';
+import RecipeCrafted from './recipe_crafted.vue';
 import RecipeUnlocked from './recipe_unlocked.vue';
-import SafelyHarvestHoney from './safely_harvest_honey.vue';
+import RideEntityInLava from './ride_entity_in_lava.vue';
 import ShotCrossbow from './shot_crossbow.vue';
 import SleptInBed from './slept_in_bed.vue';
 import SlideDownBlock from './slide_down_block.vue';
+import StartedRinding from './started_riding.vue';
 import SummonedEntity from './summoned_entity.vue';
 import TameAnimal from './tame_animal.vue';
 import TargetHit from './target_hit.vue';
 import ThrownItemPickedUpByEntity from './thrown_item_picked_up_by_entity.vue';
+import ThrownItemPickedUpByPlayer from './thrown_item_picked_up_by_player.vue';
 import UsedEnderEye from './used_ender_eye.vue';
 import UsedTotem from './used_totem.vue';
+import UsingItem from './using_item.vue';
 import VillagerTrade from './villager_trade.vue';
 import VoluntaryExile from './voluntary_exile.vue';
 
 export default defineComponent({
 	name: 'TabCriteria',
 	components: {
+		AllayDropItemOnBlock,
+		AvoidVibration,
 		BeeNestDestroyed,
 		BredAnimals,
 		BrewedPotion,
@@ -282,14 +329,17 @@ export default defineComponent({
 		EnterBlock,
 		EntityHurtPlayer,
 		EntityKilledPlayer,
+		FallFromHeight,
 		FilledBucket,
 		FishingRodHooked,
 		HeroOfTheVillage,
 		InventoryChanged,
 		ItemDurabilityChanged,
 		ItemUsedOnBlock,
+		KillMobNearSculkCatalyst,
 		KilledByCrossbow,
 		Levitation,
+		LightningStrike,
 		Location,
 		NetherTravel,
 		PlacedBlock,
@@ -297,17 +347,21 @@ export default defineComponent({
 		PlayerHurtEntity,
 		PlayerInteractedWithEntity,
 		PlayerKilledEntity,
+		RecipeCrafted,
 		RecipeUnlocked,
-		SafelyHarvestHoney,
+		RideEntityInLava,
 		ShotCrossbow,
 		SleptInBed,
 		SlideDownBlock,
+		StartedRinding,
 		SummonedEntity,
 		TameAnimal,
 		TargetHit,
 		ThrownItemPickedUpByEntity,
+		ThrownItemPickedUpByPlayer,
 		UsedEnderEye,
 		UsedTotem,
+		UsingItem,
 		VillagerTrade,
 		VoluntaryExile
 	},
@@ -317,6 +371,8 @@ export default defineComponent({
 
 		const generateCriteriaList = () => {
 			criterias.value = [
+				{ value: 'allay_drop_item_on_block', label: capitalize(t('builtin.advancement.trigger.allayDropItemOnBlock')) },
+				{ value: 'avoid_vibration', label: capitalize(t('builtin.advancement.trigger.avoidVibration')) },
 				{ value: 'bee_nest_destroyed', label: capitalize(t('builtin.advancement.trigger.beeNestDestroyed')) },
 				{ value: 'bred_animals', label: capitalize(t('builtin.advancement.trigger.bredAnimals')) },
 				{ value: 'brewed_potion', label: capitalize(t('builtin.advancement.trigger.brewedPotion')) },
@@ -330,6 +386,7 @@ export default defineComponent({
 				{ value: 'enter_block', label: capitalize(t('builtin.advancement.trigger.enterBlock')) },
 				{ value: 'entity_hurt_player', label: capitalize(t('builtin.advancement.trigger.entityHurtPlayer')) },
 				{ value: 'entity_killed_player', label: capitalize(t('builtin.advancement.trigger.entityKilledPlayer')) },
+				{ value: 'fall_from_height', label: capitalize(t('builtin.advancement.trigger.fallFromHeight')) },
 				{ value: 'filled_bucket', label: capitalize(t('builtin.advancement.trigger.filledBucket')) },
 				{ value: 'fishing_rod_hooked', label: capitalize(t('builtin.advancement.trigger.fishingRodHooked')) },
 				{ value: 'hero_of_the_village', label: capitalize(t('builtin.advancement.trigger.heroOfTheVillage')) },
@@ -337,8 +394,10 @@ export default defineComponent({
 				{ value: 'inventory_changed', label: capitalize(t('builtin.advancement.trigger.inventoryChanged')) },
 				{ value: 'item_durability_changed', label: capitalize(t('builtin.advancement.trigger.itemDurabilityChanged')) },
 				{ value: 'item_used_on_block', label: capitalize(t('builtin.advancement.trigger.itemUsedOnBlock')) },
+				{ value: 'kill_mob_near_sculk_catalyst', label: capitalize(t('builtin.advancement.trigger.killMobNearSculkCatalyst')) },
 				{ value: 'killed_by_crossbow', label: capitalize(t('builtin.advancement.trigger.killedByCrossbow')) },
 				{ value: 'levitation', label: capitalize(t('builtin.advancement.trigger.levitation')) },
+				{ value: 'lightning_strike', label: capitalize(t('builtin.advancement.trigger.lightningStrike')) },
 				{ value: 'location', label: capitalize(t('builtin.advancement.trigger.location')) },
 				{ value: 'nether_travel', label: capitalize(t('builtin.advancement.trigger.netherTravel')) },
 				{ value: 'placed_block', label: capitalize(t('builtin.advancement.trigger.placedBlock')) },
@@ -346,25 +405,29 @@ export default defineComponent({
 				{ value: 'player_hurt_entity', label: capitalize(t('builtin.advancement.trigger.playerHurtEntity')) },
 				{ value: 'player_interacted_with_entity', label: capitalize(t('builtin.advancement.trigger.playerInteractedWithEntity')) },
 				{ value: 'player_killed_entity', label: capitalize(t('builtin.advancement.trigger.playerKilledEntity')) },
+				{ value: 'recipe_crafted', label: capitalize(t('builtin.advancement.trigger.recipeCrafted')) },
 				{ value: 'recipe_unlocked', label: capitalize(t('builtin.advancement.trigger.recipeUnlocked')) },
+				{ value: 'ride_entity_in_lava', label: capitalize(t('builtin.advancement.trigger.rideEntityInLava')) },
 				{ value: 'safely_harvest_honey', label: capitalize(t('builtin.advancement.trigger.safelyHarvestHoney')) },
 				{ value: 'shot_crossbow', label: capitalize(t('builtin.advancement.trigger.shotCrossbow')) },
 				{ value: 'slept_in_bed', label: capitalize(t('builtin.advancement.trigger.sleptInBed')) },
 				{ value: 'slide_down_block', label: capitalize(t('builtin.advancement.trigger.slideDownBlock')) },
+				{ value: 'started_rinding', label: capitalize(t('builtin.advancement.trigger.startedRinding')) },
 				{ value: 'summoned_entity', label: capitalize(t('builtin.advancement.trigger.summonedEntity')) },
 				{ value: 'tame_animal', label: capitalize(t('builtin.advancement.trigger.tameAnimal')) },
 				{ value: 'target_hit', label: capitalize(t('builtin.advancement.trigger.targetHit')) },
 				{ value: 'thrown_item_picked_up_by_entity', label: capitalize(t('builtin.advancement.trigger.thrownItemPickedUpByEntity')) },
+				{ value: 'thrown_item_picked_up_by_player', label: capitalize(t('builtin.advancement.trigger.thrownItemPickedUpByPlayer')) },
 				{ value: 'tick', label: capitalize(t('builtin.advancement.trigger.tick')) },
 				{ value: 'used_ender_eye', label: capitalize(t('builtin.advancement.trigger.usedEnderEye')) },
 				{ value: 'used_totem', label: capitalize(t('builtin.advancement.trigger.usedTotem')) },
+				{ value: 'using_item', label: capitalize(t('builtin.advancement.trigger.usingItem')) },
 				{ value: 'villager_trade', label: capitalize(t('builtin.advancement.trigger.villagerTrade')) },
-				{ value: 'voluntary_exile', label: capitalize(t('builtin.advancement.trigger.voluntaryExile'))
-				}
+				{ value: 'voluntary_exile', label: capitalize(t('builtin.advancement.trigger.voluntaryExile')) }
 			];
 		};
 
-		const getTrad = (c: criteria) => c.toLowerCase().replace(/([-_][a-z])/g, group =>
+		const getTrad = (c: criteria) => c.toLowerCase().replace(/([-_][a-z])/g, (group: string) =>
 			group
 				.toUpperCase()
 				.replace('-', '')

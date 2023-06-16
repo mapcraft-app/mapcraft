@@ -6,7 +6,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import SelectDimension from '../../select/dimension.vue';
-import { changed_dimension } from '../../../conditions';
+import { changed_dimension } from '../../../interfaces/1.17_1.19';
 
 export default defineComponent({
 	name: 'TabChangedDimension',

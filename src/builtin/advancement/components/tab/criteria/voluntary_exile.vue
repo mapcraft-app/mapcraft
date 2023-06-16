@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import Biome from '../../interface/biome.vue';
-import { voluntary_exile } from '../../../conditions';
+import { voluntary_exile } from '../../../interfaces/1.17_1.19';
 import { biome } from '../../../model';
 
 export default defineComponent({

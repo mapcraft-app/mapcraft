@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import SelectPotion from '../../select/potion.vue';
-import { brewed_potion } from '../../../conditions';
+import { brewed_potion } from '../../../interfaces/1.17_1.19';
 
 export default defineComponent({
 	name: 'TabBrewedPotion',
