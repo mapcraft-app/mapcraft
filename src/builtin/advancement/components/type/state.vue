@@ -8,10 +8,10 @@
 		<div
 			v-for="(el, i) in states"
 			:key="i"
-			class="row inline"
+			class="row no-wrap full-width justify-between"
 		>
-			<q-input v-model="el.key" dense :label="$capitalize($t('builtin.advancement.type.key'))" class="q-pr-sm"/>
-			<q-input v-model="el.value" dense :label="$capitalize($t('builtin.advancement.type.value'))" class="q-pr-sm" />
+			<q-input v-model="el.key" dense :label="$capitalize($t('builtin.advancement.type.key'))" />
+			<q-input v-model="el.value" dense :label="$capitalize($t('builtin.advancement.type.value'))" />
 			<q-btn flat color="red" icon="delete" @click="removeState(i)"/>
 		</div>
 	</div>

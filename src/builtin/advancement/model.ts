@@ -143,6 +143,16 @@ export interface fluid {
 	tag: string | null
 }
 
+export interface ingredient {
+	items: string[],
+	tag: string | null,
+	count: number | numberRange | null,
+	durability: number | numberRange | null,
+	potion: potionType | null,
+	nbt: string | null,
+	enchantments: enchantement[] | null
+}
+
 export interface item {
 	item: string,
 	count: number | numberRange | null,
@@ -175,6 +185,11 @@ export interface slot {
 	empty: number | numberRange,
 	full: number | numberRange,
 	occupied: number | numberRange
+}
+
+export interface tags {
+	id: string,
+	expected: boolean
 }
 
 export interface type {

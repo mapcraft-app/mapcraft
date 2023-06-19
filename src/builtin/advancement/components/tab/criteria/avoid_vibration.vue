@@ -8,7 +8,7 @@ import interfaceEntity from '../../interface/entityPlayer.vue';
 import type { avoid_vibration } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabAvoidVibration',
 	components: {
 		interfaceEntity
 	},

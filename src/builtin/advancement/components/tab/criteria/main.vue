@@ -411,11 +411,10 @@ export default defineComponent({
 				{ value: 'recipe_crafted', label: capitalize(t('builtin.advancement.trigger.recipeCrafted')) },
 				{ value: 'recipe_unlocked', label: capitalize(t('builtin.advancement.trigger.recipeUnlocked')) },
 				{ value: 'ride_entity_in_lava', label: capitalize(t('builtin.advancement.trigger.rideEntityInLava')) },
-				{ value: 'safely_harvest_honey', label: capitalize(t('builtin.advancement.trigger.safelyHarvestHoney')) },
 				{ value: 'shot_crossbow', label: capitalize(t('builtin.advancement.trigger.shotCrossbow')) },
 				{ value: 'slept_in_bed', label: capitalize(t('builtin.advancement.trigger.sleptInBed')) },
 				{ value: 'slide_down_block', label: capitalize(t('builtin.advancement.trigger.slideDownBlock')) },
-				{ value: 'started_rinding', label: capitalize(t('builtin.advancement.trigger.startedRinding')) },
+				{ value: 'started_riding', label: capitalize(t('builtin.advancement.trigger.startedRinding')) },
 				{ value: 'summoned_entity', label: capitalize(t('builtin.advancement.trigger.summonedEntity')) },
 				{ value: 'tame_animal', label: capitalize(t('builtin.advancement.trigger.tameAnimal')) },
 				{ value: 'target_hit', label: capitalize(t('builtin.advancement.trigger.targetHit')) },
@@ -460,11 +459,14 @@ export default defineComponent({
 
 		onBeforeMount(() => {
 			generateCriteriaList();
-			for (let i = 0; i < selectedAdvancement.value.child.data.criteria.length; i++) {
-				if (!Object.prototype.hasOwnProperty.call(selectedAdvancement.value.child.data.criteria[i], 'conditions'))
-					selectedAdvancement.value.child.data.criteria[i].conditions = {} as any;
+			if (!selectedAdvancement.value.child.data.criteria || !selectedAdvancement.value.child.data.criteria.length)
+				selectedAdvancement.value.child.data.criteria = [];
+			else {
+				for (let i = 0; i < selectedAdvancement.value.child.data.criteria.length; i++) {
+					if (!Object.prototype.hasOwnProperty.call(selectedAdvancement.value.child.data.criteria[i], 'conditions'))
+						selectedAdvancement.value.child.data.criteria[i].conditions = {} as any;
+				}
 			}
-
 			watch(locale, () => generateCriteriaList());
 		});
 

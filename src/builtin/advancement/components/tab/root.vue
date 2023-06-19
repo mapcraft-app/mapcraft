@@ -1,23 +1,25 @@
 <template>
-	<q-input
-		v-model="path"
-		standard
-		:label="$capitalize($t('builtin.advancement.tab.background'))"
-	>
-		<template v-slot:append>
-			<q-btn flat round color="secondary" icon="folder" @click="changePath()" />
-		</template>
-	</q-input>
-	<template v-if="minecraft.semverCompare(store.minecraftVersion, '1.20') >= 0">
-		<q-toggle
-			v-model="telemetry"
-			:label="$capitalize($t('builtin.advancement.tab.telemetry'))"
+	<div>
+		<q-input
+			v-model="path"
+			standard
+			:label="$capitalize($t('builtin.advancement.tab.background'))"
 		>
-			<q-tooltip class="bg-purple text-body2" :offset="[10, 10]">
-				{{ $capitalize($t('builtin.advancement.tab.telemetryExplanation')) }}
-			</q-tooltip>
-		</q-toggle>
-	</template>
+			<template v-slot:append>
+				<q-btn flat round color="secondary" icon="folder" @click="changePath()" />
+			</template>
+		</q-input>
+		<template v-if="minecraft.semverCompare(store.minecraftVersion, '1.20') >= 0">
+			<q-toggle
+				v-model="telemetry"
+				:label="$capitalize($t('builtin.advancement.tab.telemetry'))"
+			>
+				<q-tooltip class="bg-purple text-body2" :offset="[10, 10]">
+					{{ $capitalize($t('builtin.advancement.tab.telemetryExplanation')) }}
+				</q-tooltip>
+			</q-toggle>
+		</template>
+	</div>
 </template>
 
 <script lang="ts">

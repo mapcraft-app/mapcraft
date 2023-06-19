@@ -37,7 +37,7 @@ import type { biome, item } from '../../../model';
 import type { allay_drop_item_on_block } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabAllayDropItemOnBlock',
 	components: {
 		interfaceEntity,
 		interfaceItem,

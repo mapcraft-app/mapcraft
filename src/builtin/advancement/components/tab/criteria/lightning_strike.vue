@@ -11,7 +11,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			:label="$capitalize($t('builtin.advancement.interface.tab.lightningStrike.lightning'))"
+			:label="$capitalize($t('builtin.advancement.tab.lightningStrike.lightning'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.lightning" />
@@ -19,7 +19,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="person"
-			:label="$capitalize($t('builtin.advancement.interface.tab.lightningStrike.bystander'))"
+			:label="$capitalize($t('builtin.advancement.tab.lightningStrike.bystander'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.bystander" />
@@ -33,7 +33,7 @@ import interfaceEntity from '../../interface/entityPlayer.vue';
 import type { lightning_strike } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabLightningStrike',
 	components: {
 		interfaceEntity
 	},

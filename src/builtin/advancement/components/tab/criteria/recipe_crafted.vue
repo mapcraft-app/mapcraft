@@ -11,64 +11,24 @@
 	</q-list>
 	<q-input
 		v-model="data.recipe_id"
-		:label="$capitalize($t('builtin.advancement.interface.entityPlayer.player'))"
+		:label="$capitalize($t('builtin.advancement.tab.recipe_crafted.recipeId'))"
 		class="q-ma-xs"
 	/>
-	
-	<q-separator />
-	
-	<span class="text-h6">{{ $capitalize($t('builtin.advancement.tab.recipe_crafted.ingredients')) }}</span>
-	<div v-if="data.ingredients" class="flex">
-		<q-card
-			v-for="(el, i) in data.ingredients"
-			:key="i"
-		>
-			<q-input
-				v-model="data.ingredients[i].tag"
-				:label="$capitalize($t('builtin.advancement.interface.common.tag'))"
-			/>
-			<number-range
-				v-model="data.ingredients[i].count"
-				:label="$capitalize($t('builtin.advancement.interface.item.count'))"
-			/>
-			<number-range
-				v-model="data.ingredients[i].durability"
-				:label="$capitalize($t('builtin.advancement.interface.item.durability'))"
-			/>
-			<potion
-				v-model="data.ingredients[i].potion"
-				:label="$capitalize($t('builtin.advancement.interface.item.potion'))"
-			/>
-			<q-input
-				v-model="data.ingredients[i].nbt"
-				:label="$capitalize($t('builtin.advancement.interface.common.nbt'))"
-			/>
-
-			<span class="text-h6">
-				{{ $capitalize($t('builtin.advancement.interface.item.enchantements')) }}
-			</span>
-
-			<enchantement v-model="data.ingredients[i].enchantments" />
-		</q-card>
-	</div>
+	<type-ingredients v-model="data.ingredients" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import interfaceEntity from '../../interface/entityPlayer.vue';
-import numberRange from '../../type/numberRange.vue';
-import potion from '../../select/potion.vue';
-import enchantement from '../../interface/enchantement.vue';
+import typeIngredients from '../../type/ingredients.vue';
 
 import type { recipe_crafted } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabRecipeCrafted',
 	components: {
 		interfaceEntity,
-		numberRange,
-		potion,
-		enchantement
+		typeIngredients
 	},
 	props: {
 		modelValue: {

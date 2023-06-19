@@ -10,16 +10,16 @@
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			icon="radar"
-			:label="$capitalize($t('builtin.advancement.tab.rideEntityInLava.startPosition'))"
+			icon="person"
+			:label="$capitalize($t('builtin.advancement.tab.thrownItemPickedUpByPlayer'))"
 			class="q-ma-xs"
 		>
 			<interface-entity v-model="data.entity" />
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			icon="radar"
-			:label="$capitalize($t('builtin.advancement.interface.tab.entityPlayer.distance'))"
+			icon="category"
+			:label="$capitalize($t('builtin.advancement.interface.item.item'))"
 			class="q-ma-xs"
 		>
 			<interface-item v-model="data.item" />
@@ -31,11 +31,10 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import interfaceEntity from '../../interface/entityPlayer.vue';
 import interfaceItem from '../../interface/item.vue';
-
 import type { thrown_item_picked_up_by_player } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabThrownItemPickedUpByPlayer',
 	components: {
 		interfaceEntity,
 		interfaceItem

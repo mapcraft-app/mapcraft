@@ -9,13 +9,14 @@ import {
 	distance,
 	effect,
 	entity,
+	ingredient,
 	item,
 	numberRange,
 	potionType,
 	slot,
 	state,
-	type,
-	enchantement
+	tags,
+	type
 } from '../model';
 
 export type criteria =
@@ -190,7 +191,7 @@ export interface kill_mob_near_sculk_catalyst {
 	player: entity,
 	entity: entity,
 	killing_blow: {
-		tags: { id: string, expected: boolean }[] | null,
+		tags: tags[] | null,
 		direct_entity: entity | null,
 		source_entity: entity | null,
 	}
@@ -249,15 +250,7 @@ export interface player_killed_entity {
 export interface recipe_crafted {
 	player: entity,
 	recipe_id: string,
-	ingredients: {
-		items: string[],
-		tag: string | null,
-		count: number | numberRange | null,
-		durability: number | numberRange | null,
-		potion: potionType | null,
-		nbt: string | null,
-		enchantments: enchantement[] | null
-	}[] | null
+	ingredients: ingredient[] | null
 }
 
 export interface recipe_unlocked {

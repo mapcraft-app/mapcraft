@@ -159,6 +159,7 @@ export default {
 			colorList: ['black', 'dark blue', 'dark green', 'dark aqua', 'dark red', 'dark purple', 'gold', 'gray', 'dark gray', 'blue', 'green', 'aqua', 'red', 'light purple', 'yellow', 'white']
 		},
 		requirements: {
+			no: 'no criteria exist',
 			and: 'and'
 		},
 		rewards: {
@@ -219,7 +220,8 @@ export default {
 		},
 		rideEntityInLava: {
 			startPosition: 'start position'
-		}
+		},
+		thrownItemPickedUpByPlayer: 'thrower entity'
 	},
 
 	select: {

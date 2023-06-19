@@ -11,7 +11,7 @@
 		<q-expansion-item
 			expand-separator
 			icon="category"
-			:label="$capitalize($t('builtin.advancement.tab.rideEntityInLava.startPosition'))"
+			:label="$capitalize($t('builtin.advancement.interface.item.item'))"
 			class="q-ma-xs"
 		>
 			<interface-item v-model="data.item" />
@@ -27,7 +27,7 @@ import interfaceItem from '../../interface/item.vue';
 import type { using_item } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabUsingItem',
 	components: {
 		interfaceEntity,
 		interfaceItem

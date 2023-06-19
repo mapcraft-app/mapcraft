@@ -109,6 +109,7 @@ class advancement {
 				id,
 				name: 'new advancement',
 				background: 'minecraft:textures/gui/advancements/backgrounds/stone.png',
+				telemetry: false
 			} as main;
 			writeFile(
 				path,

@@ -1,75 +1,65 @@
 <template>
 	<div class="column items-center">
-		<q-btn
-			color="green" outline icon="add"
-			class="full-width"
-			@click="() => addReward()"
-		/>
-		<template
-			v-for="(_el, i) of rewards"
-			:key="i"
-		>
-			<div class="line row justify-around q-ma-sm q-pa-md">
-				<q-btn
-					square unelevated color="red"
-					icon="remove" size="1em" padding=".1em"
-					@click="() => deleteReward(i)"
-				/>
-				<q-option-group
-					v-model="rewards[i]"
-					:options="rewardsOptions"
-					type="checkbox"
-					inline
-				/>
-			</div>
-			<q-badge v-if="rewards.length - 1 > i" color="purple">
-				{{ $t('builtin.advancement.tab.requirements.and').toUpperCase() }}
-			</q-badge>
+		<template v-if="isCriteria">
+			<q-btn
+				color="green" outline icon="add"
+				class="full-width"
+				@click="() => addRequirement()"
+			/>
+			<template
+				v-for="(_el, i) of selectedAdvancement.child.data.requirements"
+				:key="i"
+			>
+				<div class="line row justify-around q-ma-sm q-pa-md">
+					<q-btn
+						square unelevated color="red"
+						icon="remove" size="1em" padding=".1em"
+						@click="() => removeRequirement(i)"
+					/>
+					<q-option-group
+						v-model="selectedAdvancement.child.data.requirements[i]"
+						:options="options"
+						type="checkbox"
+						inline
+					/>
+				</div>
+				<q-badge v-if="selectedAdvancement.child.data.requirements.length - 1 > i" color="purple">
+					{{ $t('builtin.advancement.tab.requirements.and').toUpperCase() }}
+				</q-badge>
+			</template>
+		</template>
+		<template v-else>
+			<span class="full-width text-center">
+				{{ $capitalize($t('builtin.advancement.tab.requirements.no')) }}</span>
 		</template>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref, watch } from 'vue';
+import { computed, defineComponent, onBeforeMount } from 'vue';
 import { selectedAdvancement } from '../../lib/handleAdv';
-import { triggers } from '../../model';
-import deepClone from 'api/deepClone';
 
 export default defineComponent({
 	name: 'TabRequirements',
 	setup () {
-		const rewards = ref<string[][]>([]);
-		const rewardsOptions = ref<{ label: string, value: string }[]>([]);
-		
-		const setRewards = (requirements: string[][]) => {
-			for (const list of requirements) {
-				const ret = [];
-				for (const name of list)
-					ret.push(name);
-				rewards.value.push(ret);
-			}
-		};
+		const options = computed(() => selectedAdvancement.value.child.data.criteria.map((e) => ({ label: e.name, value: e.name })));
+		const isCriteria = computed(() => selectedAdvancement.value.child.data.criteria && selectedAdvancement.value.child.data.criteria.length);
 
-		const setRewardsOptions = (list: triggers[]) => {
-			for (const trigger of list)
-				rewardsOptions.value.push({ label: trigger.name, value: trigger.name });
-		};
-
-		const addReward = () => rewards.value.push([]);
-
-		const deleteReward = (i: number) => rewards.value.splice(i, 1);
+		const addRequirement = () => selectedAdvancement.value.child.data.requirements.push([]);
+		const removeRequirement = (i: number) => selectedAdvancement.value.child.data.requirements.splice(i, 1);
 
 		onBeforeMount(() => {
-			setRewardsOptions(selectedAdvancement.value.child.data.criteria);
-			setRewards(selectedAdvancement.value.child.data.requirements);
-			watch(rewards, (val) => selectedAdvancement.value.child.data.requirements = deepClone(val), { deep: true });
+			if (!selectedAdvancement.value.child.data.requirements || !selectedAdvancement.value.child.data.requirements.length)
+				selectedAdvancement.value.child.data.requirements = [];
 		});
 
 		return {
-			rewards,
-			rewardsOptions,
-			addReward,
-			deleteReward
+			selectedAdvancement,
+			options,
+			isCriteria,
+
+			addRequirement,
+			removeRequirement
 		};
 	}
 });

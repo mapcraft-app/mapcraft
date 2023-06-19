@@ -10,7 +10,7 @@
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			icon="category"
+			icon="straighten"
 			:label="$capitalize($t('builtin.advancement.interface.entityPlayer.distance'))"
 			class="q-ma-xs"
 		>
@@ -37,7 +37,7 @@ import type { fall_from_height } from '../../../interfaces/1.20';
 import type { biome } from '../../../model';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabFallFromHeight',
 	components: {
 		interfaceBiome,
 		interfaceDistance,

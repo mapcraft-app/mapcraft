@@ -159,6 +159,7 @@ export default {
 			colorList: ['noir', 'bleu foncé', 'vert foncé', 'bleu eau foncé', 'rouge foncé', 'violet foncé', 'or', 'gris', 'gris foncé', 'bleu', 'vert', 'bleu eau', 'rouge', 'violet clair', 'jaune', 'blanc']
 		},
 		requirements: {
+			no: 'aucun critère n\'existe',
 			and: 'et'
 		},
 		rewards: {
@@ -219,7 +220,8 @@ export default {
 		},
 		ride_entity_in_lava: {
 			startPosition: 'position de départ'
-		}
+		},
+		thrownItemPickedUpByPlayer: 'entité lanceur'
 	},
 
 	select: {

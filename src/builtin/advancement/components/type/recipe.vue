@@ -8,10 +8,14 @@
 		<div
 			v-for="(el, i) in recipes"
 			:key="i"
-			class="row inline"
+			class="row no-wrap full-width justify-between"
 		>
-			<q-input v-model="el.key" dense :label="$capitalize($t('builtin.advancement.type.recipe'))" class="q-pr-sm"/>
-			<q-toggle v-model="el.value" class="q-pr-sm" />
+			<q-input
+				v-model="el.key"
+				dense
+				:label="$capitalize($t('builtin.advancement.type.recipe'))"
+			/>
+			<q-toggle v-model="el.value" />
 			<q-btn flat color="red" icon="delete" @click="removeRecipe(i)"/>
 		</div>
 	</div>

@@ -14,6 +14,7 @@ import {
 	potionType,
 	slot,
 	state,
+	tags,
 	type
 } from '../model';
 
@@ -188,7 +189,7 @@ export interface kill_mob_near_sculk_catalyst {
 	player: entity,
 	entity: entity,
 	killing_blow: {
-		tags: { id: string, expected: boolean }[] | null,
+		tags: tags[] | null,
 		direct_entity: entity | null,
 		source_entity: entity | null,
 	}

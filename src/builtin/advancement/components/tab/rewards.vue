@@ -28,8 +28,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeMount } from 'vue';
 import { selectedAdvancement } from '../../lib/handleAdv';
+import type { rewards } from '../../model';
 import StringArray from './stringArray.vue';
 
 export default defineComponent({
@@ -38,6 +39,11 @@ export default defineComponent({
 		StringArray
 	},
 	setup () {
+		onBeforeMount(() => {
+			if (!selectedAdvancement.value.child.data.rewards)
+				selectedAdvancement.value.child.data.rewards = {} as rewards;
+		});
+
 		return {
 			selectedAdvancement
 		};

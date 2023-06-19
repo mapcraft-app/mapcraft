@@ -10,7 +10,7 @@
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			icon="radar"
+			icon="location_on"
 			:label="$capitalize($t('builtin.advancement.tab.rideEntityInLava.startPosition'))"
 			class="q-ma-xs"
 		>
@@ -18,8 +18,8 @@
 		</q-expansion-item>
 		<q-expansion-item
 			expand-separator
-			icon="radar"
-			:label="$capitalize($t('builtin.advancement.interface.tab.entityPlayer.distance'))"
+			icon="straighten"
+			:label="$capitalize($t('builtin.advancement.interface.entityPlayer.distance'))"
 			class="q-ma-xs"
 		>
 			<interface-distance v-model="data.distance" />
@@ -36,7 +36,7 @@ import interfaceBiome from '../../interface/biome.vue';
 import type { ride_entity_in_lava } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabRideEntityInLava',
 	components: {
 		interfaceEntity,
 		interfaceDistance,

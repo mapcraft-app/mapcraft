@@ -8,11 +8,19 @@
 		<div
 			v-for="(el, i) in stats"
 			:key="i"
-			class="row inline"
+			class="column full-width item-center"
 		>
-			<select-stats v-model="el.type" />
-			<q-input v-model="el.stat" dense :label="$capitalize($t('builtin.advancement.type.stat'))" class="q-pr-sm" />
-			<type-number-range v-model="el.value" :label="$capitalize($t('builtin.advancement.interface.type.value'))" />
+			<select-stats
+				v-model="el.type"
+				dense
+				:label="$capitalize($t('builtin.advancement.interface.type.type'))"
+			/>
+			<q-input v-model="el.stat" dense :label="$capitalize($t('builtin.advancement.type.stat'))"/>
+			<type-number-range
+				v-model="el.value"
+				class="q-pt-sm"
+				:label="$capitalize($t('builtin.advancement.type.value'))"
+			/>
 			<q-btn flat color="red" icon="delete" @click="removeStats(i)"/>
 		</div>
 	</div>

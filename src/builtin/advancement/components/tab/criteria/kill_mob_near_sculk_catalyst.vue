@@ -22,18 +22,9 @@
 			:label="$capitalize($t('builtin.advancement.tab.killingBlow'))"
 			class="q-ma-xs"
 		>
-			<span class="text-h6">{{ $capitalize($t('builtin.advancement.tab.tags.title')) }}</span>
-			<div v-if="data.killing_blow.tags" class="flex">
-				<q-card v-for="(tag, i) of data.killing_blow.tags" :key="tag.id">
-					<q-input
-						v-model.number="data.killing_blow.tags[i].id"
-						:label="$capitalize($t('builtin.advancement.tab.tags.id'))"
-					/>
-					<q-toggle
-						v-model="data.killing_blow.tags[i].expected"
-						:label="$capitalize($t('builtin.advancement.tab.tags.expected'))"
-					/>
-				</q-card>
+			<div class="column full-width items-center q-pb-sm">
+				<span class="text-h6">{{ $capitalize($t('builtin.advancement.tab.tags.title')) }}</span>
+				<type-tags v-model="data.killing_blow.tags" />
 			</div>
 			<q-separator />
 			<q-list bordered class="q-mt-sm">
@@ -61,13 +52,14 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import interfaceEntity from '../../interface/entityPlayer.vue';
-
+import typeTags from '../../type/tags.vue';
 import type { kill_mob_near_sculk_catalyst } from '../../../interfaces/1.20';
 
 export default defineComponent({
-	name: 'Tab',
+	name: 'TabKillMobNearSculkCatalyst',
 	components: {
-		interfaceEntity
+		interfaceEntity,
+		typeTags
 	},
 	props: {
 		modelValue: {
@@ -81,9 +73,9 @@ export default defineComponent({
 			player: props.modelValue.player ?? null,
 			entity: props.modelValue.entity ?? null,
 			killing_blow: {
-				tags: props.modelValue.killing_blow.tags ?? [],
-				direct_entity: props.modelValue.killing_blow.direct_entity ?? null,
-				source_entity: props.modelValue.killing_blow.source_entity ?? null
+				tags: props.modelValue.killing_blow?.tags ?? [],
+				direct_entity: props.modelValue.killing_blow?.direct_entity ?? null,
+				source_entity: props.modelValue.killing_blow?.source_entity ?? null
 			}
 		} as kill_mob_near_sculk_catalyst);
 
