@@ -174,7 +174,7 @@
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<recipe-crafted
-				v-else-if="criteria.trigger === 'recipe_crafted'"
+				v-else-if="is_1_20 && criteria.trigger === 'recipe_crafted'"
 				v-model="selectedAdvancement.child.data.criteria[i].conditions"
 			/>
 			<recipe-unlocked
@@ -252,9 +252,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref, watch } from 'vue';
+import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue';
+import { minecraft } from 'mapcraft-api/frontend';
 import { useI18n } from 'vue-i18n';
 import { capitalize } from 'vue/plugins/app';
+import { mapStore } from 'src/store/map';
 
 import { selectedAdvancement } from '../../../lib/handleAdv';
 import { criteria } from '../../../interfaces/1.20';
@@ -366,6 +368,7 @@ export default defineComponent({
 		VoluntaryExile
 	},
 	setup () {
+		const store = mapStore();
 		const { t, locale } = useI18n();
 		const criterias = ref<{ value: string, label: string }[]>([]);
 
@@ -453,6 +456,8 @@ export default defineComponent({
 			selectedAdvancement.value.child.data.criteria.splice(index, 1);
 		};
 
+		const is_1_20 = computed(() => minecraft.semverCompare(store.minecraftVersion, '1.20') >= 0);
+
 		onBeforeMount(() => {
 			generateCriteriaList();
 			for (let i = 0; i < selectedAdvancement.value.child.data.criteria.length; i++) {
@@ -472,7 +477,9 @@ export default defineComponent({
 
 			addCriteria,
 			changeTrigger,
-			deleteCriteria
+			deleteCriteria,
+
+			is_1_20
 		};
 	}
 });

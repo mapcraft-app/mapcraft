@@ -252,6 +252,7 @@ export default {
 	trigger: {
 		allayDropItemOnBlock: 'allay drop item on block',
 		avoidVibration: 'avoid vibration',
+		
 		beeNestDestroyed: 'bee nest destroyed',
 		bredAnimals: 'bred animals',
 		brewedPotion: 'brewed potion',

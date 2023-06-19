@@ -22,6 +22,12 @@ export default {
 		save: 'Sauvegarde',
 		temp: 'Temporaire'
 	},
+	minecraftVersion: {
+		title: 'Vous venez de changer de version',
+		version: '{from} vers {to}',
+		text: 'Changer de version n\'est pas anodin. Beaucoup de choses peuvent changer entre les différentes versions de Minecraft, et donc sur les données générées par Mapcraft. Celui-ci essaiera d\'adapter les données dans la mesure du possible, mais des erreurs peuvent se produire. N\'oubliez pas de vérifier vos données.',
+		ok: 'J\'ai compris'
+	},
 	minecraftUser: {
 		title: 'Nom d\'utilisateur Minecraft',
 		tooltip: 'Le nom d\'utilisateur que vous utilisez dans le jeu, ce qui permet à Mapcraft d\'intercepter uniquement les commandes qui vous concernent'

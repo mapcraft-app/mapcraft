@@ -218,12 +218,13 @@ export default defineComponent({
 					storeMap.setIcon((el.icon !== false)
 						? $path(el.icon)
 						: '/imgs/app/default_logo.png');
-					storeMap.setName(el.name);
 					storeMap.setPath(el.path);
 					storeMap.setMapPath(window.env.directory.save, window.env.directory.resource, name);
 					window.mapcraft.engine.newInstance(window.env.directory, name);
 					window.mapcraft.engine.getInfo()
 						.then((d: any) => {
+							storeMap.setName(d.name);
+							storeMap.setMinecraftVersion(d.minecraftVersion);
 							mapName.value = d.name;
 							mapVersion.value = d.minecraftVersion;
 							startInstall();

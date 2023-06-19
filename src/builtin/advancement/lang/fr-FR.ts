@@ -250,6 +250,9 @@ export default {
 	},
 
 	trigger: {
+		allayDropItemOnBlock: 'allay dépose un objet sur un bloc',
+		avoidVibration: 'éviter les vibrations',
+
 		beeNestDestroyed: 'nid d\'abeilles détruit',
 		bredAnimals: 'animaux élevés',
 		brewedPotion: 'potion brassée',
@@ -263,6 +266,9 @@ export default {
 		enterBlock: 'entrer le bloc',
 		entityHurtPlayer: 'une entité a blessé le joueur',
 		entityKilledPlayer: 'une entité a tué le joueur',
+
+		fallFromHeight: 'chute de hauteur',
+
 		filledBucket: 'seau rempli',
 		fishingRodHooked: 'canne à pêche accrochée',
 		heroOfTheVillage: 'héros du village',
@@ -270,8 +276,14 @@ export default {
 		inventoryChanged: 'inventaire modifié',
 		itemDurabilityChanged: 'la durabilité de l\'élément a été modifiée',
 		itemUsedOnBlock: 'élément utilisé sur le bloc',
+
+		killMobNearSculkCatalyst: 'tuer l\'entité à proximité du catalyseur de sculk',
+
 		killedByCrossbow: 'tué par une arbalète',
 		levitation: 'lévitation',
+
+		lightningStrike: 'coup de foudre',
+
 		location: 'emplacement',
 		netherTravel: 'voyage dans le nether',
 		placedBlock: 'bloc placé',
@@ -279,18 +291,31 @@ export default {
 		playerHurtEntity: 'entité blessée par un joueur',
 		playerInteractedWithEntity: 'le joueur a interagi avec une entité',
 		playerKilledEntity: 'entité tuée par un joueur',
+
+		recipeCrafted: 'recette élaborée',
+
 		recipeUnlocked: 'recette débloquée',
+
+		rideEntityInLava: 'montée d\'une entité dans la lave',
+
 		safelyHarvestHoney: 'récolte du miel en toute sécurité',
 		shotCrossbow: 'tir à l\'arbalète',
 		sleptInBed: 'dormir dans un lit',
 		slideDownBlock: 'bloc glissement vers le bas',
+
+		startedRinding: 'a commencé à monter',
+
 		summonedEntity: 'entité invoquée',
 		tameAnimal: 'animal apprivoisé',
 		targetHit: 'cible atteinte',
 		thrownItemPickedUpByEntity: 'élément jeté ramassé par une entité',
+		thrownItemPickedUpByPlayer: 'élément jeté ramassé par le joueur',
 		tick: 'tick',
 		usedEnderEye: 'œil d\'ender utilisé',
 		usedTotem: 'totem utilisé',
+
+		usingItem: 'utilisation d\'un élément',
+
 		villagerTrade: 'commerce de villageois',
 		voluntaryExile: 'exil volontaire',
 		notFound: 'ce critère n\'existe pas'

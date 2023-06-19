@@ -7,7 +7,6 @@ import {
 	damage,
 	dimensionType,
 	distance,
-	tags,
 	effect,
 	entity,
 	item,
@@ -189,7 +188,7 @@ export interface kill_mob_near_sculk_catalyst {
 	player: entity,
 	entity: entity,
 	killing_blow: {
-		tags: tags | null,
+		tags: { id: string, expected: boolean }[] | null,
 		direct_entity: entity | null,
 		source_entity: entity | null,
 	}
