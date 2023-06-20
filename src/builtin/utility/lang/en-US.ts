@@ -5,6 +5,7 @@ export default {
 	search: 'search',
 	blocks: 'blocks',
 	items: 'items',
+	entities: 'entities',
 	tags: 'tags',
 	copy: 'copy to clipboard'
 };

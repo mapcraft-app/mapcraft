@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount } from 'vue';
+import { defineComponent, onBeforeMount, watch } from 'vue';
 import { selectedAdvancement } from '../../lib/handleAdv';
 import type { rewards } from '../../model';
 import StringArray from './stringArray.vue';
@@ -42,6 +42,14 @@ export default defineComponent({
 		onBeforeMount(() => {
 			if (!selectedAdvancement.value.child.data.rewards)
 				selectedAdvancement.value.child.data.rewards = {} as rewards;
+			watch(selectedAdvancement.value.child.data.rewards, (newVal, oldVal) => {
+				if (newVal.function !== oldVal.function) {
+					if (newVal.function && !/^[a-z\d_\-.]+:/m.test(newVal.function))
+						selectedAdvancement.value.child.data.rewards.function = `minecraft:${newVal.function}`;
+					else
+						selectedAdvancement.value.child.data.rewards.function = newVal.function;
+				}
+			}, { deep: true });
 		});
 
 		return {
