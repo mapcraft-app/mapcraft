@@ -16,6 +16,9 @@ import notificationFunctions from './channels/notification/functions';
 import shellDefinitions from './channels/shell/definitions';
 import shellFunctions from './channels/shell/functions';
 
+import updateDefinitions from './channels/update/definitions';
+import updateFunctions from './channels/update/functions';
+
 import windowDefinitions from './channels/window/definitions';
 import windowFunctions from './channels/window/functions';
 
@@ -31,6 +34,7 @@ importInList(dialogDefinitions, dialogFunctions);
 importInList(editorDefinitions, editorFunctions);
 importInList(notificationDefinitions, notificationFunctions);
 importInList(shellDefinitions, shellFunctions);
+importInList(updateDefinitions, updateFunctions);
 importInList(windowDefinitions, windowFunctions);
 
 for (const ipc of ipcList) {

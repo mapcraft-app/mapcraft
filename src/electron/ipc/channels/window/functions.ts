@@ -1,34 +1,32 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BrowserWindow } from 'electron';
 import type Electron from 'electron';
-import { ipcFunctions } from 'electron/ipc/ipcType';
-
-const ipcWindow = <BrowserWindow>BrowserWindow.fromId(Number(process.env.WINDOW_ID));
+import type { ipcFunctions } from 'electron/ipc/ipcType';
 
 export default [
-	(_event: Electron.IpcMainEvent): void => {
-		if (!ipcWindow.webContents.isDevToolsOpened())
-			ipcWindow.webContents.openDevTools();
+	(event: Electron.IpcMainEvent): void => {
+		if (!event.sender.isDevToolsOpened())
+			event.sender.openDevTools();
 		else
-			ipcWindow.webContents.closeDevTools();
+			event.sender.closeDevTools();
 	},
-	(_event: Electron.IpcMainEvent): void => {
-		ipcWindow.close();
+	(event: Electron.IpcMainEvent): void => {
+		event.sender.close();
 	},
-	(_event: Electron.IpcMainEvent): void => {
-		ipcWindow.setFullScreen(!ipcWindow.isFullScreen());
+	(event: Electron.IpcMainEvent): void => {
+		BrowserWindow.fromWebContents(event.sender)?.setFullScreen(
+			!BrowserWindow.fromWebContents(event.sender)?.isFullScreen()
+		);
 	},
-	(_event: Electron.IpcMainEvent): void => {
-		if (!ipcWindow.isMaximized())
-			ipcWindow.maximize();
+	(event: Electron.IpcMainEvent): void => {
+		if (!BrowserWindow.fromWebContents(event.sender)?.isMaximized())
+			BrowserWindow.fromWebContents(event.sender)?.maximize();
 		else
-			ipcWindow.unmaximize();
+			BrowserWindow.fromWebContents(event.sender)?.unmaximize();
 	},
-	(_event: Electron.IpcMainEvent): void => {
-		ipcWindow.minimize();
+	(event: Electron.IpcMainEvent): void => {
+		BrowserWindow.fromWebContents(event.sender)?.minimize();
 	},
-	(_event: Electron.IpcMainEvent, error: string): void => {
+	(event: Electron.IpcMainEvent, error: string): void => {
 		throw new Error(error);
 	}
 ] as ipcFunctions;

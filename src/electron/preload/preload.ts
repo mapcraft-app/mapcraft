@@ -12,6 +12,9 @@ import { Shell } from 'electron/api/shell';
 import 'builtin/front';
 import 'builtin/back';
 
+import check from './checkUpdate';
+import install, { getStat } from './installUpdate';
+
 //#region Repeat checking minecraft log file
 const shell = new Shell();
 let isWatch = false;
@@ -36,6 +39,12 @@ contextBridge.exposeInMainWorld('log', {
 	info  : (message: any, ...optional: any[]) => log.info(message, optional),
 	warn  : (message: any, ...optional: any[]) => log.warn(message, optional),
 	psql  : (message: any, ...optional: any[]) => log.psql(message, optional)
+});
+
+contextBridge.exposeInMainWorld('update', {
+	check,
+	install,
+	getStat
 });
 
 contextBridge.exposeInMainWorld('mapcraft', {

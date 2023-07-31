@@ -1,33 +1,31 @@
 import { dialog, shell, BrowserWindow } from 'electron';
 import type Electron from 'electron';
-import { ipcFunctions } from 'electron/ipc/ipcType';
-
-const ipcWindow = <BrowserWindow>BrowserWindow.fromId(Number(process.env.WINDOW_ID));
+import type { ipcFunctions } from 'electron/ipc/ipcType';
 
 export default [
-	async (_event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
-		return dialog.showOpenDialog(ipcWindow, {
+	async (event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
+		return dialog.showOpenDialog(BrowserWindow.fromWebContents(event.sender) as BrowserWindow, {
 			defaultPath,
 			filters,
 			properties: [ 'openFile' ]
 		});
 	},
-	async (_event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
-		return dialog.showOpenDialog(ipcWindow, {
+	async (event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
+		return dialog.showOpenDialog(BrowserWindow.fromWebContents(event.sender) as BrowserWindow, {
 			defaultPath,
 			filters,
 			properties: [ 'openFile', 'multiSelections' ]
 		});
 	},
-	async (_event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
-		return dialog.showOpenDialog(ipcWindow, {
+	async (event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
+		return dialog.showOpenDialog(BrowserWindow.fromWebContents(event.sender) as BrowserWindow, {
 			defaultPath,
 			filters,
 			properties: [ 'openDirectory' ]
 		});
 	},
-	async (_event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
-		return dialog.showOpenDialog(ipcWindow, {
+	async (event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {
+		return dialog.showOpenDialog(BrowserWindow.fromWebContents(event.sender) as BrowserWindow, {
 			defaultPath,
 			filters,
 			properties: [ 'openDirectory', 'multiSelections' ]

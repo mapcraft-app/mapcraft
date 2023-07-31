@@ -19,7 +19,8 @@ import { generateMeta } from 'src/meta';
 import { getBuiltin } from 'src/builtin/front';
 import { mapStore } from '../store/map';
 import { userStore } from '../store/user';
-import { ipcCommand } from '../electron/api/shell/interface';
+import type { ipcCommand } from '../electron/api/shell/interface';
+import type { update } from '../electron/preload/checkUpdate';
 import type { QNotifyUpdateOptions } from 'quasar';
 
 import BarWindows from './components/bar/windows.vue';
@@ -36,6 +37,7 @@ export default defineComponent({
 		const { t } = useI18n();
 		const storeMap = mapStore();
 		const storeUser = userStore();
+		const isBlur = ref<boolean>(false);
 		const os = window.env.directory.os;
 		let interval: NodeJS.Timer, statusInterval: NodeJS.Timer; // eslint-disable-line no-undef
 		let notif: any = undefined;
@@ -93,9 +95,7 @@ export default defineComponent({
 						]
 					});
 				})
-				.catch((e) => {
-					console.log(e);
-				});
+				.catch((e) => window.log.error(e));
 		};
 
 		const notification = (command: ipcCommand) => {
@@ -114,6 +114,11 @@ export default defineComponent({
 		};
 
 		onBeforeMount(() => {
+			window.ipc.receiveAll('update::start', (data: update) => {
+				storeMap.updateData = data;
+				router.push('/update');
+			});
+
 			window.log.info('Application finish to mounted');
 			router.push('/map');
 			interval = setInterval(() => {
@@ -141,7 +146,8 @@ export default defineComponent({
 		});
 
 		return {
-			os
+			os,
+			isBlur
 		};
 	}
 });

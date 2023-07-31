@@ -8,6 +8,7 @@ import dialogDefinitions from './channels/dialog/definitions';
 import editorDefinitions from './channels/editor/definitions';
 import notificationDefinitions from './channels/notification/definitions';
 import shellDefinitions from './channels/shell/definitions';
+import updateDefitions from './channels/update/definitions';
 import windowDefinitions from './channels/window/definitions';
 
 const ipcList: {
@@ -39,6 +40,7 @@ pushImport(dialogDefinitions);
 pushImport(editorDefinitions);
 pushImport(notificationDefinitions);
 pushImport(shellDefinitions);
+pushImport(updateDefitions);
 pushImport(windowDefinitions);
 
 if (import.meta.env.DEV) {

@@ -51,8 +51,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue';
+import { useQuasar } from 'quasar';
 import { globalStore } from 'store/global';
-import { defineComponent, ref } from 'vue';
+import { mapStore } from 'store/map';
+
 import MenuList from 'components/menu/List.vue';
 import DarkMode from 'components/menu/DarkMode.vue';
 import Lang from 'components/menu/Lang.vue';
@@ -71,10 +74,28 @@ export default defineComponent({
 		EditorDialog
 	},
 	setup() {
+		const $q = useQuasar();
 		const store = globalStore();
+		const storeMap = mapStore();
 		const leftDrawerOpen = ref(false);
 		const toggleLeftDrawer = () =>
 			(leftDrawerOpen.value = !leftDrawerOpen.value);
+
+		onMounted(() => {
+			window.update.check(window.env.directory, storeMap.info.name, storeMap.minecraftVersion)
+				.then((update) => {
+					if (Object.keys(update).length)
+						window.ipc.send('update::init', update);
+				})
+				.catch((e) => {
+					window.log.error(e);
+					$q.notify({
+						type: 'error',
+						message: e
+					});
+				});
+		});
+		
 		return {
 			store,
 			leftDrawerOpen,

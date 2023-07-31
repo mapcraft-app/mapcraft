@@ -2,11 +2,12 @@ import { appMapGet } from 'electron/preload/mapSelection';
 import { userStorage } from 'electron/preload/exposeEnv';
 import { builtinFormat } from 'app/src/builtin/front';
 import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
-
 import type { download } from 'mapcraft-api';
 import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
 import type { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
 import type { dataEngineInterface, mapEngine, mapEngineInstance } from 'electron/preload/engine';
+import type { update } from './electron/preload/checkUpdate';
+import type { stat } from './electron/preload/installUpdate';
 
 export declare global {
 	namespace NodeJS {
@@ -89,6 +90,16 @@ export declare global {
 			info: (message: any, ...optional: any[]) => void,
 			warn: (message: any, ...optional: any[]) => void,
 			psql: (message: any, ...optional: any[]) => void,
+		}
+
+		update: {
+			check: (
+				env: envInterface,
+				mapName: string,
+				minecraftVersion: minecraftVersion
+			) => Promise<update>,
+			install: (env: envInterface, updateData: update) => void,
+			getStat: () => stat
 		}
 
 		mapcraft: {

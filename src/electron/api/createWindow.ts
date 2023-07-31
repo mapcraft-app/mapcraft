@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron';
 import { resolve } from 'path';
 import { WindowError } from 'src/electron/api/error';
+import type { update } from '../preload/checkUpdate';
 
 export interface optionWindows {
 	center?: boolean,
@@ -9,6 +10,28 @@ export interface optionWindows {
 	preload?: string
 	width?: number,
 }
+
+type windowType = 'main' | 'loader' | 'update';
+interface windowSave {
+	w: BrowserWindow;
+	d: Date;
+}
+
+export const windowInstance: Map<windowType, windowSave> = new Map();
+const pushWindow = (w: BrowserWindow, type: windowType) => {
+	windowInstance.set(type, {
+		w,
+		d: new Date()
+	});
+};
+const rmWindow = (w: BrowserWindow) => {
+	for (const wi of windowInstance) {
+		if (wi[1].w.id === w.id) {
+			windowInstance.delete(wi[0]);
+			return;
+		}
+	}
+};
 
 const iconLoad = (): string =>
 	import.meta.env.DEV
@@ -38,12 +61,53 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 	});
 	if (!window)
 		throw new WindowError('Failed to create app window, close app');
-	process.env.WINDOW_ID = String(window.id);
 	if (import.meta.env.DEV) {
 		window.loadURL(import.meta.env.ELECTRON_APP_URL);
 		window.webContents.openDevTools();
 	} else
 		window.loadFile(import.meta.env.ELECTRON_APP_URL);
+	pushWindow(window, 'main');
+	window.on('close', () => rmWindow(window));
+	return window;
+};
+
+export function updateWindow(parent: BrowserWindow, data: update): BrowserWindow {
+	const window = new BrowserWindow({
+		parent,
+		width: 450,
+		height: 450,
+		minHeight: 450,
+		minWidth: 450,
+		show: false,
+		frame: false,
+		modal: true,
+		icon: iconLoad(),
+		webPreferences: {
+			contextIsolation: true,
+			devTools: import.meta.env.DEV,
+			defaultEncoding: 'utf-8',
+			enableWebSQL: false,
+			nodeIntegration: false,
+			webSecurity: true,
+			sandbox: false,
+			preload: resolve(__dirname, 'preload.js')
+		}
+	});
+	if (!window)
+		throw new WindowError('Failed to create update window, close app');
+	if (import.meta.env.DEV) {
+		window.loadURL(import.meta.env.ELECTRON_APP_URL);
+		window.webContents.openDevTools();
+	} else
+		window.loadFile(import.meta.env.ELECTRON_APP_URL);
+	pushWindow(window, 'update');
+	window.once('ready-to-show', () => {
+		window.webContents.send('update::start', data);
+		window.show();
+	});
+	window.on('close', () => {
+		rmWindow(window);
+	});
 	return window;
 };
 
@@ -72,6 +136,8 @@ export function loaderWindows(): BrowserWindow {
 		window.loadURL(import.meta.env.ELECTRON_LOAD_URL);
 	else
 		window.loadFile(import.meta.env.ELECTRON_LOAD_URL);
+	pushWindow(window, 'loader');
+	window.on('close', () => rmWindow(window));
 	window.once('ready-to-show', () => window.show());
 	return window;
 };

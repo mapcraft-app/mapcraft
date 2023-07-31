@@ -44,6 +44,16 @@ const routes: RouteRecordRaw[] = [
 		]
 	},
 	{
+		path: '/update',
+		component: () => import('layouts/Update.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('pages/Update.vue')
+			}
+		]
+	},
+	{
 		path: '/:catchAll(.*)*',
 		component: () => import('layouts/Main.vue'),
 		children: [

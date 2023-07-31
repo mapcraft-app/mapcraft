@@ -12,4 +12,3 @@ export const resetStore = (resetList = false): void => {
 	}
 	selectedNode.value = null;
 };
-
