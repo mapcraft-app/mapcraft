@@ -1,7 +1,9 @@
 import { randomBytes } from 'crypto';
-import { readdirSync,  } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { download, sevenZip } from 'mapcraft-api/backend';
 import { resolve } from 'path';
+import semver from 'electron/api/semver';
+import { writeFile } from 'fs/promises';
 
 interface apiData {
 	statusCode: number;
@@ -17,9 +19,10 @@ interface apiData {
 	linux: string;
 	windows: string;
 }
+
 type os = 'darwin' | 'linux' | 'windows';
 
-const install = async (apiData: apiData): Promise<void> => {
+const install = async (apiData: apiData, pathVersion: string): Promise<void> => {
 	const osToDl: Map<string, os> = new Map([
 		['win32', 'windows'],
 		['darwin', 'darwin'],
@@ -32,14 +35,20 @@ const install = async (apiData: apiData): Promise<void> => {
 	const zip = new sevenZip();
 
 	await dl.get();
-	await zip.unpack(dl.destination, resolve(process.env.UPDATE, apiData.version));
+	await zip.unpack(dl.destination, process.env.UPDATE);
+	await writeFile(pathVersion, apiData.version, { encoding: 'utf-8' });
 };
 
 export default async (): Promise<void> => {
-	const dirs = readdirSync(process.env.UPDATE, { encoding: 'utf-8' });
-	const apiData: apiData = await fetch('https://api.mapcraft.app/software/update')
+	const pathVersion = resolve(process.env.UPDATE, 'version');
+	const apiData: apiData = await fetch('https://api.mapcraft.app/software/update', { method: 'GET' })
 		.then((d) => d.json());
 
-	if (apiData.statusCode === 200 && (dirs.length <= 0 || !dirs.includes(apiData.version)))
-		install(apiData);
+	if (apiData.statusCode === 200) {
+		const version = (existsSync(pathVersion))
+			? readFileSync(pathVersion, { encoding: 'utf-8' })
+			: null;
+		if (version === null || semver(version.toString(), apiData.version) === 1)
+			install(apiData, pathVersion);
+	}
 };

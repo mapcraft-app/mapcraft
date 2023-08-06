@@ -6,11 +6,10 @@ import {
 	session,
 } from 'electron';
 import { normalize } from 'path';
-
 import errorDialog from 'electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'electron/api/createWindow';
 import generateEnv from 'electron/api/generateEnv';
-import updateSystem from 'electron/updateSystem';
+import updateSystem from './updateSystem';
 import type Log from 'api/log';
 
 let loader: BrowserWindow | undefined = undefined;

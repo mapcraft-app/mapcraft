@@ -25,7 +25,7 @@
     ],
     "asar": true,
     "asarUnpack": [
-      "node_modules/mapcraft-api/node_modules/{7zip-bin,7zip-min}/**/*"
+      "node_modules/mapcraft-api/node_modules/{7zip-bin}/**/*"
     ]
   },
   "scripts": {
