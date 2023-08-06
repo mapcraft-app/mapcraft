@@ -10,6 +10,7 @@ import { normalize } from 'path';
 import errorDialog from 'electron/api/errorDialog';
 import { createWindow, loaderWindows } from 'electron/api/createWindow';
 import generateEnv from 'electron/api/generateEnv';
+import updateSystem from 'electron/updateSystem';
 import type Log from 'api/log';
 
 let loader: BrowserWindow | undefined = undefined;
@@ -56,6 +57,9 @@ app.whenReady().then(async () => {
 	log.info('Electron started');
 	log.info('Initialize application');
 	log.info('Initialize main and loader window');
+
+	log.info('Check update system');
+	updateSystem();
 
 	let isLoading = true;
 	loader = loaderWindows();

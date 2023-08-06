@@ -17,6 +17,7 @@ export declare global {
 			PACKAGED: string,
 			APP: string,
 			APP_DATA: string,
+			UPDATE: string,
 			GAME: string,
 			LOG: string,
 			DATE: string,
@@ -32,6 +33,7 @@ export declare global {
 				os: 'aix' | 'darwin' | 'freebsd' | 'linux' | 'openbsd' | 'sunos' | 'win32',
 				app: string,
 				appData: string,
+				update: string
 				game: string,
 				log: string,
 				date: string,

@@ -26,6 +26,7 @@ export default function generateEnv(app: Electron.App): void {
 		: 'false';
 	process.env.APP = app.getAppPath();
 	process.env.APP_DATA = resolve(app.getPath('userData'), 'appdata');
+	process.env.UPDATE= resolve(app.getPath('userData'), 'update');
 	const configFile = resolve(process.env.APP_DATA, 'config');
 	const data = existsSync(configFile)
 		? JSON.parse(readFileSync(configFile, { encoding: 'utf-8' }))
@@ -53,6 +54,8 @@ export default function generateEnv(app: Electron.App): void {
 		mkdirSync(app.getPath('userData'));
 	if (!existsSync(process.env.APP_DATA))
 		mkdirSync(process.env.APP_DATA);
+	if (!existsSync(process.env.UPDATE))
+		mkdirSync(process.env.UPDATE);
 	if (!existsSync(configFile)) {
 		writeFileSync(configFile, JSON.stringify({
 			game: process.env.GAME,

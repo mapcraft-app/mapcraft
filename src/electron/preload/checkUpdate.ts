@@ -2,6 +2,7 @@ import { readFile } from 'fs/promises';
 import { platform } from 'os';
 import { resolve } from 'path';
 import { version } from 'package.json';
+import compareSemVer from 'electron/api/semver';
 
 import type { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
 import type { envInterface } from 'mapcraft-api/dist/types/src/backend/engine/interface';
@@ -75,34 +76,6 @@ export interface update {
 	datapack?: updateInfo;
 	resourcepack?: updateInfo;
 }
-
-/**
- * Compare semver
- * @param oldVersion string
- * @param newVersion string
- * @returns -1 if newVersion is lesser than oldVersion, 0 if equal, 1 is upper
- */
-const compareSemVer = (oldVersion: string, newVersion: string): number => {
-	const ret = (comp: boolean) => <number><any>comp | 0;
-	const data = {
-		old: oldVersion.indexOf('-') !== -1
-			? oldVersion.split('-')
-			: oldVersion,
-		new: newVersion.indexOf('-') !== -1
-			? newVersion.split('-')
-			: newVersion,
-	};
-
-	if (Array.isArray(data.old) !== Array.isArray(data.new))
-		return ret(Array.isArray(data.old));
-	if (Array.isArray(data.old) && Array.isArray(data.new)) {
-		const preRelease = data.new[1].localeCompare(data.old[1]);
-		return preRelease === 0
-			? data.new[0].localeCompare(data.old[0], undefined, { numeric: true, sensitivity: 'case', caseFirst: 'upper' })
-			: preRelease;
-	}
-	return (data.new as string).localeCompare(data.old as string, undefined, { numeric: true, sensitivity: 'case', caseFirst: 'upper' });
-};
 
 export default async (env: envInterface, mapName: string, minecraftVersion: minecraftVersion): Promise<update> => {
 	const os = platform() === 'win32'
