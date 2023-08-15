@@ -81,10 +81,8 @@ app.whenReady().then(async () => {
 			mainWindow.show();
 			mainWindow.focus();
 		}
-		if (loader) {
-			loader.hide();
+		if (loader)
 			loader.destroy();
-		}
 	});
 
 	app.on('activate', () => {

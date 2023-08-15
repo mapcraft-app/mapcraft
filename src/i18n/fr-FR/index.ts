@@ -14,6 +14,8 @@ export default {
 		logError: 'En attente du fichier log du jeu'
 	},
 	update: {
+		banner: 'Ne fermer pas la fenêtre pendant la (les) mise(s) à jour',
+		beforeRestart: 'Mapcraft redémarrera dans {n} secondes',
 		data: 'Pack de données',
 		resource: 'Pack de ressources',
 		software: 'Logiciel',

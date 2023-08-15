@@ -1,9 +1,9 @@
 import { randomBytes } from 'crypto';
 import { existsSync, readFileSync } from 'fs';
+import { writeFile } from 'fs/promises';
 import { download, sevenZip } from 'mapcraft-api/backend';
 import { resolve } from 'path';
 import semver from 'electron/api/semver';
-import { writeFile } from 'fs/promises';
 
 interface apiData {
 	statusCode: number;
@@ -48,7 +48,7 @@ export default async (): Promise<void> => {
 		const version = (existsSync(pathVersion))
 			? readFileSync(pathVersion, { encoding: 'utf-8' })
 			: null;
-		if (version === null || semver(version.toString(), apiData.version) === 1)
+		if (version === null || semver(version, apiData.version) === 1)
 			install(apiData, pathVersion);
 	}
 };

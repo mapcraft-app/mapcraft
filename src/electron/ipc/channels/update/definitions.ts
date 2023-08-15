@@ -7,6 +7,10 @@ export default {
 			name: 'init',
 			type: ipcType.SEND,
 			reply: 'start'
+		},
+		{
+			name: 'restart',
+			type: ipcType.SEND
 		}
 	]
 } as ipcDefinition;

@@ -25,8 +25,19 @@ export default function generateEnv(app: Electron.App): void {
 		? 'true'
 		: 'false';
 	process.env.APP = app.getAppPath();
+	if (import.meta.env.DEV) {
+		process.env.APP_EXE = `"node ${resolve(
+			app.getAppPath(),
+			'..',
+			'node_modules',
+			'vite',
+			'bin',
+			'vite.js'
+		)} ${resolve(app.getAppPath(), '..')}"`;
+	} else
+		process.env.APP_EXE = app.getPath('exe');
 	process.env.APP_DATA = resolve(app.getPath('userData'), 'appdata');
-	process.env.UPDATE= resolve(app.getPath('userData'), 'update');
+	process.env.UPDATE = resolve(app.getPath('userData'), 'update');
 	const configFile = resolve(process.env.APP_DATA, 'config');
 	const data = existsSync(configFile)
 		? JSON.parse(readFileSync(configFile, { encoding: 'utf-8' }))

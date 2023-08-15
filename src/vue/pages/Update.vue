@@ -4,7 +4,15 @@
 
 	<q-banner v-if="isUpdate" class="text-white bg-orange q-ma-sm">
 		<div class="flex justify-center">
-			<span>Ne fermer pas la fenêtre pendant la (les) mise(s) à jour</span>
+			<span>{{ $t('update.banner') }}</span>
+		</div>
+	</q-banner>
+	<q-banner
+		v-if="storeMap.updateData?.software && stat.software >= 100"
+		class="text-white bg-green q-ma-sm"
+	>
+		<div class="flex justify-center">
+			<span>{{ $t('update.beforeRestart', { n: restart }) }}</span>
 		</div>
 	</q-banner>
 
@@ -23,6 +31,7 @@
 				<q-item-section>
 					<q-linear-progress
 						v-if="stat.datapack < 100"
+						:animation-speed="250"
 						:value="stat.datapack / 100"
 						rounded
 						color="yellow-9"
@@ -45,7 +54,7 @@
 		>
 			<template v-slot:header>
 				<q-item-section avatar>
-					<q-avatar icon="imagesmode" color="" />
+					<q-avatar icon="photo" />
 				</q-item-section>
 				<q-item-section>
 					{{ $t('update.resource') }}
@@ -53,6 +62,7 @@
 				<q-item-section>
 					<q-linear-progress
 						v-if="stat.resourcepack < 100"
+						:animation-speed="250"
 						:value="stat.resourcepack / 100"
 						rounded
 						color="yellow-9"
@@ -76,7 +86,7 @@
 			<template v-slot:header>
 				<q-item-section avatar>
 					<q-avatar>
-						<q-img :src="$toPublic('/imgs/app/icon_small.png')" />
+						<q-img :src="$toPublic('/imgs/app/icon_small.png')" width="65%" />
 					</q-avatar>
 				</q-item-section>
 				<q-item-section>
@@ -85,7 +95,8 @@
 				<q-item-section>
 					<q-linear-progress
 						v-if="stat.software < 100"
-						:value="stat.software/ 100"
+						:animation-speed="250"
+						:value="stat.software / 100"
 						rounded
 						color="yellow-9"
 						size="md"
@@ -107,13 +118,13 @@
 		<q-btn
 			color="red"
 			:label="$t('update.cancel')"
-			:disable="isUpdate"
+			:disable="isUpdate || restart !== null"
 			@click="cancel"
 		/>
 		<q-btn
 			color="green"
 			:label="$t('update.start')"
-			:loading="isUpdate"
+			:loading="isUpdate || restart !== null"
 			@click="update"
 		/>
 	</div>
@@ -137,11 +148,12 @@ export default defineComponent({
 		const storeMap = mapStore();
 		const $q = useQuasar();
 		const md = markdownIt();
+
 		let interval: NodeJS.Timer; // eslint-disable-line no-undef
 		const isFinish: Map<statType, boolean> = new Map();
-
 		const isUpdate = ref<boolean>(false);
 		const stat = ref<stat>({ datapack: 0, resourcepack: 0, software: 0 });
+		const restart = ref<number | null>(null);
 
 		const cancel = () => window.ipc.send('window::close');
 		const update = () => {
@@ -157,7 +169,18 @@ export default defineComponent({
 				}
 				if (![ ...isFinish.values()].some((e) => e === false)) {
 					clearInterval(interval);
-					setTimeout(() => window.ipc.send('window::close'), 3000);
+					isUpdate.value = false;
+					if (!storeMap.updateData?.software)
+						window.ipc.send('window::close');
+					else {
+						restart.value = 4;
+						setInterval(() => {
+							if (restart.value && restart.value > 0)
+								restart.value -= 1;
+							else
+								window.ipc.send('update::restart');
+						}, 1000);
+					}
 				}
 			}, 100);
 		};
@@ -182,6 +205,7 @@ export default defineComponent({
 			storeMap,
 			isUpdate,
 			stat,
+			restart,
 			cancel,
 			update,
 			render

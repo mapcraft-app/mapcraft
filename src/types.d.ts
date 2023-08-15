@@ -16,6 +16,7 @@ export declare global {
 			DEV: string,
 			PACKAGED: string,
 			APP: string,
+			APP_EXE: string,
 			APP_DATA: string,
 			UPDATE: string,
 			GAME: string,

@@ -1,18 +1,20 @@
 import { sevenZip, download } from 'mapcraft-api/backend';
+import { spawn } from 'child_process';
 import { randomBytes } from 'crypto';
 import { resolve } from 'path';
-
+import { rm } from 'fs/promises';
+import { log } from 'app/src/api/log';
+import { platform } from 'os';
 import type { packInstall, softwareInstall, update } from './checkUpdate';
 import type { envInterface } from 'mapcraft-api/dist/types/src/backend/engine/interface';
 import type { statFile } from 'mapcraft-api/dist/types/src/backend/download';
-import { rm } from 'fs/promises';
-import { log } from 'app/src/api/log';
 
 export interface stat {
 	datapack: number;
 	resourcepack: number;
 	software: number;
 }
+type updateType = 'datapack' | 'resourcepack' | 'software';
 
 export const installStat: stat = {
 	datapack: 0,
@@ -24,7 +26,23 @@ export const getStat = (): stat => installStat;
 
 export default (env: envInterface, updateData: update): void => {
 	const rand = () => randomBytes(32).toString('hex').slice(0, 32);
-	const config: Map<'datapack' | 'resourcepack' | 'software', { down: download, zip: sevenZip, unpack: string }> = new Map();
+	const updateSoftware = (): string => {
+		switch (platform()) {
+		case 'win32':
+			return resolve(process.env.UPDATE, 'update-windows.exe');
+		case 'darwin':
+			return resolve(process.env.UPDATE, 'update-darwin');
+		case 'linux':
+		default:
+			return resolve(process.env.UPDATE, 'update-linux');
+		}
+	};
+	const promises = [];
+	const config: Map<updateType, {
+		down: download,
+		zip: sevenZip,
+		unpack: string
+	}> = new Map();
 
 	if (updateData.datapack) {
 		config.set('datapack', {
@@ -58,25 +76,62 @@ export default (env: envInterface, updateData: update): void => {
 	}
 
 	for (const c of config) {
-		c[1].down.on('data', (downStat: statFile) => installStat[c[0]] = Math.floor(downStat.percent / 2));
-		c[1].down.get()
+		c[1].down.on('data', (downStat: statFile) => {
+			if (c[0] === 'software')
+				installStat[c[0]] = Math.floor(downStat.percent);
+			else
+				installStat[c[0]] = Math.floor(downStat.percent / 2);
+		});
+		promises.push(
+			new Promise<void>((res, rej) => {
+				c[1].down.get()
+					.then(() => {
+						if (c[0] === 'software')
+							res();
+						else {
+							let temp = 0;
+							const before = installStat[c[0]];
+							const interval = setInterval(() => {
+								if (c[1].zip.percent > temp) {
+									temp = c[1].zip.percent;
+									installStat[c[0]] = before + Math.floor(c[1].zip.percent / 2);
+								}
+							}, 100);
+							c[1].zip.unpack(c[1].down.destination, c[1].unpack)
+								.finally(() => {
+									rm(c[1].down.destination, { force: true });
+									installStat[c[0]] = 100;
+									clearInterval(interval);
+									c[1].down.removeAllListeners('data');
+									res();
+								})
+								.catch((e) => {
+									log.error(e);
+									rej();
+								});
+						}
+					});
+			})
+		);
+	}
+	const c = config.get('software');
+	if (c) {
+		Promise.all(promises)
 			.then(() => {
-				let temp = 0;
-				const before = installStat[c[0]];
-				const interval = setInterval(() => {
-					if (c[1].zip.percent > temp) {
-						temp = c[1].zip.percent;
-						installStat[c[0]] = before + Math.floor(c[1].zip.percent / 2);
+				spawn(
+					updateSoftware(),
+					[
+						c.down.destination,
+						resolve(process.env.TEMP, rand()),
+						process.env.APP_EXE,
+						'false'
+					],
+					{
+						detached: true,
+						shell: false,
+						windowsHide: false
 					}
-				}, 100);
-				c[1].zip.unpack(c[1].down.destination, c[1].unpack)
-					.finally(() => {
-						rm(c[1].down.destination, { force: true });
-						installStat[c[0]] = 100;
-						clearInterval(interval);
-						c[1].down.removeAllListeners('data');
-					})
-					.catch((e) => log.error(e));
+				).unref();
 			});
 	}
 };

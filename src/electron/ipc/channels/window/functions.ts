@@ -26,7 +26,7 @@ export default [
 	(event: Electron.IpcMainEvent): void => {
 		BrowserWindow.fromWebContents(event.sender)?.minimize();
 	},
-	(event: Electron.IpcMainEvent, error: string): void => {
+	(_event: Electron.IpcMainEvent, error: string): void => {
 		throw new Error(error);
 	}
 ] as ipcFunctions;

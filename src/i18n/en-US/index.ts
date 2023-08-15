@@ -14,6 +14,8 @@ export default {
 		logError: 'Waiting for the game log file'
 	},
 	update: {
+		banner: 'Do not close the window during update(s)',
+		beforeRestart: 'Mapcraft will restart in {n} seconds',
 		data: 'Data pack',
 		resource: 'Resource pack',
 		software: 'Software',
