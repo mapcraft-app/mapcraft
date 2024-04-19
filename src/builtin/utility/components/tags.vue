@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { toPublic, path } from 'vue/plugins/app';
+import { toPublic, path } from '@/app/plugins/app';
 import { copyToClipboard, repUnderscore } from './lib';
 import type { tabsType, tags, tagEl } from './lib';
 

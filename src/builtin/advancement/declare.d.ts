@@ -1,4 +1,4 @@
-import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import type { minecraftVersion } from 'mapcraft-api';
 import { envInterface } from '../interface';
 import { main } from './model';
 

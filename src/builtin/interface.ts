@@ -1,4 +1,4 @@
-import { shellModel } from 'electron/api/shell/interface';
+import { shellModel } from '@/electron/api/shell/interface';
 
 export interface info {
 	private: boolean;

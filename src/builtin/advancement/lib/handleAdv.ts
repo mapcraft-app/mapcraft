@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import deepClone from 'api/deepClone';
+import deepClone from '@/api/deepClone';
 import { advancement, main, rewards, triggers } from '../model';
 
 export interface adv {

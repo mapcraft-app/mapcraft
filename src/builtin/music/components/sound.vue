@@ -121,6 +121,8 @@ export default defineComponent({
 
 		const copySound = (files: FileList) => {
 			if (props.selectedSound) {
+				console.log(props.sound, files);
+
 				window.music.sound.upload({
 					index: props.index,
 					name: props.sound.name,

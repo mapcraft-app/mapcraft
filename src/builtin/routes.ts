@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
-import { builtinList } from 'app/src/builtin/front';
+import { builtinList } from '@/builtin/front';
 
 const getNormName = (name: string): string | null => {
 	const __name = name.toLowerCase();
@@ -13,26 +13,26 @@ const getNormName = (name: string): string | null => {
 export default [
 	{
 		path: getNormName('advancement'),
-		component: () => import('builtin/advancement/main.vue')
+		component: () => import('@/builtin/advancement/main.vue')
 	},
 	{
 		path: getNormName('cutscene'),
-		component: () => import('builtin/cutscene/main.vue')
+		component: () => import('@/builtin/cutscene/main.vue')
 	},
 	{
 		path: getNormName('music'),
-		component: () => import('builtin/music/main.vue')
+		component: () => import('@/builtin/music/main.vue')
 	},
 	{
 		path: getNormName('recipe'),
-		component: () => import('builtin/recipe/main.vue')
+		component: () => import('@/builtin/recipe/main.vue')
 	},
 	{
 		path: getNormName('trigger'),
-		component: () => import('builtin/trigger/main.vue')
+		component: () => import('@/builtin/trigger/main.vue')
 	},
 	{
 		path: getNormName('utility'),
-		component: () => import('builtin/utility/main.vue')
+		component: () => import('@/builtin/utility/main.vue')
 	}
 ] as RouteRecordRaw[];

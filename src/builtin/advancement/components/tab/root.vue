@@ -25,7 +25,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
-import { mapStore } from 'src/store/map';
+import { mapStore } from '@/store/map';
 import { advancementsList, indexAdv } from '../../store';
 
 export default defineComponent({
@@ -72,3 +72,4 @@ export default defineComponent({
 	}
 });
 </script>
+@/app/store/map

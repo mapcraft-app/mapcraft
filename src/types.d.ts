@@ -1,7 +1,7 @@
 import { appMapGet } from 'electron/preload/mapSelection';
 import { userStorage } from 'electron/preload/exposeEnv';
 import { builtinFormat } from 'app/src/builtin/front';
-import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import type { minecraftVersion } from 'mapcraft-api/frontend';
 import type { download } from 'mapcraft-api';
 import type { envInterface } from 'mapcraft-api/dist/types/src/engine/interface';
 import type { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';

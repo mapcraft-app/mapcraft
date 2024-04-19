@@ -1,7 +1,8 @@
 import { BrowserWindow } from 'electron';
-import { resolve } from 'path';
-import { WindowError } from 'src/electron/api/error';
-import type { update } from '../preload/checkUpdate';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { WindowError } from '@/electron/api/error';
+import type { update } from '@/electron/preload/checkUpdate';
 
 export interface optionWindows {
 	center?: boolean,
@@ -33,8 +34,8 @@ const rmWindow = (w: BrowserWindow) => {
 	}
 };
 
-const iconLoad = (): string =>
-	import.meta.env.DEV
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const iconLoad = (): string => import.meta.env.DEV
 		? resolve(__dirname, '..', 'src', 'public', 'imgs', 'app', 'icon.ico')
 		: resolve(__dirname, 'imgs', 'app', 'icon.ico');
 
@@ -56,7 +57,7 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 			nodeIntegration: args.nodeIntegration ?? false,
 			webSecurity: true,
 			sandbox: false,
-			preload: args.preload ?? resolve(__dirname, 'preload.js')
+			preload: args.preload ?? resolve(__dirname, 'preload.mjs')
 		}
 	});
 	if (!window)
@@ -90,7 +91,7 @@ export function updateWindow(parent: BrowserWindow, data: update): BrowserWindow
 			nodeIntegration: false,
 			webSecurity: true,
 			sandbox: false,
-			preload: resolve(__dirname, 'preload.js')
+			preload: resolve(__dirname, 'preload.mjs')
 		}
 	});
 	if (!window)

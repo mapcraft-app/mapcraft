@@ -43,8 +43,8 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
-import { minecraft } from 'mapcraft-api';
-import { mapStore } from 'app/src/store/map';
+import { minecraft } from 'mapcraft-api/frontend';
+import { mapStore } from '@/store/map';
 import { enchantement } from '../../model';
 import numberRange from '../type/numberRange.vue';
 
@@ -119,3 +119,4 @@ export default defineComponent({
 	}
 });
 </script>
+@/app/store/map

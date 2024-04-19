@@ -2,14 +2,14 @@ import { constants, watch } from 'fs';
 import type { FSWatcher } from 'fs';
 import { access } from 'fs/promises';
 import { resolve } from 'path';
-import { IpcError } from 'electron/api/error';
-import ipc from 'electron/ipc/render';
-import lang from 'i18n/index';
+import { IpcError } from '@/electron/api/error';
+import ipc from '@/electron/ipc/render';
+import lang from '@/i18n/index';
 import { commandRet, ipcCommand, shellModel } from './interface';
 
-import { builtinList } from 'app/src/builtin/front';
+import { builtinList } from '@/builtin/front';
 import { ipcRenderer } from 'electron';
-import readLastLines, { line } from 'api/readLastLines';
+import readLastLines, { line } from '@/api/readLastLines';
 
 export class Shell {
 	COMMAND: string;
@@ -207,8 +207,10 @@ export class Shell {
 								);
 								if (commands) {
 									if (Array.isArray(commands)) {
-										commands.forEach((e) => {
-											if (e && e.ret.player === user.minecraftUsername) {
+										commands
+											.filter(c => c !== null)
+											.forEach((e) => {
+											if (e && e.ret.player.toLowerCase() === user.minecraftUsername.toLowerCase()) {
 												if (e.ret.notification === undefined || e.ret.notification === true)
 													ipc.send('notification::push', e);
 												ipc.send('shell::new-command', e);
@@ -216,7 +218,7 @@ export class Shell {
 										});
 										return;
 									}
-									if (commands.ret.player === user.minecraftUsername) {
+									if (commands.ret.player.toLowerCase() === user.minecraftUsername.toLowerCase()) {
 										if (commands.ret.notification === undefined || commands.ret.notification === true)
 											ipc.send('notification::push', commands);
 										ipc.send('shell::new-command', commands);

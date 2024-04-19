@@ -1,5 +1,5 @@
 import { info, list, lang } from './interface';
-import { shellModel } from 'electron/api/shell/interface';
+import { shellModel } from '@/electron/api/shell/interface';
 
 import advancementPack from './advancement/package.json';
 import advancementLang from './advancement/lang';

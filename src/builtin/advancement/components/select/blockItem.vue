@@ -16,7 +16,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
-import { mapStore } from 'app/src/store/map';
+import { mapStore } from '@/store/map';
 import { getter, setter } from '../../lib/regMinecraft';
 
 export default defineComponent({
@@ -100,3 +100,4 @@ export default defineComponent({
 	}
 });
 </script>
+@/app/store/map

@@ -65,7 +65,7 @@ export default defineComponent({
 			getFiles();
 		});
 
-		onUnmounted(() => clearInterval(timer));
+		onUnmounted(() => clearInterval(timer as any));
 
 		return {
 			list,

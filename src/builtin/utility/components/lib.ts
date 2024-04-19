@@ -1,4 +1,4 @@
-import { capitalize } from 'vue/plugins/app';
+import { capitalize } from '@/app/plugins/app';
 import type { QVueGlobals } from 'quasar';
 import type { ComposerTranslation } from 'vue-i18n';
 

@@ -1,35 +1,48 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 		"types": ["vite/client", "node", "electron"],
 
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+		"allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+		"esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
 		"baseUrl": ".",
 		"paths": {
-			"app/*": ["*"],
-			"src/*": ["src/*"],
-			"api/*": ["src/api/*"],
-			"builtin/*": ["src/builtin/*"],
-			"electron/*": ["src/electron/*"],
-			"vue/*": ["src/vue/*"],
-			"i18n/*": ["src/i18n/*"],
-			"store/*": ["src/store/*"],
-			"assets/*": ["src/assets/*"],
-			"components/*": ["src/vue/components/*"],
-			"layouts/*": ["src/vue/layouts/*"],
-			"pages/*": ["src/vue/pages/*"]
+			"@/main/*": ["./*"],
+			"@/api/*": ["./src/api/*"],
+			"@/app/*": ["./src/app/*"],
+			"@/builtin/*": ["./src/builtin/*"],
+			"@/electron/*": ["./src/electron/*"],
+			
+			"@/components/*": ["./src/app/components/*"],
+			"@/i18n/*": ["./src/app/i18n/*"],
+			"@/layouts/*": ["./src/app/layouts/*"],
+			"@/pages/*": ["./src/app/pages/*"],
+			"@/meta": ["./src/app/meta.ts"],
+			"@/router/*": ["src/app/router/*"],
+			"@/store/*": ["src/app/store/*"]
 		}
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "package.json"],
+  "include": [
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue",
+		"src/vite.config.ts"
+	],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

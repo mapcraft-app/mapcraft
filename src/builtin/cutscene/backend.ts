@@ -5,11 +5,12 @@
 import { existsSync, writeFileSync } from 'fs';
 import { writeFile, mkdir, access } from 'fs/promises';
 import { resolve } from 'path';
-import ipc from 'electron/ipc/render';
-import database, { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
+import ipc from '@/electron/ipc/render';
+import type { sql } from 'mapcraft-api/backend';
+import type { tableInterface } from 'mapcraft-api';
 
-import { mapEngineInstance } from 'electron/preload/engine';
-import { exposeInMainWorld } from 'api/plugins/backend';
+import { mapEngineInstance } from '@/electron/preload/engine';
+import { exposeInMainWorld } from '@/api/plugins/backend';
 
 import createCutscene from './functions/createCutscene';
 import deleteCutscene from './functions/deleteCutscene';
@@ -23,7 +24,7 @@ class cutscene {
 	private env: envInterface;
 	private name: string;
 	private tables: tableInterface[];
-	public db: database;
+	public db: sql;
 	public _path: {
 		dir: string;
 		main: string;
@@ -61,7 +62,7 @@ class cutscene {
 				);'
 			}
 		];
-		this.db = {} as database;
+		this.db = {} as sql;
 		this._path = {} as {dir: string, main: string};
 	}
 

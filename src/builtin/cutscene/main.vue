@@ -31,11 +31,11 @@
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { defineComponent, onBeforeMount, onUnmounted, onMounted, ref, toRaw, watch } from 'vue';
-import { mapStore } from 'store/map';
-import { capitalize } from 'app/src/vue/plugins/app';
+import { mapStore } from '@/store/map';
+import { capitalize } from '@/app/plugins/app';
 import { cutscene, cutsceneInterface, cutscenePointInterface, end } from './interface';
 import shell from './shell';
-import type { ipcCommand } from 'electron/api/shell/interface';
+import type { ipcCommand } from '@/electron/api/shell/interface';
 
 import Options from './components/option.vue';
 import PointComponent from './components/point.vue';
@@ -322,7 +322,7 @@ export default defineComponent({
 
 		onUnmounted(() => {
 			window.ipc.remove('shell::command', shellCommand);
-			clearInterval(saveCutscene);
+			clearInterval(saveCutscene as any);
 			saveData();
 		});
 
@@ -368,3 +368,4 @@ export default defineComponent({
 	color: rgb(19, 157, 95);
 }
 </style>
+@/app/store/map

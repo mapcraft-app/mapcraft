@@ -3,11 +3,10 @@ import { spawn } from 'child_process';
 import { randomBytes } from 'crypto';
 import { resolve } from 'path';
 import { rm } from 'fs/promises';
-import { log } from 'app/src/api/log';
+import { log } from '@/api/log';
 import { platform } from 'os';
 import type { packInstall, softwareInstall, update } from './checkUpdate';
-import type { envInterface } from 'mapcraft-api/dist/types/src/backend/engine/interface';
-import type { statFile } from 'mapcraft-api/dist/types/src/backend/download';
+import type { envInterface, statFile } from 'mapcraft-api';
 
 export interface stat {
 	datapack: number;

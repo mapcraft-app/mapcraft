@@ -79,8 +79,8 @@
 import { useQuasar, QSpinnerPuff } from 'quasar';
 import { defineComponent, onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mapStore } from 'store/map';
-import { capitalize, path } from 'app/src/vue/plugins/app';
+import { mapStore } from '@/store/map';
+import { capitalize, path } from '@/app/plugins/app';
 import { category, sound, sounds } from './interface';
 
 import createVue from './components/create.vue';
@@ -275,7 +275,7 @@ export default defineComponent({
 		});
 
 		onBeforeUnmount(() => {
-			clearInterval(autosaveInterval);
+			clearInterval(autosaveInterval as any);
 			save(true);
 		});
 
@@ -322,3 +322,4 @@ export default defineComponent({
 	width: 100%;
 }
 </style>
+@/app/store/map

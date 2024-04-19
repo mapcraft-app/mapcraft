@@ -62,7 +62,7 @@
 import { computed, defineComponent, PropType, onBeforeMount, onUnmounted, reactive, ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { textColor, titleModel } from '../../../model';
-import { capitalize } from 'src/vue/plugins/app';
+import { capitalize } from '@/app/plugins/app';
 import { useI18n } from 'vue-i18n';
 
 interface color {
@@ -185,7 +185,7 @@ export default defineComponent({
 			watch(props.modelValue, (val) => data.value = val);
 		});
 
-		onUnmounted(() => clearInterval(obfuscatedTime));
+		onUnmounted(() => clearInterval(obfuscatedTime as any));
 
 		return {
 			data,

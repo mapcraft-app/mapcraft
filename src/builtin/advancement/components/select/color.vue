@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, onBeforeMount, watch } from 'vue';
-import { capitalize } from 'app/src/vue/plugins/app';
+import { capitalize } from '@/app/plugins/app';
 import { useI18n } from 'vue-i18n';
 import { textColor } from '../../model';
 

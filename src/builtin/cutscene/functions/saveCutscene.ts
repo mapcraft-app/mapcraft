@@ -1,8 +1,8 @@
-import type database from 'mapcraft-api/dist/types/src/backend/sql';
+import { type sql } from 'mapcraft-api/backend';
 import type { cutsceneInterface, cutscenePointInterface } from '../interface';
 
 const saveCutscene_GEN1 = async (
-	db: database,
+	db: sql,
 	cutscene: cutsceneInterface,
 	points: cutscenePointInterface[]
 ): Promise<void> => {
@@ -27,7 +27,7 @@ const saveCutscene_GEN1 = async (
 };
 
 export default (
-	db: database,
+	db: sql,
 	cutscene: cutsceneInterface,
 	points: cutscenePointInterface[]
 ): Promise<void> => {

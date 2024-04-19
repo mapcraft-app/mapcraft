@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'fs';
 import { writeFile } from 'fs/promises';
 import { download, sevenZip } from 'mapcraft-api/backend';
 import { resolve } from 'path';
-import semver from 'electron/api/semver';
+import semver from '@/electron/api/semver';
 
 interface apiData {
 	statusCode: number;

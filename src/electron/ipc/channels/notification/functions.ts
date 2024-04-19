@@ -1,8 +1,8 @@
 import { Notification } from 'electron';
-import { ipcFunctions } from 'electron/ipc/ipcType';
-import { ipcCommand } from 'electron/api/shell/interface';
+import { ipcFunctions } from '@/main/src/electron/ipc/type';
+import { ipcCommand } from '@/electron/api/shell/interface';
 import { resolve } from 'path';
-import { builder } from 'package.json';
+import { builder } from '@/main/package.json';
 import type Electron from 'electron';
 
 const toPublic = (url: string): string => {

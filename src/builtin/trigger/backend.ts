@@ -1,18 +1,19 @@
-import { exposeInMainWorld } from 'api/plugins/backend';
-import ipc from 'app/src/electron/ipc/render';
-import { mapEngineInstance } from 'app/src/electron/preload/engine';
+import { exposeInMainWorld } from '@/api/plugins/backend';
+import ipc from '@/electron/ipc/render';
+import { mapEngineInstance } from '@/electron/preload/engine';
 import { existsSync, writeFileSync } from 'fs';
 import { access, mkdir, rm } from 'fs/promises';
 import { fs } from 'mapcraft-api/backend';
-import database, { tableInterface } from 'mapcraft-api/dist/types/src/backend/sql';
+import { sql } from 'mapcraft-api/backend';
 import { resolve } from 'path';
 import { createTrigger, triggerInterface } from './interface';
 import { envInterface } from '../interface';
+import type { tableInterface } from 'mapcraft-api';
 
 class trigger {
 	private env: envInterface;
 	private table: tableInterface;
-	private db: database;
+	private db: sql;
 	public datapackDir: {
 		base: string,
 		detect: string,

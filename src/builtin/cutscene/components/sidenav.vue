@@ -72,7 +72,7 @@
 import { computed, defineComponent, onBeforeMount, onBeforeUnmount, ref, PropType } from 'vue';
 import { useQuasar } from 'quasar';
 import { cutsceneInterface } from '../interface';
-import { ipcCommand } from 'app/src/electron/api/shell/interface';
+import { ipcCommand } from '@/electron/api/shell/interface';
 import shell from '../shell';
 
 export default defineComponent({

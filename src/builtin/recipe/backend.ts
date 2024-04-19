@@ -1,8 +1,8 @@
 import { constants } from 'fs';
 import { access, mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
-import { minecraft } from 'mapcraft-api';
-import { exposeInMainWorld } from 'app/src/api/plugins/backend';
+import { minecraft } from 'mapcraft-api/frontend';
+import { exposeInMainWorld } from '@/api/plugins/backend';
 import {
 	crafting,
 	furnace,
@@ -22,7 +22,7 @@ import {
 	smithingTable
 } from './interface';
 import { envInterface } from '../interface';
-import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import { block, items, minecraftVersion } from 'mapcraft-api';
 import random from './components/random';
 
 interface list {

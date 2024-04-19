@@ -14,10 +14,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, onBeforeMount, watch } from 'vue';
-import { capitalize } from 'app/src/vue/plugins/app';
+import { capitalize } from '@/app/plugins/app';
 import { useI18n } from 'vue-i18n';
 import { minecraft } from 'mapcraft-api/frontend';
-import { mapStore } from 'store/map';
+import { mapStore } from '@/store/map';
 import { potionType } from '../../model';
 import { getter, setter } from '../../lib/regMinecraft';
 
@@ -92,3 +92,4 @@ export default defineComponent({
 	}
 });
 </script>
+@/app/store/map

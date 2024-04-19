@@ -43,10 +43,10 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { defineComponent, onBeforeMount, onUnmounted, ref, toRaw } from 'vue';
-import { mapStore } from 'store/map';
+import { mapStore } from '@/store/map';
 import { createTrigger, triggerInterface } from './interface';
 import shell from './shell';
-import type { ipcCommand } from 'electron/api/shell/interface';
+import type { ipcCommand } from '@/electron/api/shell/interface';
 
 import rowVue from './components/row.vue';
 
@@ -200,3 +200,4 @@ export default defineComponent({
 	width: -webkit-fill-available;
 }
 </style>
+@/app/store/map

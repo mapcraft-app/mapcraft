@@ -1,5 +1,5 @@
-import { commandRet } from 'electron/api/shell/interface';
-import { ipcFunctions } from 'electron/ipc/ipcType';
+import { commandRet } from '@/electron/api/shell/interface';
+import { ipcFunctions } from '@/main/src/electron/ipc/type';
 import type Electron from 'electron';
 
 export default [

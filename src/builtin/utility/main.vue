@@ -44,8 +44,8 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref, watch } from 'vue';
-import { minecraft } from 'mapcraft-api';
-import { mapStore } from 'app/src/store/map';
+import { minecraft } from 'mapcraft-api/frontend';
+import { mapStore } from '@/store/map';
 import { tabsType, list, tags } from './components/lib';
 
 import blocksItems from './components/blocksItems.vue';
@@ -153,3 +153,4 @@ export default defineComponent({
 	}
 });
 </script>
+@/app/store/map

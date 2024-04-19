@@ -1,8 +1,7 @@
 import bezierEasing from 'bezier-easing';
 import { writeFile, mkdir, access } from 'fs/promises';
 import { resolve } from 'path';
-import { fs } from 'mapcraft-api/backend';
-import type database from 'mapcraft-api/dist/types/src/backend/sql';
+import { fs, type sql } from 'mapcraft-api/backend';
 import type { bezier, cutsceneInterface, cutscenePointInterface, transition } from '../interface';
 
 interface CutsceneData {
@@ -64,12 +63,12 @@ class BezierCurve {
 
 class GenerateCutsceneGen1 {
 	private id: number;
-	private db: database;
+	private db: sql;
 	private path: { dir: string, main: string };
 
 	constructor(
 		id: number,
-		db: database,
+		db: sql,
 		path: {dir: string, main: string},
 	) {
 		this.id = id;
@@ -358,7 +357,7 @@ class GenerateCutsceneGen1 {
 
 export default (
 	id: number,
-	db: database,
+	db: sql,
 	path: {dir: string, main: string}
 ): Promise<void[]> => {
 	/*

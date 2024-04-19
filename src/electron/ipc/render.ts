@@ -2,7 +2,7 @@
  * Import this file inside renderer process (usually preload)
  */
 import { contextBridge, ipcRenderer } from 'electron';
-import ipcNaming, { ipcDefinition, ipcType } from './ipcType';
+import ipcNaming, { ipcDefinition, ipcType } from './type';
 
 import dialogDefinitions from './channels/dialog/definitions';
 import editorDefinitions from './channels/editor/definitions';

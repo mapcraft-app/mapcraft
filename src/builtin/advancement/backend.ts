@@ -1,13 +1,13 @@
-import { exposeInMainWorld } from 'app/src/api/plugins/backend';
+import { exposeInMainWorld } from '@/api/plugins/backend';
 import { randomBytes } from 'crypto';
 import { existsSync, readdirSync, readFileSync, rmSync } from 'fs';
 import { mkdir, rm, writeFile } from 'fs/promises';
 import { extname, resolve } from 'path';
-import { minecraft } from 'mapcraft-api';
+import { minecraft } from 'mapcraft-api/frontend';
 
-import iso from 'api/isoDate';
-import deepClone from 'api/deepClone';
-import { block, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import iso from '@/api/isoDate';
+import deepClone from '@/api/deepClone';
+import type { block, items, minecraftVersion } from 'mapcraft-api';
 import { envInterface } from '../interface';
 import { main, advancement as advance, insideAdvancement, display, rewards } from './model';
 

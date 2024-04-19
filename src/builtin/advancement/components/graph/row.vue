@@ -63,7 +63,7 @@ import { line } from './interface';
 import { advancement } from '../../model';
 import { addChildren, adv, removeChildren, selectedAdvancement } from '../../lib/handleAdv';
 import { advancementsList, indexAdv, resetStore, selectedNode } from '../../store';
-import { toPublic } from 'vue/plugins/app';
+import { toPublic } from '@/app/plugins/app';
 
 export default defineComponent({
 	name: 'GraphRow',

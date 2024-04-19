@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import type Electron from 'electron';
-import type { ipcFunctions } from 'electron/ipc/ipcType';
+import type { ipcFunctions } from '@/main/src/electron/ipc/type';
 
 export default [
 	(event: Electron.IpcMainEvent): void => {

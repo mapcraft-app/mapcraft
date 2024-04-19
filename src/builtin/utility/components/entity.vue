@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { toPublic } from 'vue/plugins/app';
+import { toPublic } from '@/app/plugins/app';
 import { copyToClipboard, repUnderscore } from './lib';
 import type { list } from './lib';
 

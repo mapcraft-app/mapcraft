@@ -36,8 +36,8 @@ export default function generateEnv(app: Electron.App): void {
 		)} ${resolve(app.getAppPath(), '..')}"`;
 	} else
 		process.env.APP_EXE = app.getPath('exe');
-	process.env.APP_DATA = resolve(app.getPath('userData'), 'appdata');
-	process.env.UPDATE = resolve(app.getPath('userData'), 'update');
+	process.env.APP_DATA = resolve(app.getPath('userData'), 'AppData');
+	process.env.UPDATE = resolve(app.getPath('userData'), 'Update');
 	const configFile = resolve(process.env.APP_DATA, 'config');
 	const data = existsSync(configFile)
 		? JSON.parse(readFileSync(configFile, { encoding: 'utf-8' }))

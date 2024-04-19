@@ -1,4 +1,4 @@
-import { ipcDefinition, ipcType } from 'electron/ipc/ipcType';
+import { ipcDefinition, ipcType } from '@/main/src/electron/ipc/type';
 
 export default {
 	channel: 'notification',

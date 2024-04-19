@@ -1,10 +1,9 @@
 import { mkdir } from 'fs/promises';
 import { resolve } from 'path';
-import { fs } from 'mapcraft-api/backend';
-import type database from 'mapcraft-api/dist/types/src/backend/sql';
+import { fs, type sql } from 'mapcraft-api/backend';
 import type { cutsceneInterface } from '../interface';
 
-const deleteCutscene_GEN1 = async (db: database, name: string, path: {dir: string, main: string}): Promise<cutsceneInterface> => {
+const deleteCutscene_GEN1 = async (db: sql, name: string, path: {dir: string, main: string}): Promise<cutsceneInterface> => {
 	await db.update('INSERT INTO cutscene (name, duration) VALUES (?, ?)', name, 0);
 	const ret: cutsceneInterface = await db.get('SELECT * FROM cutscene WHERE name = ?', name);
 	await db.update('UPDATE cutscene SET tag = ? WHERE id = ?', `Cutscene_${ret.id}`, ret.id);
@@ -24,7 +23,7 @@ const deleteCutscene_GEN1 = async (db: database, name: string, path: {dir: strin
 
 export default (
 	name: string,
-	db: database,
+	db: sql,
 	path: {dir: string, main: string}
 ): Promise<cutsceneInterface> => {
 	/*

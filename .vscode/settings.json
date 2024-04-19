@@ -1,0 +1,26 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "editor.detectIndentation": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.formatOnSave": false,
+	"javascript.format.enable": false,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.codeActionsOnSave": {
+		"source.fixAll": "explicit"
+	},
+  "eslint.validate": [
+		"html",
+    "javascript",
+    "typescript",
+		"vue"
+  ],
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"[vue]": {
+		"editor.defaultFormatter": "Vue.volar"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	}
+}

@@ -1,4 +1,4 @@
-import { commandFormat, shellModel } from 'app/src/electron/api/shell/interface';
+import { commandFormat, shellModel } from '@/electron/api/shell/interface';
 
 export default {
 	name: 'trigger',

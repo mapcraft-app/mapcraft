@@ -1,5 +1,5 @@
 import { editor } from 'mapcraft-api/backend';
-import { ipcFunctions } from 'electron/ipc/ipcType';
+import { ipcFunctions } from '@/main/src/electron/ipc/type';
 import type Electron from 'electron';
 
 export default [

@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { toPublic, path } from 'vue/plugins/app';
+import { toPublic, path } from '@/app/plugins/app';
 import { copyToClipboard, repUnderscore } from './lib';
 import type { list } from './lib';
 

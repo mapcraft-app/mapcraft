@@ -1,8 +1,8 @@
 import { resolve } from 'path';
-import { minecraft } from 'mapcraft-api';
-import { exposeInMainWorld } from 'app/src/api/plugins/backend';
-import { block, entities, items, minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
-import { envInterface } from '../interface';
+import { minecraft } from 'mapcraft-api/frontend';
+import { exposeInMainWorld } from '@/api/plugins/backend';
+import type { block, entities, items, minecraftVersion } from 'mapcraft-api';
+import type { envInterface } from '../interface';
 
 interface list {
 	id: string,

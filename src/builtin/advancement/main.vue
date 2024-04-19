@@ -116,8 +116,8 @@
 import { computed, defineComponent, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar, QSpinnerPuff } from 'quasar';
-import { capitalize } from 'vue/plugins/app';
-import { mapStore } from 'store/map';
+import { capitalize } from '@/app/plugins/app';
+import { mapStore } from '@/store/map';
 import {
 	adv,
 	getChild,
@@ -349,7 +349,7 @@ export default defineComponent({
 		});
 
 		onBeforeUnmount(() => {
-			clearInterval(autosaveInterval);
+			clearInterval(autosaveInterval as any);
 			saveAll();
 			resetStore(true);
 		});
@@ -435,3 +435,4 @@ export default defineComponent({
 	background-color: rgba(0,0,0,0);
 }
 </style>
+@/app/store/map

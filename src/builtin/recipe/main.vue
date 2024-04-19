@@ -44,7 +44,7 @@
 				animated
 				transition-prev="fade"
 				transition-next="fade"
-				@vnode-updated="tabIsUpdate"
+				@vue:updated="tabIsUpdate"
 			>
 				<q-tab-panel name="player" class="q-pa-none">
 					<craft-player-vue
@@ -142,8 +142,8 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, onBeforeMount, ref, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mapStore } from 'store/map';
-import { capitalize } from 'app/src/vue/plugins/app';
+import { mapStore } from '@/store/map';
+import { capitalize } from '@/app/plugins/app';
 
 import {
 	tableGen,
@@ -400,3 +400,4 @@ export default defineComponent({
 	width: 70%
 }
 </style>
+@/app/store/map

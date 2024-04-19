@@ -2,7 +2,7 @@
  * Import this file inside main process
  */
 import { ipcMain } from 'electron';
-import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface, ipcType } from './ipcType';
+import ipcNaming, { ipcDefinition, ipcFunctions, ipcListInterface, ipcType } from './type';
 
 import dialogDefinitions from './channels/dialog/definitions';
 import dialogFunctions from './channels/dialog/functions';

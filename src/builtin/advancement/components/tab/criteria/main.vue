@@ -255,8 +255,8 @@
 import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue';
 import { minecraft } from 'mapcraft-api/frontend';
 import { useI18n } from 'vue-i18n';
-import { capitalize } from 'vue/plugins/app';
-import { mapStore } from 'src/store/map';
+import { capitalize } from '@/app/plugins/app';
+import { mapStore } from '@/store/map';
 
 import { selectedAdvancement } from '../../../lib/handleAdv';
 import { criteria } from '../../../interfaces/1.20';
@@ -495,3 +495,4 @@ export default defineComponent({
 	width: 50%;
 }
 </style>
+@/app/store/map

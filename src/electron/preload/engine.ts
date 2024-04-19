@@ -1,17 +1,11 @@
-import { buildMap, engine, sql } from 'mapcraft-api/backend';
-import { log } from 'api/log';
-
-import type datapack from 'mapcraft-api/dist/types/src/backend/engine/datapack';
-import type resource from 'mapcraft-api/dist/types/src/backend/engine/resourcepack';
-import database, { tableInterface} from 'mapcraft-api/dist/types/src/backend/sql';
-import type { envInterface } from 'mapcraft-api/dist/types/src/backend/engine/interface';
-import { RunResult } from 'better-sqlite3';
-import { minecraftVersion } from 'mapcraft-api/dist/types/src/minecraft/interface';
+import { buildMap, datapack, resourcepack, sql } from 'mapcraft-api/backend';
+import { log } from '@/api/log';
+import type { tableInterface, minecraftVersion, envInterface } from 'mapcraft-api';
 
 export interface mapEngineInstanceInterface {
 	build: buildMap,
 	datapack: datapack,
-	resourcepack: resource
+	resourcepack: resourcepack
 }
 
 export interface mapEngineInfoTable {
@@ -19,14 +13,17 @@ export interface mapEngineInfoTable {
 	minecraftVersion: string;
 }
 
+interface RunResult {
+	changes: number;
+	lastInsertRowid: number | bigint;
+}
+
 export class mapEngine {
 	private __env: envInterface;
 	private __name: string;
 	private __version: minecraftVersion;
-
 	public instance: mapEngineInstanceInterface;
-	public database: database;
-
+	public database: sql;
 	public eventStatus: string;
 	
 	constructor(env: envInterface, name: string) {
@@ -47,8 +44,8 @@ export class mapEngine {
 	public init(version: minecraftVersion): void {
 		this.__version = version;
 		this.instance = {} as mapEngineInstanceInterface;
-		this.instance.datapack = new engine.data(this.__env, this.__name, version);
-		this.instance.resourcepack = new engine.resource(this.__env, this.__name, version);
+		this.instance.datapack = new datapack(this.__env, this.__name, version);
+		this.instance.resourcepack = new resourcepack(this.__env, this.__name, version);
 		this.instance.build = new buildMap(this.instance.datapack, this.instance.resourcepack);
 		this.instance.build.on('change', (e) => this.eventStatus = e as string);
 	}
@@ -109,7 +106,7 @@ export default {
 	init: (version: minecraftVersion): void => {
 		mapEngineInstance.init(version);
 	},
-	database: (): database => mapEngineInstance.database,
+	database: (): sql => mapEngineInstance.database,
 	instance: (): mapEngine => mapEngineInstance,
 	build: (): Promise<string> => mapEngineInstance.build(),
 	buildStatus: (): string => mapEngineInstance.eventStatus,

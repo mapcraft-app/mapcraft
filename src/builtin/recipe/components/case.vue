@@ -34,7 +34,7 @@ export default defineComponent({
 		}
 	},
 	emits: ['remove', 'select'],
-	setup (props, { emit }) {
+	setup (_props, { emit }) {
 		const remove = () => {
 			emit('remove');
 		};

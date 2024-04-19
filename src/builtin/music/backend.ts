@@ -1,4 +1,4 @@
-import { exposeInMainWorld } from 'app/src/api/plugins/backend';
+import { exposeInMainWorld } from '@/api/plugins/backend';
 import { existsSync, readFileSync } from 'fs';
 import { cp, mkdir, rm, writeFile } from 'fs/promises';
 import { basename, resolve } from 'path';

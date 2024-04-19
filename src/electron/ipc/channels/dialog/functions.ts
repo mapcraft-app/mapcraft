@@ -1,6 +1,6 @@
 import { dialog, shell, BrowserWindow } from 'electron';
 import type Electron from 'electron';
-import type { ipcFunctions } from 'electron/ipc/ipcType';
+import type { ipcFunctions } from '@/main/src/electron/ipc/type';
 
 export default [
 	async (event: Electron.IpcMainEvent, defaultPath: string = String(process.env.GAME), filters?: Electron.FileFilter[]): Promise<any> => {

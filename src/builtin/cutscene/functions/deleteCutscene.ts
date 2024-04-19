@@ -1,9 +1,8 @@
 import { rm } from 'fs/promises';
 import { resolve } from 'path';
-import { fs } from 'mapcraft-api/backend';
-import type database from 'mapcraft-api/dist/types/src/backend/sql';
+import { fs, type sql } from 'mapcraft-api/backend';
 
-const deleteCutscene = async(id: number, db: database, path: {dir: string, main: string}): Promise<void> => {
+const deleteCutscene = async(id: number, db: sql, path: {dir: string, main: string}): Promise<void> => {
 	await Promise.all([
 		db.update('DELETE FROM cutscenePoint WHERE cutsceneId = ?', id),
 		db.update('DELETE FROM cutscene WHERE id = ?', id),
@@ -14,7 +13,7 @@ const deleteCutscene = async(id: number, db: database, path: {dir: string, main:
 
 export default (
 	id: number,
-	db: database,
+	db: sql,
 	path: {dir: string, main: string}
 ): Promise<void> => {
 	/*
