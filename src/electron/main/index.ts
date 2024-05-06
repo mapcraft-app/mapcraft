@@ -29,7 +29,15 @@ const SecurityPolicy: string = [
 ].join(' ');
 
 protocol.registerSchemesAsPrivileged([
-	{ scheme: 'app', privileges: { bypassCSP: true }}
+	{
+		scheme: 'app',
+		privileges: {
+			bypassCSP: true,
+			secure: true,
+			supportFetchAPI: true,
+			stream: true
+		}
+	}
 ]);
 
 app.whenReady().then(async () => {
@@ -41,13 +49,12 @@ app.whenReady().then(async () => {
 			}
 		});
 	});
-	protocol.handle('app', (req) => {
-		return net.fetch(
-			normalize(
-				decodeURIComponent(req.url.replace(/app:\/{2,3}/gi, ''))
-			)
-		);
-	});
+
+	protocol.handle('app', (req) => net.fetch(
+		normalize(
+			decodeURIComponent(req.url.replace(/app:\/{2,3}/gi, ''))
+		)
+	));
 
 	generateEnv(app); // Generate process.env variables
 	log = (await import('@/api/log')).log;

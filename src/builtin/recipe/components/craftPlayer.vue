@@ -7,14 +7,22 @@
 		<div class="craft_background">
 			<div class="recipes_cases_2x2">
 				<template v-for="i in 4" :key="i">
-					<case-vue :data="recipeCases[i - 1]" @remove="removeSelect(i - 1)" @select="openSelect(i - 1)" />
+					<case-vue 
+						:data="recipe.cases[i - 1]"
+						@remove="removeSelect(i - 1)"
+						@select="openSelect(i - 1)"
+					/>
 				</template>
 			</div>
 			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
 			<div class="craft_result">
-				<case-vue :data="recipeCases[4]" @remove="removeSelect(4)" @select="openSelect(4)" />
+				<case-vue
+					:data="recipe.cases[4]"
+					@remove="removeSelect(4)"
+					@select="openSelect(4)"
+				/>
 				<q-input
-					v-model.number="count"
+					v-model.number="recipe.result.count"
 					input-class="input-reduce"
 					square filled dense
 					class="input" type="number" value="1"
@@ -23,10 +31,7 @@
 			</div>
 		</div>
 	</div>
-	<option-table-vue
-		:config="options"
-		@change="changeOptions"
-	/>
+	<option-table-vue :config="recipe.options" />
 	<optionButtonVue
 		@create="createRecipe"
 		@delete="deleteRecipe"
@@ -34,10 +39,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
-import type { PropType } from 'vue';
-import random from './random';
-import { caseData, resultTable } from '../interface';
+import { defineComponent, onMounted, ref, toRaw, watch, type PropType } from 'vue';
+import { selectedRecipeData, selectedRecipeName } from '../store';
+import { resultTable } from '../interface';
 
 import caseVue from './case.vue';
 import optionButtonVue from './optionButton.vue';
@@ -47,98 +51,90 @@ export default defineComponent({
 	name: 'CraftPlayer',
 	components: { caseVue, optionButtonVue, optionTableVue },
 	props: {
-		read: {
-			type: Object as PropType<resultTable>,
-			default: undefined,
-			required: false
-		},
 		selection: {
 			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
 			default: undefined,
 			required: false
 		}
 	},
-	emits: ['openDialog', 'create', 'delete'],
+	emits: ['openDialog', 'create', 'error', 'delete'],
 	setup (props, { emit }) {
-		const recipeCases = ref<(caseData)[]>([
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' },
-		]);
-		const count = ref<number>(0);
-		const isSelected = ref<boolean>(false);
-		const options = ref<{ shapeless: boolean, exactPosition: boolean, group: string | null, outputName: string | null }>({
-			shapeless: false,
-			exactPosition: false,
-			group: null,
-			outputName: random()
+		const recipe = ref<resultTable>({
+			cases: [],
+			result: {
+				item: {} as any,
+				count: 0
+			},
+			options: {
+				exact: false
+			}
 		});
 
-		const removeSelect = (id: number) => {
-			recipeCases.value[id] = { type: 'block', id: '', path: '' };
-		};
-		const openSelect = (id: number) => {
-			isSelected.value = true;
-			emit('openDialog', { type: 'recipe', id });
+		const readData = () => {
+			if (
+				!selectedRecipeData.value
+				|| !['player'].includes((selectedRecipeData.value as any).type)
+			)
+				return;
+			try {
+				recipe.value = window.recipe.read.table(
+					selectedRecipeName.value as string,
+					toRaw(selectedRecipeData.value)
+				);
+			} catch {
+				recipe.value = {
+					cases: [],
+					result: {
+						item: {} as any,
+						count: 0
+					},
+					options: {
+						exact: false
+					}
+				};
+			}
 		};
 
-		const changeOptions = (d: { shapeless: boolean, exactPosition: boolean, group: string | null, outputName: string | null }) => {
-			options.value.exactPosition = d.exactPosition;
-			options.value.group = d.group;
-			options.value.outputName = d.outputName;
-			options.value.shapeless = d.shapeless;
+		const removeSelect = (id: number) => {
+			if (recipe.value)
+				recipe.value.cases[id] = { type: 'block', id: '', path: '' };
 		};
-		const createRecipe = () => {
-			emit('create', {
-				recipes: recipeCases.value.slice(0, 4).map((e) => e.id),
-				result: recipeCases.value[4].id,
-				count: count.value,
-				options: {
-					shapeless: options.value.shapeless,
-					exactPosition: options.value.exactPosition,
-					group: options.value.group,
-					outputName: options.value.outputName
-				}
+
+		const openSelect = (id: number) => emit('openDialog', { type: 'recipe', id });
+
+		const createRecipe = () => window.recipe.generate.table({
+			recipes: recipe.value.cases.slice(0, 4).map((e) => e.id),
+			result: recipe.value.cases[4].id,
+			count: recipe.value.result.count,
+			options: {
+				shapeless: (recipe.value.options.exact === false),
+				exactPosition: (recipe.value.options.exact === true),
+				group: recipe.value.options.group ?? null,
+				outputName: recipe.value.options.outputName ?? null
+			}
+		})
+			.then(() => emit('create', recipe.value.options.outputName))
+			.catch((e) => {
+				window.log.error('table', e);
+				emit('error', recipe.value.options.outputName);
 			});
-		};
-		const deleteRecipe = () => {
-			emit('delete', options.value.outputName);
-		};
+
+		const deleteRecipe = () => emit('delete', recipe.value.options.outputName);
 
 		onMounted(() => {
-			watch(() => props.read, (after) => {
-				if (!after)
-					return;
-				recipeCases.value = after.cases;
-				count.value = after.result.count;
-				changeOptions({
-					shapeless: false,
-					exactPosition: after.options.exact,
-					group: after.options.group ?? null,
-					outputName: after.options.outputName ?? null
-				});
-			});
-
+			readData();
+			watch(() => selectedRecipeName.value, () => readData());
 			watch(() => props.selection, (after) => {
-				if (after && isSelected.value) {
-					isSelected.value = false;
-					recipeCases.value[after.case] = after;
-				}
+				if (after)
+					recipe.value.cases[after.case] = after;
 			});
 		});
 
 		return {
-			recipeCases,
-			count,
-			isSelected,
-			options,
-
+			selectedRecipeData,
+			recipe,
 			removeSelect,
 			openSelect,
-
-			changeOptions,
 			createRecipe,
 			deleteRecipe
 		};

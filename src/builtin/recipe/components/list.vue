@@ -61,7 +61,7 @@ export default defineComponent({
 		};
 
 		onBeforeMount(() => {
-			timer = setInterval(() => getFiles(), 10000);
+			timer = setInterval(() => getFiles(), 2500);
 			getFiles();
 		});
 

@@ -209,6 +209,7 @@ class recipe {
 			model.group = data.options.group;
 		else
 			delete model.group;
+
 		if (data.options.shapeless) {
 			model.type = 'minecraft:crafting_shapeless';
 			delete model.pattern;
@@ -411,25 +412,11 @@ class recipe {
 	}
 
 	recipeType(data: any) {
-		switch (data.type) {
-		case 'minecraft:crafting_shapeless':
-		case 'minecraft:crafting_shaped':
-			return 'table';
-			// return this.readTable(name, data);
-		case 'minecraft:smelting':
-		case 'minecraft:blasting':
-		case 'minecraft:campfire_cooking':
-		case 'minecraft:smoking':
-			return 'furnace';
-			// return this.readFurnace(name, data);
-		case 'minecraft:smithing':
-			return 'smithing';
-			// return this.readSmithing(name, data);
-		case 'minecraft:stonecutting':
-		default:
-			return 'stonecutter';
-			// return this.readStonecutter(name, data);
-		}
+		if (Object.prototype.hasOwnProperty.call(data, 'isPlayer'))
+			return (data.isPlayer === true)
+				? 'player'
+				: 'crafting';
+		return data.type;
 	}
 
 	readTable(name: string, data: any): resultTable {
@@ -477,10 +464,12 @@ class recipe {
 		ret.options.outputName = name;
 		if (data.group)
 			ret.options.group = data.group;
-		if (data.type === 'minecraft:crafting_shapeless') {
+		if (data.type.includes('shapeless')) {
+			ret.options.exact = false;
 			for (const i in data.ingredients)
 				addCase(data.ingredients[i].item, Number(i));
 		} else {
+			ret.options.exact = true;
 			for (let row = 0, _case = 0; data.pattern.length > row; row++) {
 				_case = row * size;
 				const items: string[] = Array.from(data.pattern[row]);

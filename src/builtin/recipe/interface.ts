@@ -1,9 +1,20 @@
 /**
+ * furnace: smelting
+ * blast_furnace: blasting
+ * campfire: campfire_cooking
+ * smoker: smoking
+ */
+export type typeFurnace = 'minecraft:smelting' | 'minecraft:blasting' | 'minecraft:campfire_cooking' | 'minecraft:smoking';
+export type typeCraft = 'minecraft:crafting_shapeless' | 'minecraft:crafting_shaped';
+export type typeStoneCutter = 'minecraft:stonecutting';
+export type typeSmithing = 'minecraft:smithing';
+
+/**
  * shapeless, ingredients is using, and pattern & key is deleted
  * shape, ingredients is deleted, and pattern & key is using
  */
 export interface crafting {
-	type: 'minecraft:crafting_shapeless' | 'minecraft:crafting_shaped',
+	type: typeCraft,
 	group?: string,
 	ingredients?: { item: string }[],
 	pattern?: string[],
@@ -15,14 +26,6 @@ export interface crafting {
 	isPlayer: boolean,
 	exactPosition: boolean
 }
-
-/**
- * furnace: smelting
- * blast_furnace: blasting
- * campfire: campfire_cooking
- * smoker: smoking
- */
-export type typeFurnace = 'minecraft:smelting' | 'minecraft:blasting' | 'minecraft:campfire_cooking' | 'minecraft:smoking';
 
 export interface furnace {
 	type: typeFurnace,
@@ -36,7 +39,7 @@ export interface furnace {
 }
 
 export interface stonecutter {
-	type: string,
+	type: typeStoneCutter,
 	group?: string,
 	ingredient: {
 		item: string
@@ -46,7 +49,7 @@ export interface stonecutter {
 }
 
 export interface smithing {
-	type: string,
+	type: typeSmithing,
 	group?: string,
 	base: {
 		item: string

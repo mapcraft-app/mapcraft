@@ -19,6 +19,7 @@
 					animated
 					swipeable
 					vertical
+					style="background-color: transparent;"
 					transition-prev="jump-up"
 					transition-next="jump-down"
 				>

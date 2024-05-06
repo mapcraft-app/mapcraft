@@ -55,7 +55,7 @@ export function createWindow(args: optionWindows = {}): BrowserWindow {
 			defaultEncoding: 'utf-8',
 			enableWebSQL: false,
 			nodeIntegration: args.nodeIntegration ?? false,
-			webSecurity: true,
+			webSecurity: !import.meta.env.DEV,
 			sandbox: false,
 			preload: args.preload ?? resolve(__dirname, 'preload.mjs')
 		}

@@ -30,7 +30,7 @@ export default defineComponent({
 		data: {
 			type: Object as PropType<caseData>,
 			default: {} as caseData,
-			required: true
+			required: false
 		}
 	},
 	emits: ['remove', 'select'],

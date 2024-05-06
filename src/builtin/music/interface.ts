@@ -1,4 +1,6 @@
-export type category = 'none' | 'ambient' | 'block' | 'hostile' | 'master' | 'music' | 'neutral' | 'player' | 'record' | 'voice' | 'weather';
+export type category =
+	'none' | 'ambient' | 'block' | 'hostile' | 'master' | 'music' |
+	'neutral' | 'player' | 'record' | 'voice' | 'weather';
 
 export type type = 'event' | 'sound';
 

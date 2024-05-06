@@ -9,7 +9,10 @@ import {
 	stonecutter,
 	stonecutterGen,
 	stonecutterTable,
-	tableGen
+	tableGen,
+	typeFurnace,
+	typeSmithing,
+	typeStoneCutter
 } from './interface';
 import { envInterface } from '../interface';
 
@@ -27,7 +30,7 @@ export declare global {
 				smithing: (data: smithingGen) => Promise<smithing>
 			},
 			read: {
-				type: (data: any) => 'furnace' | 'stonecutter' | 'smithing' | 'table',
+				type: (data: any) => typeFurnace | typeStoneCutter | typeSmithing | 'crafting' | 'player'
 				table: (name: string, data: any) => resultTable,
 				furnace: (name: string, data: any) => furnaceTable,
 				stonecutter: (name: string, data: any) => stonecutterTable,

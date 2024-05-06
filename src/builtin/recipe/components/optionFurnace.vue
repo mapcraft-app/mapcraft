@@ -1,18 +1,18 @@
 <template>
 	<div class="row justify-evenly q-ma-md">
 		<div class="column justify-center items-center">
-			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.furnace.experience')) }}</span>
 			<q-input
-				v-model.number="data.experience"
+				v-model.number="$props.config.experience"
+				:label="$capitalize($t('builtin.recipe.options.furnace.experience'))"
 				type="number"
 				step="0.1" min="0"
 				class="max-width"
 			/>
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.furnace.time')) }}</span>
 			<q-input
-				v-model.number="data.time"
+				v-model.number="$props.config.time"
+				:label="$capitalize($t('builtin.recipe.options.furnace.time'))"
 				type="number"
 				step="0.1" min="0"
 				class="max-width"
@@ -23,65 +23,42 @@
 			</q-input>
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.group')) }}</span>
-			<q-input v-model="data.group" :label="$capitalize($t('builtin.recipe.options.group'))" />
+			<q-input
+				v-model="$props.config.group"
+				:label="$capitalize($t('builtin.recipe.options.group'))"
+			/>
 		</div>
 		<div class="column justify-center items-center">
-			<span class="text-body1">{{ $capitalize($t('builtin.recipe.options.name')) }}</span>
-			<q-input v-model="data.outputName" :label="$capitalize($t('builtin.recipe.options.name'))" />
+			<q-input
+				v-model="$props.config.outputName"
+				:label="$capitalize($t('builtin.recipe.options.name'))"
+			/>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, watch } from 'vue';
-import type { PropType } from 'vue';
+import { defineComponent, onBeforeMount, type PropType } from 'vue';
+import random from './random';
 
 export default defineComponent({
-	name: 'OptionTable',
+	name: 'OptionFurnace',
 	props: {
 		config: {
 			type: Object as PropType<{
 				experience: number,
 				time: number,
-				group: string | null,
-				outputName: string | null
+				group?: string,
+				outputName?: string
 			}>,
 			required: true
 		}
 	},
-	emits: ['change'],
-	setup (props, { emit }) {
-		const data = reactive({
-			experience: props.config.experience,
-			time: props.config.time,
-			group: props.config.group,
-			outputName: props.config.outputName
+	setup (props) {
+		onBeforeMount(() => {
+			if (!props.config.outputName)
+				props.config.outputName = random();
 		});
-
-		onMounted(() => {
-			watch(props.config, (d) => {
-				if (d) {
-					data.experience = d.experience;
-					data.time = d.time;
-					data.group = d.group;
-					data.outputName = d.outputName;
-				}
-			});
-			watch(data, (newData) => {
-				emit('change', newData);
-			});
-		});
-
-		return {
-			data
-		};
 	}
 });
 </script>
-
-<style scoped>
-.max-width {
-	width: 6em;
-}
-</style>

@@ -30,7 +30,9 @@ class music {
 		};
 		this.env = env;
 		this.id = 0;
-		this.json = JSON.parse(readFileSync(this.path.json, { encoding: 'utf-8', flag: 'r' })) as Record<string, sound>;
+		this.json = JSON.parse(
+			readFileSync(this.path.json, { encoding: 'utf-8', flag: 'r' })
+		) as Record<string, sound>;
 		for (const id in this.json)
 			this.id = this.json[id].id;
 		if (!existsSync(this.datapack.function))
@@ -46,7 +48,11 @@ class music {
 	}
 
 	async saveFile(data?: Record<string, sound>) {
-		return writeFile(this.path.json, JSON.stringify(data ?? this.json, null, 2), { encoding: 'utf-8', flag: 'w' });
+		return writeFile(
+			this.path.json,
+			JSON.stringify(data ?? this.json, null, 2),
+			{ encoding: 'utf-8', flag: 'w' }
+		);
 	}
 
 	async addMusic(sound: sound) {
@@ -179,7 +185,8 @@ exposeInMainWorld('music', {
 			name: string,
 			index: number,
 			category: category,
-			duration: number}) => __instance__.datapackCreateMusic(d),
+			duration: number}
+		) => __instance__.datapackCreateMusic(d),
 		delete: (id: number, index: number) => __instance__.datapackDeleteMusic(id, index)
 	},
 	music: {

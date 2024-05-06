@@ -1,16 +1,29 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">{{ $capitalize($t('builtin.recipe.tabs.stonecutter')) }}</span>
+		<span class="text-h6 q-pb-sm">
+			{{ $capitalize($t('builtin.recipe.tabs.stonecutter')) }}
+		</span>
 		<q-separator />
 	</div>
 	<div class="craft">
 		<div class="craft_background">
-			<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
-			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
+			<case-vue
+				:data="recipe.recipe"
+				@remove="removeSelect('recipe')"
+				@select="openSelect('recipe')"
+			/>
+			<img
+				class="craft_arrow"
+				:src="$toPublic('imgs/minecraft/arrow.png')"
+			/>
 			<div class="craft_result">
-				<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
+				<case-vue
+					:data="recipe.result"
+					@remove="removeSelect('result')"
+					@select="openSelect('result')"
+				/>
 				<q-input
-					v-model.number="count"
+					v-model.number="recipe.count"
 					input-class="input-reduce"
 					square filled dense
 					class="input" type="number" value="1"
@@ -19,6 +32,7 @@
 			</div>
 		</div>
 	</div>
+	<option-base :config="recipe" />
 	<optionButtonVue
 		@create="createRecipe"
 		@delete="deleteRecipe"
@@ -26,22 +40,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
-import random from './random';
+import { defineComponent, onMounted, ref, toRaw, watch } from 'vue';
 import type { PropType } from 'vue';
-import { caseData, stonecutterGen, stonecutterTable } from '../interface';
-
+import { caseData, stonecutterTable } from '../interface';
 import caseVue from './case.vue';
 import optionButtonVue from './optionButton.vue';
-
-interface options {
-	group: string | null,
-	outputName: string | null
-}
+import optionBase from './optionBase.vue';
+import { selectedRecipeData, selectedRecipeName } from '../store';
 
 export default defineComponent({
 	name: 'Stonecutter',
-	components: { caseVue, optionButtonVue },
+	components: { caseVue, optionButtonVue, optionBase },
 	props: {
 		read: {
 			type: Object as PropType<stonecutterTable>,
@@ -54,73 +63,68 @@ export default defineComponent({
 			required: false
 		}
 	},
-	emits: ['openDialog', 'create', 'delete'],
+	emits: ['openDialog', 'create', 'error', 'delete'],
 	setup (props, { emit }) {
-		const recipeCases = ref<(caseData)[]>([
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' }
-		]);
-		const count = ref<number>(0);
-		const isSelected = ref<boolean>(false);
-		const options = ref<options>({
-			group: null,
-			outputName: random()
+		const recipe = ref<stonecutterTable>({
+			recipe: {} as caseData,
+			result: {} as caseData,
+			count: 0
 		});
 		
-		const removeSelect = (id: number) => {
-			recipeCases.value[id] = { type: 'block', id: '', path: '' };
-		};
-		const openSelect = (id: number) => {
-			isSelected.value = true;
-			emit('openDialog', { type: 'recipe', id });
+		const removeSelect = (id: string) => {
+			(recipe.value as Record<string, any>)[id] = { type: 'block', id: '', path: '' };
 		};
 
-		const changeOptions = (d: options) => {
-			options.value.group = d.group;
-			options.value.outputName = d.outputName;
+		const openSelect = (id: string) => emit('openDialog', { type: 'recipe', id });
+
+		const readData = () => {
+			if (
+				!selectedRecipeData.value
+				|| (selectedRecipeData.value as any).type !== 'minecraft:stonecutting'
+			)
+				return;
+			try {
+				recipe.value = window.recipe.read.stonecutter(
+					selectedRecipeName.value as string,
+					toRaw(selectedRecipeData.value)
+				);
+			} catch {
+				recipe.value = {
+					recipe: {} as caseData,
+					result: {} as caseData,
+					count: 0
+				};
+			}
 		};
 
-		const createRecipe = () => {
-			emit('create', {
-				recipe: recipeCases.value[0].id,
-				result: recipeCases.value[1].id,
-				count: count.value,
-				group: options.value.group,
-				outputName: options.value.outputName
-			} as stonecutterGen);
-		};
-		const deleteRecipe = () => {
-			emit('delete', options.value.outputName);
-		};
-
-		onMounted(() => {
-			watch(() => props.read, (after) => {
-				if (!after)
-					return;
-				recipeCases.value[0] = after.recipe;
-				recipeCases.value[1] = after.result;
-				count.value = after.count;
-				options.value.group = after.group ?? null;
-				options.value.outputName = after.outputName ?? null;
+		const createRecipe = () => window.recipe.generate.stonecutter({
+			recipe: recipe.value.recipe.id,
+			result: recipe.value.result.id,
+			count: recipe.value.count,
+			group: recipe.value.group,
+			outputName: recipe.value.outputName
+		})
+			.then(() => emit('create', recipe.value.outputName))
+			.catch((e) => {
+				window.log.error('table', e);
+				emit('error', recipe.value.outputName);
 			});
 
+		const deleteRecipe = () => emit('delete', recipe.value.outputName);
+
+		onMounted(() => {
+			readData();
+			watch(() => selectedRecipeName.value, () => readData());
 			watch(() => props.selection, (after) => {
-				if (after && isSelected.value) {
-					isSelected.value = false;
-					recipeCases.value[after.case] = after;
-				}
+				if (after)
+					(recipe.value as Record<string, any>)[after.case] = after;
 			});
 		});
 
 		return {
-			recipeCases,
-			count,
-			isSelected,
-			options,
-
+			recipe,
 			removeSelect,
 			openSelect,
-			changeOptions,
 			createRecipe,
 			deleteRecipe
 		};

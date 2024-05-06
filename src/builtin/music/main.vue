@@ -50,8 +50,15 @@
 						<q-expansion-item
 							v-for="(sound, key) in soundList[selectedSoundKey].sounds"
 							:key="key"
-							:label="sound.name.length ? sound.name : 'blank'"
 						>
+							<template v-slot:header>
+								<q-item-section>
+									<span v-if="sound.name.length">
+										{{ sound.name }}
+									</span>
+									<q-icon v-else name="link_off" />
+								</q-item-section>
+							</template>
 							<sound-vue
 								:id="soundList[selectedSoundKey].id"
 								:category="soundList[selectedSoundKey].category"

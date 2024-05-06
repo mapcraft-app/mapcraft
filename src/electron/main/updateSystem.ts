@@ -42,7 +42,10 @@ const install = async (apiData: apiData, pathVersion: string): Promise<void> => 
 export default async (): Promise<void> => {
 	const pathVersion = resolve(process.env.UPDATE, 'version');
 	const apiData: apiData = await fetch('https://api.mapcraft.app/software/update', { method: 'GET' })
-		.then((d) => d.json());
+		.then((d) => d.json())
+		.catch(() => {
+			/// make nothing
+		});
 
 	if (apiData.statusCode === 200) {
 		const version = (existsSync(pathVersion))

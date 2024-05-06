@@ -24,6 +24,7 @@ export default {
 		},
 		buttons: {
 			create: 'create recipe',
+			save: 'save recipe',
 			delete: 'delete recipe'
 		},
 		group: 'group',

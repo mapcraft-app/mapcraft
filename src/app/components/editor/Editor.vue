@@ -75,8 +75,6 @@ export default defineComponent({
 			aceEditor.session.setValue(props.data.data);
 			aceEditor.session.setMode(`ace/mode/${props.data.extension}`);
 			title.value = props.data.filename;
-
-			console.log(props.data, aceEditor);
 		});
 
 		return {

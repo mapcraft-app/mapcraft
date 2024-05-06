@@ -21,8 +21,10 @@
 				ref="audioPlayer"
 				class="audio-player"
 				controls
-				:src="$path(getSound(sound.name))"
+				preload="auto"
+				:src="(sound.name.length > 0) ? getSound(sound.name) : undefined"
 				@durationchange="changeDuration"
+				@change="() => console.log('change')"
 			>
 			</audio>
 		</q-card-section>
@@ -121,11 +123,9 @@ export default defineComponent({
 
 		const copySound = (files: FileList) => {
 			if (props.selectedSound) {
-				console.log(props.sound, files);
-
 				window.music.sound.upload({
 					index: props.index,
-					name: props.sound.name,
+					name: props.selectedSound,
 					file: files[0]
 				})
 					.then((d) => {

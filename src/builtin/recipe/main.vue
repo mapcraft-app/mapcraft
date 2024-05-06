@@ -1,14 +1,17 @@
 <template>
-	<div class="row main">
-		<div class="left">
-			<list-vue @select="handleListSelection" />
-		</div>
-		<div class="right">
+	<q-splitter
+		v-model="splitter"
+		:limits="[15,35]"
+	>
+		<template v-slot:before>
+			<list @select="handleListSelection" />
+		</template>
+		<template v-slot:after>
 			<q-tabs
-				v-model="selectedTab"
+				v-model="selectedRecipeType"
 				dense
 				infinite
-				class="text-grey q-pb-md"
+				class="text-grey"
 				active-color="primary"
 				indicator-color="primary"
 				align="justify"
@@ -16,121 +19,119 @@
 				<q-tab name="player">
 					<img :src="$toPublic('imgs/minecraft/player.png')" />
 				</q-tab>
-				<q-tab name="craft">
+				<q-tab name="crafting">
 					<img :src="$toPublic('imgs/minecraft/block/crafting_table.webp')" />
 				</q-tab>
-				<q-tab name="furnace">
+				<q-tab name="minecraft:smelting">
 					<img :src="$toPublic('imgs/minecraft/block/furnace.webp')" />
 				</q-tab>
-				<q-tab name="blast">
+				<q-tab name="minecraft:blasting">
 					<img :src="$toPublic('imgs/minecraft/block/blast_furnace.webp')" />
 				</q-tab>
-				<q-tab name="campfire">
+				<q-tab name="minecraft:campfire_cooking">
 					<img :src="$toPublic('imgs/minecraft/block/campfire.webp')" />
 				</q-tab>
-				<q-tab name="smoker">
+				<q-tab name="minecraft:smoking">
 					<img :src="$toPublic('imgs/minecraft/block/smoker.webp')" />
 				</q-tab>
-				<q-tab name="stonecutter">
+				<q-tab name="minecraft:stonecutting">
 					<img :src="$toPublic('imgs/minecraft/block/stonecutter.webp')" />
 				</q-tab>
-				<q-tab name="smithing">
+				<q-tab name="minecraft:smithing">
 					<img :src="$toPublic('imgs/minecraft/block/smithing_table.webp')" />
 				</q-tab>
 			</q-tabs>
 			<q-tab-panels
-				v-model="selectedTab"
-				style="height: calc(100% - 65px);"
+				v-model="selectedRecipeType"
+				class="tab"
 				animated
-				transition-prev="fade"
-				transition-next="fade"
-				@vue:updated="tabIsUpdate"
+				style="background-color: transparent;"
 			>
 				<q-tab-panel name="player" class="q-pa-none">
-					<craft-player-vue
-						:read="readPlayer"
+					<craft-player
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationTable"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="craft" class="q-pa-none">
-					<craft-table-vue
-						:read="readTable"
+				<q-tab-panel name="crafting" class="q-pa-none">
+					<craft-table
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationTable"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="furnace" class="q-pa-none">
-					<furnace-vue
-						:name="$capitalize($t('builtin.recipe.tabs.furnace'))"
+				<q-tab-panel name="minecraft:smelting" class="q-pa-none">
+					<furnace
 						type="minecraft:smelting"
-						:read="readFurnace"
+						:name="$capitalize($t('builtin.recipe.tabs.furnace'))"
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationFurnace"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="blast" class="q-pa-none">
-					<furnace-vue
-						:name="$capitalize($t('builtin.recipe.tabs.blast'))"
+				<q-tab-panel name="minecraft:blasting" class="q-pa-none">
+					<furnace
 						type="minecraft:blasting"
-						:read="readFurnace"
+						:name="$capitalize($t('builtin.recipe.tabs.blast'))"
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationFurnace"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="campfire" class="q-pa-none">
-					<furnace-vue
-						:name="$capitalize($t('builtin.recipe.tabs.campfire'))"
+				<q-tab-panel name="minecraft:campfire_cooking" class="q-pa-none">
+					<furnace
 						type="minecraft:campfire_cooking"
-						:read="readFurnace"
+						:name="$capitalize($t('builtin.recipe.tabs.campfire'))"
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationFurnace"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="smoker" class="q-pa-none">
-					<furnace-vue
-						:name="$capitalize($t('builtin.recipe.tabs.smoker'))"
+				<q-tab-panel name="minecraft:smoking" class="q-pa-none">
+					<furnace
 						type="minecraft:smoking"
-						:read="readFurnace"
+						:name="$capitalize($t('builtin.recipe.tabs.smoker'))"
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationFurnace"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="stonecutter" class="q-pa-none">
-					<stonecutter-vue
-						:read="readStonecutter"
+				<q-tab-panel name="minecraft:stonecutting" class="q-pa-none">
+					<stonecutter
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationStonecutter"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
-				<q-tab-panel name="smithing" class="q-pa-none">
-					<smithing-vue
-						:read="readSmithing"
+				<q-tab-panel name="minecraft:smithing" class="q-pa-none">
+					<smithing
 						:selection="selectionReturn"
 						@open-dialog="openDialog"
-						@create="creationSmithing"
+						@create="creationSuccessNotif"
+						@error="creationErrorNotif"
 						@delete="deletion"
 					/>
 				</q-tab-panel>
 			</q-tab-panels>
-		</div>
-	</div>
+		</template>
+	</q-splitter>
 	<keep-alive>
-		<dialog-vue
+		<dialog-item-selection
 			:modal="openSelectionModal"
 			@close="handleClose"
 			@selected="handleSelection"
@@ -139,64 +140,51 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, onBeforeMount, ref } from 'vue';
 import { useQuasar } from 'quasar';
-import { defineComponent, onBeforeMount, ref, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mapStore } from '@/store/map';
 import { capitalize } from '@/app/plugins/app';
-
 import {
-	tableGen,
-	tabsName,
-	furnaceGen,
-	furnaceTable,
-	smithingGen,
-	stonecutterGen,
-	resultTable,
-	stonecutterTable,
-	smithingTable
-} from './interface';
-import craftPlayerVue from './components/craftPlayer.vue';
-import craftTableVue from './components/craftTable.vue';
-import furnaceVue from './components/furnace.vue';
-import listVue from './components/list.vue';
-import dialogVue from './components/dialog.vue';
-import smithingVue from './components/smithing.vue';
-import stonecutterVue from './components/stonecutter.vue';
-
-interface selectedRecipe {
-	name: string;
-	type: tabsName;
-	path: string;
-}
+	selectedRecipeType,
+	selectedRecipeData,
+	selectedRecipeName
+} from './store';
+import list from './components/list.vue';
+import dialogItemSelection from './components/dialog.vue';
+import craftPlayer from './components/craftPlayer.vue';
+import craftTable from './components/craftTable.vue';
+import furnace from './components/furnace.vue';
+import smithing from './components/smithing.vue';
+import stonecutter from './components/stonecutter.vue';
 
 export default defineComponent({
-	name: 'CutsceneBuiltin',
+	name: 'BuiltinRecipeMain',
 	components: {
-		craftPlayerVue,
-		craftTableVue,
-		furnaceVue,
-		listVue,
-		dialogVue,
-		smithingVue,
-		stonecutterVue
+		list,
+		dialogItemSelection,
+		craftPlayer,
+		craftTable,
+		furnace,
+		smithing,
+		stonecutter
 	},
 	setup () {
 		const $q = useQuasar();
 		const { t } = useI18n();
 		const storeMap = mapStore();
-		const selectedTab = ref<tabsName>('player');
-		const selectedRecipe = ref<selectedRecipe | null>(null);
 
-		//#region Block/Item Modal
+		const splitter = ref<number>(30);
 		const openSelectionModal = ref<boolean>(false);
 		const saveModalData = ref<{ type: 'recipe' | 'result', id: number}>();
-		const selectionReturn = ref<{ type: 'block' | 'item', id: string, path: string, case: number }>();
-
+		const selectionReturn = ref<{
+			type: 'block' | 'item',
+			id: string,
+			path: string, case: number
+		}>();
 		const handleClose = () => {
 			openSelectionModal.value = false;
 		};
-
 		const handleSelection = (data: { type: 'block' | 'item', path: string, selected: string }) => {
 			openSelectionModal.value = false;
 			if (!saveModalData.value)
@@ -208,14 +196,27 @@ export default defineComponent({
 				case: saveModalData.value.id
 			};
 		};
-		
 		const openDialog = (data: { type: 'recipe' | 'result', id: number}) => {
 			saveModalData.value = data;
 			openSelectionModal.value = true;
 		};
-		//#endregion Handle modal
 
-		//#region creation/deletion
+		const handleListSelection = (recipe: any) => {
+			window.recipe.file.read(recipe.path)
+				.then((data) => JSON.parse(data))
+				.then((data) => {
+					selectedRecipeName.value = recipe.name;
+					selectedRecipeType.value = window.recipe.read.type(data);
+					selectedRecipeData.value = data;
+				})
+				.catch((e) => $q.notify({
+					position: 'top-right',
+					message: capitalize(e),
+					icon: 'error',
+					color: 'red-7'
+				}));
+		};
+
 		const creationSuccessNotif = (name: string) => {
 			$q.notify({
 				position: 'top-right',
@@ -234,42 +235,6 @@ export default defineComponent({
 			});
 		};
 
-		const creationTable = (d: tableGen) => {
-			window.recipe.generate.table(d)
-				.then(() => creationSuccessNotif(d.options.outputName ?? ''))
-				.catch((e) => {
-					window.log.error('table', e);
-					creationErrorNotif(d.options.outputName ?? '');
-				});
-		};
-
-		const creationFurnace = (d: furnaceGen) => {
-			window.recipe.generate.furnace(d)
-				.then(() => creationSuccessNotif(d.options.outputName ?? ''))
-				.catch((e) => {
-					window.log.error('furnace', e);
-					creationErrorNotif(d.options.outputName ?? '');
-				});
-		};
-
-		const creationStonecutter = (d: stonecutterGen) => {
-			window.recipe.generate.stonecutter(d)
-				.then(() => creationSuccessNotif(d.outputName ?? ''))
-				.catch((e) => {
-					window.log.error('stonecutter', e);
-					creationErrorNotif(d.outputName ?? '');
-				});
-		};
-
-		const creationSmithing = (d: smithingGen) => {
-			window.recipe.generate.smithing(d)
-				.then(() => creationSuccessNotif(d.outputName ?? ''))
-				.catch((e) => {
-					window.log.error('smithing', e);
-					creationErrorNotif(d.outputName ?? '');
-				});
-		};
-
 		const deletion = (name: string) => {
 			window.recipe.file.delete(name)
 				.then(() => $q.notify({
@@ -278,6 +243,10 @@ export default defineComponent({
 					icon: 'check_circle',
 					color: 'green-7'
 				}))
+				.then(() => {
+					selectedRecipeData.value = null;
+					selectedRecipeName.value = null;
+				})
 				.catch((e) => {
 					window.log.error('delete', e);
 					$q.notify({
@@ -288,95 +257,26 @@ export default defineComponent({
 					});
 				});
 		};
-		//#endregion creation/deletion
-
-		//#region Handle list
-		const readSave = ref<{type: 'furnace' | 'stonecutter' | 'smithing' | 'table' | null, recipe: selectedRecipe, data: any} | null>(null);
-		const readPlayer = ref<resultTable>();
-		const readTable = ref<resultTable>();
-		const readFurnace = ref<furnaceTable>();
-		const readSmithing = ref<smithingTable>();
-		const readStonecutter = ref<stonecutterTable>();
-
-		const handleListSelection = (recipe: selectedRecipe) => {
-			window.recipe.file.read(recipe.path)
-				.then((data) => JSON.parse(data))
-				.then((data) => {
-					readSave.value = {
-						type: window.recipe.read.type(data),
-						recipe,
-						data
-					};
-					selectedRecipe.value = recipe;
-					if (selectedTab.value === recipe.type)
-						tabIsUpdate();
-					else
-						selectedTab.value = recipe.type;
-				})
-				.catch((e) => $q.notify({
-					position: 'top-right',
-					message: capitalize(e),
-					icon: 'error',
-					color: 'red-7'
-				}));
-		};
-
-		const tabIsUpdate = () => {
-			if (readSave.value === null)
-				return;
-			if (readSave.value.type === 'furnace')
-				readFurnace.value = window.recipe.read.furnace(readSave.value.recipe.name, toRaw(readSave.value.data));
-			else if (readSave.value.type === 'smithing')
-				readSmithing.value = window.recipe.read.smithing(readSave.value.recipe.name, toRaw(readSave.value.data));
-			else if (readSave.value.type === 'stonecutter')
-				readStonecutter.value = window.recipe.read.stonecutter(readSave.value.recipe.name, toRaw(readSave.value.data));
-		 	else {
-				// table
-				const temp = window.recipe.read.table(readSave.value.recipe.name, toRaw(readSave.value.data));
-				if (temp.cases.length === 10)
-					readTable.value = temp;
-				else
-					readPlayer.value = temp;
-			}
-			readSave.value = null;
-		};
-		//#endregion Handle list
 
 		onBeforeMount(() => window.recipe.init(storeMap.getMapPath(), storeMap.minecraftVersion));
 
 		return {
-			selectedTab,
-			selectedRecipe,
+			selectedRecipeType,
+			selectedRecipeData,
 
-			//#region Block/Item Modal
+			splitter,
 			openSelectionModal,
 			saveModalData,
 			selectionReturn,
-
 			handleClose,
 			handleSelection,
 			openDialog,
-			//#endregion Block/Item Modal
-
-			//#region creation/deletion
-			creationTable,
-			creationFurnace,
-			creationStonecutter,
-			creationSmithing,
-			deletion,
-			//#endregion creation/deletion
-
-			//#region Handle list
-			readSave,
-			readPlayer,
-			readTable,
-			readFurnace,
-			readSmithing,
-			readStonecutter,
 
 			handleListSelection,
-			tabIsUpdate
-			//#endregion Handle list
+
+			creationSuccessNotif,
+			creationErrorNotif,
+			deletion
 		};
 	}
 });
@@ -399,5 +299,7 @@ export default defineComponent({
 .right {
 	width: 70%
 }
+.tab {
+	height: calc(100% - 65px);
+}
 </style>
-@/app/store/map

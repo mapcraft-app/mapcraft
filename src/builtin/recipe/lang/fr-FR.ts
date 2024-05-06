@@ -24,6 +24,7 @@ export default {
 		},
 		buttons: {
 			create: 'créer la recette',
+			save: 'sauvegarder la recette',
 			delete: 'supprimer la recette'
 		},
 		group: 'groupe',

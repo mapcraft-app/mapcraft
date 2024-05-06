@@ -1,17 +1,39 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">{{ $capitalize($t('builtin.recipe.tabs.smithing')) }}</span>
+		<span class="text-h6 q-pb-sm">
+			{{ $capitalize($t('builtin.recipe.tabs.smithing')) }}
+		</span>
 		<q-separator />
 	</div>
+	{{ recipe }}
 	<div class="craft">
 		<div class="craft_background">
-			<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
-			<img class="craft_fire_and_cross" :src="$toPublic('imgs/minecraft/cross.png')"/>
-			<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
-			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
-			<case-vue :data="recipeCases[2]" @remove="removeSelect(2)" @select="openSelect(2)" />
+			<case-vue
+				:data="recipe.base"
+				@remove="removeSelect('base')"
+				@select="openSelect('base')"
+			/>
+			<img
+				class="craft_fire_and_cross"
+				:src="$toPublic('imgs/minecraft/cross.png')"
+			/>
+			<case-vue
+				:data="recipe.addition"
+				@remove="removeSelect('addition')"
+				@select="openSelect('addition')"
+			/>
+			<img
+				class="craft_arrow"
+				:src="$toPublic('imgs/minecraft/arrow.png')"
+			/>
+			<case-vue
+				:data="recipe.result"
+				@remove="removeSelect('result')"
+				@select="openSelect('result')"
+			/>
 		</div>
 	</div>
+	<option-base :config="recipe" />
 	<optionButtonVue
 		@create="createRecipe"
 		@delete="deleteRecipe"
@@ -19,100 +41,85 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
-import random from './random';
-import type { PropType } from 'vue';
-import { caseData, smithingGen, smithingTable } from '../interface';
-
+import { defineComponent, onMounted, ref, toRaw, watch, type PropType } from 'vue';
+import type { caseData, smithingTable } from '../interface';
 import caseVue from './case.vue';
 import optionButtonVue from './optionButton.vue';
-
-interface options {
-	group: string | null,
-	outputName: string | null
-}
+import optionBase from './optionBase.vue';
+import { selectedRecipeData, selectedRecipeName } from '../store';
 
 export default defineComponent({
 	name: 'Smithing',
-	components: { caseVue, optionButtonVue },
+	components: { caseVue, optionButtonVue, optionBase },
 	props: {
-		read: {
-			type: Object as PropType<smithingTable>,
-			default: undefined,
-			required: false
-		},
 		selection: {
 			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
 			default: undefined,
 			required: false
 		}
 	},
-	emits: ['openDialog', 'create', 'delete'],
+	emits: ['openDialog', 'create', 'error', 'delete'],
 	setup (props, { emit }) {
-		const recipeCases = ref<(caseData)[]>([
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' }
-		]);
-		const isSelected = ref<boolean>(false);
-		const options = ref<options>({
-			group: null,
-			outputName: random()
+		const recipe = ref<smithingTable>({
+			base: {} as caseData,
+			addition: {} as caseData,
+			result: {} as caseData
 		});
 
-		const removeSelect = (id: number) => {
-			recipeCases.value[id] = { type: 'block', id: '', path: '' };
-		};
-		const openSelect = (id: number) => {
-			isSelected.value = true;
-			emit('openDialog', { type: 'recipe', id });
+		const removeSelect = (id: string) => {
+			(recipe.value as Record<string, any>)[id] = { type: 'block', id: '', path: '' };
 		};
 
-		const changeOptions = (d: options) => {
-			options.value.group = d.group;
-			options.value.outputName = d.outputName;
+		const openSelect = (id: string) => emit('openDialog', { type: 'recipe', id });
+
+		const readData = () => {
+			if (
+				!selectedRecipeData.value
+				|| (selectedRecipeData.value as any).type !== 'minecraft:smithing'
+			)
+				return;
+			try {
+				recipe.value = window.recipe.read.smithing(
+					selectedRecipeName.value as string,
+					toRaw(selectedRecipeData.value)
+				);
+			} catch {
+				recipe.value = {
+					base: {} as caseData,
+					addition: {} as caseData,
+					result: {} as caseData,
+				};
+			}
 		};
 
-		const createRecipe = () => {
-			emit('create', {
-				base: recipeCases.value[0].id,
-				addition: recipeCases.value[1].id,
-				result: recipeCases.value[2].id,
-				group: options.value.group,
-				outputName: options.value.outputName
-			} as smithingGen);
-		};
-		const deleteRecipe = () => {
-			emit('delete', options.value.outputName);
-		};
-
-		onMounted(() => {
-			watch(() => props.read, (after) => {
-				if (!after)
-					return;
-				recipeCases.value[0] = after.base;
-				recipeCases.value[1] = after.addition;
-				recipeCases.value[2] = after.result;
-				options.value.group = after.group ?? null;
-				options.value.outputName = after.outputName ?? null;
+		const createRecipe = () => window.recipe.generate.smithing({
+			base: recipe.value.base.id,
+			addition: recipe.value.addition.id,
+			result: recipe.value.result.id,
+			group: recipe.value.group,
+			outputName: recipe.value.outputName
+		})
+			.then(() => emit('create', recipe.value.outputName))
+			.catch((e) => {
+				window.log.error('table', e);
+				emit('error', recipe.value.outputName);
 			});
 
+		const deleteRecipe = () => emit('delete', recipe.value.outputName);
+
+		onMounted(() => {
+			readData();
+			watch(() => selectedRecipeName.value, () => readData());
 			watch(() => props.selection, (after) => {
-				if (after && isSelected.value) {
-					isSelected.value = false;
-					recipeCases.value[after.case] = after;
-				}
+				if (after)
+					(recipe.value as Record<string, any>)[after.case] = after;
 			});
 		});
 
 		return {
-			recipeCases,
-			isSelected,
-			options,
-
+			recipe,
 			removeSelect,
 			openSelect,
-			changeOptions,
 			createRecipe,
 			deleteRecipe
 		};

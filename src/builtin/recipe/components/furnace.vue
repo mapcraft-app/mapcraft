@@ -1,23 +1,33 @@
 <template>
 	<div class="q-ma-md">
-		<span class="text-h6 q-pb-sm">{{ name }}</span>
+		<span class="text-h6 q-pb-sm">
+			{{ name }}
+		</span>
 		<q-separator />
 	</div>
 	<div class="craft">
 		<div class="craft_background">
 			<div class="recipes_cases_furnace">
-				<case-vue :data="recipeCases[0]" @remove="removeSelect(0)" @select="openSelect(0)" />
-				<img class="craft_fire_and_cross" :src="$toPublic('imgs/minecraft/fire.png')"/>
+				<case-vue
+					:data="recipe.recipe"
+					@remove="removeSelect('recipe')"
+					@select="openSelect('recipe')"
+				/>
+				<img
+					class="craft_fire_and_cross"
+					:src="$toPublic('imgs/minecraft/fire.png')"
+				/>
 				<div class="case-disabled"></div>
 			</div>
-			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')"/>
-			<case-vue :data="recipeCases[1]" @remove="removeSelect(1)" @select="openSelect(1)" />
+			<img class="craft_arrow" :src="$toPublic('imgs/minecraft/arrow.png')" />
+			<case-vue
+				:data="recipe.result"
+				@remove="removeSelect('result')"
+				@select="openSelect('result')"
+			/>
 		</div>
 	</div>
-	<option-furnace-vue
-		:config="options"
-		@change="changeOptions"
-	/>
+	<option-furnace-vue :config="recipe.options" />
 	<optionButtonVue
 		@create="createRecipe"
 		@delete="deleteRecipe"
@@ -25,21 +35,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
-import random from './random';
-import type { PropType } from 'vue';
-import { caseData, furnaceGen, furnaceTable, typeFurnace } from '../interface';
-
+import { defineComponent, onMounted, ref, toRaw, watch, type PropType } from 'vue';
+import { selectedRecipeData, selectedRecipeName } from '../store';
+import type { caseData, furnaceTable, typeFurnace } from '../interface';
 import caseVue from './case.vue';
 import optionFurnaceVue from './optionFurnace.vue';
 import optionButtonVue from './optionButton.vue';
-
-interface options {
-	experience: number,
-	time: number,
-	group: string | null,
-	outputName: string | null
-}
 
 export default defineComponent({
 	name: 'Furnace',
@@ -53,93 +54,89 @@ export default defineComponent({
 			type: String as PropType<typeFurnace>,
 			required: true
 		},
-		read: {
-			type: Object as PropType<furnaceTable>,
-			default: undefined,
-			required: false
-		},
 		selection: {
-			type: Object as PropType<{ type: 'block' | 'item', id: string, path: string, case: number }>,
+			type: Object as PropType<{
+				type: 'block' | 'item',
+				id: string,
+				path: string,
+				case: number
+			}>,
 			default: undefined,
 			required: false
 		}
 	},
-	emits: ['openDialog', 'create', 'delete'],
+	emits: ['openDialog', 'create', 'error', 'delete'],
 	setup (props, { emit }) {
-		const recipeCases = ref<(caseData)[]>([
-			{ type: 'block', id: '', path: '' },
-			{ type: 'block', id: '', path: '' }
-		]);
-		const isSelected = ref<boolean>(false);
-		const options = ref<options>({
-			experience: 0.0,
-			time: 0.0,
-			group: null,
-			outputName: random()
+		const recipe = ref<furnaceTable>({
+			recipe: {} as caseData,
+			result: {} as caseData,
+			options: {
+				experience: 0,
+				time: 0
+			}
 		});
 
-		const removeSelect = (id: number) => {
-			recipeCases.value[id] = { type: 'block', id: '', path: '' };
-		};
-		const openSelect = (id: number) => {
-			isSelected.value = true;
-			emit('openDialog', { type: 'recipe', id });
+		const removeSelect = (id: string) => {
+			(recipe.value as Record<string, any>)[id] = { type: 'block', id: '', path: '' };
 		};
 
-		const changeOptions = (d: options) => {
-			options.value.experience = d.experience;
-			options.value.time = d.time;
-			options.value.group = d.group;
-			options.value.outputName = d.outputName;
+		const openSelect = (id: string) => emit('openDialog', { type: 'recipe', id });
+
+		const readData = () => {
+			if (
+				!selectedRecipeData.value
+				|| (selectedRecipeData.value as any).type !== props.type
+			)
+				return;
+			try {
+				recipe.value = window.recipe.read.furnace(
+					selectedRecipeName.value as string,
+					toRaw(selectedRecipeData.value)
+				);
+			} catch {
+				recipe.value = {
+					recipe: {} as caseData,
+					result: {} as caseData,
+					options: {
+						experience: 0,
+						time: 0
+					}
+				};
+			}
 		};
 
-		const createRecipe = () => {
-			emit('create', {
-				type: props.type,
-				recipe: recipeCases.value[0].id,
-				result: recipeCases.value[1].id,
-				options: {
-					experience: options.value.experience,
-					time: options.value.time,
-					group: options.value.group,
-					outputName: options.value.outputName,
-				}
-			} as furnaceGen);
-		};
-		const deleteRecipe = () => {
-			emit('delete', options.value.outputName);
-		};
-
-		onMounted(() => {
-			watch(() => props.read, (after) => {
-				if (!after)
-					return;
-				recipeCases.value[0] = after.recipe;
-				recipeCases.value[1] = after.result;
-				changeOptions({
-					experience: after.options.experience,
-					time: after.options.time,
-					group: after.options.group ?? null,
-					outputName: after.options.outputName ?? null
-				});
+		const createRecipe = () => window.recipe.generate.furnace({
+			type: props.type,
+			recipe: recipe.value.recipe.id,
+			result: recipe.value.result.id,
+			options: {
+				experience: recipe.value.options.experience,
+				time: recipe.value.options.time,
+				group: recipe.value.options.group ?? null,
+				outputName: recipe.value.options.outputName ?? null
+			}
+		})
+			.then(() => emit('create', recipe.value.options.outputName))
+			.catch((e) => {
+				window.log.error('table', e);
+				emit('error', recipe.value.options.outputName);
 			});
 
+		const deleteRecipe = () => emit('delete', recipe.value.options.outputName);
+
+		onMounted(() => {
+			readData();
+			watch(() => selectedRecipeName.value, () => readData());
 			watch(() => props.selection, (after) => {
-				if (after && isSelected.value) {
-					isSelected.value = false;
-					recipeCases.value[after.case] = after;
-				}
+				if (after)
+					(recipe.value as Record<string, any>)[after.case] = after;
 			});
 		});
 
 		return {
-			recipeCases,
-			isSelected,
-			options,
-
+			recipe,
 			removeSelect,
 			openSelect,
-			changeOptions,
 			createRecipe,
 			deleteRecipe
 		};
