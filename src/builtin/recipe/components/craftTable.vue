@@ -73,7 +73,8 @@ export default defineComponent({
 		const readData = () => {
 			if (
 				!selectedRecipeData.value
-				|| !['crafting'].includes((selectedRecipeData.value as any).type)
+				|| !((selectedRecipeData.value as any).type as string).includes('crafting_shape')
+				|| (selectedRecipeData.value as any).isPlayer
 			)
 				return;
 			try {

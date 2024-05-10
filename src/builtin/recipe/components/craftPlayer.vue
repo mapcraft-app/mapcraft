@@ -73,8 +73,9 @@ export default defineComponent({
 		const readData = () => {
 			if (
 				!selectedRecipeData.value
-				|| !['player'].includes((selectedRecipeData.value as any).type)
-			)
+				|| !((selectedRecipeData.value as any).type as string).includes('crafting_shape')
+				|| !(selectedRecipeData.value as any).isPlayer
+			) 
 				return;
 			try {
 				recipe.value = window.recipe.read.table(
@@ -132,6 +133,7 @@ export default defineComponent({
 
 		return {
 			selectedRecipeData,
+			selectedRecipeName,
 			recipe,
 			removeSelect,
 			openSelect,

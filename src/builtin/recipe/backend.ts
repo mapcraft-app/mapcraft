@@ -23,7 +23,6 @@ import {
 } from './interface';
 import { envInterface } from '../interface';
 import { block, items, minecraftVersion } from 'mapcraft-api';
-import random from './components/random';
 
 interface list {
 	id: string,
@@ -159,8 +158,10 @@ class recipe {
 
 	//#region Generation
 	writeRecipe(data: any, model: any) {
-		const name = data.options.outputName ?? random(16);
-		this.createFile(model, name);
+		this.createFile(
+			model,
+			data.options?.outputName ?? data.outputName
+		);
 	}
 
 	async generateFurnace(data: furnaceGen) {

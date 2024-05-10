@@ -17,35 +17,35 @@
 				align="justify"
 			>
 				<q-tab name="player">
-					<img :src="$toPublic('imgs/minecraft/player.png')" />
+					<q-img :src="$toPublic('imgs/minecraft/player.png')" />
 				</q-tab>
 				<q-tab name="crafting">
-					<img :src="$toPublic('imgs/minecraft/block/crafting_table.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/crafting_table.webp')" />
 				</q-tab>
 				<q-tab name="minecraft:smelting">
-					<img :src="$toPublic('imgs/minecraft/block/furnace.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/furnace.webp')" />
 				</q-tab>
 				<q-tab name="minecraft:blasting">
-					<img :src="$toPublic('imgs/minecraft/block/blast_furnace.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/blast_furnace.webp')" />
 				</q-tab>
 				<q-tab name="minecraft:campfire_cooking">
-					<img :src="$toPublic('imgs/minecraft/block/campfire.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/campfire.webp')" />
 				</q-tab>
 				<q-tab name="minecraft:smoking">
-					<img :src="$toPublic('imgs/minecraft/block/smoker.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/smoker.webp')" />
 				</q-tab>
 				<q-tab name="minecraft:stonecutting">
-					<img :src="$toPublic('imgs/minecraft/block/stonecutter.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/stonecutter.webp')" />
 				</q-tab>
 				<q-tab name="minecraft:smithing">
-					<img :src="$toPublic('imgs/minecraft/block/smithing_table.webp')" />
+					<q-img :src="$toPublic('imgs/minecraft/block/smithing_table.webp')" />
 				</q-tab>
 			</q-tabs>
 			<q-tab-panels
 				v-model="selectedRecipeType"
-				class="tab"
+				class="tab transparent"
 				animated
-				style="background-color: transparent;"
+				@transition="reset()"
 			>
 				<q-tab-panel name="player" class="q-pa-none">
 					<craft-player
@@ -217,6 +217,11 @@ export default defineComponent({
 				}));
 		};
 
+		const reset = () => {
+			selectedRecipeName.value = null;
+			selectedRecipeData.value = null;
+		};
+
 		const creationSuccessNotif = (name: string) => {
 			$q.notify({
 				position: 'top-right',
@@ -243,10 +248,7 @@ export default defineComponent({
 					icon: 'check_circle',
 					color: 'green-7'
 				}))
-				.then(() => {
-					selectedRecipeData.value = null;
-					selectedRecipeName.value = null;
-				})
+				.then(() => reset())
 				.catch((e) => {
 					window.log.error('delete', e);
 					$q.notify({
@@ -273,6 +275,7 @@ export default defineComponent({
 			openDialog,
 
 			handleListSelection,
+			reset,
 
 			creationSuccessNotif,
 			creationErrorNotif,
@@ -301,5 +304,8 @@ export default defineComponent({
 }
 .tab {
 	height: calc(100% - 65px);
+}
+.transparent {
+	background-color: transparent;
 }
 </style>

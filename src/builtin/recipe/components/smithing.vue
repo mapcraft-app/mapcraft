@@ -5,7 +5,6 @@
 		</span>
 		<q-separator />
 	</div>
-	{{ recipe }}
 	<div class="craft">
 		<div class="craft_background">
 			<case-vue
@@ -42,11 +41,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, toRaw, watch, type PropType } from 'vue';
-import type { caseData, smithingTable } from '../interface';
 import caseVue from './case.vue';
 import optionButtonVue from './optionButton.vue';
 import optionBase from './optionBase.vue';
 import { selectedRecipeData, selectedRecipeName } from '../store';
+import type { caseData, smithingTable } from '../interface';
 
 export default defineComponent({
 	name: 'Smithing',
@@ -101,6 +100,7 @@ export default defineComponent({
 		})
 			.then(() => emit('create', recipe.value.outputName))
 			.catch((e) => {
+				console.error(e);
 				window.log.error('table', e);
 				emit('error', recipe.value.outputName);
 			});
