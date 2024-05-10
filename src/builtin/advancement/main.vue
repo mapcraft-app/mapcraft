@@ -1,13 +1,16 @@
 <template>
 	<q-splitter
-		v-model="splitter" horizontal
-		separator-style="background-color: rgba(0,0,0,0)"
-		style="height:100%"
+		v-model="splitter"
+		horizontal
+		style="height: 100%"
 		:limits="[20, 90]"
 	>
 		<template v-slot:before>
-			<div class="main">
-				<div class="list">
+			<q-splitter
+				v-model="splitterTree"
+				:limits="[25, 45]"
+			>
+				<template v-slot:before>
 					<q-btn
 						color="green" outline
 						square icon="add"
@@ -26,8 +29,8 @@
 							<q-item-section>{{ adv.data.name }}</q-item-section>
 						</q-item>
 					</q-list>
-				</div>
-				<div class="tree">
+				</template>
+				<template v-slot:after>
 					<template v-if="indexAdv >= 0">
 						<div class="top">
 							<q-input v-model="advancementsList[indexAdv].data.name" label="Name" class="input" />
@@ -58,8 +61,9 @@
 							/>
 						</div>
 					</template>
-				</div>
-			</div>
+				</template>
+			</q-splitter>
+			
 		</template>
 		<template v-slot:after>
 			<div v-if="selectedAdvancement" class="edit">
@@ -356,6 +360,7 @@ export default defineComponent({
 
 		return {
 			splitter: ref(50),
+			splitterTree: ref(25),
 			idOfRoot,
 			advancementsList,
 			indexAdv,
@@ -410,7 +415,7 @@ export default defineComponent({
 	display: inline-flex;
 	flex-wrap: nowrap;
 	align-items: center;
-	width: inherit;
+	width: 100%;
 	justify-content: space-around;
 	height: 4.5em;
 	border-bottom: 1px solid rgba(150, 150, 150, .5);

@@ -1,6 +1,10 @@
 <template>
-	<div class="row inherit-height main">
-		<div class="left">
+	<q-splitter
+		v-model="splitter"
+		class="main"
+		:limits="[15,35]"
+	>
+		<template v-slot:before>
 			<div class="row no-wrap justify-around q-ma-md">
 				<q-btn
 					color="orange-7"
@@ -18,8 +22,8 @@
 				:list="soundList"
 				@select="selectMusic"
 			/>
-		</div>
-		<div v-if="selectedSoundKey" class="right">
+		</template>
+		<template v-if="selectedSoundKey" v-slot:after>
 			<q-tabs
 				v-model="tab" dense align="justify"
 				narrow-indicator class="q-pb-sm"
@@ -73,13 +77,13 @@
 					</q-list>
 				</q-tab-panel>
 			</q-tab-panels>
-		</div>
-		<create-vue
-			:dialog="createDialog"
-			@create="createNewMusic"
-			@close="createDialog = false"
-		/>
-	</div>
+		</template>
+	</q-splitter>
+	<create-vue
+		:dialog="createDialog"
+		@create="createNewMusic"
+		@close="createDialog = false"
+	/>
 </template>
 
 <script lang="ts">
@@ -110,6 +114,7 @@ export default defineComponent({
 		const category: category[] = ['none', 'ambient', 'block', 'hostile', 'master', 'music', 'neutral', 'player', 'record', 'voice', 'weather'];
 		let autosaveInterval: NodeJS.Timer; // eslint-disable-line no-undef
 
+		const splitter = ref<number>(25);
 		const tab = ref<'general' | 'sounds'>('general');
 		const createDialog = ref<boolean>(false);
 		const soundList = ref<Record<string, sound>>({});
@@ -124,7 +129,7 @@ export default defineComponent({
 
 		const selectMusic = (key: string) => {
 			selectedSoundKey.value = key;
-			soundList.value[key].sounds = soundList.value[key].sounds.map((e) => ({
+			soundList.value[key].sounds = soundList.value[key].sounds?.map((e) => ({
 				attenuation_distance: e.attenuation_distance ?? 16,
 				name: e.name,
 				pitch: e.pitch ?? 1,
@@ -133,7 +138,7 @@ export default defineComponent({
 				type: e.type ?? 'sound',
 				volume: e.volume ?? 1,
 				weight: e.weight ?? 1
-			}));
+			})) ?? [];
 		};
 
 		const deleteMusic = () => {
@@ -287,6 +292,7 @@ export default defineComponent({
 		});
 
 		return {
+			splitter,
 			category,
 			tab,
 			createDialog,
@@ -309,24 +315,9 @@ export default defineComponent({
 
 <style scoped>
 .main {
-	display: flex;
-	min-height: inherit;
-}
-.left {
-	display: inline-flex;
-	flex-direction: column;
-	width: 35%;
-	max-height: calc(100vh - 5.6em);
-	border-right: 1px solid rgba(0, 0, 0, 0.2);
-	overflow-x: auto;
-}
-.right {
-	width: 65%;
-	max-height: calc(100vh - 5.6em);
-	overflow-x: auto;
+	height: 100%;
 }
 .add {
 	width: 100%;
 }
 </style>
-@/app/store/map

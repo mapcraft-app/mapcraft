@@ -11,7 +11,7 @@
 					v-ripple
 					clickable
 					:class="(el.id === selectEl) ? 'background': ''"
-					@click="select(el.id, el.name)"
+					@click="select(el.id, el.key)"
 				>
 					<q-item-section class="q-pl-sm">
 						<q-item-label>{{ el.name }}</q-item-label>
@@ -26,9 +26,13 @@
 import { defineComponent, onBeforeMount, PropType, ref, watch } from 'vue';
 import { category, sound } from '../interface';
 
+interface extendSound extends sound {
+	key: string
+}
+
 interface sort {
 	type: category,
-	els: sound[]
+	els: extendSound[]
 }
 
 export default defineComponent({
@@ -74,7 +78,7 @@ export default defineComponent({
 				sort.value[el].els.length = 0;
 			for (const id in data) {
 				const i = getSort(data[id].category);
-				sort.value[i].els.push(data[id]);
+				sort.value[i].els.push({key: id, ...data[id] });
 			}
 		};
 

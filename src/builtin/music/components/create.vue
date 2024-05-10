@@ -1,6 +1,6 @@
 <template>
 	<q-dialog v-model="$props.dialog" persistent>
-		<q-card style="width: 40vw">
+		<q-card style="width: 60vw">
 			<q-card-section class="row reverse q-pb-none">
 				<q-btn
 					v-close-popup icon="close" flat
