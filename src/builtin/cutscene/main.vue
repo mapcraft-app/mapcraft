@@ -1,30 +1,40 @@
 <template>
-	<sidenav-component
-		:list="cutsceneList"
-		@created="createCutscene"
-		@deleted="deleteCutscene"
-		@selected="selectCutscene"
-	/>
-	<div v-if="cutsceneSelected" class="layout-content">
-		<options
-			:model-value="cutsceneSelected"
-			@open="openFile"
-			@save="saveData"
-			@generate="generateCutscene()"
-		/>
-		<template v-if="cutsceneSelected">
-			<point-component
-				v-for="point of cutsceneSelected.points"
-				:key="point.point"
-				:model-value="point"
-				:disable="cutsceneSelected.points[cutsceneSelected.points.length - 1].point === point.point"
-				@delete="removePoint"
+	<q-splitter
+		v-model="splitter"
+		:limits="[15,40]"
+		class="full-height"
+	>
+		<template v-slot:before>
+			<sidenav-component
+				:list="cutsceneList"
+				@created="createCutscene"
+				@deleted="deleteCutscene"
+				@selected="selectCutscene"
 			/>
-			<div class="add-point" @click="addPoint()">
-				<q-icon name="add" size="2em" />
+		</template>
+		<template v-slot:after>
+			<div v-if="cutsceneSelected">
+				<options
+					:model-value="cutsceneSelected"
+					@open="openFile"
+					@save="saveData"
+					@generate="generateCutscene()"
+				/>
+				<template v-if="cutsceneSelected">
+					<point-component
+						v-for="point of cutsceneSelected.points"
+						:key="point.point"
+						:model-value="point"
+						:disable="cutsceneSelected.points[cutsceneSelected.points.length - 1].point === point.point"
+						@delete="removePoint"
+					/>
+					<div class="add-point" @click="addPoint()">
+						<q-icon name="add" size="2em" />
+					</div>
+				</template>
 			</div>
 		</template>
-	</div>
+	</q-splitter>
 </template>
 
 <script lang="ts">
@@ -52,6 +62,7 @@ export default defineComponent({
 		const $q = useQuasar();
 		const { t } = useI18n();
 		const storeMap = mapStore();
+		const splitter = ref<number>(20);
 		const cutsceneList = ref<cutsceneInterface[]>([]);
 		const cutsceneSelected = ref<cutscene | null>(null);
 		let saveCutscene: NodeJS.Timer; // eslint-disable-line no-undef
@@ -327,6 +338,7 @@ export default defineComponent({
 		});
 
 		return {
+			splitter,
 			cutsceneList,
 			cutsceneSelected,
 
@@ -347,14 +359,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.layout-content {
-	position: absolute;
-  width: -webkit-fill-available;
-  top: 0;
-  z-index: 0;
-  transition: .3s;
-	margin: 0 .7em;
-}
 .add-point {
 	display: flex;
 	align-items: center;
@@ -368,4 +372,3 @@ export default defineComponent({
 	color: rgb(19, 157, 95);
 }
 </style>
-@/app/store/map
