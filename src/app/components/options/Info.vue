@@ -5,7 +5,11 @@
 			{{ $capitalize(select?.name ?? '') }}
 		</span>
 	</div>
-	<q-splitter v-model="splitter" class="splitter">
+	<q-splitter
+		v-model="splitter"
+		class="splitter"
+		:limits="[15,35]"
+	>
 		<template v-slot:before>
 			<q-tabs
 				v-model="tabs"

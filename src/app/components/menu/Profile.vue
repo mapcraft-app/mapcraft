@@ -7,16 +7,18 @@
 		/>
 		<div class="column justify-center q-pl-sm">
 			<span class="text-h5 text-center text-weight-light q-pb-sm">
-				{{ user.username }}
-				<q-tooltip class="bg-secondary text-body2" anchor="top middle" self="bottom middle">
-					{{ user.minecraftUsername }}
-				</q-tooltip>
+				{{ (user.offline) ? user.username : user.minecraftUsername }}
 			</span>
 			<q-btn outline square :label="$t('components.menu.profile.disconnect')" @click="disconnect()" />
 		</div>
 	</div>
 	<div class="row justify-center q-pb-sm">
-		<q-btn square flat :label="$t('components.menu.profile.documentation')" />
+		<q-btn
+			square
+			flat
+			:label="$t('components.menu.profile.documentation')"
+			@click="external"
+		/>
 	</div>
 </template>
 
@@ -24,11 +26,13 @@
 import { useQuasar } from 'quasar';
 import { defineComponent, onBeforeMount, ref, watch } from 'vue';
 import router from '@/router/index';
+import { globalStore } from '@/store/global';
 import { userStore } from '@/store/user';
 
 export default defineComponent({
 	setup() {
 		const $q = useQuasar();
+		const global = globalStore();
 		const user = userStore();
 		const avatarUrl = ref<string>('imgs/minecraft/player.png');
 
@@ -40,6 +44,8 @@ export default defineComponent({
 			$q.localStorage.remove('user');
 			router.push('/user');
 		};
+
+		const external = () => window.ipc.send('dialog::open-external', `https://mapcraft.app/${global.lang}/docs`);
 
 		onBeforeMount(() => {
 			avatar();
@@ -53,7 +59,8 @@ export default defineComponent({
 			user,
 			avatarUrl,
 			avatar,
-			disconnect
+			disconnect,
+			external
 		};
 	}
 });
@@ -66,4 +73,3 @@ export default defineComponent({
 	image-rendering: pixelated;
 }
 </style>
-@/app/router/index@/app/store/user
