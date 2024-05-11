@@ -16,6 +16,7 @@ export default defineConfig((env) => ({
 	},
 	build: {
 		emptyOutDir: true,
+		outDir: resolve(__dirname, '..', 'dist'),
 		target: ['es2021', 'chrome100'],
 		minify: (env.mode === 'production'),
 		sourcemap: false,
@@ -31,7 +32,9 @@ export default defineConfig((env) => ({
 			}
 		},
 		ssr: true,
-		watch: {}
+		watch: (env.mode !== 'production')
+			? {}
+			: undefined
 	},
   plugins: [
 		tsConfigPaths({

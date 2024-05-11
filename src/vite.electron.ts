@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { exit } from 'process';
 import { build, type PluginOption, type ViteDevServer, type Rollup } from 'vite';
 import { spawn, type ChildProcess } from 'child_process';
+import tsConfigPaths from 'vite-tsconfig-paths';
 import { version, repository } from '../package.json';
 import { compilerOptions } from '../tsconfig.json';
 import type { AddressInfo } from 'net';
@@ -29,6 +30,7 @@ const electronDevServer = async (options: option, server: ViteDevServer) => {
 	);
 
 	const watcher: Rollup.RollupWatcher = await build({
+		base: (!options.dev) ? './' : '/',
 		mode: server.config.mode,
 		clearScreen: false,
 		define: {
@@ -39,7 +41,7 @@ const electronDevServer = async (options: option, server: ViteDevServer) => {
 		},
 		build: {
 			cssCodeSplit: false,
-			emptyOutDir: false,
+			emptyOutDir: !options.dev,
 			minify: options.dev,
 			target: ['es2021', 'node21'],
 			rollupOptions: {
@@ -55,7 +57,9 @@ const electronDevServer = async (options: option, server: ViteDevServer) => {
 			},
 			sourcemap: false,
 			ssr: true,
-			watch: {},
+			watch: (options.dev)
+				? {}
+				: undefined
 		},
 		resolve: {
 			alias: Object
@@ -67,7 +71,7 @@ const electronDevServer = async (options: option, server: ViteDevServer) => {
 							? e[1][0].slice(0, e[1][0].length - 2)
 							: e[1][0]
 					)
-				}))
+				}))	
 		}
 	}) as any as Rollup.RollupWatcher;
 

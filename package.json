@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite ./src",
     "lint": "eslint .",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "build": "vite build ./src && vite build -c ./src/vite.electron.ts ./src",
+    "preview": "yarn build && electron-builder --dir --config build.js",
+    "production:mac": "yarn build && electron-builder -m --config build.js",
+    "production:windows": "yarn build && electron-builder -w --config build.js",
+    "production:linux": "yarn build && electron-builder -l --config build.js"
   },
   "repository": {
     "type": "git",
