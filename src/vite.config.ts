@@ -4,27 +4,50 @@ import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import electronPlugin from './vite.electron';
+import { version, repository } from '../package.json';
+
+const genDefine = (isProduction: boolean): any => {
+	let ret: Record<string, unknown> = {};
+
+	ret['__VUE_I18N_FULL_INSTALL__'] = false;
+	ret['__VUE_I18N_LEGACY_API__'] = false;
+	if (isProduction) {
+		ret['import.meta.env.APP_VERSION'] = JSON.stringify(version);
+		ret['import.meta.env.APP_GIT_URL'] = JSON.stringify(repository.url);
+		ret['import.meta.env.ELECTRON_APP_URL'] = JSON.stringify('index.html');
+		ret['import.meta.env.ELECTRON_LOAD_URL'] = JSON.stringify(`load.html`);
+	}
+	return ret;
+};
+
+const genInput = (isProduction: boolean): any => {
+	let ret: Record<string, unknown> = {};
+
+	ret['main'] = resolve(__dirname, 'electron', 'main', 'index.ts');
+	ret['preload'] = resolve(__dirname, 'electron', 'preload', 'index.ts');
+	if (isProduction) {
+		ret['load.html'] = resolve(__dirname, 'load.html');
+		ret['index.html'] = resolve(__dirname, 'index.html');
+	}
+	return ret;
+};
 
 export default defineConfig((env) => ({
-	base: (env.mode === 'production') ? './' : '/',
+	// base: (env.mode === 'production') ? './' : '/',
+	base: './',
 	clearScreen: false,
 	publicDir: './public',
 	logLevel: 'info',
-	define: {
-		__VUE_I18N_FULL_INSTALL__: true,
-		__VUE_I18N_LEGACY_API__: false,
-	},
+	define: genDefine(env.mode === 'production'),
 	build: {
 		emptyOutDir: true,
 		outDir: resolve(__dirname, '..', 'dist'),
 		target: ['es2021', 'chrome100'],
-		minify: (env.mode === 'production'),
+		// minify: (env.mode === 'production'),
+		minify: false,
 		sourcemap: false,
 		rollupOptions: {
-			input: {
-				'main': resolve(__dirname, 'electron', 'main', 'index.ts'),
-				'preload': resolve(__dirname, 'electron', 'preload', 'index.ts')
-			},
+			input: genInput(env.mode === 'production'),
 			output: {
 				chunkFileNames: '[name]-[hash].mjs',
 				entryFileNames: '[name].mjs',
@@ -36,6 +59,7 @@ export default defineConfig((env) => ({
 			? {}
 			: undefined
 	},
+	appType: 'custom',
   plugins: [
 		tsConfigPaths({
 			root: resolve(__dirname, '..'),
@@ -49,8 +73,10 @@ export default defineConfig((env) => ({
 		quasar({
 			sassVariables: resolve(__dirname, 'app', 'sass', 'theme.sass')
 		}),
-		electronPlugin({
-			dev: (env.mode === 'production')
-		})
+		(env.mode !== 'production')
+			? electronPlugin({
+					dev: (env.mode !== 'production')
+				})
+			: undefined
 	]
 }));

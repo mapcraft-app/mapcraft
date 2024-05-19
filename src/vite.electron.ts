@@ -2,7 +2,6 @@ import { resolve } from 'path';
 import { exit } from 'process';
 import { build, type PluginOption, type ViteDevServer, type Rollup } from 'vite';
 import { spawn, type ChildProcess } from 'child_process';
-import tsConfigPaths from 'vite-tsconfig-paths';
 import { version, repository } from '../package.json';
 import { compilerOptions } from '../tsconfig.json';
 import type { AddressInfo } from 'net';

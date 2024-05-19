@@ -1,18 +1,14 @@
 {
   "name": "mapcraft",
+	"description": "",
   "private": true,
   "version": "1.0.0-beta",
   "type": "module",
-  "scripts": {
-    "dev": "vite ./src",
-    "lint": "eslint .",
-    "postinstall": "electron-builder install-app-deps",
-    "build": "vite build ./src && vite build -c ./src/vite.electron.ts ./src",
-    "preview": "yarn build && electron-builder --dir --config build.js",
-    "production:mac": "yarn build && electron-builder -m --config build.js",
-    "production:windows": "yarn build && electron-builder -w --config build.js",
-    "production:linux": "yarn build && electron-builder -l --config build.js"
-  },
+	"main": "main.mjs",
+	"author": {
+		"name": "Clément BERTRAND",
+		"url": "https://github.com/c-bertran"
+	},
   "repository": {
     "type": "git",
     "url": "https://github.com/mapcraft-app/mapcraft.git"
@@ -26,12 +22,22 @@
       "node_modules/mapcraft-api/node_modules/{7zip-bin}/**/*"
     ]
   },
+	"scripts": {
+    "dev": "vite ./src",
+    "lint": "eslint .",
+    "postinstall": "electron-builder install-app-deps",
+		"build": "vite build ./src",
+    "preview": "yarn build && electron-builder --dir --config build.cjs",
+    "production:mac": "yarn build && electron-builder -m --config build.cjs",
+    "production:windows": "yarn build && electron-builder -w --config build.cjs",
+    "production:linux": "yarn build && electron-builder -l --config build.cjs"
+  },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.6.0",
     "@types/markdown-it": "^13.0.7",
     "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
-    "electron": "^28.2.9",
+    "electron": "^28.2.9", 
     "electron-builder": "^24.13.3",
     "eslint": "^8.57.0",
     "sass": "^1.33.0",
