@@ -18,7 +18,7 @@
 		>
 			<span class="material-icons" aria-hidden="true">{{ (!isFullscreen) ? 'fullscreen' : 'fullscreen_exit' }}</span>
 		</div>
-		<i></i>
+		<i v-if="store.updateData === undefined"></i>
 		<template v-if="store.updateData === undefined">
 			<div :title="$t('app.minimize')" @click="() => click('minimize')">
 				<span class="material-icons" aria-hidden="true">remove</span>
@@ -77,4 +77,3 @@ export default defineComponent({
 	}
 });
 </script>
-@/app/store/map
