@@ -2,14 +2,15 @@
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true,
     "strict": true
   },
   "include": [
 		"src/vite.config.ts",
-		"src/vite.electron.ts",
-		"src/monaco-plugin/*.ts",
+		"src/vite.config.electron.ts",
+		"src/vite/plugin.vite.ts"
 	]
 }

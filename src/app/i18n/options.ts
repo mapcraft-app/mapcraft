@@ -1,5 +1,5 @@
-import enUS from 'quasar/lang/en-US.mjs';
-import fr from 'quasar/lang/fr.mjs';
+import enUS from 'quasar/lang/en-US';
+import fr from 'quasar/lang/fr';
 
 export default [
 	{

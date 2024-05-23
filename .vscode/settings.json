@@ -11,10 +11,10 @@
 		"source.fixAll": "explicit"
 	},
   "eslint.validate": [
+		"vue",
 		"html",
     "javascript",
-    "typescript",
-		"vue"
+    "typescript"
   ],
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"[vue]": {

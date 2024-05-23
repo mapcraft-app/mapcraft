@@ -2,12 +2,12 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 		"types": ["vite/client", "node", "electron"],
 
-    "moduleResolution": "bundler",
+    "moduleResolution": "NodeNext",
     "allowImportingTsExtensions": true,
 		"allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -23,17 +23,17 @@
 
 		"baseUrl": ".",
 		"paths": {
-			"@/main/*": ["./*"],
-			"@/api/*": ["./src/api/*"],
-			"@/app/*": ["./src/app/*"],
-			"@/builtin/*": ["./src/builtin/*"],
-			"@/electron/*": ["./src/electron/*"],
+			"@/main/*": ["*"],
+			"@/api/*": ["src/api/*"],
+			"@/app/*": ["src/app/*"],
+			"@/builtin/*": ["src/builtin/*"],
+			"@/electron/*": ["src/electron/*"],
 			
-			"@/components/*": ["./src/app/components/*"],
-			"@/i18n/*": ["./src/app/i18n/*"],
-			"@/layouts/*": ["./src/app/layouts/*"],
-			"@/pages/*": ["./src/app/pages/*"],
-			"@/meta": ["./src/app/meta.ts"],
+			"@/components/*": ["src/app/components/*"],
+			"@/i18n/*": ["src/app/i18n/*"],
+			"@/layouts/*": ["src/app/layouts/*"],
+			"@/pages/*": ["src/app/pages/*"],
+			"@/meta": ["src/app/meta.ts"],
 			"@/router/*": ["src/app/router/*"],
 			"@/store/*": ["src/app/store/*"]
 		}
@@ -42,7 +42,10 @@
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.vue",
-		"src/vite.config.ts"
+		"vite.config.ts",
+		"vite.electron.ts",
+		"src/vite/plugin.vite.ts",
+		"package.json"
 	],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "tsconfig.node.json" }]
 }
