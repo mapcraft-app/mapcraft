@@ -16,7 +16,9 @@
 			:title="$t('app.fullscreen')"
 			@click="() => click('fullscreen')"
 		>
-			<span class="material-icons" aria-hidden="true">{{ (!isFullscreen) ? 'fullscreen' : 'fullscreen_exit' }}</span>
+			<span class="material-icons" aria-hidden="true">
+				{{ (!isFullscreen) ? 'fullscreen' : 'fullscreen_exit' }}
+			</span>
 		</div>
 		<i v-if="store.updateData === undefined"></i>
 		<template v-if="store.updateData === undefined">
@@ -24,7 +26,9 @@
 				<span class="material-icons" aria-hidden="true">remove</span>
 			</div>
 			<div :title="$t('app.maximize')" @click="() => click('maximize')">
-				<span class="material-icons min-max" aria-hidden="true">{{ (!isMaximize) ? 'filter_none' : 'check_box_outline_blank' }}</span>
+				<span class="material-icons min-max" aria-hidden="true">
+					{{ (!isMaximize) ? 'filter_none' : 'check_box_outline_blank' }}
+				</span>
 			</div>
 		</template>
 		<div class="close-button" :title="$t('app.close')" @click="() => click('close')">
