@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import tsConfigPaths from 'vite-tsconfig-paths';
-import electronServer from './vite/plugin.vite.ts';
+import electronServer from './vite/plugin.vite';
 
 export default defineConfig((env) => ({
 	base: (env.mode === 'production') ? './' : '/',
