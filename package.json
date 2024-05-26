@@ -58,7 +58,7 @@
     "better-sqlite3": "^9.4.5",
     "bezier-easing": "^2.1.0",
     "codemirror": "^6.0.1",
-    "mapcraft-api": "../api",
+    "mapcraft-api": "^2.3.4",
     "markdown-it": "^14.1.0",
     "pinia": "^2.1.7",
     "quasar": "^2.15.1",
