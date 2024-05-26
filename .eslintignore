@@ -1,8 +1,0 @@
-/dist
-/node_modules
-/src/public
-package.json
-tsconfig.*
-rollup.config.*
-*.d.ts
-.eslintrc.js

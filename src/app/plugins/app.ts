@@ -61,9 +61,9 @@ export const toPublic = (url: string): string => {
 
 export interface fetchInterface {
 	get: (url: string) => Promise<globalThis.Response>,
-	post: (url: string, data: Record<string, any>) => Promise<globalThis.Response>,
-	put: (url: string, data: Record<string, any>) => Promise<globalThis.Response>,
-	delete: (url: string, data: Record<string, any>) => Promise<globalThis.Response>,
+	post: (url: string, data: Record<string, unknown>) => Promise<globalThis.Response>,
+	put: (url: string, data: Record<string, unknown>) => Promise<globalThis.Response>,
+	delete: (url: string, data: Record<string, unknown>) => Promise<globalThis.Response>,
 }
 /**
  * Preconfigured fetch api
@@ -75,7 +75,7 @@ export class $fetch {
 		});
 	}
 	
-	static post(url: string, data: Record<string, any>, contentType?: string): Promise<globalThis.Response> {
+	static post(url: string, data: Record<string, unknown>, contentType?: string): Promise<globalThis.Response> {
 		return fetch(api(url), {
 			method: 'POST',
 			headers: {
@@ -88,7 +88,7 @@ export class $fetch {
 		});
 	}
 	
-	static put(url: string, data: Record<string, any>, contentType?: string): Promise<globalThis.Response> {
+	static put(url: string, data: Record<string, unknown>, contentType?: string): Promise<globalThis.Response> {
 		return fetch(api(url), {
 			method: 'PUT',
 			headers: {
@@ -101,7 +101,7 @@ export class $fetch {
 		});
 	}
 	
-	static delete(url: string, data: Record<string, any>, contentType?: string): Promise<globalThis.Response> {
+	static delete(url: string, data: Record<string, unknown>, contentType?: string): Promise<globalThis.Response> {
 		return fetch(api(url), {
 			method: 'DELETE',
 			headers: {

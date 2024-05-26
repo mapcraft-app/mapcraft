@@ -1,3 +1,4 @@
+/* eslint-disable */
 const process = require('process');
 const { resolve } = require('path');
 const { mkdir, writeFile } = require('fs/promises');

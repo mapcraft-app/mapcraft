@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import en from './en-US';
 import fr from './fr-FR';
 import { builtinLang } from '@/builtin/front';

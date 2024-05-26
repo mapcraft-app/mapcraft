@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import { accessSync, constants, mkdirSync, writeFile } from 'fs';
 import { resolve } from 'path';
 import { format } from 'util';

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const isNumberRange = (data: Record<any, any>): Record<any, any> | undefined => {
 	if (Object.prototype.hasOwnProperty.call(data, 'min') && Object.keys(data).length === 1)
 		return { min: data['min'], max: data['min'] };

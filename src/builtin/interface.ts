@@ -30,6 +30,7 @@ export interface list {
 
 export interface lang {
 	pluginName: string,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data: Record<string, any>
 }
 

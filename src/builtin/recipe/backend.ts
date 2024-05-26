@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { constants } from 'fs';
 import { access, mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
@@ -157,6 +158,7 @@ class recipe {
 	//#endregion Data
 
 	//#region Generation
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	writeRecipe(data: any, model: any) {
 		this.createFile(
 			model,

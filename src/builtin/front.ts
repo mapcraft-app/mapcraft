@@ -24,6 +24,7 @@ import utilityLang from './utility/lang';
 export const builtinList: list[] = [];
 export const builtinLang: lang[] = [];
 export const normName = (str: string): string => str.toLowerCase().normalize().replace(/[_*.\s]+/, '_');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addBuiltin = (d: info, lang: Record<string, any>, sh: shellModel | shellModel[] | undefined = undefined): void => {
 	if (Array.isArray(sh))
 		sh.forEach((e) => e.plugin = d.name);

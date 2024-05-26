@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { buildMap, datapack, resourcepack, sql } from 'mapcraft-api/backend';
 import { log } from '@/api/log';
 import type { tableInterface, minecraftVersion, envInterface } from 'mapcraft-api';
@@ -21,7 +23,7 @@ interface RunResult {
 export class mapEngine {
 	private __env: envInterface;
 	private __name: string;
-	private __version: minecraftVersion;
+	//private __version: minecraftVersion;
 	public instance: mapEngineInstanceInterface;
 	public database: sql;
 	public eventStatus: string;
@@ -29,7 +31,7 @@ export class mapEngine {
 	constructor(env: envInterface, name: string) {
 		this.__env = env;
 		this.__name = name;
-		this.__version = '1.17';
+		//this.__version = '1.17';
 		this.instance = {} as mapEngineInstanceInterface;
 		this.database = new sql(env, name, log.psql, {
 			name: 'info',
@@ -42,7 +44,7 @@ export class mapEngine {
 	}
 
 	public init(version: minecraftVersion): void {
-		this.__version = version;
+		//this.__version = version;
 		this.instance = {} as mapEngineInstanceInterface;
 		this.instance.datapack = new datapack(this.__env, this.__name, version);
 		this.instance.resourcepack = new resourcepack(this.__env, this.__name, version);

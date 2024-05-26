@@ -5,6 +5,7 @@
  * @returns -1 if newVersion is lesser than oldVersion, 0 if equal, 1 is upper
  */
 export default (oldVersion: string, newVersion: string): number => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const ret = (comp: boolean) => <number><any>comp | 0;
 	const data = {
 		old: oldVersion.indexOf('-') !== -1

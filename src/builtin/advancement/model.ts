@@ -224,6 +224,7 @@ export interface rewards {
 export interface triggers {
 	name: string;
 	trigger: criteria_1_17_1_19 | criteria_1_20 | null;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	conditions: any
 }
 

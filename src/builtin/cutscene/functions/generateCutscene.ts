@@ -82,6 +82,7 @@ class GenerateCutsceneGen1 {
 			: ` ~${number.toPrecision(10)}`;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private join(json: Record<any, any>) {
 		let data = '';
 		for (const id in json) {

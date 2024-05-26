@@ -10,7 +10,7 @@ export interface ipcDefinition {
 	}[]
 }
 export interface ipcFunctions {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
 	[index: number]: ((event: Electron.IpcMainEvent | Electron.IpcMainInvokeEvent, ...args: any[]) => void)
 }
 export interface ipcListInterface {

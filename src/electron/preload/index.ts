@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { contextBridge, clipboard } from 'electron';
 import { writeFile } from 'fs';
 import { resolve, join, normalize } from 'path';

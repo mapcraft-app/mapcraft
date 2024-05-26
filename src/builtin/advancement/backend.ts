@@ -18,7 +18,7 @@ interface advancementList {
 
 interface criteria {
 	trigger: string;
-	conditions: Record<any, unknown>;
+	conditions: Record<string, unknown>;
 }
 
 interface realCriteria {
@@ -31,7 +31,7 @@ interface realCriteria {
 }
 
 class advancement {
-	private env: envInterface;
+	// private env: envInterface;
 	private version: minecraftVersion;
 	public path: {
 		base: string,
@@ -47,7 +47,7 @@ class advancement {
 			item: resolve(env.resourcepack, 'assets', 'minecraft', 'textures', 'item'),
 		};
 		
-		this.env = env;
+		// this.env = env;
 		this.version = minecraftVersion;
 		this.path = {
 			base: resolve(env.datapack.base, 'advancements'),
@@ -177,6 +177,7 @@ class advancement {
 			for (const adv of json.criteria) {
 				if (Object.prototype.hasOwnProperty.call(adv, 'conditions')) {
 					if (Object.prototype.hasOwnProperty.call(adv.conditions, '__at_root__')) {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						const temp = {} as Record<any, any>;
 						for (const key in adv.conditions) {
 							if (key === '__at_root__')

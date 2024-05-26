@@ -5,7 +5,7 @@ export const mapcraftApiUrl = (process.env.DEV)
 	: 'api.mapcraft.app';
 
 export default class req {
-	static get(url: string, options?: RequestOptions): Promise<any> {
+	static get(url: string, options?: RequestOptions): Promise<string> {
 		return new Promise((resolve, reject) => {
 			get(url, options ?? {}, (res) => {
 				let data = '';
@@ -16,7 +16,7 @@ export default class req {
 		});
 	}
 
-	static post(url: string, data: Record<string, unknown>): Promise<any> {
+	static post(url: string, data: Record<string, unknown>): Promise<string> {
 		const __url = new URL(url);
 		const __ret = JSON.stringify(data);
 		return new Promise((resolve, reject) => {
