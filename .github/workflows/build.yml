@@ -16,7 +16,7 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
@@ -27,8 +27,31 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-latest')
         run: sudo apt-get update && sudo apt-get upgrade -y
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1.6.0
+      - name: yarn
+        run: yarn && yarn build
+
+      - name: build-mac
+        if: startsWith(matrix.os, 'macos-latest')
+        run: yarn production:mac
+
+      - name: build-mac
+        if: startsWith(matrix.os, 'ubuntu-latest')
+        run: yarn production:linux
+
+      - name: build-mac
+        if: startsWith(matrix.os, 'windows-latest')
+        run: yarn production:windows
+
+      - name: release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          github_token: ${{ secrets.github_token }}
-          release: true
+          files: |
+            ./dist/electron-build/Mapcraft_linux.AppImage
+            ./dist/electron-build/Mapcraft_linux.7z
+            ./dist/electron-build/Mapcraft_mac.dmg
+            ./dist/electron-build/Mapcraft_mac.dmg.blockmap
+            ./dist/electron-build/Mapcraft_mac.7z
+            ./dist/electron-build/Mapcraft_win.exe
+            ./dist/electron-build/Mapcraft_win.exe.blockmap
+            ./dist/electron-build/Mapcraft_win.7zip

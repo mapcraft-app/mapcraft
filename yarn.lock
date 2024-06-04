@@ -2443,8 +2443,10 @@ magic-string@^0.30.10:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
 
-mapcraft-api@../api:
+mapcraft-api@^2.3.4:
   version "2.3.4"
+  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-2.3.4.tgz#87bd89f54b5ab5660494b3b5c67105138c84087b"
+  integrity sha512-pSjhi7WLu/sg+zdbbkdSPXmsoBYzCDNurUu2yhVb5nWx2lcsKICES+gjbAz/UOnZwjhbBgJBpbay+gRoqBT6rQ==
   dependencies:
     "7zip-bin" "^5.2.0"
     better-sqlite3 "^9.4.3"
