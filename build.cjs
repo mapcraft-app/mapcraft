@@ -6,9 +6,16 @@ const packageJson = require('./package.json');
 const upper = (str) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`;
 
 const info = {
-	icon: (isMac = false) => `src/public/imgs/app/icon.${(isMac)
-		? 'icns'
-		: 'ico'}`,
+	icon: (os = 'windows') => {
+		switch (os) {
+		case 'mac':
+			return 'src/public/imgs/app/icon.icns';
+		case 'linux':
+			return 'src/public/imgs/app/icon.png';
+		default:
+			return 'src/public/imgs/app/icon.ico';
+		}
+	},
 	artifactName: '${productName}_${os}.${ext}',
 	arch: (d = undefined) => d ?? [ 'x64' ]
 };
@@ -104,7 +111,7 @@ module.exports = {
 	mac: {
 		category: 'public.app-category.productivity',
 		type: 'distribution',
-		icon: info.icon(true),
+		icon: info.icon('mac'),
 		artifactName: info.artifactName,
 		target: build('dmg', packageJson.builder.arch ?? undefined)
 	},
@@ -117,7 +124,7 @@ module.exports = {
 	linux: {
 		category: 'Development',
 		synopsis: 'Mapcraft is a software that increases the possibilities of mapmakers without any complex installation',
-		icon: info.icon(),
+		icon: info.icon('linux'),
 		artifactName: info.artifactName,
 		target: build('AppImage', packageJson.builder.arch ?? undefined)
 	}
