@@ -71,6 +71,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+      - name: lsls
+        run: ls -la && ls -la ./artifacts
       - name: release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
