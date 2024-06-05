@@ -13,8 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        #os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -45,7 +44,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-latest')
         uses: actions/upload-artifact@v4
         with:
-          name: artifact-ubuntu
+          name: artifact-linux
           path: |
             ./dist/electron-build/Mapcraft_linux.AppImage
             ./dist/electron-build/Mapcraft_linux.7z
@@ -57,7 +56,7 @@ jobs:
         if: startsWith(matrix.os, 'windows-latest')
         uses: actions/upload-artifact@v4
         with:
-          name: artifact-ubuntu
+          name: artifact-windows
           path: |
             ./dist/electron-build/Mapcraft_win.exe
             ./dist/electron-build/Mapcraft_win.exe.blockmap
@@ -71,18 +70,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-      - name: lsls
-        run: ls -la && ls -la ./artifacts && ls -la ./artifacts/artifact-ubuntu
       - name: release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ./artifacts/Mapcraft_mac.dmg
-            ./artifacts/Mapcraft_mac.dmg.blockmap
-            ./artifacts/Mapcraft_mac.7z
-            ./artifacts/Mapcraft_linux.AppImage
-            ./artifacts/Mapcraft_linux.7z
-            ./artifacts/Mapcraft_win.exe
-            ./artifacts/Mapcraft_win.exe.blockmap
-            ./artifacts/Mapcraft_win.7zip
+            ./artifacts/artifact-mac/Mapcraft_mac.dmg
+            ./artifacts/artifact-mac/Mapcraft_mac.dmg.blockmap
+            ./artifacts/artifact-mac/Mapcraft_mac.7z
+            ./artifacts/artifact-linux/Mapcraft_linux.AppImage
+            ./artifacts/artifact-linux/Mapcraft_linux.7z
+            ./artifacts/artifact-windows/Mapcraft_win.exe
+            ./artifacts/artifact-windows/Mapcraft_win.exe.blockmap
+            ./artifacts/artifact-windows/Mapcraft_win.7zip
