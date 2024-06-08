@@ -60,7 +60,7 @@ jobs:
           path: |
             ./dist/electron-build/Mapcraft_win.exe
             ./dist/electron-build/Mapcraft_win.exe.blockmap
-            ./dist/electron-build/Mapcraft_win.7zip
+            ./dist/electron-build/Mapcraft_win.7z
 
   publish:
     needs: release
@@ -82,4 +82,4 @@ jobs:
             ./artifacts/artifact-linux/Mapcraft_linux.7z
             ./artifacts/artifact-windows/Mapcraft_win.exe
             ./artifacts/artifact-windows/Mapcraft_win.exe.blockmap
-            ./artifacts/artifact-windows/Mapcraft_win.7zip
+            ./artifacts/artifact-windows/Mapcraft_win.7z

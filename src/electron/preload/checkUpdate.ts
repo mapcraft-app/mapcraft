@@ -104,7 +104,7 @@ export default async (env: envInterface, mapName: string, minecraftVersion: mine
 		infos.resourcepack.statusCode === 200 &&
 		infos.software.statusCode === 200
 	) {
-		if (minecraft.semverCompare(currentVersion.software, infos.software.version) === 1) {
+		if (minecraft.semverCompare(currentVersion.software, infos.software.version) === -1) {
 			update.software = {
 				version: infos.software.version,
 				description: infos.software.description,
@@ -112,7 +112,7 @@ export default async (env: envInterface, mapName: string, minecraftVersion: mine
 				release: infos.software[os]
 			};
 		}
-		if (minecraft.semverCompare(currentVersion.datapack.mapcraft.version, infos.datapack.releases[0].version) === 1) {
+		if (minecraft.semverCompare(currentVersion.datapack.mapcraft.version, infos.datapack.releases[0].version) === -1) {
 			update.datapack = {
 				version: infos.datapack.releases[0].version,
 				description: infos.datapack.releases[0].description,
@@ -120,7 +120,7 @@ export default async (env: envInterface, mapName: string, minecraftVersion: mine
 				release: infos.datapack.releases[0]
 			};
 		}
-		if (minecraft.semverCompare(currentVersion.resourcepack.mapcraft.version, infos.resourcepack.releases[0].version) === 1) {
+		if (minecraft.semverCompare(currentVersion.resourcepack.mapcraft.version, infos.resourcepack.releases[0].version) === -1) {
 			update.resourcepack = {
 				version: infos.resourcepack.releases[0].version,
 				description: infos.resourcepack.releases[0].description,
