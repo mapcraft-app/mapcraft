@@ -3,7 +3,7 @@
 		<div class="case">
 			<img
 				:title="data.id"
-				:src="(data.type === 'block') ? data.path : $path(data.path)"
+				:src="genPath(data)"
 				@click="select"
 				@error="$imgErr"
 			/>
@@ -21,7 +21,8 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import { caseData } from '../interface';
+import { toPublic, path } from '@/app/plugins/app';
+import type { caseData } from '../interface';
 
 export default defineComponent({
 	name: 'Case',
@@ -37,13 +38,29 @@ export default defineComponent({
 		const remove = () => {
 			emit('remove');
 		};
+
 		const select = () => {
 			emit('select');
 		};
 
+		const genPath = (data: caseData) => {
+			if (data.type === 'item') {
+				return data.path
+					? path(data.path)
+					: toPublic('/imgs/minecraft/no_data.png');
+			} else {
+				return toPublic(
+					data.path
+						? `/imgs/minecraft/block/${data.id}.webp`
+						: '/imgs/minecraft/no_data.png'
+				);
+			}
+		};
+
 		return {
 			remove,
-			select
+			select,
+			genPath
 		};
 	}
 });

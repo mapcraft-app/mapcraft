@@ -2,7 +2,7 @@
   "name": "mapcraft",
   "description": "mapcraft",
   "private": true,
-  "version": "1.0.2-beta",
+  "version": "1.0.4-beta",
   "type": "module",
   "main": "main.mjs",
   "author": {
@@ -27,6 +27,7 @@
     "lint": "eslint .",
     "postinstall": "electron-builder install-app-deps",
     "build": "vite build -c ./src/vite.config.ts ./src && vite build -c ./src/vite.config.electron.ts ./src",
+		"build:dev": "vite build -c ./src/vite.config.ts ./src && vite build --mode development -c ./src/vite.config.electron.ts ./src",
     "preview": "electron-builder --dir --config build.cjs",
     "production:mac": "electron-builder -p never -m --config build.cjs",
     "production:windows": "electron-builder -p never -w --config build.cjs",
