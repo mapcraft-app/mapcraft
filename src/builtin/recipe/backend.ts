@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { constants } from 'fs';
-import { access, mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
+import { accessSync, constants, mkdirSync } from 'fs';
+import { access, readdir, readFile, rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { minecraft } from 'mapcraft-api/frontend';
 import { exposeInMainWorld } from '@/api/plugins/backend';
@@ -70,9 +70,11 @@ class recipe {
 			block: resolve(env.resourcepack, 'assets', 'minecraft', 'textures', 'block'),
 			item: resolve(env.resourcepack, 'assets', 'minecraft', 'textures', 'item'),
 		};
-
-		access(this.recipeDir)
-			.catch(async () => await mkdir(this.recipeDir, { recursive: true }));
+		try {
+			accessSync(this.recipeDir, constants.O_RDWR);
+		} catch {
+			mkdirSync(this.recipeDir, { recursive: true });
+		}
 	}
 
 	//#region Data
