@@ -1,5 +1,5 @@
 <template>
-	<div class="tags">
+	<div class="tags" ref="tags">
 		<template
 			v-for="el of $props.list"
 			:key="el.id"
@@ -16,12 +16,16 @@
 					<div
 						v-for="item in el.els"
 						:key="item.name"
-						class="element"
+						:class="{
+							element: true,
+							tag: item.type === 'tags'
+						}"
 						@click="copyToClipboard($q, $t, item.name)"
 					>
 						<a
 							v-if="item.type === 'tags'"
-							:href="el.tag"
+							:href="item.tag"
+							@click="toTag"
 						>
 							{{ item.name }}
 						</a>
@@ -44,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import { toPublic, path } from '@/app/plugins/app';
 import { copyToClipboard, repUnderscore } from './lib';
 import type { tabsType, tags, tagEl } from './lib';
@@ -63,6 +67,7 @@ export default defineComponent({
 		}
 	},
 	setup () {
+		const tags = ref<HTMLDivElement | null>(null);
 		const genPath = (el: tagEl, type: tabsType) => {
 			switch (type) {
 			case 'blocks':
@@ -80,10 +85,20 @@ export default defineComponent({
 			}
 		};
 
+		const toTag = (e: MouseEvent) => {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			tags.value
+				?.querySelector((e.target as HTMLLinkElement).getAttribute('href') ?? '#nope')
+				?.scrollIntoView(true);
+		};
+
 		return {
+			tags,
 			copyToClipboard,
 			repUnderscore,
-			genPath
+			genPath,
+			toTag
 		};
 	}
 });
@@ -112,6 +127,12 @@ export default defineComponent({
   justify-content: center;
 	cursor: pointer;
 }
+.tags .element.tag {
+	width: fit-content;
+	padding-left: .5em;
+	padding-right: .5em
+}
+
 .tags img {
 	width: 100%;
 	height: inherit;
