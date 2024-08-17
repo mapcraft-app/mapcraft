@@ -2445,10 +2445,10 @@ magic-string@^0.30.10:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
 
-mapcraft-api@^2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-2.4.3.tgz#e2dafa5d113a11e4050d0b37e38a2d0bc9621a9a"
-  integrity sha512-ny60V+qRHk7GyPF/+IMbBe2tDQP3aRj3BbqW7gdP5HRk0nmV3ATwVS5sXGd7W7ZT3Sk/CYA3mADOhjS1C3Im/Q==
+mapcraft-api@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/mapcraft-api/-/mapcraft-api-2.4.6.tgz#01507491411fa167f8918df588e5ae172131eefe"
+  integrity sha512-iE0vnNiEq/VAIbJPEG1PEdwc1GmJ/QZQ1uUVpQNe49T21/S2LCKz+uMdh1SMYHe1XkpAKmVxwXmuNGnqnIZmNw==
   dependencies:
     "7zip-bin" "^5.2.0"
     better-sqlite3 "^9.4.3"

@@ -89,10 +89,12 @@ export default defineComponent({
 				})
 				.catch((e) => {
 					window.log.error(e);
-					$q.notify({
-						color: 'red',
-						message: e
-					});
+					if ($q) {
+						$q.notify({
+							color: 'red',
+							message: e ?? 'Error with uâdte'
+						});
+					}
 				});
 		});
 		
@@ -123,4 +125,3 @@ export default defineComponent({
 	height: inherit;
 }
 </style>
-@/app/store/global@/app/store/map
