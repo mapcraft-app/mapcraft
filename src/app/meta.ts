@@ -2,7 +2,7 @@ import * as info from '@/main/package.json';
 
 export interface MetaData {
 	title: string;
-	titleTemplate(str: string): string; // eslint-disable-line no-unused-vars
+	titleTemplate(str: string): string;
 }
 
 const EMPTY = '___EMPTY___';

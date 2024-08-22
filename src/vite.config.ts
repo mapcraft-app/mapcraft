@@ -20,6 +20,7 @@ export default defineConfig((env) => ({
 		target: ['esnext', 'chrome100'],
 		minify: (env.mode === 'production'),
 		sourcemap: false,
+		chunkSizeWarningLimit: 1000,
 		rollupOptions: {
 			input: {
 				'load.html': resolve(__dirname, 'load.html'),

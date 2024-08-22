@@ -20,7 +20,7 @@ export interface shellModel {
 	plugin: string;
 	name: string;
 	builtin?: boolean;
-	fn: (args: string[]) => commandRet // eslint-disable-line no-unused-vars
+	fn: (args: string[]) => commandRet;
 }
 
 export function commandFormat(args: string[], data: Record<string, any> | null = null, notification = true): commandRet {

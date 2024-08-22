@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import type { App } from 'vue';
 import { globalStore } from '@/store/global';
 import { builder } from '@/main/package.json';

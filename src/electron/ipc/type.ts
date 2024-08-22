@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type Electron from 'electron';
 
 export interface ipcDefinition {
@@ -10,7 +11,6 @@ export interface ipcDefinition {
 	}[]
 }
 export interface ipcFunctions {
-	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
 	[index: number]: ((event: Electron.IpcMainEvent | Electron.IpcMainInvokeEvent, ...args: any[]) => void)
 }
 export interface ipcListInterface {

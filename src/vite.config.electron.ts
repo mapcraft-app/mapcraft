@@ -17,6 +17,7 @@ export default defineConfig((env) => ({
 		emptyOutDir: false,
 		minify: (env.mode === 'production'),
 		target: ['esnext', 'node16'],
+		chunkSizeWarningLimit: 1000,
 		rollupOptions: {
 			input: {	
 				'main': 'src/electron/main/index.ts',

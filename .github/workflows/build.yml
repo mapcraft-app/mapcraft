@@ -17,16 +17,16 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-      - name: Install Node.js, NPM and Yarn
+      - name: Install Node.js, NPM and npm
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: yarn
-        run: yarn && yarn build
+      - name: npm
+        run: npm install && npm run build
 
       - name: build-mac
         if: startsWith(matrix.os, 'macos-latest')
-        run: yarn production:mac
+        run: npm run production:mac
       - name: Upload Mac artifact
         if: startsWith(matrix.os, 'macos-latest')
         uses: actions/upload-artifact@v4
@@ -39,7 +39,7 @@ jobs:
 
       - name: build-linux
         if: startsWith(matrix.os, 'ubuntu-latest')
-        run: yarn production:linux
+        run: npm run production:linux
       - name: Upload Ubuntu artifact
         if: startsWith(matrix.os, 'ubuntu-latest')
         uses: actions/upload-artifact@v4
@@ -51,7 +51,7 @@ jobs:
     
       - name: build-windows
         if: startsWith(matrix.os, 'windows-latest')
-        run: yarn production:windows
+        run: npm run production:windows
       - name: Upload Windows artifact
         if: startsWith(matrix.os, 'windows-latest')
         uses: actions/upload-artifact@v4

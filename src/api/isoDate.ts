@@ -9,7 +9,7 @@ export interface isoDate {
 }
 
 export enum isoCompare {
-	LESS = -1, SAME = 0, GREATER = 1 // eslint-disable-line no-unused-vars
+	LESS = -1, SAME = 0, GREATER = 1
 }
 
 const iso = {
