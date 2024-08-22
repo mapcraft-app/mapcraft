@@ -3,8 +3,8 @@ import ipc from '@/electron/ipc/render';
 import { mapEngineInstance } from '@/electron/preload/engine';
 import { existsSync, writeFileSync } from 'fs';
 import { access, mkdir, rm } from 'fs/promises';
-import { fs } from 'mapcraft-api/backend';
-import { sql } from 'mapcraft-api/backend';
+import { fs, sql } from 'mapcraft-api/backend';
+import { minecraft } from 'mapcraft-api/frontend';
 import { resolve } from 'path';
 import { createTrigger, triggerInterface } from './interface';
 import { envInterface } from '../interface';
@@ -21,6 +21,7 @@ class trigger {
 	};
 
 	constructor(env: envInterface) {
+		let temp = resolve(env.datapack.base, 'functions', 'trigger');
 		this.env = env;
 		this.table = {
 			name: 'trigger',
@@ -38,16 +39,29 @@ class trigger {
 			);'
 		};
 		this.db = mapEngineInstance.database;
-
-		const temp = resolve(env.datapack.base, 'functions', 'trigger');
 		this.datapackDir = {
 			base: temp,
 			detect: resolve(temp, 'detect.mcfunction'),
 			execute: resolve(temp, 'execute.mcfunction'),
 		};
 		this.db.addTable(this.table);
-		access(this.datapackDir.base)
-			.catch(async () => await mkdir(this.datapackDir.base, { recursive: true }));
+		this.db.get('SELECT minecraftVersion FROM info')
+			.then((d) => d.minecraftVersion)
+			.then((d: string) => {
+				if ((minecraft.semverCompare(d , '1.21') >= 0)) {
+					temp = resolve(env.datapack.base, 'function', 'trigger');
+					this.datapackDir = {
+						base: temp,
+						detect: resolve(temp, 'detect.mcfunction'),
+						execute: resolve(temp, 'execute.mcfunction'),
+					};
+				}
+			
+			})
+			.finally(() => {
+				access(this.datapackDir.base)
+					.catch(async () => await mkdir(this.datapackDir.base, { recursive: true }));
+			});
 	}
 
 	editFile(id: number): void {

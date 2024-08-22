@@ -2,7 +2,9 @@ import { exposeInMainWorld } from '@/api/plugins/backend';
 import { existsSync, readFileSync } from 'fs';
 import { cp, mkdir, rm, writeFile } from 'fs/promises';
 import { basename, resolve } from 'path';
+import { minecraft } from 'mapcraft-api/frontend';
 import { fs } from 'mapcraft-api/backend';
+import { mapEngineInstance } from '@/electron/preload/engine';
 import { sounds, sound, category } from './interface';
 import { envInterface } from '../interface';
 
@@ -35,8 +37,19 @@ class music {
 		) as Record<string, sound>;
 		for (const id in this.json)
 			this.id = this.json[id].id;
-		if (!existsSync(this.datapack.function))
-			mkdir(this.datapack.function, { recursive: true });
+
+		mapEngineInstance.database.get('SELECT minecraftVersion FROM info')
+			.then((d) => d.minecraftVersion)
+			.then((d: string) => {
+				if (minecraft.semverCompare(d , '1.21') >= 0) {
+					this.datapack = {
+						execute: resolve(env.datapack.base, 'function', 'music', 'execute.mcfunction'),
+						function: resolve(env.datapack.base, 'function', 'music')
+					};
+				}
+				if (!existsSync(this.datapack.function))
+					mkdir(this.datapack.function, { recursive: true });
+			});
 	}
 
 	isExist(name: string): boolean {

@@ -6,6 +6,7 @@ import { existsSync, writeFileSync } from 'fs';
 import { writeFile, mkdir, access } from 'fs/promises';
 import { resolve } from 'path';
 import ipc from '@/electron/ipc/render';
+import { minecraft } from 'mapcraft-api/frontend';
 import type { sql } from 'mapcraft-api/backend';
 import type { tableInterface } from 'mapcraft-api';
 
@@ -23,6 +24,7 @@ import { cutsceneInterface, cutscenePointInterface } from './interface';
 class cutscene {
 	private env: envInterface;
 	private name: string;
+	private functionOrFunctions: 'function' | 'functions';
 	private tables: tableInterface[];
 	public db: sql;
 	public _path: {
@@ -33,6 +35,7 @@ class cutscene {
 	constructor() {
 		this.env = {} as envInterface;
 		this.name = '';
+		this.functionOrFunctions = 'functions';
 		this.tables = [
 			{
 				name: 'cutscene',
@@ -70,9 +73,16 @@ class cutscene {
 		this.env = env;
 		this.name = name;
 		this.db = mapEngineInstance.database;
+		
+		if (minecraft.semverCompare(
+			(await this.db.get('SELECT minecraftVersion FROM info'))
+			?.minecraftVersion, '1.21') >= 0
+		)
+			this.functionOrFunctions = 'function';
+
 		this._path = {
-			dir: resolve(env.datapack.base, 'functions', 'cutscene'),
-			main: resolve(env.datapack.base, 'functions', 'cutscene', 'start.mcfunction')
+			dir: resolve(env.datapack.base, this.functionOrFunctions, 'cutscene'),
+			main: resolve(env.datapack.base, this.functionOrFunctions, 'cutscene', 'start.mcfunction')
 		};
 		this.db.addTable(this.tables);
 		await access(this._path.dir)
