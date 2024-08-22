@@ -30,7 +30,7 @@ export default class {
 			throw new Error(`The number of lines read must be between 1 and Infinity, current ${nLines}`);
 		try {
 			accessSync(this.config.path, constants.R_OK);
-		} catch (e) {
+		} catch {
 			throw new Error(`File not exist ${this.config.path}`);
 		}
 	}

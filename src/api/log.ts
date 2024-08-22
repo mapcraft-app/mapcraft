@@ -37,7 +37,7 @@ export default class Log {
 		this.psql = this.psql.bind(this);
 		try {
 			accessSync(resolvePath, constants.F_OK);
-		} catch (___) {
+		} catch {
 			try {
 				mkdirSync(resolvePath);
 			} catch (e: any) {

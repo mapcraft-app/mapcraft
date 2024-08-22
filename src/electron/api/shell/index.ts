@@ -45,7 +45,7 @@ export class Shell {
 
 		try {
 			watch(process.env.APP_DATA).close();
-		} catch (err) {
+		} catch {
 			ipcRenderer.send('window::crash', 'NodeJS.fs.watch api is unavailable. Are you running Windows, Mac or Linux ?');
 		}
 

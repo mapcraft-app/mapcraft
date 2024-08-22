@@ -123,7 +123,7 @@ class trigger {
 		try {
 			if (existsSync(link))
 				rm(link, { recursive: true });
-		} catch (___) {
+		} catch {
 			/// make nothing
 		}
 		await fs.removeLine(this.datapackDir.detect, occ);

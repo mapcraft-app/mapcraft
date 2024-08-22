@@ -72,7 +72,7 @@ export async function exposeInMainWorld(apiKey: string, api: unknown): Promise<v
 	}
 	try {
 		contextBridge.exposeInMainWorld(apiKey, api);
-	} catch (___) {
+	} catch {
 		throw new Error(`${apiKey} channel is already registered. The closest available channel is ${apiKey}_0`);
 	}
 }
