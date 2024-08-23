@@ -8,7 +8,7 @@ body:
       value: |
         This form is only for submitting feature requests. If you have a usage question
         or are unsure if this is really a bug, make sure to:
-        - Read the [docs](https://documentation.mapcraft.app)
+        - Read the [docs](https://mapcraft.app/en-US/docs)
         - Ask on [Discord Chat](https://discord.gg/PMEFsW3ac9)
   - type: textarea
     id: problem-description
