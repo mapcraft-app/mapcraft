@@ -17,16 +17,20 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-      - name: Install Node.js, NPM and npm
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: npm
-        run: npm install && npm run build
+        run: |
+          npm install
+          npm run build
 
       - name: build-mac
         if: startsWith(matrix.os, 'macos-latest')
-        run: npm run production:mac
+        run: |
+          npm install -D dmg-license
+          npm run production:mac
       - name: Upload Mac artifact
         if: startsWith(matrix.os, 'macos-latest')
         uses: actions/upload-artifact@v4
