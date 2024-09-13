@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img height="250" src="src/dist/img/icon/icon_small.png" alt="Mapcraft logo"><br/>
+    <img height="250" src="src/public/imgs/app/icon_small.png" alt="Mapcraft logo"><br/>
     Mapcraft is a software to increase the native possibilities of Minecraft Java edition without any mod installation
 </h1>
 
