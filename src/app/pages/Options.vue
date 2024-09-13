@@ -66,7 +66,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import optionsBuild from '@/components/options/Build.vue';
 import optionsDirectory from '@/components/options/Directory.vue';
 import optionsInfo from '@/components/options/Info.vue';
@@ -85,7 +86,15 @@ export default defineComponent({
 	},
 	setup () {
 		const splitter = ref<number>(15);
-		const tab = ref<string>('general');
+		const tab = ref<'general' | 'account' | 'build' | 'info'>('general');
+		const route = useRoute();
+		const toUser = (hash?: string) => {
+			if (hash && hash.localeCompare('#user') === 0)
+				tab.value = 'account';
+		};
+
+		onMounted(() => toUser(route.hash));
+		onBeforeRouteUpdate((r) => toUser(r.hash));
 
 		return {
 			splitter,

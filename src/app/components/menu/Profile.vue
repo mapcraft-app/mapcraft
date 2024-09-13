@@ -6,9 +6,20 @@
 			@error="avatarUrl = $toPublic('imgs/minecraft/player.png')"
 		/>
 		<div class="column justify-center q-pl-sm">
-			<span class="text-h5 text-center text-weight-light q-pb-sm">
-				{{ (user.offline) ? user.username : user.minecraftUsername }}
-			</span>
+			<div class="text-h5 text-center q-pb-sm cursor-pointer" >
+				<q-tooltip
+					class="bg-secondary text-body2 text-center"
+					anchor="top middle"
+					self="bottom middle"
+				>
+					If this is not your in-game pseudonym, click here for change it
+				</q-tooltip>
+				<q-btn
+					flat
+					:label="((user.offline) ? user.username : user.minecraftUsername) ?? ''"
+					@click="$router.push({ path: '/options', hash: '#user' })"
+				/>
+			</div>
 			<q-btn outline square :label="$t('components.menu.profile.disconnect')" @click="disconnect()" />
 		</div>
 	</div>
@@ -45,7 +56,12 @@ export default defineComponent({
 			router.push('/user');
 		};
 
-		const external = () => window.ipc.send('dialog::open-external', `https://mapcraft.app/${global.lang}/docs`);
+		const external = () => {
+			if (global.plugin === null)
+				window.ipc.send('dialog::open-external', `https://mapcraft.app/${global.lang}/docs`);
+			else
+				window.ipc.send('dialog::open-external', `https://mapcraft.app/${global.lang}/docs/builtin/${global.plugin.name}`);
+		};
 
 		onBeforeMount(() => {
 			avatar();

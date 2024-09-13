@@ -1,7 +1,12 @@
 <template>
 	<div class="flex column">
 		<div class="width-form q-mb-md">
-			<q-btn color="green-8" :label="$t('pages.user.mapcraft')" @click="mapcraft"/>
+			<q-btn
+				disable
+				color="green-8"
+				:label="$t('pages.user.mapcraft')"
+				@click="mapcraft"
+			/>
 		</div>
 		<div class="width-form">
 			<template v-if="isServerMode">
@@ -31,7 +36,9 @@ export default defineComponent({
 	emits: ['isOffline', 'mapcraftAccountSelected'],
 	setup (_props, { emit }) {
 		return {
-			mapcraft: (): void => emit('mapcraftAccountSelected'),
+			mapcraft: (): void => {
+				// emit('mapcraftAccountSelected');
+			},
 			isOffline: (): void => emit('isOffline')
 		};
 	}
