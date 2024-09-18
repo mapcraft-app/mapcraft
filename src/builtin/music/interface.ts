@@ -2,7 +2,7 @@ export type category =
 	'none' | 'ambient' | 'block' | 'hostile' | 'master' | 'music' |
 	'neutral' | 'player' | 'record' | 'voice' | 'weather';
 
-export type type = 'event' | 'sound';
+export type type = 'event' | 'file';
 
 export interface sounds {
 	attenuation_distance?: number,

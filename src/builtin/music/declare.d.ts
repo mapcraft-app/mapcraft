@@ -7,6 +7,7 @@ export declare global {
 			init: (env: envInterface) => void,
 			get: () => Record<string, sound>,
 			save: (data?: Record<string, sound>) => Promise<void>,
+			analyze: (src: string) => Promise<number>,
 			datapack: {
 				create: (d: {
 						id: number;

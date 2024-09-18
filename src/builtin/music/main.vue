@@ -135,7 +135,7 @@ export default defineComponent({
 				pitch: e.pitch ?? 1,
 				preload: e.preload,
 				stream: e.stream,
-				type: e.type ?? 'sound',
+				type: e.type ?? 'file',
 				volume: e.volume ?? 1,
 				weight: e.weight ?? 1
 			})) ?? [];
@@ -165,7 +165,7 @@ export default defineComponent({
 					pitch: 1,
 					preload: undefined,
 					stream: undefined,
-					type: 'sound',
+					type: 'file',
 					volume: 1,
 					weight: 1
 				} as sounds);
@@ -202,7 +202,7 @@ export default defineComponent({
 					category: soundList.value[key].category,
 					id: soundList.value[key].id,
 					name: soundList.value[key].name,
-					replace: (!soundList.value[key].replace || soundList.value[key].replace && soundList.value[key].replace === false)
+					replace: (!soundList.value[key].replace || soundList.value[key].replace && !soundList.value[key].replace)
 						? undefined
 						: soundList.value[key].replace,
 					subtitle: soundList.value[key].subtitle ?? undefined,
@@ -219,10 +219,8 @@ export default defineComponent({
 							: e.preload,
 						stream: (!e.stream)
 							? undefined
-							: e.preload,
-						type: (e.type === 'sound')
-							? undefined
-							: 'event',
+							: e.stream,
+						type: e.type ?? 'file',
 						volume: (!e.volume || e.volume && e.volume === 1)
 							? undefined
 							: e.volume,
@@ -232,25 +230,20 @@ export default defineComponent({
 					}))
 				} as sound;
 				
-				let audio: HTMLAudioElement = document.createElement('audio');
-				const getDuration = (src: string): Promise<number> => {
-					return new Promise((res) => {
-						audio.src = src;
-						audio.addEventListener('loadedmetadata', () => {
-							res(Math.round(audio.duration));
-						}, { once: true });
-					});
-				};
-
 				for (const id in soundList.value[key].sounds) {
+					const toto = await window.music.analyze(
+							path(window.music.sound.get(soundList.value[key].sounds[id].name))
+						);
+					console.log(toto, toto * 20)
+					
 					window.music.datapack.create({
 						id:soundList.value[key].id,
 						name: soundList.value[key].sounds[id].name,
 						index: Number(id),
 						category: soundList.value[key].category,
-						duration: await getDuration(
+						duration: (await window.music.analyze(
 							path(window.music.sound.get(soundList.value[key].sounds[id].name))
-						)
+						)) * 20
 					});
 				}
 			}

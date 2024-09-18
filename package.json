@@ -67,8 +67,8 @@
     "vue": "^3.4.21",
     "vue-i18n": "^9.10.2"
   },
-	"optionalDependencies": {
-		"@rollup/rollup-darwin-arm64": "^4.21.0",
+  "optionalDependencies": {
+    "@rollup/rollup-darwin-arm64": "^4.21.0",
     "@rollup/rollup-linux-x64-gnu": "^4.21.0"
   }
 }

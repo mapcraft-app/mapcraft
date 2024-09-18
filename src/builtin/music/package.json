@@ -5,6 +5,7 @@
   "description": "music plugin",
   "license": "MIT",
   "version": "1.0.0",
+	"type": "module",
   "author": {
     "email": "hello@mapcraft.app",
     "name": "Mapcraft"

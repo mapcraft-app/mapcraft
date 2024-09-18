@@ -50,7 +50,7 @@
 				v-model="$props.sound.type"
 				:bottom-slots="false"
 				dense
-				:options="['event', 'sound']"
+				:options="['file', 'event']"
 				class="q-pb-sm"
 				:disable="!$props.sound.name.length"
 			/>
