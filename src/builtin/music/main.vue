@@ -231,14 +231,9 @@ export default defineComponent({
 				} as sound;
 				
 				for (const id in soundList.value[key].sounds) {
-					const toto = await window.music.analyze(
-							path(window.music.sound.get(soundList.value[key].sounds[id].name))
-						);
-					console.log(toto, toto * 20)
-					
 					window.music.datapack.create({
 						id:soundList.value[key].id,
-						name: soundList.value[key].sounds[id].name,
+						name: soundList.value[key].sounds[id].name.slice(0, soundList.value[key].sounds[id].name.lastIndexOf('/')),
 						index: Number(id),
 						category: soundList.value[key].category,
 						duration: (await window.music.analyze(

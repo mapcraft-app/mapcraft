@@ -5,23 +5,9 @@ import { basename, resolve } from 'path';
 import { minecraft } from 'mapcraft-api/frontend';
 import { fs } from 'mapcraft-api/backend';
 import { mapEngineInstance } from '@/electron/preload/engine';
+import ipc from '@/electron/ipc/render';
 import { sounds, sound, category } from './interface';
 import { envInterface } from '../interface';
-
-const analyzeAudio = async (src: string): Promise<number> => {
-	return new Promise((res) => {
-		const audio = new Audio(src);
-		audio.addEventListener('loadedmetadata', () => {
-			if (audio.duration !== Infinity)
-				return res(Math.floor(audio.duration));
-			audio.currentTime = 10000000;
-			setTimeout(() => {
-				audio.currentTime = 0;
-				res(Math.floor(audio.duration));
-			}, 1000);
-		}, { once: true });
-	});
-};
 
 class music {
 	private env: envInterface;
@@ -217,7 +203,7 @@ exposeInMainWorld('music', {
 		) => __instance__.datapackCreateMusic(d),
 		delete: (id: number, index: number) => __instance__.datapackDeleteMusic(id, index)
 	},
-	analyze: (src: string) => analyzeAudio(src),
+	analyze: async (src: string) => await ipc.invoke('file::get-duration', src),
 	music: {
 		add: (sound: sound) => __instance__.addMusic(sound),
 		remove: (name: string) => __instance__.removeMusic(name),

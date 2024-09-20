@@ -7,6 +7,7 @@ import ipcNaming, { ipcDefinition, ipcType } from './type';
 
 import dialogDefinitions from './channels/dialog/definitions';
 import editorDefinitions from './channels/editor/definitions';
+import fileDefinitions from './channels/file/definitions';
 import notificationDefinitions from './channels/notification/definitions';
 import shellDefinitions from './channels/shell/definitions';
 import updateDefitions from './channels/update/definitions';
@@ -39,6 +40,7 @@ const pushImport = (def: ipcDefinition): void => {
 
 pushImport(dialogDefinitions);
 pushImport(editorDefinitions);
+pushImport(fileDefinitions);
 pushImport(notificationDefinitions);
 pushImport(shellDefinitions);
 pushImport(updateDefitions);

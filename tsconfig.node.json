@@ -3,7 +3,7 @@
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
 		"resolveJsonModule": true,
     "strict": true

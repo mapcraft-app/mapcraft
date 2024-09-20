@@ -10,6 +10,9 @@ import dialogFunctions from './channels/dialog/functions';
 import editorDefinitions from './channels/editor/definitions';
 import editorFunctions from './channels/editor/functions';
 
+import fileDefinitions from './channels/file/definitions';
+import fileFunctions from './channels/file/functions';
+
 import notificationDefinitions from './channels/notification/definitions';
 import notificationFunctions from './channels/notification/functions';
 
@@ -32,6 +35,7 @@ const importInList = (definition: ipcDefinition, functions: ipcFunctions): void 
 
 importInList(dialogDefinitions, dialogFunctions);
 importInList(editorDefinitions, editorFunctions);
+importInList(fileDefinitions, fileFunctions);
 importInList(notificationDefinitions, notificationFunctions);
 importInList(shellDefinitions, shellFunctions);
 importInList(updateDefinitions, updateFunctions);
