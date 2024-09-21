@@ -87,6 +87,25 @@ class music {
 		return temp;
 	}
 
+	async changeMusicName(newName: string, oldName: string) {
+		const path = {
+			old: resolve(this.path.base, oldName),
+			new: resolve(this.path.base, newName)
+		};
+	
+		if (existsSync(path.new))
+			throw new Error(`${newName} exist`);
+		await mkdir(path.new);
+		await cp(path.old, path.new, { preserveTimestamps: true, recursive: true });
+		await rm(path.old, { recursive: true, force: true });
+		this.json[newName] = { ...this.json[oldName] };
+		this.json[newName].name = newName;
+		this.json[newName].sounds = this.json[newName].sounds.map((e) => ({ ...e, ...{ name: e.name.replaceAll(oldName, newName) } }));
+		delete this.json[oldName];
+		await this.saveFile();
+		return this.json[newName];
+	}
+
 	async removeMusic(name: string) {
 		if (!this.isExist(name))
 			throw new Error(`${name} not exist`);
@@ -136,27 +155,19 @@ class music {
 	}
 
 	//#region datapack
-
-	/**
-	 * 1: 11, 12, 13, ...
-	 * 2: 21, 22, 23, ...
-	 * ...
-	 */
 	async datapackCreateMusic(d: {
 		id: number,
 		name: string,
-		index: number,
 		category: category,
 		duration: number
 	}) {
-		const soundId = `${d.id}${d.index}`;
 		const category: category = (d.category === 'none')
 			? 'master'
 			: d.category;
 		const duration = isNaN(d.duration)
 			? 0
 			: d.duration;
-		const path = resolve(this.datapack.function, `${soundId}.mcfunction`);
+		const path = resolve(this.datapack.function, `${d.id}.mcfunction`);
 		const data = [
 			`execute if score @s MC_MusicTime matches 1 run playsound ${d.name} ${category} @s ~ ~ ~`,
 			`execute if score @s[tag=!RepeatMusic] MC_MusicTime matches ${duration}.. run scoreboard players set @s MC_Music 0`,
@@ -168,19 +179,18 @@ class music {
 		await writeFile(path, data.join('\n'), { encoding: 'utf-8', flag: 'w' });
 		await fs.modifyLine(
 			this.datapack.execute,
-			`function mapcraft-data:music/${soundId}`,
-			`execute if score @s MC_Music matches ${soundId} run function mapcraft-data:music/${soundId}`,
+			`function mapcraft-data:music/${d.id}`,
+			`execute if score @s MC_Music matches ${d.id} run function mapcraft-data:music/${d.id}`,
 			true
 		);
 	}
 
-	async datapackDeleteMusic(id: number, index: number) {
-		const soundId = `${id}${index}`;
-		const path = resolve(this.datapack.function, `${soundId}.mcfunction`);
+	async datapackDeleteMusic(id: number) {
+		const path = resolve(this.datapack.function, `${id}.mcfunction`);
 		if (!existsSync(this.datapack.execute))
 			return;
 		await rm(path, { force: true });
-		await fs.removeLine(this.datapack.execute, `matches ${soundId.toString()}`);
+		await fs.removeLine(this.datapack.execute, `matches ${id.toString()}`);
 	}
 	//#endregion datapack
 }
@@ -197,15 +207,15 @@ exposeInMainWorld('music', {
 		create: (d: {
 			id: number,
 			name: string,
-			index: number,
 			category: category,
 			duration: number}
 		) => __instance__.datapackCreateMusic(d),
-		delete: (id: number, index: number) => __instance__.datapackDeleteMusic(id, index)
+		delete: (id: number) => __instance__.datapackDeleteMusic(id)
 	},
 	analyze: async (src: string) => await ipc.invoke('file::get-duration', src),
 	music: {
 		add: (sound: sound) => __instance__.addMusic(sound),
+		changeName: (newName: string, oldName: string) => __instance__.changeMusicName(newName, oldName),
 		remove: (name: string) => __instance__.removeMusic(name),
 	},
 	sound: {

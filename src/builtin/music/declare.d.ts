@@ -12,14 +12,14 @@ export declare global {
 				create: (d: {
 						id: number;
 						name: string;
-						index: number;
 						category: category;
 						duration: number;
 				}) => Promise<void>;
-				delete: (id: number, index: number) => Promise<void>;
+				delete: (id: number) => Promise<void>;
 			},
 			music: {
 				add: (sound: sound) => Promise<sound>;
+				changeName: (newName: string, oldName: string) => Promise<sound>;
 				remove: (name: string) => Promise<void>;
 			},
 			sound: {

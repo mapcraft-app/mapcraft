@@ -163,7 +163,7 @@ export default defineComponent({
 			)
 				.then(() => {
 					emit('delete-sound');
-					window.music.datapack.delete(props.id, props.index);
+					window.music.datapack.delete(props.id);
 				})
 				.catch((e) => console.error(e));
 		};

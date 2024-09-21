@@ -41,6 +41,7 @@
 				<q-tab-panel name="general">
 					<general-vue
 						:sound="soundList[selectedSoundKey]"
+						@change-name="changeMusicName"
 						@delete-music="deleteMusic"
 					/>
 				</q-tab-panel>
@@ -141,12 +142,23 @@ export default defineComponent({
 			})) ?? [];
 		};
 
+		const changeMusicName = (newName: string, oldName: string) => {
+			window.music.music.changeName(newName, oldName)
+				.then((newSound) => {
+					delete soundList.value[oldName];
+					soundList.value[newName] = newSound;
+					selectedSoundKey.value = newName;
+				})
+				.catch((e) => {
+					console.error(e);
+				});
+		};
+
 		const deleteMusic = () => {
 			if (selectedSoundKey.value) {
 				const name = soundList.value[selectedSoundKey.value].name;
 				window.music.music.remove(name)
 					.then(() => {
-						console.log('hello');
 						if (selectedSoundKey.value)
 							delete soundList.value[selectedSoundKey.value];
 						selectedSoundKey.value = null;
@@ -229,18 +241,22 @@ export default defineComponent({
 							: e.weight
 					}))
 				} as sound;
-				
-				for (const id in soundList.value[key].sounds) {
-					window.music.datapack.create({
-						id:soundList.value[key].id,
-						name: soundList.value[key].sounds[id].name.slice(0, soundList.value[key].sounds[id].name.lastIndexOf('/')),
-						index: Number(id),
-						category: soundList.value[key].category,
-						duration: (await window.music.analyze(
-							path(window.music.sound.get(soundList.value[key].sounds[id].name))
-						)) * 20
-					});
+				const maxDurationSounds: number[] = [];
+				for (const sound of soundList.value[key].sounds) {
+					maxDurationSounds.push(
+						await window.music.analyze(
+							path(window.music.sound.get(sound.name))
+						)
+					);
 				}
+				const maxDurationSoundIndex = maxDurationSounds.indexOf(Math.max(...maxDurationSounds));
+
+				window.music.datapack.create({
+					id: soundList.value[key].id,
+					name: soundList.value[key].sounds[maxDurationSoundIndex].name.slice(0, soundList.value[key].sounds[maxDurationSoundIndex].name.lastIndexOf('/')),
+					category: soundList.value[key].category,
+					duration: maxDurationSounds[maxDurationSoundIndex] * 20
+				});
 			}
 			window.music.save(retData)
 				.then(() => {
@@ -289,6 +305,7 @@ export default defineComponent({
 
 			createNewMusic,
 			selectMusic,
+			changeMusicName,
 			deleteMusic,
 
 			addSound,
