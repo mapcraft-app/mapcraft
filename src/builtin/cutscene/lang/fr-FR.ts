@@ -31,6 +31,7 @@ export default {
 	content: {
 		menu: {
 			editStart: 'modifier le mcfunction de départ',
+			editDuring: 'modifier le mcfunction exécuté pendant la scène',
 			editEnd: 'modifier le mcfunction de fin',
 			option: 'modifier les options',
 			save: {

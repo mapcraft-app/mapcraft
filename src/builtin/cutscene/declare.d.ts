@@ -6,7 +6,7 @@ export declare global {
 	interface Window {
 		cutscene: {
 			init: (env: envInterface, name: string) => Promise<void>,
-			openFile: (id: number, start: boolean = true) => void,
+			openFile: (id: number, type: 'start' | 'during' | 'end') => void,
 			getCutscene: (id: number | undefined = undefined) => Promise<cutsceneInterface | cutsceneInterface[]>,
 			getPoints: (id: number) => Promise<cutscenePointInterface[]>,
 			create: (name: string) => Promise<cutsceneInterface>,

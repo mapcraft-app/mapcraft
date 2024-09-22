@@ -18,7 +18,10 @@
 			<template v-slot:right>
 				<q-icon name="delete"/>
 			</template>
-			<q-item :class="isSelected(cutscene.id)">
+			<q-item :class="{
+				'element-selected': (cutsceneSelectedId === cutscene.id),
+				row: true
+			}">
 				<q-item-section no-wrap>
 					<span class="q-mr-md">
 					<q-icon name="sell" class="q-mr-xs" />
@@ -82,12 +85,6 @@ export default defineComponent({
 		const modalCutsceneName = ref<string | null>(null);
 		const cutsceneSelectedId = ref<number>(-1);
 
-		const isSelected = (id: number) => {
-			if (cutsceneSelectedId.value === id)
-				return 'element-selected';
-			return '';
-		};
-
 		const openCutscene = (id: number) => {
 			window.mapcraft.clipboard.writeText(`cutscene_${id}`);
 			const x = props.list.findIndex((e) => e.id === id);
@@ -120,7 +117,6 @@ export default defineComponent({
 			modalCutsceneName,
 			cutsceneSelectedId,
 	
-			isSelected,
 			openCutscene,
 			createCutscene,
 			deleteCutscene

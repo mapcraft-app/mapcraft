@@ -67,9 +67,12 @@ export default defineComponent({
 		const cutsceneSelected = ref<cutscene | null>(null);
 		let saveCutscene: NodeJS.Timer; // eslint-disable-line no-undef
 
-		const openFile = (start: boolean) => {
+		const openFile = (type: 'start' | 'during' | 'end') => {
 			if (cutsceneSelected.value)
-				window.cutscene.openFile(cutsceneSelected.value.cutscene.id, start);
+				window.cutscene.openFile(
+					cutsceneSelected.value.cutscene.id,
+					type
+				);
 		};
 
 		//#region Cutscene

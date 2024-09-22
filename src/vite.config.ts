@@ -10,6 +10,16 @@ export default defineConfig((env) => ({
 	clearScreen: false,
 	publicDir: './public',
 	logLevel: 'info',
+	css: {
+		preprocessorOptions: {
+			scss: {
+				api: 'modern-compiler'
+			},
+			sass: {
+				api: 'modern-compiler'
+			},
+		}
+	},
 	define: {
 		__VUE_I18N_FULL_INSTALL__: true,
     __VUE_I18N_LEGACY_API__: false

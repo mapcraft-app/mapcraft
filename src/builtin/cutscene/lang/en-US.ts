@@ -31,6 +31,7 @@ export default {
 	content: {
 		menu: {
 			editStart: 'edit start mcfunction file',
+			editDuring: 'edit the mcfunction that is executed during the cutscene',
 			editEnd: 'edit end mcfunction file',
 			option: 'edit options',
 			save: {

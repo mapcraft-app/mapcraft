@@ -98,10 +98,12 @@ class GenerateCutsceneGen1 {
 		return data;
 	}
 
-	private genSavePosition (parse: string[]) {
+	private genSavePosition (parse: string[], isPlayer = false) {
+		const ret = [];
+	
 		if (parse[0] === 'origin') {
-			return [
-				'# Save position',
+			ret.push(...[
+				'# Save data',
 				'\n',
 				'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!Debug] positioned as @s store result score @s MC_CutsceneSaveX run data get entity @s Pos[0]',
 				'\n',
@@ -112,9 +114,16 @@ class GenerateCutsceneGen1 {
 				'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!Debug] positioned as @s store result score @s MC_CutsceneSaveRx run data get entity @s Rotation[0]',
 				'\n',
 				'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!Debug] positioned as @s store result score @s MC_CutsceneSaveRy run data get entity @s Rotation[1]'
-			];
+			]);
 		}
-		return undefined;
+		if (isPlayer) {
+			ret.push(...[
+				'\n',
+				'execute if score @s MC_Cutscene matches 0 if entity @s[tag=!Debug] positioned as @s store result score @s MC_CutsceneSaveGamemode run data get entity @s playerGameType'
+			])
+		}
+	
+		return ret;
 	}
 
 	private genLoadPosition (parse: string[], time: { Max: number }) {
@@ -230,12 +239,14 @@ class GenerateCutsceneGen1 {
 			cameraPlayer: resolve(this.path.dir, this.id.toString(), 'camera_player.mcfunction'),
 
 			start: resolve(this.path.dir, this.id.toString(), 'start.mcfunction'),
+			during: resolve(this.path.dir, this.id.toString(), 'during.mcfunction'),
 			end: resolve(this.path.dir, this.id.toString(), 'end.mcfunction')
 		};
 
 		const templateFiles = {
 			Launch: ['execute if entity @s[tag=Cutscene,tag=', tag ,'] run function mapcraft-data:cutscene/', this.id.toString(), '/main'],
 			Start: ['# ', tag,' start'],
+			During: ['# ', tag, 'during'],
 			End: ['# ', tag,' end'],
 			Main: {
 				0: ['execute if entity @s[type=minecraft:player] positioned ', coordinates.position, ' rotated ', coordinates.rotation, ' run function mapcraft-data:cutscene/', this.id.toString() ,'/player'],
@@ -262,7 +273,8 @@ class GenerateCutsceneGen1 {
 			Cutscene: {
 				0: ['# Cutscene'],
 				1: ['execute if score @s MC_Cutscene matches 1..', time.Max.toString(), ' run function mapcraft-data:cutscene/', this.id.toString(), '/camera_entity'],
-				2: ['scoreboard players add @s MC_Cutscene 1'],
+				2: ['execute if score @s MC_Cutscene matches 1..', time.Max.toString(), ' if entity @s[tag=!Debug] run function mapcraft-data:cutscene/', this.id.toString() ,'/during'],
+				3: ['scoreboard players add @s MC_Cutscene 1'],
 			},
 			End: {
 				0: ['# End'],
@@ -277,7 +289,7 @@ class GenerateCutsceneGen1 {
 		const templatePlayerFile = {
 			Core: {
 				0: ['# Core'],
-				1: () => this.genSavePosition(parse),
+				1: () => this.genSavePosition(parse, true),
 				2: ['execute if score @s MC_Cutscene matches 0 if entity @s[tag=!Debug] run function mapcraft:built_in/cutscene/save_gamemode'],
 				3: ['execute if score @s MC_Cutscene matches 0 run tp @s[tag=', tag, ',tag=Cutscene,tag=!Debug] ~ ~ ~ ~ ~'],
 				4: ['execute if score @s MC_Cutscene matches 0 unless entity @e[sort=nearest,tag=Cutscene,tag=Camera] run function mapcraft:built_in/cutscene/summon_camera'],
@@ -297,7 +309,8 @@ class GenerateCutsceneGen1 {
 				0: ['# Cutscene'],
 				1: ['execute if entity @s[tag=', tag ,',tag=!Debug] if score @s MC_Cutscene matches ..', time.Max.toString() ,' if entity @e[tag=', tag ,',tag=Cutscene,tag=Camera,sort=nearest,limit=1,distance=1..] run spectate @e[tag=', tag ,',tag=Cutscene,tag=Camera,sort=nearest,limit=1] @s'],
 				2: ['scoreboard players add @s MC_Cutscene 1'],
-				3: ['execute if score @s MC_Cutscene matches 1..', time.Max.toString(), ' at @e[tag=', tag, ',tag=Cutscene,tag=Camera,sort=nearest,limit=1] run function mapcraft-data:cutscene/', this.id.toString(), '/camera_player'],
+				3: ['execute if score @s MC_Cutscene matches 1..', time.Max.toString(), ' if entity @s[tag=!Debug] run function mapcraft-data:cutscene/', this.id.toString() ,'/during'],
+				4: ['execute if score @s MC_Cutscene matches 1..', time.Max.toString(), ' at @e[tag=', tag, ',tag=Cutscene,tag=Camera,sort=nearest,limit=1] run function mapcraft-data:cutscene/', this.id.toString(), '/camera_player'],
 			},
 			End: {
 				0: ['# End'],
@@ -305,9 +318,13 @@ class GenerateCutsceneGen1 {
 				4: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. run kill @e[tag=', tag, ',tag=Cutscene,tag=Camera,sort=nearest,limit=1]'],
 				5: ['execute if score @s MC_Cutscene matches ', time.Max.toString(), '.. if entity @s[tag=!Debug] run function mapcraft:built_in/cutscene/load_gamemode'],
 				6: () => this.genLoadPosition(parse, time),
-				7: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=', tag ,',tag=!Debug] run tag @s remove ', tag],
-				8: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=!Debug] run function mapcraft-data:cutscene/', this.id.toString() ,'/end'],
-				9: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. run scoreboard players set @s MC_Cutscene 0']
+				7: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=!Debug] if score @s MC_CutsceneSaveGamemode matches 0 run gamemode survival @s'],
+				8: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=!Debug] if score @s MC_CutsceneSaveGamemode matches 1 run gamemode creative @s'],
+				9: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=!Debug] if score @s MC_CutsceneSaveGamemode matches 2 run gamemode adventure @s'],
+				10: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=!Debug] if score @s MC_CutsceneSaveGamemode matches 3 run gamemode spectator @s'],
+				11: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=', tag ,',tag=!Debug] run tag @s remove ', tag],
+				12: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. if entity @s[tag=!Debug] run function mapcraft-data:cutscene/', this.id.toString() ,'/end'],
+				13: ['execute if score @s MC_Cutscene matches ', time.Max.toString() ,'.. run scoreboard players set @s MC_Cutscene 0']
 			}
 		};
 
@@ -336,10 +353,11 @@ class GenerateCutsceneGen1 {
 		fs.modifyLine(this.path.main, `tag=${tag}`, templateFiles.Launch.join(''), true);
 
 		/**
-		 * Create start and end mcfunction files
+		 * Create start, during and end mcfunction files
 		 */
 		await Promise.all([
 			writeFile(filePath.start , `${templateFiles.Start.join('')}\n`, { encoding: 'utf-8', flag: 'wx' }),
+			writeFile(filePath.during , `${templateFiles.Start.join('')}\n`, { encoding: 'utf-8', flag: 'wx' }),
 			writeFile(filePath.end, `${templateFiles.End.join('')}\n`, { encoding: 'utf-8', flag: 'wx' })
 		]).catch(() => { /* make nothing */ });
 

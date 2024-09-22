@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { fs, type sql } from 'mapcraft-api/backend';
 import type { cutsceneInterface } from '../interface';
 
-const deleteCutscene_GEN1 = async (db: sql, name: string, path: {dir: string, main: string}): Promise<cutsceneInterface> => {
+const createCutscene_GEN1 = async (db: sql, name: string, path: {dir: string, main: string}): Promise<cutsceneInterface> => {
 	await db.update('INSERT INTO cutscene (name, duration) VALUES (?, ?)', name, 0);
 	const ret: cutsceneInterface = await db.get('SELECT * FROM cutscene WHERE name = ?', name);
 	await db.update('UPDATE cutscene SET tag = ? WHERE id = ?', `Cutscene_${ret.id}`, ret.id);
@@ -35,5 +35,5 @@ export default (
 		|| version === '1.19' || version === '1.19.1' || version === '1.19.2' || version === '1.19.3' || version === '1.19.4'
 	)
 	*/
-	return deleteCutscene_GEN1(db, name, path);
+	return createCutscene_GEN1(db, name, path);
 };

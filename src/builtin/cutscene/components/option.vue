@@ -8,17 +8,26 @@
 		<div class="row no-wrap justify-between">
 			<q-btn
 				square unelevated color="light-blue-7"
-				icon="play_arrow"
-				@click="$emit('open', true)"
+				icon="sym_o_line_start_diamond"
+				@click="$emit('open', 'start')"
 			>
 				<q-tooltip :delay="500" class="bg-light-blue-7">
 					{{ $capitalize($t('builtin.cutscene.content.menu.editStart')) }}
 				</q-tooltip>
 			</q-btn>
 			<q-btn
+				square unelevated color="purple-5"
+				icon="route"
+				@click="$emit('open', 'during')"
+			>
+				<q-tooltip :delay="500" class="bg-purple-5">
+					{{ $capitalize($t('builtin.cutscene.content.menu.editDuring')) }}
+				</q-tooltip>
+			</q-btn>
+			<q-btn
 				square unelevated color="red-7"
-				icon="stop"
-				@click="$emit('open', false)"
+				icon="sym_o_line_end_diamond"
+				@click="$emit('open', 'end')"
 			>
 				<q-tooltip :delay="500" class="bg-red-7">
 					{{ $capitalize($t('builtin.cutscene.content.menu.editEnd')) }}
