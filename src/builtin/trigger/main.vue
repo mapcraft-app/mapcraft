@@ -16,13 +16,14 @@
 			</div>
 			<div class="row no-wrap text-center">
 				<div class="col-1">{{ $t('builtin.trigger.main.id') }}</div>
-				<div class="col-3">{{ $capitalize($t('builtin.trigger.main.name')) }}</div>
+				<div class="col-2">{{ $capitalize($t('builtin.trigger.main.name')) }}</div>
 				<div class="col-1">{{ $t('builtin.trigger.main.x1') }}</div>
 				<div class="col-1">{{ $t('builtin.trigger.main.y1') }}</div>
 				<div class="col-1">{{ $t('builtin.trigger.main.z1') }}</div>
 				<div class="col-1">{{ $t('builtin.trigger.main.x2') }}</div>
 				<div class="col-1">{{ $t('builtin.trigger.main.y2') }}</div>
 				<div class="col-1">{{ $t('builtin.trigger.main.z2') }}</div>
+				<div class="col-1">{{ $capitalize($t('builtin.trigger.main.unique')) }}</div>
 			</div>
 		</div>
 		<div class="container">
@@ -82,8 +83,26 @@ export default defineComponent({
 
 		const createTrigger = (d: createTrigger | undefined = undefined) => {
 			const data: createTrigger = (d)
-				? { name: d.name ?? random(), x1: d.x1 ?? 0, y1: d.y1 ?? 0, z1: d.z1 ?? 0, x2: d.x2 ?? 0, y2: d.y2 ?? 0, z2: d.z2 ?? 0 }
-				: { name: random(), x1: 0, y1: 0, z1: 0, x2: 0, y2: 0, z2: 0 };
+				? {
+						name: d.name ?? random(),
+						onlyOnce: d.onlyOnce ?? 0,
+						x1: d.x1 ?? 0,
+						y1: d.y1 ?? 0,
+						z1: d.z1 ?? 0,
+						x2: d.x2 ?? 0,
+						y2: d.y2 ?? 0,
+						z2: d.z2 ?? 0
+					}
+				: {
+						name: random(),
+						onlyOnce: 0,
+						x1: 0,
+						y1: 0,
+						z1: 0,
+						x2: 0,
+						y2: 0,
+						z2: 0
+					};
 			window.trigger.create(data)
 				.then((ret) => {
 					triggers.value.push(ret);
@@ -106,6 +125,7 @@ export default defineComponent({
 		const newCommand = (d: ipcCommand) => {
 			if (d.ret.command === shell.name && d.ret.data) {
 				createTrigger({
+					onlyOnce: 0,
 					x1: d.ret.data.coordinates.p1[0],
 					y1: d.ret.data.coordinates.p1[1],
 					z1: d.ret.data.coordinates.p1[2],
@@ -131,6 +151,7 @@ export default defineComponent({
 						triggers.value = els.map((e) => ({
 							id: e.id,
 							name: e.name,
+							onlyOnce: e.onlyOnce,
 							x1: e.x1, y1: e.y1, z1: e.z1,
 							x2: e.x2, y2: e.y2, z2: e.z2
 						}));
@@ -138,6 +159,7 @@ export default defineComponent({
 						triggers.value = [{
 							id: els.id,
 							name: els.name,
+							onlyOnce: els.onlyOnce,
 							x1: els.x1, y1: els.y1, z1: els.z1,
 							x2: els.x2, y2: els.y2, z2: els.z2
 						}];
@@ -174,13 +196,6 @@ export default defineComponent({
 .line {
 	padding-top: .2rem;
 	padding-bottom: .2rem
-}
-.line > div {
-	display: inline-flex;
-	flex-wrap: nowrap;
-	justify-content: space-around;
-	align-content: center;
-	align-items: center;
 }
 
 .sticky {

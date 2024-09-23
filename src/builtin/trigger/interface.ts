@@ -1,6 +1,7 @@
 export interface triggerInterface {
 	id: number;
 	name: string;
+	onlyOnce: number;
 	x1: number;
 	y1: number;
 	z1: number;
@@ -11,6 +12,7 @@ export interface triggerInterface {
 
 export interface createTrigger {
 	name?: string;
+	onlyOnce: number;
 	x1: number;
 	y1: number;
 	z1: number;

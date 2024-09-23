@@ -1,11 +1,11 @@
 <template>
-	<div class="col-1">
+	<div class="col-1 row items-center justify-center">
 		<q-badge color="light-blue-7">{{ trigger.id }}</q-badge>
 	</div>
 	<q-input
 		v-model="trigger.name"
 		type="text" dense :rules="[val => val.length > 0]"
-		class="col-3 q-pl-xs q-pr-xs"
+		class="col-2 q-pl-xs q-pr-xs"
 		hide-bottom-space
 		debounce="250"
 	/>
@@ -51,13 +51,22 @@
 		hide-bottom-space
 		debounce="250"
 	/>
-	<div class="end">
+	<div class="col-1 row justify-center items-center">
+		<q-toggle
+			v-model="trigger.onlyOnce"
+			:false-value="0"
+			:true-value="1"
+		/>
+	</div>
+	<div class="end row justify-center items-center">
 		<q-btn square unelevated color="light-blue-7" icon="play_arrow" @click="editFile(trigger.id)" />
 		<q-btn square unelevated color="red-7" icon="delete">
 			<q-popup-proxy>
 				<q-card square>
 					<q-card-section class="column">
-						<span class="text-center">{{ $capitalize($t('builtin.trigger.main.delete')) }}</span>
+						<span class="text-center">
+							{{ $capitalize($t('builtin.trigger.main.delete')) }}
+						</span>
 						<q-btn icon="delete" color="red-7" @click="deleteTrigger(trigger.id)"/>
 					</q-card-section>
 				</q-card>
@@ -81,16 +90,7 @@ export default defineComponent({
 	},
 	emits: ['update', 'editFile', 'delete'],
 	setup (props, { emit }) {
-		const trigger = ref<triggerInterface>({
-			id: props.data.id,
-			name: props.data.name,
-			x1: props.data.x1,
-			y1: props.data.y1,
-			z1: props.data.z1,
-			x2: props.data.x2,
-			y2: props.data.y2,
-			z2: props.data.z2
-		});
+		const trigger = ref<triggerInterface>({ ...props.data });
 		const editFile = (id: number) => emit('editFile', id);
 		const deleteTrigger = (id: number) => emit('delete', id);
 		
@@ -111,17 +111,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.line {
-	padding-top: .2rem;
-	padding-bottom: .2rem
-}
-.line > div {
-	display: inline-flex;
-	flex-wrap: nowrap;
-	justify-content: space-around;
-	align-content: center;
-	align-items: center;
-}
 .end {
 	width: -webkit-fill-available;
 }

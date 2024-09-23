@@ -28,6 +28,7 @@ class trigger {
 			sql: 'CREATE TABLE IF NOT EXISTS "trigger" (\
 				"id" INTEGER,\
 				"name" TEXT,\
+				"onlyOnce"	INTEGER NOT NULL DEFAULT 0,\
 				"x1" INTEGER,\
 				"y1" INTEGER,\
 				"z1" INTEGER,\
@@ -79,11 +80,17 @@ class trigger {
 	}
 
 	async create(data: createTrigger): Promise<triggerInterface> {
-		await this.db.update('INSERT INTO trigger (name, x1, y1, z1, x2, y2, z2) VALUES (?, ?, ?, ?, ?, ?, ?)', data.name, data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
+		await this.db.update(
+			'INSERT INTO trigger (name, onlyOnce, x1, y1, z1, x2, y2, z2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+			data.name, data.onlyOnce,
+			data.x1, data.y1, data.z1,
+			data.x2, data.y2, data.z2
+		);
 		const ret: triggerInterface = await this.db.get('SELECT id FROM trigger WHERE name = ?', data.name);
 		const format = {
 			id: ret.id,
 			name: data.name,
+			onlyOnce: data.onlyOnce,
 			x1: data.x1, y1: data.y1, z1: data.z1,
 			x2: data.x2, y2: data.y2, z2: data.z2
 		} as triggerInterface;
@@ -91,27 +98,63 @@ class trigger {
 		return format;
 	}
 
-	generateTrigger(data: triggerInterface, edit = false) {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	generateTrigger(data: triggerInterface, _edit = false) {
 		const triggerPath = resolve(this.datapackDir.base, data.id.toString());
-		const ret = [
-			'execute if entity @s[x=', data.x1.toString(),
-			',y=', data.y1.toString(),
-			',z=', data.z1.toString(),
-			',dx=', (data.x2 - data.x1).toString(),
-			',dy=', (data.y2 - data.y1).toString(),
-			',dz=', (data.z2 - data.z1).toString(),
-			'] run scoreboard players set @s MC_Trigger ', data.id.toString(),
-		];
 
 		mkdir(triggerPath, { recursive: true })
 			.then(() => {
-				writeFileSync(resolve(triggerPath, 'detect.mcfunction'), ret.join(''), { encoding: 'utf-8', flag: 'w' });
-				if (!edit) {
-					if (!existsSync(resolve(triggerPath, 'execute.mcfunction')))
-						writeFileSync(resolve(triggerPath, 'execute.mcfunction'), `# Trigger ${data.id.toString()}\n`, { encoding: 'utf-8', flag: 'w' });
-					fs.addLine(this.datapackDir.detect, `function mapcraft-data:trigger/${data.id.toString()}/detect\n`);
-					fs.addLine(this.datapackDir.execute, `execute if score @s MC_Trigger matches ${data.id.toString()} run function mapcraft-data:trigger/${data.id.toString()}/execute\n`);
+				writeFileSync(
+					resolve(triggerPath, 'detect.mcfunction'),
+					[
+						'execute if entity @s[x=', data.x1.toString(),
+						',y=', data.y1.toString(),
+						',z=', data.z1.toString(),
+						',dx=', (data.x2 - data.x1).toString(),
+						',dy=', (data.y2 - data.y1).toString(),
+						',dz=', (data.z2 - data.z1).toString(),
+						'] run scoreboard players set @s MC_Trigger ', data.id.toString()
+					].join(''),
+					{ encoding: 'utf-8', flag: 'w' }
+				);
+
+				if (!existsSync(resolve(triggerPath, 'execute.mcfunction'))) {
+					writeFileSync(
+						resolve(triggerPath, 'execute.mcfunction'),
+						`# Trigger ${data.id.toString()}\n`,
+						{ encoding: 'utf-8', flag: 'w' }
+					);
 				}
+				
+				if (data.onlyOnce === 1) {
+					writeFileSync(
+						resolve(triggerPath, 'reset.mcfunction'),
+						`tag @s remove Trigger${data.id.toString()}`,
+						{ encoding: 'utf-8', flag: 'w' }
+					);
+					writeFileSync(
+						resolve(triggerPath, 'execute_only_once.mcfunction'),
+						`tag @s add Trigger${data.id.toString()}\nfunction mapcraft-data:trigger/${data.id.toString()}/execute`,
+						{ encoding: 'utf-8', flag: 'w' }
+					);
+				}
+				fs.modifyLine(
+					this.datapackDir.detect,
+					`trigger/${data.id.toString()}/detect`,
+					`function mapcraft-data:trigger/${data.id.toString()}/detect`,
+					true
+				);
+				fs.modifyLine(
+					this.datapackDir.execute,
+					`score @s MC_Trigger matches ${data.id.toString()}`,
+					[
+						'execute if score @s MC_Trigger matches ', data.id.toString(),
+						(data.onlyOnce === 1) ? ` unless entity @s[tag=Trigger${data.id.toString()}] ` : ' ',
+						`run function mapcraft-data:trigger/${data.id.toString()}/`,
+						(data.onlyOnce === 1) ? 'execute_only_once' : 'execute'
+					].join(''),
+					true
+				);
 			})
 			.catch((e) => window.log.error(e));
 	}
@@ -133,7 +176,13 @@ class trigger {
 
 	async editTrigger(data: triggerInterface): Promise<void> {
 		this.generateTrigger(data, true);
-		await this.db.update('UPDATE trigger SET name = ?, x1 = ?, y1 = ?, z1 = ?, x2 = ?, y2 = ?, z2 = ? WHERE id = ?', data.name, data.x1, data.y1, data.z1, data.x2, data.y2, data.z2, data.id);
+		await this.db.update(
+			'UPDATE trigger SET name = ?, onlyOnce = ?, x1 = ?, y1 = ?, z1 = ?, x2 = ?, y2 = ?, z2 = ? WHERE id = ?',
+			data.name, data.onlyOnce,
+			data.x1, data.y1, data.z1,
+			data.x2, data.y2, data.z2,
+			data.id
+		);
 	}
 }
 

@@ -8,6 +8,7 @@ export default {
 		delete: 'êtes-vous sûr ?',
 		id: 'ID',
 		name: 'nom',
+		unique: 'une seule fois',
 		x1: 'X1',
 		x2: 'X2',
 		y1: 'Y1',
